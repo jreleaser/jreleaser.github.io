@@ -1,0 +1,48 @@
+
+= Packagers
+:jbake-type:   page
+:jbake-status: published
+
+After a release is created at the desired remote Git host, JReleaser can generate and publish specialized packagers
+into their respective distribution media, such a Git repository you have access to, or a packager store.
+
+The sections defined here can be applied globally (for all distributions) or per distribution. Global configuration is
+inherited by distribution configuration. Here's for example how <<_homebrew,Homebrew>> and <<_scoop,Scoop>> can be activated
+for all distributions:
+
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  brew:
+    enabled: true
+  scoop:
+    enabled: true
+----
+
+Given this setup here's how a distribution may inherit that configuration and disable Scoop while keeping Homebrew active:
+
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  brew:
+    enabled: true
+  scoop:
+    enabled: true
+
+distributions:
+  app:
+    scoop:
+      enabled: false
+    artifacts:
+      - path: path/to/app-1.0.0.zip
+----
+
+:leveloffset: 3
+include::chocolatey.adoc[]
+include::homebrew.adoc[]
+include::jbang.adoc[]
+include::scoop.adoc[]
+include::snap.adoc[]
+:leveloffset: 2

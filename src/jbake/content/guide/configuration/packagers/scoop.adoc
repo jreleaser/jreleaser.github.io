@@ -1,0 +1,128 @@
+
+= Scoop
+:jbake-type:   page
+:jbake-status: published
+
+JReleaser can generate and publish a _Scoop App Manifest_ into a repository that you have access to.
+
+The `scoop` section specifies how the manifest should be created.
+
+NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Scoop.
+
+WARNING: Snapshots are not supported.
+
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  scoop:
+    # Enables or disables Scoop.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Scoop distribution
+    # Defaults to `src/distribution/${distribution.name}/scoop`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/scoop/templates
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+      foo: bar
+
+    # URL used to check the latest version.
+    # Defaults to the releaser's `latestReleaseUrlFormat`.
+    # [optional]
+    checkverUrl:
+
+    # URL used to download a new version.
+    # Defaults to the releaser's `downloadUrlFormat`.
+    # [optional]
+    autoupdateUrl:
+
+    # Git author used to commit to the bucket repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: pass:[jreleaser-bot@jreleaser.org]
+
+    # Git repository to push the app manifest.
+    # Defaults are shown.
+    # [optional]
+    bucket:
+
+      # The owner of the bucket repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the bucket repository.
+      # Defaults to `${distribution.name}-scoop-bucket`.
+      # [optional]
+      name: app-scoop-bucket
+
+      # Username used for authoring commits. Must have write access to the bucket repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the bucket repository.
+      # If left unspecified, the JRELEASER_SCOOP_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd
+----
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `manifest.json` formula in the `duke/app-scoop-bucket` repository:
+
+[source,json]
+----
+{
+  "homepage": "https://acme.com/app",
+  "description": "Sample app",
+  "version": "1.2.3",
+  "license": "Apache-2.0",
+  "url": "https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip",
+  "hash": "sha256:812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466",
+  "extract_dir": "app-1.2.3",
+  "env_add_path": "bin",
+  "suggest": {
+    "JDK": [
+      "java/oraclejdk",
+      "java/openjdk"
+    ]
+  },
+  "checkver": {
+    "url": "https://github.com/duke/app/releases/latest",
+    "re": "v([\\d.]+).zip"
+  },
+  "autoupdate": {
+    "url": "https://github.com/duke/app/releases/download/v1.2.3/app-$version.zip",
+    "extract_dir": "app-$version",
+    "hash": {
+      "url": "$url.sha256"
+    }
+  }
+}
+----
+
+Your users can then install your app by doing:
+
+[source]
+----
+scoop bucket add duke https://github.com/duke/app-scoop-bucket.git
+scoop install duke/app
+----
+

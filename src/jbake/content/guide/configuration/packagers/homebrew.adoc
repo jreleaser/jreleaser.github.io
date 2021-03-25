@@ -1,0 +1,129 @@
+
+= Homebrew
+:jbake-type:   page
+:jbake-status: published
+
+The `brew` section specifies how the formula should be created. You can check the
+link:https://github.com/Homebrew/brew/blob/master/docs/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
+link:https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md[formula cookbook] for more details.
+
+NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Homebrew.
+
+WARNING: Snapshots are not supported.
+
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  brew:
+    # Enables or disables Homebrew.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Homebrew distribution
+    # Defaults to `src/distribution/${distribution.name}/brew`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/brew/templates
+
+    # A map of Homebrew dependencies.
+    # The key `:java` will be added automatically if not defined.
+    # [optional]
+    dependencies:
+      # key in symbol format
+      # mapped as `depends_on :key1 => "value1"`
+      ':key1': value1
+
+      # plain key
+      # mapped as `depends_on "key2" => "value2"`
+      key2: value2
+
+      # key in symbol format without value
+      # mapped as `depends_on `:key3`
+      ':key3': 'null'
+
+      # plain key without value
+      # mapped as `depends_on `"key4"`
+      key4: 'null'
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+      foo: bar
+
+    # Git author used to commit to the tap repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: pass:[jreleaser-bot@jreleaser.org]
+
+    # Git repository to push the formula to.
+    # Defaults are shown.
+    # [optional]
+    tap:
+
+      # The owner of the tap repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the tap repository.
+      # Defaults to `homebrew-tap`.
+      # [optional]
+      name: homebrew-tap
+
+      # Username used for authoring commits. Must have write access to the tap repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the tap repository.
+      # If left unspecified, the JRELEASER_HOMEBREW_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd
+----
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `app.rb` formula in the `duke/homebrew-tap` repository:
+
+[source,ruby]
+----
+class App < Formula
+  desc "Sample app"
+  homepage "https://acme.com/app"
+  version "1.2.3"
+  url "https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip"
+  sha256 "812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466"
+  license "Apache-2.0"
+
+  bottle :unneeded
+
+  depends_on :java => "8"
+
+  def install
+    libexec.install Dir["*"]
+    bin.install_symlink "#{libexec}/bin/app"
+  end
+
+  test do
+    output = shell_output("#{bin}/app --version")
+    assert_match "1.2.3", output
+  end
+end
+----
+
+NOTE: JReleaser does not generate a valid homebrew-core formula. The generated formulas are meant to be published as
+link:https://docs.brew.sh/Taps.html[homebrew taps], and in their current form will not be accepted in any of the official
+homebrew repositories.
+
