@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>JReleaser</title>
+
+    <link href="../../../css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="../../../css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="../../../css/asciidoctor.css"
+          rel="stylesheet">
+    <link href="../../../css/navbar-top-fixed.css"
+          rel="stylesheet">
+
+    <link rel="shortcut icon" href="../../../favicon.ico">
+
+    <style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+
+    @media only screen and (min-width:768px){
+        #toctitle{font-size:1.375em}
+        #toc.toc{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto; padding-top: 60px;}
+        #toc.toc #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+        #toc.toc>ul{font-size:.9em;margin-bottom:0}
+        #toc.toc ul ul{margin-left:0;padding-left:1em}
+        #toc.toc ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+    }
+    @media only screen and (min-width:1280px){
+        body.toc2{padding-left:20em;padding-right:0}
+        #toc.toc{width:20em; padding-top: 60px;}
+        #toc.toc #toctitle{font-size:1.375em}
+        #toc.toc>ul{font-size:.95em}
+        #toc.toc ul ul{padding-left:1.25em}
+    }
+    </style>
+
+</head>
+
+<body class="toc2 toc-left">
+   
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="../../../#">JReleaser</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../../#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/guide">Guide</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/jreleaser/jreleaser">Code</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+	
+	<div class="page-header">
+		<h1>Scoop</h1>
+	</div>
+
+	<!--p><em>25 March 2021</em></p-->
+
+	<p><div class="paragraph">
+<p>JReleaser can generate and publish a <em>Scoop App Manifest</em> into a repository that you have access to.</p>
+</div>
+<div class="paragraph">
+<p>The <code>scoop</code> section specifies how the manifest should be created.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+At the moment, only artifacts with <code>.zip</code> extension may be packaged with Scoop.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Snapshots are not supported.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="yaml"># [optional]
+packagers:
+  # [optional]
+  scoop:
+    # Enables or disables Scoop.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Scoop distribution
+    # Defaults to `src/distribution/${distribution.name}/scoop`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/scoop/templates
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+      foo: bar
+
+    # URL used to check the latest version.
+    # Defaults to the releaser's `latestReleaseUrlFormat`.
+    # [optional]
+    checkverUrl:
+
+    # URL used to download a new version.
+    # Defaults to the releaser's `downloadUrlFormat`.
+    # [optional]
+    autoupdateUrl:
+
+    # Git author used to commit to the bucket repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: jreleaser-bot@jreleaser.org
+
+    # Git repository to push the app manifest.
+    # Defaults are shown.
+    # [optional]
+    bucket:
+
+      # The owner of the bucket repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the bucket repository.
+      # Defaults to `${distribution.name}-scoop-bucket`.
+      # [optional]
+      name: app-scoop-bucket
+
+      # Username used for authoring commits. Must have write access to the bucket repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the bucket repository.
+      # If left unspecified, the JRELEASER_SCOOP_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
+a <code>manifest.json</code> formula in the <code>duke/app-scoop-bucket</code> repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="json">{
+  "homepage": "https://acme.com/app",
+  "description": "Sample app",
+  "version": "1.2.3",
+  "license": "Apache-2.0",
+  "url": "https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip",
+  "hash": "sha256:812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466",
+  "extract_dir": "app-1.2.3",
+  "env_add_path": "bin",
+  "suggest": {
+    "JDK": [
+      "java/oraclejdk",
+      "java/openjdk"
+    ]
+  },
+  "checkver": {
+    "url": "https://github.com/duke/app/releases/latest",
+    "re": "v([\\d.]+).zip"
+  },
+  "autoupdate": {
+    "url": "https://github.com/duke/app/releases/download/v1.2.3/app-$version.zip",
+    "extract_dir": "app-$version",
+    "hash": {
+      "url": "$url.sha256"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your users can then install your app by doing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>scoop bucket add duke https://github.com/duke/app-scoop-bucket.git
+scoop install duke/app</code></pre>
+</div>
+</div></p>
+
+        <footer class="mastfoot mt-auto">
+            <div class="inner">
+                <p>&copy; 2021 Andres Almiray</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
+
+</body>
+</html>

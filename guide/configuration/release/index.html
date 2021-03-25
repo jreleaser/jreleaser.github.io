@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>JReleaser</title>
+
+    <link href="../../../css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="../../../css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="../../../css/asciidoctor.css"
+          rel="stylesheet">
+    <link href="../../../css/navbar-top-fixed.css"
+          rel="stylesheet">
+
+    <link rel="shortcut icon" href="../../../favicon.ico">
+
+    <style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+
+    @media only screen and (min-width:768px){
+        #toctitle{font-size:1.375em}
+        #toc.toc{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto; padding-top: 60px;}
+        #toc.toc #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+        #toc.toc>ul{font-size:.9em;margin-bottom:0}
+        #toc.toc ul ul{margin-left:0;padding-left:1em}
+        #toc.toc ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+    }
+    @media only screen and (min-width:1280px){
+        body.toc2{padding-left:20em;padding-right:0}
+        #toc.toc{width:20em; padding-top: 60px;}
+        #toc.toc #toctitle{font-size:1.375em}
+        #toc.toc>ul{font-size:.95em}
+        #toc.toc ul ul{padding-left:1.25em}
+    }
+    </style>
+
+</head>
+
+<body class="toc2 toc-left">
+   
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="../../../#">JReleaser</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../../#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/guide">Guide</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/jreleaser/jreleaser">Code</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+	
+	<div class="page-header">
+		<h1>Release</h1>
+	</div>
+
+	<!--p><em>20 March 2021</em></p-->
+
+	<p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser can create and tag a GitHub release, upload all files and generate the changelog based on the new commits since
+the previous tag.</p>
+</div>
+<div class="paragraph">
+<p>The <code>release</code> section allows the following options to be customized</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_github">Github</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="yaml"># [required]
+release:
+  # Repo in which the release will be created.
+  # [required]
+  github:
+    # Disables or enables publication to GitHub.
+    # defaults to `true`.
+    enabled: true
+
+    # The user or organization that owns the repository.
+    # [required]
+    owner: duke
+
+    # The name of the repository.
+    # If unspecified, will use ${project.name}.
+    # [optional]
+    name: app
+
+    # The GitHub host url.
+    # Defaults to `github.com`.
+    # [required]
+    host: github.com
+
+    # Username used for authoring commits. Must have write access to the repository.
+    # [required]
+    username: duke
+
+    # Password or OAuth token with write access to the repository.
+    # If left unspecified, the JRELEASER_GITHUB_TOKEN environment variable must be defined.
+    # [required]
+    token: 1n$3cUrEP@s$w0rd
+
+    # The tag associated with the release.
+    # If left unspecified, will use `v${project.version}`.
+    # [optional]
+    tagName: v1.0.0
+
+    # The name of the release.
+    # If left unspecified, will use `Release ${tagName}`.
+    # [optional]
+    releaseName: Release v1.0.0
+
+    # Drops and creates an existing release with matching tag.
+    # Defaults to `false`.
+    # [optional]
+    overwrite: true
+
+    # Appends artifacts to an existing release with matching tag,
+    # useful if `overwrite` is set to `false`.
+    # Defaults to `false`.
+    # [optional]
+    allowUploadToExisting: true
+
+    # The GitHub API endpoint to use.
+    # Update it if using GitHub Enterprise.
+    # Defaults to `https://api.github.com`.
+    # [optional]
+    apiEndpoint: https://api.github.com
+
+    # Git author used to commit to the repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # Defaults to `jreleaser-bot`.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # Defaults to `jreleaser-bot@jreleaser.org`.
+      # [optional]
+      email: jreleaser-bot@jreleaser.org
+
+    # Signs commits with the configured credentials.
+    # The <a href="#_signing">signing</a> section must be configured as well.
+    # Defaults to `false`.
+    # [optional]
+    sign: false
+
+    # Changelog customization.
+    # [optional]
+    changelog:
+      # Disables or enables the changelog.
+      # defaults to `true`.
+      # [optional]
+      enabled: true
+
+      # Sorts commits in ascending (oldest first) or descending (newer first).
+      # Valid values are: `ASC`, `DESC`.
+      # Defaults to `DESC`.
+      # [optional]
+      sort: DESC
+
+      # Path to an external file that contains the changelog, read as is.
+      # May be a relative path to the configuration file or an absolute path.
+      # If unspecified, JReleaser will automatically calculate the changelog.
+      # [optional]
+      external: path/to/changelog.md
+
+      # Create explicit markdown links for commit hashes.
+      # Defaults to `false`.
+      # [optional]
+      links: false
+
+    # The target branch to use.
+    # Defaults to `main`.
+    # [optional]
+    targetCommitish: main
+
+    # Marks the release as a draft.
+    # Defaults to `false`.
+    # [optional]
+    draft: false
+
+    # Marks the release as prerelease.
+    # Defaults to `false`.
+    # [optional]
+    prerelease: false
+
+    # The following properties define [optional] URL formats.
+    # Defaults are shown.
+    # Review the available <a href="#_templates">template</a> names.
+
+    repoUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}
+
+    commitUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits
+
+    downloadUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}
+
+    releaseNotesUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}
+
+    latestReleaseUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest
+
+    issueTrackerUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues</code></pre>
+</div>
+</div>
+</div></p>
+
+        <footer class="mastfoot mt-auto">
+            <div class="inner">
+                <p>&copy; 2021 Andres Almiray</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
+
+</body>
+</html>
