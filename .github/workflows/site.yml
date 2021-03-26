@@ -19,11 +19,13 @@ jobs:
 
       - name: Copy landing page
         run: |
-          sudo cp -rf $GITHUB_WORKSPACE/landing/* $GITHUB_WORKSPACE/build/site
+          mkdir $GITHUB_WORKSPACE/website
+          cp -rf $GITHUB_WORKSPACE/build/site/* $GITHUB_WORKSPACE/website
+          cp -rf $GITHUB_WORKSPACE/landing/* $GITHUB_WORKSPACE/website
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.2.1
         with:
-          FOLDER: build/site
+          FOLDER: $GITHUB_WORKSPACE/website
           BRANCH: 'gh-pages'
           COMMIT_MESSAGE: "[CI] Publish Documentation for ${{ github.sha }}"
