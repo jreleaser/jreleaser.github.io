@@ -1,0 +1,53 @@
+= Sdkman
+
+Publishes a release to link:https://sdkman.io[SDKMAN!]. Please follow the instructions at
+link:https://sdkman.io/vendors[] to register your project as a candidate and obtain publishing credentials.
+
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  # [optional]
+  sdkman:
+
+    # Enable or disable this announcer.
+    # Defaults to `true`.
+    # [optional]
+    enabled: true
+
+    # The name of the candidate registered in thew SDKMAN! database.
+    # If unspecified, will use ${project.name}.
+    # [optional]
+    candidate:
+
+    # Announce a major release if `true`, minor release if `false`.
+    # Defaults to `true`.
+    # [optional]
+    major: true
+
+    # The consumer key for publishing to SDKMAN!.
+    # If left unspecified, the JRELEASER_SDKMAN_CONSUMER_KEY environment variable must be defined.
+    # [required]
+    consumerKey:
+
+    # The consumer token for publishing to SDKMAN!.
+    # If left unspecified, the JRELEASER_SDKMAN_CONSUMER_TOKEN environment variable must be defined.
+    # [required]
+    consumerToken:
+----
+
+This announcer has the following considerations:
+
+* No snapshot releases are supported.
+* Only `zip` artifacts are supported.
+* The default platform is set to `UNIVERSAL` if the artifact did not define a value for its `platform` field.
+* If there's more than one artifact then each artifact requires distinct `platform` values, otherwise the latest
+ artifact will override any previous matches by platform.
+* Announcing will be skipped if no suitable artifacts are found.
+
+Supported platform values are:
+
+* `mac`, `osx`.
+* `win`, `windows`.
+* `linux`.
+

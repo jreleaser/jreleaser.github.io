@@ -1,0 +1,144 @@
+= Chocolatey
+
+Publishes packages to link:https://chocolatey.org[].
+
+NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Chocolatey.
+
+WARNING: Local publication of packages is currently not supported. Please set `remoteBuild` to `true` and trigger a
+build in CI. Local publication will be added at a later release.
+
+WARNING: Snapshots are not supported.
+
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  chocolatey:
+    # Enables or disables Chocolatey.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Chocolatey distribution
+    # Defaults to `src/distribution/${distribution.name}/chocolatey`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/chocolatey/templates
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+      foo: bar
+
+    # The username that can publish Chocolatey packages.
+    # If left unspecified, the release owner will be used.
+    # [required]
+    username: duke
+
+    # Whether to build the package on a remote server or locally.
+    # Defaults to `false`.
+    # [optional]
+    remoteBuild: false
+
+    # Git author used to commit to the bucket repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: pass:[jreleaser-bot@jreleaser.org]
+
+    # Git repository to push the package it remoteBuild is `true`.
+    # Defaults are shown.
+    # [optional]
+    bucket:
+
+      # The owner of the bucket repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the bucket repository.
+      # Defaults to `${distribution.name}-chocolatey-bucket`.
+      # [optional]
+      name: app-chocolatey-bucket
+
+      # Username used for authoring commits. Must have write access to the bucket repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the bucket repository.
+      # If left unspecified, the JRELEASER_CHOCOLATEY_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd
+----
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+the following files in `out/jreleaser/app/prepare`, which may be published to `app-chocolatey-bucket`
+
+[source,xml]
+[subs="verbatim"]
+.app.nuspec
+----
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <!-- required -->
+    <id>app</id>
+    <version>1.2.3</version>
+    <authors>Duke</authors>
+    <description>Sample app</description>
+    <!-- optional -->
+    <title>app</title>
+    <projectUrl>https://acme.com/app</projectUrl>
+    <license type="expression">Apache-2.0</license>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags></tags>
+    <summary>Sample app</summary>
+    <releaseNotes>https://github.com/duke/app/releases/tag/v1.2.3</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
+----
+
+[source]
+.tools/chocolateyinstall.ps1
+----
+$tools = Split-Path $MyInvocation.MyCommand.Definition
+$package = Split-Path $tools
+$app_home = Join-Path $package 'app-1.2.3'
+$app_bat = Join-Path $app_home 'bin/app.cmd'
+
+Install-ChocolateyZipPackage `
+    -PackageName 'app' `
+    -Url 'https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip' `
+    -Checksum '812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466' `
+    -ChecksumType 'sha256' `
+    -UnzipLocation $package
+
+Install-BinFile -Name 'app' -Path $app_bat
+----
+
+[source]
+.tools/chocolateyuninstall.ps1
+----
+$tools = Split-Path $MyInvocation.MyCommand.Definition
+$package = Split-Path $tools
+$app_home = Join-Path $package 'app-1.2.3'
+$app_bat = Join-Path $app_home 'bin/app.cmd'
+
+Uninstall-BinFile -Name 'app' -Path $app_bat
+----
+

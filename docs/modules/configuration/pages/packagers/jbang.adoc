@@ -1,0 +1,138 @@
+= Jbang
+
+Unleash the power of Java with link:https://github.com/jbangdev/jbang[jbang]. You can publish distributions as jbang
+catalogs.
+
+Each separate executable will have its own jbang script. All executables will be collected in the same catalog. Existing
+catalogs located at the target repository will be merged into a single catalog.
+
+Snapshots are supported, in which case executables will bear the `-snapshot` suffix in their alias.
+
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  jbang:
+    # Enables or disables Jbang.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Jbang distribution
+    # Defaults to `src/distribution/${distribution.name}/jbang`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/jbang/templates
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+      foo: bar
+
+    # Git author used to commit to the catalog repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: pass:[jreleaser-bot@jreleaser.org]
+
+    # Git repository to push the catalog to.
+    # Defaults are shown.
+    # [optional]
+    catalog:
+
+      # The owner of the catalog repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the catalog repository.
+      # Defaults to `jbang-catalog`.
+      # [optional]
+      name: jbang-catalog
+
+      # Username used for authoring commits. Must have write access to the catalog repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the catalog repository.
+      # If left unspecified, the JRELEASER_JBANG_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd
+----
+
+NOTE: You must define a value for `mainClass` in the owning distribution.
+
+NOTE: When the project's version is snapshot, unless manually updated, the default prepared template assumes JARs may be
+resolved from link:https://jitpack.io[].
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `app.java` file in the `duke/jbang-catalog` repository:
+
+[source,json]
+.jbang-catalog.json
+----
+{
+  "aliases": {
+    "app": {
+      "script-ref": "app.java",
+      "description": "Sample app"
+    }
+  }
+}
+----
+
+[source,java]
+.app.java
+----
+//usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 8
+//DEPS com.acme:app:1.2.3
+
+public class app {
+    public static void main(String... args) throws Exception {
+        com.acme.Main.main(args);
+    }
+}
+----
+
+When the version is snapshot then the catalog and the script template change to:
+
+[source,json]
+.jbang-catalog.json
+----
+{
+  "aliases": {
+    "app-snapshot": {
+      "script-ref": "app_snapshot.java",
+      "description": "Sample app"
+    }
+  }
+}
+----
+
+[source,java]
+.app_snapshot.java
+----
+//usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 8
+//REPOS jitpack
+//DEPS com.github.duke:app:main-SNAPSHOT
+
+public class app_snapshot {
+    public static void main(String... args) throws Exception {
+        com.acme.Main.main(args);
+    }
+}
+----
+

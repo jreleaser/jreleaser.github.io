@@ -1,0 +1,188 @@
+= Snap
+
+link:http://snapcraft.io[Snaps] are a new packaging format, that will let you publish your project directly to the
+Ubuntu store. From there it will be installable in all the link:https://snapcraft.io/docs/core/install[supported Linux distros],
+with automatic and transactional updates.
+
+You can read more about it in the link:https://snapcraft.io/docs/[snapcraft docs].
+
+NOTE: At the moment, only artifacts with `.tar.gz` or `.tar` extension may be packaged with Snapcraft.
+
+WARNING: Snapshots are not supported.
+
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  snap:
+    # Enables or disables Snapcraft.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Snapcraft distribution
+    # Defaults to `src/distribution/${distribution.name}/snap`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/snap/templates
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
+      foo: bar
+
+    # Git author used to commit to the snap repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: pass:[jreleaser-bot@jreleaser.org]
+
+    # Exported snapcraft login credentials.
+    # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin`.
+    # Required if `remoteBuild` is set to `false`.
+    exportedLogin:
+
+    # Whether to build the package on a remote server or locally.
+    # If set to `true` then the package must be configured to be built
+    # via link:https://snapcraft.io[].
+    # Review the docs at link:https://snapcraft.io/build[].
+    # Defaults to `false`.
+    # [optional]
+    remoteBuild: false
+
+    # Git repository to push the package it remoteBuild is `true`.
+    # Defaults are shown.
+    # [optional]
+    snap:
+
+      # The owner of the snap repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the tap repository.
+      # Defaults to `homebrew-tap`.
+      # [optional]
+      name: homebrew-tap
+
+      # Username used for authoring commits. Must have write access to the snap repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the snap repository.
+      # If left unspecified, the JRELEASER_SNAP_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd
+
+    # A snap of type base to be used as the execution environment for this snap.
+    # Valid values are:
+    # * bare - Empty base snap;
+    # * core - Ubuntu Core 16;
+    # * core18 - Ubuntu Core 18.
+    # Defaults to `core18`.
+    # [optional]
+    base: core18
+
+    # A guardrail to prevent you from releasing a snap to all your users before
+    # it is ready.
+    # `devel` will let you release only to the `edge` and `beta` channels in the
+    # store. `stable` will let you release also to the `candidate` and `stable`
+    # channels. More info about channels here:
+    # link:https://snapcraft.io/docs/reference/channels[].
+    # Defaults to `stable`.
+    # [optional]
+    grade: stable
+
+    # Snaps can be setup to follow three different confinement policies:
+    # `strict`, `devmode` and `classic`. A strict confinement where the snap
+    # can only read and write in its own namespace is recommended. Extra
+    # permissions for strict snaps can be declared as `plugs` for the app, which
+    # are explained later. More info about confinement here:
+    # link:https://snapcraft.io/docs/reference/confinement[].
+    # Defaults to `strict`.
+    # [optional]
+    confinement: strict
+
+    # List of plug names the application is associated with.
+    # When a plug is connected to one of these slots, the application
+    # will be granted the permissions specified for that interface.
+    # If attributes are required, or the plug name does not match the
+    # interface name, more details must be declared in the `plugs` field.
+    # link:https://snapcraft.io/docs/reference/interfaces[].
+    # [optional]
+    localPlugs:
+      - some_plug_name
+
+    # List of slot names the application is associated with.
+    # When a plug is connected to one of these slots, the application
+    # will be granted the permissions specified for that interface.
+    # If attributes are required, or the slot name does not match the
+    # interface name, more details must be declared in the `slots` field.
+    # link:https://snapcraft.io/docs/reference/interfaces[].
+    # [optional]
+    localSlots:
+      - some_slot_name
+
+    # Allows plugs to be configured.
+    # [optional]
+    plugs:
+      some_plug_name:
+        key: value
+
+    # Allows slots to be configured.
+    # [optional]
+    slots:
+      some_slot_name:
+        key: value
+        read:
+        - $HOME/.foo
+        write:
+        - $HOME/.foo
+        - $HOME/.foobar
+----
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `snapcraft.yaml` file `out/jreleaser/snap/prepare`, which may be published to `app-snap`
+
+[source,yaml]
+.snapcraft.yaml
+----
+name: app
+base: core18
+version: 1.2.3
+license: Apache-2.0
+grade: stable
+type: app
+confinement: strict
+summary: Sample app
+description: Sample app
+
+apps:
+  app:
+    command: bin/app
+    environment:
+      JAVA_HOME: $SNAP/usr/lib/jvm/java
+
+parts:
+  app:
+    plugin: dump
+    source: https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.tar.gz
+    source-checksum: sha256/8e74020ca5e7d01d25c34cf1bd53adcf78c77adf7b53530ae5e0baeb841cb43e
+    stage-packages:
+      - openjdk-8-jdk
+    organize:
+      usr/lib/jvm/java-8-openjdk*: usr/lib/jvm/java
+----      
+
+
