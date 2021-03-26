@@ -110,22 +110,6 @@ such as JSON, the <a href="#_maven">Maven</a> DSL, the <a href="#_gradle">Gradle
   # [required]
   version: 1.0.0
 
-  # Maven coordinates: groupId.
-  # Inherited by distributions if they do not define a value for it.
-  # [required]
-  groupId: com.acme
-
-  # Maven coordinates: artifactId.
-  # If undefined, will use ${project.name}.
-  # Inherited by distributions if they do not define a value for it.
-  # [required]
-  artifactId: app
-
-  # Identifies the project as being mermber of a multi-project build.
-  # Defaults to `false`.
-  # [optional]
-  multiProject : false
-
   # A short description (60 chars max).
   # [required]
   description: My awesome app
@@ -158,15 +142,37 @@ such as JSON, the <a href="#_maven">Maven</a> DSL, the <a href="#_gradle">Gradle
   # [required]
   license: Apache-2.0
 
-  # The minimum Java version required by consumers to run the application.
-  # [required]
-  javaVersion: 8
-
   # Additional properties used when evaluating templates.
   # [optional]
   extraProperties:
     # Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
-    foo: bar</code></pre>
+    foo: bar
+
+  # [required]
+  java:
+    # Maven coordinates: groupId.
+    # Inherited by distributions if they do not define a value for it.
+    # [required]
+    groupId: com.acme
+
+    # Maven coordinates: artifactId.
+    # If undefined, will use ${project.name}.
+    # Inherited by distributions if they do not define a value for it.
+    # [required]
+    artifactId: app
+
+    # The minimum Java version required by consumers to run the application.
+    # [required]
+    version: 8
+
+    # The application's entry point.
+    # [optional]
+    mainClass: com.acme.Main
+
+    # Identifies the project as being member of a multi-project build.
+    # Defaults to `false`.
+    # [optional]
+    multiProject : false</code></pre>
 </div>
 </div>
 </div>
@@ -1307,26 +1313,6 @@ distributions:
     # [optional]
     executable: app
 
-    # The minimum Java version required by consumers to run the application.
-    # If left undefined, will use {project.javaVersion}.
-    # [optional]
-    javaVersion: 8
-
-    # Maven coordinates: groupId.
-    # f left undefined, will use {project.groupId}
-    # [optional]
-    groupId: com.acme
-
-    # Maven coordinates: artifactId.
-    # f left undefined, will use {project.artifactId}
-    # [optional]
-    artifactId: app
-
-    # The application's entry point.
-    # Required by <a href="#_jbang">jbang</a>.
-    # [optional]
-    mainClass: com.acme.Main
-
     # A list of tags.
     # [optional]
     tags:
@@ -1349,7 +1335,35 @@ distributions:
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
       - path: path/to/{{distributionName}}-{{projectVersion}}-win.zip
-        platform: windows</code></pre>
+        platform: windows
+
+    # [optional]
+    java:
+      # Maven coordinates: groupId.
+      # If left undefined, will use ${project.java.groupId}.
+      # [optional]
+      groupId: com.acme
+
+      # Maven coordinates: artifactId.
+      # If left undefined, will use ${project.java.artifactId}.
+      # [optional]
+      artifactId: app
+
+      # The minimum Java version required by consumers to run the application.
+      # If left undefined, will use ${project.java.version}.
+      # [optional]
+      version: 8
+
+      # The application's entry point.
+      # If left undefined, will use ${project.java.mainClass}.
+      # [optional]
+      mainClass: com.acme.Main
+
+      # Identifies the project as being member of a multi-project build.
+      # If left undefined, will use ${project.java.multiProject}.
+      # Defaults to `false`.
+      # [optional]
+      multiProject : false</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1681,16 +1695,20 @@ also support templates. A template name can be used as <code>{{ name }}</code></
 <td class="tableblock halign-left valign-top"><p class="tableblock">comma separate list of project tags</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">javaVersion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the project Java version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">groupId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectJavaGroupId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the project groupId (Maven coordinates)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifactId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectJavaArtifactId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the project artifactId (Maven coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectJavaVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the project Java version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectMainClass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the main class launched by the executable script launcher</p></td>
 </tr>
 </tbody>
 </table>
@@ -1809,15 +1827,19 @@ key, such that</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">comma separate list of distribution tags</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributionGroupId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionJavaGroupId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the distribution groupId (Maven coordinates)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionJavaArtifactId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the distribution artifactId (Maven coordinates)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mainClass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionJavaVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the distribution Java version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionMainClass</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the main class launched by the executable script launcher</p></td>
 </tr>
 </tbody>
@@ -1852,10 +1874,6 @@ and the capitalized key, such that</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifactJavaVersion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact Java version</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifactUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
 </tr>
@@ -1885,10 +1903,6 @@ and the capitalized key, such that</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributionJavaVersion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact Java version</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
 </tr>
@@ -1917,10 +1931,6 @@ and the capitalized key, such that</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifact{{CapitalizedPlatform}}JavaVersion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the distribution Java version</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifact{{CapitalizedPlatform}}Url</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
@@ -1957,9 +1967,6 @@ and the capitalized key, such that</p>
 <div class="ulist">
 <ul>
 <li>
-<p>artifactJavaVersion</p>
-</li>
-<li>
 <p>artifactUrl</p>
 </li>
 <li>
@@ -1967,9 +1974,6 @@ and the capitalized key, such that</p>
 </li>
 <li>
 <p>artifactFileName</p>
-</li>
-<li>
-<p>distributionJavaVersion</p>
 </li>
 <li>
 <p>distributionUrl</p>
@@ -1987,9 +1991,6 @@ and the capitalized key, such that</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>artifactOsxJavaVersion</p>
-</li>
 <li>
 <p>artifactOsxUrl</p>
 </li>
