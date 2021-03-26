@@ -4,3 +4,53 @@
 !function(){"use strict";var t,e=document.querySelector(".page-versions .version-menu-toggle");e&&(t=document.querySelector(".page-versions"),e.addEventListener("click",function(e){t.classList.toggle("is-active"),e.stopPropagation()}),document.documentElement.addEventListener("click",function(){t.classList.remove("is-active")}))}();
 !function(){"use strict";var t=document.querySelector(".navbar-burger");t&&t.addEventListener("click",function(t){t.stopPropagation(),document.documentElement.classList.toggle("is-clipped--navbar"),this.classList.toggle("is-active");var e=document.getElementById(this.dataset.target);e.classList.toggle("is-active")&&(e.style.maxHeight="",t=window.innerHeight-Math.round(e.getBoundingClientRect().top),parseInt(window.getComputedStyle(e).maxHeight,10)!==t&&(e.style.maxHeight=t+"px"))}.bind(t))}();
 !function(){"use strict";var s=/^\$ (\S[^\\\n]*(\\\n(?!\$ )[^\\\n]*)*)(?=\n|$)/gm,l=/( ) *\\\n *|\\\n( ?) */g,d=/ +$/gm,r=(document.getElementById("site-script")||{dataset:{}}).dataset;[].slice.call(document.querySelectorAll(".doc pre.highlight, .doc .literalblock pre")).forEach(function(e){var t,n,c,i,a;if(e.classList.contains("highlight"))(c=(t=e.querySelector("code")).dataset.lang)&&"console"!==c&&((i=document.createElement("span")).className="source-lang",i.appendChild(document.createTextNode(c)));else{if(!e.innerText.startsWith("$ "))return;var o=e.parentNode.parentNode;o.classList.remove("literalblock"),o.classList.add("listingblock"),e.classList.add("highlightjs","highlight"),(t=document.createElement("code")).className="language-console hljs",t.dataset.lang="console",t.appendChild(e.firstChild),e.appendChild(t)}(c=document.createElement("div")).className="source-toolbox",i&&c.appendChild(i),window.navigator.clipboard&&((n=document.createElement("button")).className="copy-button",n.setAttribute("title","Copy to clipboard"),"svg"===r.svgAs?((o=document.createElementNS("http://www.w3.org/2000/svg","svg")).setAttribute("class","copy-icon"),(i=document.createElementNS("http://www.w3.org/2000/svg","use")).setAttribute("href",window.uiRootPath+"/img/octicons-16.svg#icon-clippy"),o.appendChild(i),n.appendChild(o)):((a=document.createElement("img")).src=window.uiRootPath+"/img/octicons-16.svg#view-clippy",a.alt="copy icon",a.className="copy-icon",n.appendChild(a)),(a=document.createElement("span")).className="copy-toast",a.appendChild(document.createTextNode("Copied!")),n.appendChild(a),c.appendChild(n)),e.appendChild(c),n&&n.addEventListener("click",function(e){var t=e.innerText.replace(d,"");"console"===e.dataset.lang&&t.startsWith("$ ")&&(t=function(e){var t,n=[];for(;t=s.exec(e);)n.push(t[1].replace(l,"$1$2"));return n.join(" && ")}(t));window.navigator.clipboard.writeText(t).then(function(){this.classList.add("clicked"),this.offsetHeight,this.classList.remove("clicked")}.bind(this),function(){})}.bind(n,t))})}();
+;(function () {
+    'use strict'
+
+    var hash = window.location.hash
+    find('.tabset').forEach(function (tabset) {
+        var active
+        var tabs = tabset.querySelector('.tabs')
+        if (tabs) {
+            var first
+            find('li', tabs).forEach(function (tab, idx) {
+                var id = (tab.querySelector('a[id]') || tab).id
+                if (!id) return
+                var pane = getPane(id, tabset)
+                if (!idx) first = { tab: tab, pane: pane }
+                if (!active && hash === '#' + id && (active = true)) {
+                    tab.classList.add('is-active')
+                    if (pane) pane.classList.add('is-active')
+                } else if (!idx) {
+                    tab.classList.remove('is-active')
+                    if (pane) pane.classList.remove('is-active')
+                }
+                tab.addEventListener('click', activateTab.bind({ tabset: tabset, tab: tab, pane: pane }))
+            })
+            if (!active && first) {
+                first.tab.classList.add('is-active')
+                if (first.pane) first.pane.classList.add('is-active')
+            }
+        }
+        tabset.classList.remove('is-loading')
+    })
+
+    function activateTab (e) {
+        var tab = this.tab
+        var pane = this.pane
+        find('.tabs li, .tab-pane', this.tabset).forEach(function (it) {
+            it === tab || it === pane ? it.classList.add('is-active') : it.classList.remove('is-active')
+        })
+        e.preventDefault()
+    }
+
+    function find (selector, from) {
+        return Array.prototype.slice.call((from || document).querySelectorAll(selector))
+    }
+
+    function getPane (id, tabset) {
+        return find('.tab-pane', tabset).find(function (it) {
+            return it.getAttribute('aria-labelledby') === id
+        })
+    }
+})()
