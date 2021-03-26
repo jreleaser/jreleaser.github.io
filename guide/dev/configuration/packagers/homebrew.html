@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Homebrew :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/packagers/homebrew.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://jreleaser.org">JReleaser</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="guide" data-version="dev">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">JReleaser</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../install.html">Install</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../quick_start.html">Quick Start</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../project.html">Project</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../signing.html">Signing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../release/index.html">Release</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../release/github.html">Github</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Packagers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chocolatey.html">Chocolatey</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="homebrew.html">Homebrew</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jbang.html">Jbang</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../distributions.html">Distributions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../files.html">Files</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../announce/index.html">Announce</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../announce/sdkman.html">Sdkman</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../announce/twitter.html">Twitter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../announce/zulip.html">Zulip</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tools</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tools/cli.html">JReleaser CLI</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tools/maven.html">JReleaser Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tools/gradle.html">JReleaser Gradle Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tools/ant.html">JReleaser Ant Tasks</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../tools/tool-provider.html">JReleaser Tool Provider</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../links.html">Links</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JReleaser</span>
+    <span class="version">dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">JReleaser</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">JReleaser</a></li>
+    <li>Configuration</li>
+    <li><a href="index.html">Packagers</a></li>
+    <li><a href="homebrew.html">Homebrew</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/packagers/homebrew.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Homebrew</h1>
+<div class="paragraph">
+<p>The <code>brew</code> section specifies how the formula should be created. You can check the
+<a href="https://github.com/Homebrew/brew/blob/master/docs/How-to-Create-and-Maintain-a-Tap.md">Homebrew documentation</a> and the
+<a href="https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md">formula cookbook</a> for more details.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+At the moment, only artifacts with <code>.zip</code> extension may be packaged with Homebrew.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Snapshots are not supported.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
+packagers:
+  # [optional]
+  brew:
+    # Enables or disables Homebrew.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Homebrew distribution
+    # Defaults to `src/distribution/${distribution.name}/brew`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/brew/templates
+
+    # A map of Homebrew dependencies.
+    # The key `:java` will be added automatically if not defined.
+    # [optional]
+    dependencies:
+      # key in symbol format
+      # mapped as `depends_on :key1 =&gt; "value1"`
+      ':key1': value1
+
+      # plain key
+      # mapped as `depends_on "key2" =&gt; "value2"`
+      key2: value2
+
+      # key in symbol format without value
+      # mapped as `depends_on `:key3`
+      ':key3': 'null'
+
+      # plain key without value
+      # mapped as `depends_on `"key4"`
+      key4: 'null'
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+      foo: bar
+
+    # Git author used to commit to the tap repository.
+    # [optional]
+    commitAuthor:
+      # Name used when authoring commits.
+      # If left undefined, will use the releaser's commit name.
+      # [optional]
+      name: jreleaser-bot
+
+      # E-mail used when authoring commits.
+      # If left undefined, will use the releaser's commit email.
+      # [optional]
+      email: jreleaser-bot@jreleaser.org
+
+    # Git repository to push the formula to.
+    # Defaults are shown.
+    # [optional]
+    tap:
+
+      # The owner of the tap repository.
+      # Defaults to the same owner as the release repository.
+      # [optional]
+      owner: duke
+
+      # The name of the tap repository.
+      # Defaults to `homebrew-tap`.
+      # [optional]
+      name: homebrew-tap
+
+      # Username used for authoring commits. Must have write access to the tap repository.
+      # Defaults to the same username as the release repository.
+      # [optional]
+      username: duke
+
+      # Password or OAuth token with write access to the tap repository.
+      # If left unspecified, the JRELEASER_HOMEBREW_GITHUB_TOKEN environment variable may be defined.
+      # [optional]
+      token: 1n$3cUrEP@s$w0rd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
+a <code>app.rb</code> formula in the <code>duke/homebrew-tap</code> repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ruby hljs" data-lang="ruby">class App &lt; Formula
+  desc "Sample app"
+  homepage "https://acme.com/app"
+  version "1.2.3"
+  url "https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip"
+  sha256 "812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466"
+  license "Apache-2.0"
+
+  bottle :unneeded
+
+  depends_on :java =&gt; "8"
+
+  def install
+    libexec.install Dir["*"]
+    bin.install_symlink "#{libexec}/bin/app"
+  end
+
+  test do
+    output = shell_output("#{bin}/app --version")
+    assert_match "1.2.3", output
+  end
+end</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+JReleaser does not generate a valid homebrew-core formula. The generated formulas are meant to be published as
+<a href="https://docs.brew.sh/Taps.html">homebrew taps</a>, and in their current form will not be accepted in any of the official
+homebrew repositories.
+</td>
+</tr>
+</table>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
+</footer>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
