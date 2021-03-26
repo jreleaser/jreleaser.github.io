@@ -1,0 +1,29 @@
+name: Site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  site:
+    name: site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Run Antora
+        uses: kameshsampath/antora-site-action@master
+        with:
+          antora_playbook: antora-playbook.yml
+
+      - name: Copy landing page
+        run: |
+          cp -rf landing/* build/site
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.2.1
+        with:
+          FOLDER: build/site
+          BRANCH: 'gh-pages'
+          COMMIT_MESSAGE: "[CI] Publish Documentation for ${{ github.sha }}"
