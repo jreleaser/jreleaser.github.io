@@ -8,6 +8,10 @@ catalogs located at the target repository will be merged into a single catalog.
 
 Snapshots are supported, in which case executables will bear the `-snapshot` suffix in their alias.
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -45,7 +49,7 @@ packagers:
       # [optional]
       email: pass:[jreleaser-bot@jreleaser.org]
 
-    # Git repository to push the catalog to.
+    # Git repository to push the formula to.
     # Defaults are shown.
     # [optional]
     catalog:
@@ -66,12 +70,257 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the catalog repository.
-      # If left unspecified, the JRELEASER_JBANG_GITHUB_TOKEN environment variable may be defined.
+      # If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+      # environment variable may be defined.
       # [optional]
-      token: 1n$3cUrEP@s$w0rd
+      token: __DO_NOT_SET_HERE__
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // [optional]
+  "packagers": {
+    // [optional]
+    "jbang": {
+      // Enables or disables Jbang.
+      // Defaults to `false`.
+      // [optional]
+      "enabled": true,
 
-NOTE: You must define a value for `mainClass` in the owning distribution.
+      // Directory with file templates used to prepare the Jbang distribution
+      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // If specified, path must exist.
+      // [optional]
+      "templateDirectory": "path/to/jbang/templates",
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+        "foo": "bar"
+      },
+
+      // Git author used to commit to the catalog repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // [optional]
+        "email": "pass:[jreleaser-bot@jreleaser.org]"
+      },
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      "catalog": {
+
+        // The owner of the catalog repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        "owner": "duke",
+
+        // The name of the catalog repository.
+        // Defaults to `jbang-catalog`.
+        // [optional]
+        "name": "jbang-catalog",
+
+        // Username used for authoring commits. Must have write access to the catalog repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        "username": "duke",
+
+        // Password or OAuth token with write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        "token": "__DO_NOT_SET_HERE__"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <!--
+    [optional]
+  -->
+  <packagers>
+    <!--
+      [optional]
+    -->
+    <jbang>
+      <!--
+        Enables or disables Jbang.
+        Defaults to `false`.
+        [optional]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        Directory with file templates used to prepare the Jbang distribution
+        Defaults to `src/distribution/${distribution.name}/jbang`.
+        If specified, path must exist.
+        [optional]
+      -->
+      <templateDirectory>>path/to/jbang/templates</templateDirectory>
+
+      <!--
+        Additional properties used when evaluating templates.
+        [optional]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+
+      <!--
+        Git author used to commit to the repository.
+        [optional]
+      -->
+      <commitAuthor>
+
+        <!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        -->
+        <name>jreleaser-bot</name>
+
+        <!--
+          E-mail used when authoring commits.
+          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          [optional]
+        -->
+        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+      </commitAuthor>
+
+      <!--
+        Git repository to push the formula to.
+        Defaults are shown.
+        [optional]
+      -->
+      <catalog>
+
+        <!--
+          The owner of the catalog repository.
+          Defaults to the same owner as the release repository.
+          [optional]
+        -->
+        <owner>duke</owner>
+
+        <!--
+          The name of the catalog repository.
+          Defaults to `jbang-catalog`.
+          [optional]
+        -->
+        <name>jbang-catalog</name>
+
+        <!--
+          Username used for authoring commits. Must have write access to the catalog repository.
+          Defaults to the same username as the release repository.
+          [optional]
+        -->
+        <username>duke</username>
+
+        <!--
+          Password or OAuth token with write access to the catalog repository.
+          If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+          environment variable may be defined.
+          [optional]
+        -->
+        <token>__DO_NOT_SET_HERE__</token>
+      </catalog>
+    </jbang>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // [optional]
+  packagers {
+    // [optional]
+    jbang {
+      // Enables or disables Jbang.
+      // Defaults to `false`.
+      // [optional]
+      enabled = true
+
+      // Directory with file templates used to prepare the Jbang distribution
+      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // If specified, path must exist.
+      // [optional]
+      templateDirectory = 'path/to/jbang/templates'
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // Git author used to commit to the catalog repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // If left undefined, will use the releaser's commit name.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // If left undefined, will use the releaser's commit email.
+        // [optional]
+        email = 'pass:[jreleaser-bot@jreleaser.org]'
+      }
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      catalog {
+
+        // The owner of the catalog repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        owner = 'duke'
+
+        // The name of the catalog repository.
+        // Defaults to `jbang-catalog`.
+        // [optional]
+        name = 'jbang-catalog'
+
+        // Username used for authoring commits. Must have write access to the catalog repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        username = 'duke'
+
+        // Password or OAuth token with write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        token = '__DO_NOT_SET_HERE__'
+      }
+    }
+  }
+}
+----
+====
+
+NOTE: You must define a value for `java.mainClass` in the owning distribution.
 
 NOTE: When the project's version is snapshot, unless manually updated, the default prepared template assumes JARs may be
 resolved from link:https://jitpack.io[].

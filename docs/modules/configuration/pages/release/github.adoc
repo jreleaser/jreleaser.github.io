@@ -1,5 +1,9 @@
 = Github
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -31,11 +35,13 @@ release:
     username: duke
 
     # Password or OAuth token with write access to the repository.
-    # If left unspecified, the JRELEASER_GITHUB_TOKEN environment variable must be defined.
+    # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+    # environment variable must be defined.
     # [required]
-    token: 1n$3cUrEP@s$w0rd
+    token: __DO_NOT_SET_HERE__
 
     # The tag associated with the release.
+    # May define a `JRELEASER_TAG_NAME` environment variable instead.
     # If left unspecified, will use `v${project.version}`.
     # [optional]
     tagName: v1.0.0
@@ -137,4 +143,499 @@ release:
 
     issueTrackerUrlFormat: pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // [required]
+  "release": {
+    // Repo in which the release will be created.
+    // [required]
+    "github": {
+      // Disables or enables publication to GitHub.
+      // defaults to `true`.
+      "enabled": true,
+
+      // The user or organization that owns the repository.
+      // [required]
+      "owner": "duke",
+
+      // The name of the repository.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      "name": "app",
+
+      // The GitHub host url.
+      // Defaults to `github.com`.
+      // [required]
+      "host": "github.com",
+
+      // Username used for authoring commits. Must have write access to the repository.
+      // [required]
+      "username": "duke",
+
+      // Password or OAuth token with write access to the repository.
+      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      "token": "__DO_NOT_SET_HERE__",
+
+      // The tag associated with the release.
+      // May define a `JRELEASER_TAG_NAME` environment variable instead.
+      // If left unspecified, will use `v${project.version}`.
+      // [optional]
+      "tagName": "v1.0.0",
+
+      // The name of the release.
+      // If left unspecified, will use `Release ${tagName}`.
+      // [optional]
+      "releaseName": "Release v1.0.0",
+
+      // Drops and creates an existing release with matching tag.
+      // Defaults to `false`.
+      // [optional]
+      "overwrite": true,
+
+      // Appends artifacts to an existing release with matching tag,
+      // useful if `overwrite` is set to `false`.
+      // Defaults to `false`.
+      // [optional]
+      "allowUploadToExisting": true,
+
+      // The GitHub API endpoint to use.
+      // Update it if using GitHub Enterprise.
+      // Defaults to `pass:[https://api.github.com]`.
+      // [optional]
+      "apiEndpoint": "pass:[https://api.github.com]",
+
+      // Git author used to commit to the repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // [optional]
+        "email": "pass:[jreleaser-bot@jreleaser.org]"
+      },
+
+      // Signs commits with the configured credentials.
+      // The xref:configuration:signing.adoc[] section must be configured as well.
+      // Defaults to `false`.
+      // [optional]
+      "sign": false,
+
+      // Changelog customization.
+      // [optional]
+      "changelog": {
+        // Disables or enables the changelog.
+        // defaults to `true`.
+        // [optional]
+        "enabled": true,
+
+        // Sorts commits in ascending (oldest first) or descending (newer first).
+        // Valid values are: `ASC`, `DESC`.
+        // Defaults to `DESC`.
+        // [optional]
+        "sort": "DESC",
+
+        // Path to an external file that contains the changelog, read as is.
+        // May be a relative path to the configuration file or an absolute path.
+        // If unspecified, JReleaser will automatically calculate the changelog.
+        // [optional]
+        "external": "path/to/changelog.md",
+
+        // Create explicit markdown links for commit hashes.
+        // Defaults to `false`.
+        // [optional]
+        "links": false
+      },
+
+      // The target branch to use.
+      // Defaults to `main`.
+      // [optional]
+      "targetCommitish": "main",
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // [optional]
+      "draft": false,
+
+      // Marks the release as prerelease.
+      // Defaults to `false`.
+      // [optional]
+      "prerelease": false,
+
+      // The following properties define [optional] URL formats.
+      // Defaults are shown.
+      // Review the available xref:configuration:templates.adoc[].
+
+      "repoUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]",
+
+      "commitUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits]",
+
+      "downloadUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}]",
+
+      "releaseNotesUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}]",
+  
+      "latestReleaseUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest]",
+
+      "issueTrackerUrlFormat": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <!--
+    [required]
+  -->
+  <release>
+    <!--
+      Repo in which the release will be created.
+      [required]
+    -->
+    <github>
+
+      <!--
+        Disables or enables publication to GitHub.
+        defaults to `true`.
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        The user or organization that owns the repository.
+        [required]
+      -->
+      <owner>duke</owner>
+
+      <!--
+        The name of the repository.
+        If unspecified, will use ${project.name}.
+        [optional]
+      -->
+      <name>app</name>
+
+      <!--
+        The GitHub host url.
+        Defaults to `github.com`.
+        [required]
+      -->
+      <host>github.com</host>
+
+      <!--
+        Username used for authoring commits. Must have write access to the repository.
+        [required]
+      -->
+      <username>duke</username>
+
+      <!--
+        Password or OAuth token with write access to the repository.
+        If left unspecified, the `JRELEASER_GITHUB_TOKEN` 
+        environment variable must be defined.
+        [required]
+      -->
+      <token>__DO_NOT_SET_HERE__</token>
+
+      <!--
+        The tag associated with the release.
+        May define a `JRELEASER_TAG_NAME` environment variable instead.
+        If left unspecified, will use `v${project.version}`.
+        [optional]
+      -->
+      <tagName>v1.0.0</tagName>
+
+      <!--
+        The name of the release.
+        If left unspecified, will use `Release ${tagName}`.
+        [optional]
+      -->
+      <releaseName>Release v1.0.0</releaseName>
+
+      <!--
+        Drops and creates an existing release with matching tag.
+        Defaults to `false`.
+        [optional]
+      -->
+      <overwrite>true</overwrite>
+
+      <!--
+        Appends artifacts to an existing release with matching tag,
+        useful if `overwrite` is set to `false`.
+        Defaults to `false`.
+        [optional]
+      -->
+      <allowUploadToExisting>true</allowUploadToExisting>
+
+      <!--
+        The GitHub API endpoint to use.
+        Update it if using GitHub Enterprise.
+        Defaults to `pass:[https://api.github.com]`.
+        [optional]
+      -->
+      <apiEndpoint>pass:[https://api.github.com]</apiEndpoint>
+
+      <!--
+        Git author used to commit to the repository.
+        [optional]
+      -->
+      <commitAuthor>
+
+        <!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        -->
+        <name>jreleaser-bot</name>
+
+        <!--
+          E-mail used when authoring commits.
+          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          [optional]
+        -->
+        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+      </commitAuthor>
+
+      <!--
+        Signs commits with the configured credentials.
+        The xref:configuration:signing.adoc[] section must be configured as well.
+        Defaults to `false`.
+        [optional]
+      -->
+      <sign>false</sign>
+
+      <!--
+        Changelog customization.
+        [optional]
+      -->
+      <changelog>
+
+        <!--
+           Disables or enables the changelog.
+          defaults to `true`.
+          [optional]
+        -->
+        <enabled>true</enabled>
+
+        <!--
+          Sorts commits in ascending (oldest first) or descending (newer first).
+          Valid values are>`ASC`, `DESC`.
+          Defaults to `DESC`.
+          [optional]
+        -->
+        <sort>DESC</sort>
+
+        <!--
+          Path to an external file that contains the changelog, read as is.
+          May be a relative path to the configuration file or an absolute path.
+          If unspecified, JReleaser will automatically calculate the changelog.
+          [optional]
+        -->
+        <external>path/to/changelog.md</external>
+
+        <!--
+          Create explicit markdown links for commit hashes.
+          Defaults to `false`.
+          [optional]
+        -->
+        <links>false</links>
+      </changelog>
+
+      <!--
+        The target branch to use.
+        Defaults to `main`.
+        [optional]
+      -->
+      <targetCommitish>main</targetCommitish>
+
+      <!--
+        Marks the release as a draft.
+        Defaults to `false`.
+        [optional]
+      -->
+      <draft>false</draft>
+
+      <!--
+        Marks the release as prerelease.
+        Defaults to `false`.
+        [optional]
+      -->
+      <prerelease>false</prerelease>
+
+      <!--
+        The following properties define [optional] URL formats.
+        Defaults are shown.
+        Review the available xref:configuration:templates.adoc[].
+      -->
+      <repoUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]</repoUrlFormat>
+  
+      <commitUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits]</commitUrlFormat>
+  
+      <downloadUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}]</downloadUrlFormat>
+  
+      <releaseNotesUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}]</releaseNotesUrlFormat>
+  
+      <latestReleaseUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest]</latestReleaseUrlFormat>
+  
+      <issueTrackerUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]</issueTrackerUrlFormat>
+    </github>
+  </release>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // [required]
+  release {
+    // Repo in which the release will be created.
+    // [required]
+    github {
+      // Disables or enables publication to GitHub.
+      // defaults to `true`.
+      enabled = true
+
+      // The user or organization that owns the repository.
+      // [required]
+      owner = 'duke'
+
+      // The name of the repository.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      name = 'app'
+
+      // The GitHub host url.
+      // Defaults to `github.com`.
+      // [required]
+      host = 'github.com'
+
+      // Username used for authoring commits. Must have write access to the repository.
+      // [required]
+      username = 'duke'
+
+      // Password or OAuth token with write access to the repository.
+      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      token = '__DO_NOT_SET_HERE__'
+
+      // The tag associated with the release.
+      // May define a `JRELEASER_TAG_NAME` environment variable instead.
+      // If left unspecified, will use `v${project.version}`.
+      // [optional]
+      tagName = 'v1.0.0'
+
+      // The name of the release.
+      // If left unspecified, will use `Release ${tagName}`.
+      // [optional]
+      releaseName = 'Release v1.0.0'
+
+      // Drops and creates an existing release with matching tag.
+      // Defaults to `false`.
+      // [optional]
+      overwrite = true
+
+      // Appends artifacts to an existing release with matching tag,
+      // useful if `overwrite` is set to `false`.
+      // Defaults to `false`.
+      // [optional]
+      allowUploadToExisting = true
+
+      // The GitHub API endpoint to use.
+      // Update it if using GitHub Enterprise.
+      // Defaults to `pass:[https://api.github.com]`.
+      // [optional]
+      apiEndpoint = 'pass:[https://api.github.com]'
+
+      // Git author used to commit to the repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // [optional]
+        email = 'pass:[jreleaser-bot@jreleaser.org]'
+      }
+
+      // Signs commits with the configured credentials.
+      // The xref:configuration:signing.adoc[] section must be configured as well.
+      // Defaults to `false`.
+      // [optional]
+      sign = false
+
+      // Changelog customization.
+      // [optional]
+      changelog {
+        // Disables or enables the changelog.
+        // defaults to `true`.
+        // [optional]
+        enabled = true
+
+        // Sorts commits in ascending (oldest first) or descending (newer first).
+        // Valid values are = `ASC`, `DESC`.
+        // Defaults to `DESC`.
+        // [optional]
+        sort = 'DESC'
+
+        // Path to an external file that contains the changelog, read as is.
+        // May be a relative path to the configuration file or an absolute path.
+        // If unspecified, JReleaser will automatically calculate the changelog.
+        // [optional]
+        external = 'path/to/changelog.md'
+
+        // Create explicit markdown links for commit hashes.
+        // Defaults to `false`.
+        // [optional]
+        links = false
+      }
+
+      // The target branch to use.
+      // Defaults to `main`.
+      // [optional]
+      targetCommitish = 'main'
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // [optional]
+      draft = false
+
+      // Marks the release as prerelease.
+      // Defaults to `false`.
+      // [optional]
+      prerelease = false
+
+      // The following properties define [optional] URL formats.
+      // Defaults are shown.
+      // Review the available xref:configuration:templates.adoc[].
+
+      repoUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]'
+
+      commitUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits]'
+
+      downloadUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}]'
+
+      releaseNotesUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}]'
+
+      latestReleaseUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest]'
+
+       issueTrackerUrlFormat = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]'
+}
+----
+====
+
 

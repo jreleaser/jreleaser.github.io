@@ -8,6 +8,10 @@ JReleaser requires at least 1 distribution to be configured. A distribution requ
 
 Distributions inherit the configuration specified in the xref:configuration:packagers/index.adoc[] block and may override it.
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -24,9 +28,9 @@ distributions:
 
     # The distribution type.
     # Used to determine packager templates.
-    # Supported values are: [BINARY].
+    # Supported values are: [JAVA_BINARY].
     # [required]
-    type: BINARY
+    type: JAVA_BINARY
 
     # Name of the executable launcher.
     # If left undefined, will use {$distribution.name}.
@@ -50,8 +54,6 @@ distributions:
     # [required]
     artifacts:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
-        # If left undefined, will use {distribution.javaVersion}.
-        javaVersion: 8
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
       - path: path/to/{{distributionName}}-{{projectVersion}}-win.zip
@@ -81,18 +83,312 @@ distributions:
 
       # Identifies the project as being member of a multi-project build.
       # If left undefined, will use ${project.java.multiProject}.
-      # Defaults to `false`.
       # [optional]
       multiProject : false
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // [required]
+  "distributions": {
+    // A named distribution
+    // [required]
+    "app": {
+
+      // Enables or disables the distribution.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are: [JAVA_BINARY].
+      // [required]
+      "type": "JAVA_BINARY",
+
+      // Name of the executable launcher.
+      // If left undefined, will use {$distribution.name}.
+      // [optional]
+      "executable": "app",
+
+      // A list of tags.
+      // [optional]
+      "tags": [
+         "cli",
+         "awesome"
+      ],
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+        "foo": "bar"
+      },
+
+      // A list of artifacts.
+      // At least on entry must be present
+      // [required]
+      "artifacts": [
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
+          "platform": "osx"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-win.zip",
+          "platform": "windows"
+        }
+      ],
+
+      // [optional]
+      "java": {
+        // Maven coordinates: groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // [optional]
+        "groupId": "com.acme",
+
+        // Maven coordinates: artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // [optional]
+        "artifactId": "app",
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // [optional]
+        "version": "8",
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // [optional]
+        "mainClass": "com.acme.Main",
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // [optional]
+        "multiProject": false
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <!--
+    [required]
+  -->
+  <distributions>
+    <!--
+      A named distribution
+      [required]
+    -->
+    <app>
+
+      <!--
+        Enables or disables the distribution.
+        Defaults to `true`.
+        [optional]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        The distribution type.
+        Used to determine packager templates.
+        Supported values are>[JAVA_BINARY].
+        [required]
+      -->
+      <type>JAVA_BINARY</type>
+
+      <!--
+        Name of the executable launcher.
+        If left undefined, will use {$distribution.name}.
+        [optional]
+      -->
+      <executable>app</executable>
+
+      <!--
+        A list of tags.
+        [optional]
+      -->
+      <tags>
+        <tag>cli</tag>
+        <tag>awesome</tag>
+      </tags>
+
+      <!--
+        Additional properties used when evaluating templates.
+        [optional]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+
+      <!--
+        A list of artifacts.
+        At least on entry must be present
+        [required]
+      -->
+      <artifacts>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}.zip</path>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
+          <platform>osx</platform>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-win.zip</path>
+          <platform>windows</platform>
+        </artifact>
+      </artifacts>
+
+      <!--
+        [optional]
+      -->
+      <java>
+        <!--
+          Maven coordinates>groupId.
+          If left undefined, will use ${project.java.groupId}.
+          [optional]
+        -->
+        <groupId>com.acme</groupId>
+
+        <!--
+          Maven coordinates>artifactId.
+          If left undefined, will use ${project.java.artifactId}.
+          [optional]
+        -->
+        <artifactId>app</artifactId>
+
+        <!--
+          The minimum Java version required by consumers to run the application.
+          If left undefined, will use ${project.java.version}.
+          [optional]
+        -->
+        <version>8</version>
+
+        <!--
+          The application's entry point.
+          If left undefined, will use ${project.java.mainClass}.
+          [optional]
+        -->
+        <mainClass>com.acme.Main</mainClass>
+
+        <!--
+          Identifies the project as being member of a multi-project build.
+          If left undefined, will use ${project.java.multiProject}.
+          [optional]
+        -->
+        <multiProject>false</multiProject>
+      </java>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // [required]
+  distributions {
+    // A named distribution
+    // [required]
+    app {
+
+      // Enables or disables the distribution.
+      // Defaults to `true`.
+      // [optional]
+      enabled = true
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are = [JAVA_BINARY].
+      // [required]
+      type = 'JAVA_BINARY'
+
+      // Name of the executable launcher.
+      // If left undefined, will use {$distribution.name}.
+      // [optional]
+      executable = 'app'
+
+      // A list of tags.
+      // [optional]
+      tags = ['cli', 'awesome']
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // A list of artifacts.
+      // At least on entry must be present
+      // [required]
+      artifacts {
+        artifact {
+          path = 'path/to/app-1.0.0.zip'
+        }
+        artifact {
+          path = 'path/to/app-1.0.0-mac.zip'
+          platform = 'osx'
+        }
+        artifact {
+          path = 'path/to/app-1.0.0-win.zip'
+          platform = 'windows'
+        }
+      }
+
+      // [optional]
+      java {
+        // Maven coordinates = groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // [optional]
+        groupI = 'com.acme'
+
+        // Maven coordinates = artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // [optional]
+        artifactId = 'app'
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // [optional]
+        version = '8'
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // [optional]
+        mainClass = 'com.acme.Main'
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // [optional]
+        multiProject = false
+      }
+    }
+  }
+}
+----
+====
 
 It's recommended to list universal artifacts first, then platform specific.
 
 The value of `platform` is dictated by the normalized values detected by
 link:https://github.com/trustin/os-maven-plugin[os-maven-plugin]. You may use the plain `platform` value or append a
-`arch` classifier. The following values are currently recognized
+`arch` classifier. The following values are currently recognized:
 
-[horizontal]
 platform:: `aix`, `hpux`, `os400`, `linux`, `osx`, `freebsd`, `openbsd`, `netbsd`, `sunos`, `windows`, `zos`.
 arch:: `x86_64`, `x86_32`, `itanium_64`, `itanium_32`, `sparc_32`, `sparc_64`, `arm_32`, `aarch_64`, `mips_32`,
 `mipsel_32`, `mips_64`, `mipsel_64`, `ppc_32`, `ppcle_32`, `ppc_64`, `ppcle_64`, `s390_32`, `s390_64`, `riscv`

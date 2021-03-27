@@ -3,6 +3,10 @@
 Enables posting a message to a link:https://zulip.com/[Zulip] server. You must procure an account and apiKey to use
 this announcer.
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -24,7 +28,8 @@ announce:
     apiHost: https://my.zulipchat.com/api/v1
 
     # The ApiKey associated with the given account.
-    # If left unspecified, the JRELEASER_ZULIP_API_KEY environment variable must be defined.
+    # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+    # environment variable must be defined.
     # [required]
     apiKey: true
 
@@ -43,4 +48,160 @@ announce:
     # [optional]
     message: icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    // [optional]
+    "zulip": {
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The Zulip account (typically an email address) to use.
+      // [required]
+      "account": announce-bot@my.zulipchat.com,
+
+      // The Zulip server endpoint
+      // [required]
+      "apiHost": "https://my.zulipchat.com/api/v1",
+
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // environment variable must be defined.
+      // [required]
+      "apiKey": "zulipApiKey",
+
+      // The channel where the message will be sent to
+      // Defaults to `announce`.
+      // [optional]
+      "channel": "announce",
+
+      // The messages' subject.
+      // Review the available xref:configuration:templates.adoc[].
+      // [optional]
+      "subject": "{{projectNameCapitalized}} {{projectVersion}}",
+
+      // The announcement message.
+      // Review the available xref:configuration:templates.adoc[].
+      // [optional]
+      "message": "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <announce>
+    <!--
+      [optional]
+    -->
+    <zulip>
+
+      <!--
+        Enable or disable this announcer.
+        Defaults to `true`.
+        [optional]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        The Zulip account (typically an email address) to use.
+        [required]
+      -->
+      <account>announce-bot@my.zulipchat.com</account>
+
+      <!--
+        The Zulip server endpoint
+        [required]
+      -->
+      <apiHost>https>my.zulipchat.com/api/v1</apiHost>
+
+      <!--
+        The ApiKey associated with the given account.
+        If left unspecified, the `JRELEASER_ZULIP_API_KEY` environment variable must be defined.
+        [required]
+      -->
+      <apiKey>zulipApiKey</apiKey>
+
+      <!--
+        The channel where the message will be sent to
+        Defaults to `announce`.
+        [optional]
+      -->
+      <channel>announce</channel>
+
+      <!--
+        The messages' subject.
+        Review the available xref:configuration>templates.adoc[].
+        [optional]
+      -->
+      <subject>{{projectNameCapitalized}} {{projectVersion}}</subject>
+
+      <!--
+        The announcement message.
+        Review the available xref:configuration>templates.adoc[].
+        [optional]
+      -->
+      <message>icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+    </zulip>
+  </announce>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    // [optional]
+    zulip {
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      enabled = true
+
+      // The Zulip account (typically an email address) to use.
+      // [required]
+      account = 'announce-bot@my.zulipchat.com'
+
+      // The Zulip server endpoint
+      // [required]
+      apiHost = 'https://my.zulipchat.com/api/v1'
+
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // environment variable must be defined.
+      // [required]
+      apiKey = 'zulipapiKey'
+
+      // The channel where the message will be sent to
+      // Defaults to `announce`.
+      // [optional]
+      channel = 'announce'
+
+      // The messages' subject.
+      // Review the available xref:configuration:templates.adoc[].
+      // [optional]
+      subject = '{{projectNameCapitalized}} {{projectVersion}}'
+
+      // The announcement message.
+      // Review the available xref:configuration:templates.adoc[].
+      // [optional]
+      message = 'icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+  }
+}
+----
+====
 

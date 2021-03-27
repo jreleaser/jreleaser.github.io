@@ -7,6 +7,10 @@ The sections defined here can be applied globally (for all distributions) or per
 inherited by distribution configuration. Here's for example how xref:packagers/homebrew.adoc[] and xref:packagers/scoop.adoc[]
 can be activated for all distributions:
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -16,9 +20,62 @@ packagers:
   scoop:
     enabled: true
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+     "brew": {
+       "enabled": true
+     },
+     "scoop": {
+       "enabled": true
+     }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <brew>
+      <enabled>true</enabled>
+    </brew>
+    <scoop>
+      <enabled>true</enabled>
+    </scoop>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    brew {
+      enabled = true
+    }
+    scoop {
+      enabled = true
+    }
+  }
+}
+----
+====
 
 Given this setup here's how a distribution may inherit that configuration and disable Scoop while keeping Homebrew active:
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
 [subs="+macros"]
 ----
@@ -32,7 +89,75 @@ distributions:
   app:
     scoop:
       enabled: false
-    artifacts:
-      - path: path/to/app-1.0.0.zip
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+     "brew": {
+       "enabled": true
+     },
+     "scoop": {
+       "enabled": true
+     }
+  },
+  "distributions": {
+    "app": {
+      "scoop": {
+        "enabled": false
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <brew>
+      <enabled>true</enabled>
+    </brew>
+    <scoop>
+      <enabled>true</enabled>
+    </scoop>
+  </packagers>
+  <distributions>
+    <app>
+      <scoop>
+        <enabled>false</enabled>
+      </scoop>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    brew {
+      enabled = true
+    }
+    scoop {
+      enabled = true
+    }
+  }
+  distributions {
+    app {
+      scoop {
+        enabled = false
+      }
+    }
+  }
+}
+----
+====
 
