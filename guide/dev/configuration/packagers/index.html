@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/packagers/index.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="../announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -181,6 +190,25 @@ into their respective distribution media, such a Git repository you have access 
 inherited by distribution configuration. Here&#8217;s for example how <a href="homebrew.html" class="page">Homebrew</a> and <a href="scoop.html" class="page">Scoop</a>
 can be activated for all distributions:</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -190,9 +218,79 @@ can be activated for all distributions:</p>
     enabled: true</code></pre>
 </div>
 </div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "packagers": {
+     "brew": {
+       "enabled": true
+     },
+     "scoop": {
+       "enabled": true
+     }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;brew&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/brew&gt;
+    &lt;scoop&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/scoop&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  packagers {
+    brew {
+      enabled = true
+    }
+    scoop {
+      enabled = true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph">
 <p>Given this setup here&#8217;s how a distribution may inherit that configuration and disable Scoop while keeping Homebrew active:</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset2_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset2_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset2_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset2_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset2_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -204,9 +302,79 @@ can be activated for all distributions:</p>
 distributions:
   app:
     scoop:
-      enabled: false
-    artifacts:
-      - path: path/to/app-1.0.0.zip</code></pre>
+      enabled: false</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "packagers": {
+     "brew": {
+       "enabled": true
+     },
+     "scoop": {
+       "enabled": true
+     }
+  },
+  "distributions": {
+    "app": {
+      "scoop": {
+        "enabled": false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;brew&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/brew&gt;
+    &lt;scoop&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/scoop&gt;
+  &lt;/packagers&gt;
+  &lt;distributions&gt;
+    &lt;app&gt;
+      &lt;scoop&gt;
+        &lt;enabled&gt;false&lt;/enabled&gt;
+      &lt;/scoop&gt;
+    &lt;/app&gt;
+  &lt;/distributions&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  packagers {
+    brew {
+      enabled = true
+    }
+    scoop {
+      enabled = true
+    }
+  }
+  distributions {
+    app {
+      scoop {
+        enabled = false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </article>
@@ -217,7 +385,10 @@ distributions:
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

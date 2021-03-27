@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/announce/twitter.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -174,9 +183,28 @@
 <article class="doc">
 <h1 class="page">Twitter</h1>
 <div class="paragraph">
-<p>Tweets a new release. You must register a new Twitter application and obtain the set of credentaials. Follow the
+<p>Tweets a new release. You must register a new Twitter application and obtain the set of credentials. Follow the
 instructions from <a href="https://developer.twitter.com/en/portal/projects-and-apps">Twitter</a> to complete this task.</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -189,22 +217,26 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
     enabled: true
 
     # The consumer key.
-    # If left unspecified, the JRELEASER_TWITTER_CONSUMER_KEY environment variable must be defined.
+    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+    # environment variable must be defined.
     # [required]
     consumerKey:
 
     # The consumer token.
-    # If left unspecified, the JRELEASER_TWITTER_CONSUMER_TOKEN environment variable must be defined.
+    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
+    # environment variable must be defined.
     # [required]
     consumerToken:
 
     # The access token.
-    # If left unspecified, the JRELEASER_TWITTER_ACCESS_TOKEN environment variable must be defined.
+    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
+    # environment variable must be defined.
     # [required]
     accessToken:
 
     # The access token secret.
-    # If left unspecified, the JRELEASER_TWITTER_ACCESS_TOKEN_SECRET environment variable must be defined.
+    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
+    # environment variable must be defined.
     # [required]
     accessTokenSecret:
 
@@ -212,6 +244,162 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
     # Review the available <a href="../templates.html" class="page">Templates</a>.
     # [optional]
     status: <span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "announce": {
+    // [optional]
+    "twitter": {
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The consumer key.
+      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+      // environment variable must be defined.
+      // [required]
+      "consumerKey": "twitterConsumerKey",
+
+      // The consumer token.
+      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      "consumerToken": "twitterConsumerToken",
+
+      // The access token.
+      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      "accessToken": "twitterAccessToken",
+
+      // The access token secret.
+      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
+      // environment variable must be defined.
+      // [required]
+      "accessTokenSecret": "twitterAccessTokenSecret",
+
+      // The announcement message.
+      // Review the available <a href="../templates.html" class="page">Templates</a>.
+      // [optional]
+      "status": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;announce&gt;
+    &lt;!--
+      [optional]
+    --&gt;
+    &lt;twitter&gt;
+
+      &lt;!--
+        Enable or disable this announcer.
+        Defaults to `true`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        The consumer key.
+        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;consumerKey&gt;twitterConsumerKey&lt;/consumerKey&gt;
+
+      &lt;!--
+        The consumer token.
+        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;consumerToken&gt;twitterConsumerToken&lt;/consumerToken&gt;
+
+      &lt;!--
+        The access token.
+        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;accessToken&gt;twitterAccessToken&lt;/accessToken&gt;
+
+      &lt;!--
+        The access token secret.
+        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;accessTokenSecret&gt;twitterAccessTokenSecret&lt;/accessTokenSecret&gt;
+
+      &lt;!--
+        The announcement message.
+        Review the available <a href="../templates.html" class="page">Templates</a>.
+        [optional]
+      --&gt;
+      &lt;status&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
+    &lt;/twitter&gt;
+  &lt;/announce&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  announce =
+    // [optional]
+    twitter =
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      enabled =  true
+
+      // The consumer key.
+      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+      // environment variable must be defined.
+      // [required]
+      consumerKey = 'twitterConsumerKey'
+
+      // The consumer token.
+      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      consumerToken = 'twitterConsumerToken'
+
+      // The access token.
+      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      accessToken = 'twitterAccessToken'
+
+      // The access token secret.
+      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
+      // environment variable must be defined.
+      // [required]
+      accessTokenSecret = 'twitterAccessTokenSecret'
+
+      // The announcement message.
+      // Review the available <a href="../templates.html" class="page">Templates</a>.
+      // [optional]
+      status = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </article>
@@ -222,7 +410,10 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

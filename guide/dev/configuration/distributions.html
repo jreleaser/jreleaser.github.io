@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/distributions.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../_/css/all.css">
     <script>var uiRootPath = '../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -184,6 +193,25 @@
 <div class="paragraph">
 <p>Distributions inherit the configuration specified in the <a href="packagers/index.html" class="page">Packagers</a> block and may override it.</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [required]
@@ -199,9 +227,9 @@ distributions:
 
     # The distribution type.
     # Used to determine packager templates.
-    # Supported values are: [BINARY].
+    # Supported values are: [JAVA_BINARY].
     # [required]
-    type: BINARY
+    type: JAVA_BINARY
 
     # Name of the executable launcher.
     # If left undefined, will use {$distribution.name}.
@@ -225,8 +253,6 @@ distributions:
     # [required]
     artifacts:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
-        # If left undefined, will use {distribution.javaVersion}.
-        javaVersion: 8
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
       - path: path/to/{{distributionName}}-{{projectVersion}}-win.zip
@@ -256,9 +282,306 @@ distributions:
 
       # Identifies the project as being member of a multi-project build.
       # If left undefined, will use ${project.java.multiProject}.
-      # Defaults to `false`.
       # [optional]
       multiProject : false</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [required]
+  "distributions": {
+    // A named distribution
+    // [required]
+    "app": {
+
+      // Enables or disables the distribution.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are: [JAVA_BINARY].
+      // [required]
+      "type": "JAVA_BINARY",
+
+      // Name of the executable launcher.
+      // If left undefined, will use {$distribution.name}.
+      // [optional]
+      "executable": "app",
+
+      // A list of tags.
+      // [optional]
+      "tags": [
+         "cli",
+         "awesome"
+      ],
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+        "foo": "bar"
+      },
+
+      // A list of artifacts.
+      // At least on entry must be present
+      // [required]
+      "artifacts": [
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
+          "platform": "osx"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-win.zip",
+          "platform": "windows"
+        }
+      ],
+
+      // [optional]
+      "java": {
+        // Maven coordinates: groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // [optional]
+        "groupId": "com.acme",
+
+        // Maven coordinates: artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // [optional]
+        "artifactId": "app",
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // [optional]
+        "version": "8",
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // [optional]
+        "mainClass": "com.acme.Main",
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // [optional]
+        "multiProject": false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    [required]
+  --&gt;
+  &lt;distributions&gt;
+    &lt;!--
+      A named distribution
+      [required]
+    --&gt;
+    &lt;app&gt;
+
+      &lt;!--
+        Enables or disables the distribution.
+        Defaults to `true`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        The distribution type.
+        Used to determine packager templates.
+        Supported values are&gt;[JAVA_BINARY].
+        [required]
+      --&gt;
+      &lt;type&gt;JAVA_BINARY&lt;/type&gt;
+
+      &lt;!--
+        Name of the executable launcher.
+        If left undefined, will use {$distribution.name}.
+        [optional]
+      --&gt;
+      &lt;executable&gt;app&lt;/executable&gt;
+
+      &lt;!--
+        A list of tags.
+        [optional]
+      --&gt;
+      &lt;tags&gt;
+        &lt;tag&gt;cli&lt;/tag&gt;
+        &lt;tag&gt;awesome&lt;/tag&gt;
+      &lt;/tags&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        [optional]
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
+        A list of artifacts.
+        At least on entry must be present
+        [required]
+      --&gt;
+      &lt;artifacts&gt;
+        &lt;artifact&gt;
+          &lt;path&gt;path/to/${project.artifactId}-${project.version}.zip&lt;/path&gt;
+        &lt;/artifact&gt;
+        &lt;artifact&gt;
+          &lt;path&gt;path/to/${project.artifactId}-${project.version}-mac.zip&lt;/path&gt;
+          &lt;platform&gt;osx&lt;/platform&gt;
+        &lt;/artifact&gt;
+        &lt;artifact&gt;
+          &lt;path&gt;path/to/${project.artifactId}-${project.version}-win.zip&lt;/path&gt;
+          &lt;platform&gt;windows&lt;/platform&gt;
+        &lt;/artifact&gt;
+      &lt;/artifacts&gt;
+
+      &lt;!--
+        [optional]
+      --&gt;
+      &lt;java&gt;
+        &lt;!--
+          Maven coordinates&gt;groupId.
+          If left undefined, will use ${project.java.groupId}.
+          [optional]
+        --&gt;
+        &lt;groupId&gt;com.acme&lt;/groupId&gt;
+
+        &lt;!--
+          Maven coordinates&gt;artifactId.
+          If left undefined, will use ${project.java.artifactId}.
+          [optional]
+        --&gt;
+        &lt;artifactId&gt;app&lt;/artifactId&gt;
+
+        &lt;!--
+          The minimum Java version required by consumers to run the application.
+          If left undefined, will use ${project.java.version}.
+          [optional]
+        --&gt;
+        &lt;version&gt;8&lt;/version&gt;
+
+        &lt;!--
+          The application's entry point.
+          If left undefined, will use ${project.java.mainClass}.
+          [optional]
+        --&gt;
+        &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
+
+        &lt;!--
+          Identifies the project as being member of a multi-project build.
+          If left undefined, will use ${project.java.multiProject}.
+          [optional]
+        --&gt;
+        &lt;multiProject&gt;false&lt;/multiProject&gt;
+      &lt;/java&gt;
+    &lt;/app&gt;
+  &lt;/distributions&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // [required]
+  distributions {
+    // A named distribution
+    // [required]
+    app {
+
+      // Enables or disables the distribution.
+      // Defaults to `true`.
+      // [optional]
+      enabled = true
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are = [JAVA_BINARY].
+      // [required]
+      type = 'JAVA_BINARY'
+
+      // Name of the executable launcher.
+      // If left undefined, will use {$distribution.name}.
+      // [optional]
+      executable = 'app'
+
+      // A list of tags.
+      // [optional]
+      tags = ['cli', 'awesome']
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // A list of artifacts.
+      // At least on entry must be present
+      // [required]
+      artifacts {
+        artifact {
+          path = 'path/to/app-1.0.0.zip'
+        }
+        artifact {
+          path = 'path/to/app-1.0.0-mac.zip'
+          platform = 'osx'
+        }
+        artifact {
+          path = 'path/to/app-1.0.0-win.zip'
+          platform = 'windows'
+        }
+      }
+
+      // [optional]
+      java {
+        // Maven coordinates = groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // [optional]
+        groupI = 'com.acme'
+
+        // Maven coordinates = artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // [optional]
+        artifactId = 'app'
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // [optional]
+        version = '8'
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // [optional]
+        mainClass = 'com.acme.Main'
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // [optional]
+        multiProject = false
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -267,28 +590,20 @@ distributions:
 <div class="paragraph">
 <p>The value of <code>platform</code> is dictated by the normalized values detected by
 <a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
-<code>arch</code> classifier. The following values are currently recognized</p>
+<code>arch</code> classifier. The following values are currently recognized:</p>
 </div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-platform
-</td>
-<td class="hdlist2">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
 <p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-arch
-</td>
-<td class="hdlist2">
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
 <p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
 <code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
-</td>
-</tr>
-</table>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -320,7 +635,10 @@ arch
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../_/js/fontawesome.js"></script>
+<script src="../../../_/js/all.js"></script-->
 <script src="../../../_/js/site.js"></script>
 <script async src="../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

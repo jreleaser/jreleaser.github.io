@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/packagers/chocolatey.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="../announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -196,7 +205,7 @@ At the moment, only artifacts with <code>.zip</code> extension may be packaged w
 </td>
 <td class="content">
 Local publication of packages is currently not supported. Please set <code>remoteBuild</code> to <code>true</code> and trigger a
-build in CI. Local publication will be added at a later release.
+build on CI. Local publication will be added at a later release.
 </td>
 </tr>
 </table>
@@ -213,6 +222,25 @@ Snapshots are not supported.
 </tr>
 </table>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
@@ -259,7 +287,7 @@ packagers:
       # [optional]
       email: jreleaser-bot@jreleaser.org
 
-    # Git repository to push the package it remoteBuild is `true`.
+    # Git repository to push the formula to.
     # Defaults are shown.
     # [optional]
     bucket:
@@ -280,9 +308,290 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the bucket repository.
-      # If left unspecified, the JRELEASER_CHOCOLATEY_GITHUB_TOKEN environment variable may be defined.
+      # If left unspecified, the `JRELEASER_CHOCOLATEY_GITHUB_TOKEN`
+      # environment variable may be defined.
       # [optional]
-      token: 1n$3cUrEP@s$w0rd</code></pre>
+      token: __DO_NOT_SET_HERE__</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [optional]
+  "packagers": {
+    // [optional]
+    "chocolatey": {
+      // Enables or disables Chocolatey.
+      // Defaults to `false`.
+      // [optional]
+      "enabled": true,
+
+      // Directory with file templates used to prepare the Chocolatey distribution
+      // Defaults to `src/distribution/${distribution.name}/chocolatey`.
+      // If specified, path must exist.
+      // [optional]
+      "templateDirectory": "path/to/chocolatey/templates",
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+        "foo": "bar"
+      },
+
+      // The username that can publish Chocolatey packages.
+      // If left unspecified, the release owner will be used.
+      // [required]
+      "username": "duke",
+
+      // Whether to build the package on a remote server or locally.
+      // Defaults to `false`.
+      // [optional]
+      "remoteBuild": false,
+
+      // Git author used to commit to the bucket repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser-bot@jreleaser.org`.
+        // [optional]
+        "email": "jreleaser-bot@jreleaser.org"
+      },
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      "bucket": {
+
+        // The owner of the bucket repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        "owner": "duke",
+
+        // The name of the bucket repository.
+        // Defaults to `${distribution.name}-chocolatey-bucket`.
+        // [optional]
+        "name": "app-chocolatey-bucket",
+
+        // Username used for authoring commits. Must have write access to the bucket repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        "username": "duke",
+
+        // Password or OAuth token with write access to the bucket repository.
+        // If left unspecified, the `JRELEASER_CHOCOLATEY_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        "token": "__DO_NOT_SET_HERE__"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    [optional]
+  --&gt;
+  &lt;packagers&gt;
+    &lt;!--
+      [optional]
+    --&gt;
+    &lt;chocolatey&gt;
+      &lt;!--
+        Enables or disables Chocolatey.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        Directory with file templates used to prepare the Chocolatey distribution
+        Defaults to `src/distribution/${distribution.name}/chocolatey`.
+        If specified, path must exist.
+        [optional]
+      --&gt;
+      &lt;templateDirectory&gt;&gt;path/to/chocolatey/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        [optional]
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
+        The username that can publish Chocolatey packages.
+        If left unspecified, the release owner will be used.
+        [required]
+      --&gt;
+      &lt;username&gt;duke&lt;/username&gt;
+
+      &lt;!--
+        Whether to build the package on a remote server or locally.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;remoteBuild&gt;false&lt;/remoteBuild&gt;
+
+      &lt;!--
+        Git author used to commit to the repository.
+        [optional]
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        --&gt;
+        &lt;name&gt;jreleaser-bot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser-bot@jreleaser.org`.
+          [optional]
+        --&gt;
+        &lt;email&gt;jreleaser-bot@jreleaser.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Git repository to push the formula to.
+        Defaults are shown.
+        [optional]
+      --&gt;
+      &lt;bucket&gt;
+
+        &lt;!--
+          The owner of the bucket repository.
+          Defaults to the same owner as the release repository.
+          [optional]
+        --&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
+
+        &lt;!--
+          The name of the bucket repository.
+          Defaults to `${distribution.name}-chocolatey-bucket`.
+          [optional]
+        --&gt;
+        &lt;name&gt;app-chocolatey-bucket&lt;/name&gt;
+
+        &lt;!--
+          Username used for authoring commits. Must have write access to the bucket repository.
+          Defaults to the same username as the release repository.
+          [optional]
+        --&gt;
+        &lt;username&gt;duke&lt;/username&gt;
+
+        &lt;!--
+          Password or OAuth token with write access to the bucket repository.
+          If left unspecified, the `JRELEASER_CHOCOLATEY_GITHUB_TOKEN`
+          environment variable may be defined.
+          [optional]
+        --&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+      &lt;/bucket&gt;
+    &lt;/chocolatey&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // [optional]
+  packagers {
+    // [optional]
+    chocolatey {
+      // Enables or disables Chocolatey.
+      // Defaults to `false`.
+      // [optional]
+      enabled = true
+
+      // Directory with file templates used to prepare the Chocolatey distribution
+      // Defaults to `src/distribution/${distribution.name}/chocolatey`.
+      // If specified, path must exist.
+      // [optional]
+      templateDirectory = 'path/to/chocolatey/templates'
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // The username that can publish Chocolatey packages.
+      // If left unspecified, the release owner will be used.
+      // [required]
+      username = 'duke'
+
+      // Whether to build the package on a remote server or locally.
+      // Defaults to `false`.
+      // [optional]
+      remoteBuild = false
+
+      // Git author used to commit to the bucket repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // If left undefined, will use the releaser's commit name.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // If left undefined, will use the releaser's commit email.
+        // [optional]
+        email = 'jreleaser-bot@jreleaser.org'
+      }
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      bucket {
+
+        // The owner of the bucket repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        owner = 'duke'
+
+        // The name of the bucket repository.
+        // Defaults to `${distribution.name}-chocolatey-bucket`.
+        // [optional]
+        name = 'app-chocolatey-bucket'
+
+        // Username used for authoring commits. Must have write access to the bucket repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        username = 'duke'
+
+        // Password or OAuth token with write access to the bucket repository.
+        // If left unspecified, the `JRELEASER_CHOCOLATEY_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        token = '__DO_NOT_SET_HERE__'
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -353,7 +662,10 @@ Uninstall-BinFile -Name 'app' -Path $app_bat</code></pre>
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

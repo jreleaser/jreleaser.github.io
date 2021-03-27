@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/announce/sdkman.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -177,6 +186,25 @@
 <p>Publishes a release to <a href="https://sdkman.io">SDKMAN!</a>. Please follow the instructions at
 <a href="https://sdkman.io/vendors" class="bare">https://sdkman.io/vendors</a> to register your project as a candidate and obtain publishing credentials.</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -199,14 +227,149 @@
     major: true
 
     # The consumer key for publishing to SDKMAN!.
-    # If left unspecified, the JRELEASER_SDKMAN_CONSUMER_KEY environment variable must be defined.
+    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+    # environment variable must be defined.
     # [required]
     consumerKey:
 
     # The consumer token for publishing to SDKMAN!.
-    # If left unspecified, the JRELEASER_SDKMAN_CONSUMER_TOKEN environment variable must be defined.
+    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+    # environment variable must be defined.
     # [required]
     consumerToken:</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [optional
+  "announce": {
+    // [optional]
+    "sdkman": {
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The name of the candidate registered in thew SDKMAN! database.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      "candidate": "app",
+
+      // Announce a major release if `true`, minor release if `false`.
+      // Defaults to `true`.
+      // [optional]
+      "major": true,
+
+      // The consumer key for publishing to SDKMAN!.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // [required]
+      "consumerKey": "sdkmanConsumerKey",
+
+      // The consumer token for publishing to SDKMAN!.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      "consumerToken": "sdkmanConsumerToken"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;announce&gt;
+    &lt;!--
+      [optional]
+    --&gt;
+    &lt;sdkman&gt;
+      &lt;!--
+        Enable or disable this announcer.
+        Defaults to `true`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        The name of the candidate registered in thew SDKMAN! database.
+        If unspecified, will use ${project.name}.
+        [optional]
+      --&gt;
+      &lt;candidate&gt;app&lt;/candidate&gt;
+
+      &lt;!--
+        Announce a major release if `true`, minor release if `false`.
+        Defaults to `true`.
+        [optional]
+      --&gt;
+      &lt;major&gt;true&lt;/major&gt;
+
+      &lt;!--
+        The consumer key for publishing to SDKMAN!.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;consumerKey&gt;sdkmanConsumerKey&lt;/consumerKey&gt;
+
+      &lt;!--
+        The consumer token for publishing to SDKMAN!.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;consumerToken&gt;sdkmanConsumerToken&lt;/consumerToken&gt;
+    &lt;/sdkman&gt;
+  &lt;/announce&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  announce {
+    // [optional]
+    sdkman {
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      enabled = true
+
+      // The name of the candidate registered in thew SDKMAN! database.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      candidate = 'app'
+
+      // Announce a major release if `true`, minor release if `false`.
+      // Defaults to `true`.
+      // [optional]
+      major = true
+
+      // The consumer key for publishing to SDKMAN!.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // [required]
+      consumerKey = "sdkmanConsumerKey"
+
+      // The consumer token for publishing to SDKMAN!.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      consumerToken = "sdkmanConsumerToken"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -256,7 +419,10 @@ artifact will override any previous matches by platform.</p>
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

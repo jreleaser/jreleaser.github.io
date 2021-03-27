@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/packagers/homebrew.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="../announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -202,6 +211,25 @@ Snapshots are not supported.
 </tr>
 </table>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
@@ -232,11 +260,11 @@ packagers:
       key2: value2
 
       # key in symbol format without value
-      # mapped as `depends_on `:key3`
+      # mapped as `depends_on :key3`
       ':key3': 'null'
 
       # plain key without value
-      # mapped as `depends_on `"key4"`
+      # mapped as `depends_on "key4"`
       key4: 'null'
 
     # Additional properties used when evaluating templates.
@@ -279,9 +307,339 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the tap repository.
-      # If left unspecified, the JRELEASER_HOMEBREW_GITHUB_TOKEN environment variable may be defined.
+      # If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+      # environment variable may be defined.
       # [optional]
-      token: 1n$3cUrEP@s$w0rd</code></pre>
+      token: __DO_NOT_SET_HERE__</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [optional]
+  "packagers": {
+    // [optional]
+    "brew": {
+      // Enables or disables Homebrew.
+      // Defaults to `false`.
+      // [optional]
+      "enabled": true,
+
+      // Directory with file templates used to prepare the Homebrew distribution
+      // Defaults to `src/distribution/${distribution.name}/brew`.
+      // If specified, path must exist.
+      // [optional]
+      "templateDirectory": "path/to/brew/templates",
+
+      // A map of Homebrew dependencies.
+      // The key `:java` will be added automatically if not defined.
+      // [optional]
+      "dependencies": {
+        // key in symbol format
+        // mapped as `depends_on :key1 =&gt; "value1"`
+        ":key1": "value1",
+
+        // plain key
+        // mapped as `depends_on "key2" =&gt; "value2"`
+        "key2": "value2",
+
+        // key in symbol format without value
+        // mapped as `depends_on :key3`
+        ":key3": "null",
+
+        // plain key without value
+        // mapped as `depends_on "key4"`
+        "key4": "null"
+      },
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+        "foo": "bar"
+      },
+
+      // Git author used to commit to the tap repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser-bot@jreleaser.org`.
+        // [optional]
+        "email": "jreleaser-bot@jreleaser.org"
+      },
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      "tap": {
+
+        // The owner of the tap repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        "owner": "duke",
+
+        // The name of the tap repository.
+        // Defaults to `homebrew-tap`.
+        // [optional]
+        "name": "homebrew-tap",
+
+        // Username used for authoring commits. Must have write access to the tap repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        "username": "duke",
+
+        // Password or OAuth token with write access to the tap repository.
+        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        "token": "__DO_NOT_SET_HERE__"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    [optional]
+  --&gt;
+  &lt;packagers&gt;
+    &lt;!--
+      [optional]
+    --&gt;
+    &lt;brew&gt;
+      &lt;!--
+        Enables or disables Homebrew.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        Directory with file templates used to prepare the Homebrew distribution
+        Defaults to `src/distribution/${distribution.name}/brew`.
+        If specified, path must exist.
+        [optional]
+      --&gt;
+      &lt;templateDirectory&gt;&gt;path/to/brew/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        A map of Homebrew dependencies.
+        The key `:java` will be added automatically if not defined.
+        [optional]
+      --&gt;
+      &lt;dependencies&gt;
+        &lt;!--
+          key in symbol format
+          mapped as `depends_on :key1 =&gt; "value1"`
+        --&gt;
+        &lt;dependency&gt;
+          &lt;key&gt;:key1&lt;/key&gt;
+          &lt;value&gt;value1&lt;/value&gt;
+        &lt;/dependency&gt;
+
+        &lt;!--
+          plain key
+          mapped as `depends_on "key2" =&gt; "value2"`
+        --&gt;
+        &lt;dependency&gt;
+          &lt;key&gt;key2&lt;/key&gt;
+          &lt;value&gt;value2&lt;/value&gt;
+        &lt;/dependency&gt;
+
+        &lt;!--
+          key in symbol format without value
+          mapped as `depends_on :key3`
+        --&gt;
+        &lt;dependency&gt;
+          &lt;key&gt;:key3&lt;/key&gt;
+        &lt;/dependency&gt;
+
+        &lt;!--
+          plain key without value
+          mapped as `depends_on "key4"`
+        --&gt;
+        &lt;dependency&gt;
+          &lt;key&gt;key4&lt;/key&gt;
+        &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        [optional]
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
+        Git author used to commit to the repository.
+        [optional]
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        --&gt;
+        &lt;name&gt;jreleaser-bot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser-bot@jreleaser.org`.
+          [optional]
+        --&gt;
+        &lt;email&gt;jreleaser-bot@jreleaser.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Git repository to push the formula to.
+        Defaults are shown.
+        [optional]
+      --&gt;
+      &lt;tap&gt;
+
+        &lt;!--
+          The owner of the tap repository.
+          Defaults to the same owner as the release repository.
+          [optional]
+        --&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
+
+        &lt;!--
+          The name of the tap repository.
+          Defaults to `homebrew-tap`.
+          [optional]
+        --&gt;
+        &lt;name&gt;homebrew-tap&lt;/name&gt;
+
+        &lt;!--
+          Username used for authoring commits. Must have write access to the tap repository.
+          Defaults to the same username as the release repository.
+          [optional]
+        --&gt;
+        &lt;username&gt;duke&lt;/username&gt;
+
+        &lt;!--
+          Password or OAuth token with write access to the tap repository.
+          If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+          environment variable may be defined.
+          [optional]
+        --&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+      &lt;/tap&gt;
+    &lt;/brew&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // [optional]
+  packagers {
+    // [optional]
+    brew {
+      // Enables or disables Homebrew.
+      // Defaults to `false`.
+      // [optional]
+      enabled = true
+
+      // Directory with file templates used to prepare the Homebrew distribution
+      // Defaults to `src/distribution/${distribution.name}/brew`.
+      // If specified, path must exist.
+      // [optional]
+      templateDirectory = 'path/to/brew/templates'
+
+      // A map of Homebrew dependencies.
+      // The key `:java` will be added automatically if not defined.
+      // [optional]
+      dependencies {
+        // key in symbol format
+        // mapped as `depends_on :key1 =&gt; "value1"`
+        addDepencency(':key1', 'value1')
+
+        // plain key
+        // mapped as `depends_on "key2" =&gt; "value2"`
+        addDepencency('key2', 'value2')
+
+        // key in symbol format without value
+        // mapped as `depends_on :key3`
+        addDependency(':key3')
+
+        // plain key without value
+        // mapped as `depends_on "key4"`
+        addDependency('key4')
+      }
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // Git author used to commit to the tap repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // If left undefined, will use the releaser's commit name.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // If left undefined, will use the releaser's commit email.
+        // [optional]
+        email = 'jreleaser-bot@jreleaser.org'
+      }
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      tap {
+
+        // The owner of the tap repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        owner = 'duke'
+
+        // The name of the tap repository.
+        // Defaults to `homebrew-tap`.
+        // [optional]
+        name = 'homebrew-tap'
+
+        // Username used for authoring commits. Must have write access to the tap repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        username = 'duke'
+
+        // Password or OAuth token with write access to the tap repository.
+        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        token = '__DO_NOT_SET_HERE__'
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -336,7 +694,10 @@ homebrew repositories.
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

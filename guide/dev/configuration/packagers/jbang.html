@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/packagers/jbang.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="../announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -184,6 +193,25 @@ catalogs located at the target repository will be merged into a single catalog.<
 <div class="paragraph">
 <p>Snapshots are supported, in which case executables will bear the <code>-snapshot</code> suffix in their alias.</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
@@ -220,7 +248,7 @@ packagers:
       # [optional]
       email: jreleaser-bot@jreleaser.org
 
-    # Git repository to push the catalog to.
+    # Git repository to push the formula to.
     # Defaults are shown.
     # [optional]
     catalog:
@@ -241,9 +269,256 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the catalog repository.
-      # If left unspecified, the JRELEASER_JBANG_GITHUB_TOKEN environment variable may be defined.
+      # If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+      # environment variable may be defined.
       # [optional]
-      token: 1n$3cUrEP@s$w0rd</code></pre>
+      token: __DO_NOT_SET_HERE__</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [optional]
+  "packagers": {
+    // [optional]
+    "jbang": {
+      // Enables or disables Jbang.
+      // Defaults to `false`.
+      // [optional]
+      "enabled": true,
+
+      // Directory with file templates used to prepare the Jbang distribution
+      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // If specified, path must exist.
+      // [optional]
+      "templateDirectory": "path/to/jbang/templates",
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+        "foo": "bar"
+      },
+
+      // Git author used to commit to the catalog repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser-bot@jreleaser.org`.
+        // [optional]
+        "email": "jreleaser-bot@jreleaser.org"
+      },
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      "catalog": {
+
+        // The owner of the catalog repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        "owner": "duke",
+
+        // The name of the catalog repository.
+        // Defaults to `jbang-catalog`.
+        // [optional]
+        "name": "jbang-catalog",
+
+        // Username used for authoring commits. Must have write access to the catalog repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        "username": "duke",
+
+        // Password or OAuth token with write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        "token": "__DO_NOT_SET_HERE__"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    [optional]
+  --&gt;
+  &lt;packagers&gt;
+    &lt;!--
+      [optional]
+    --&gt;
+    &lt;jbang&gt;
+      &lt;!--
+        Enables or disables Jbang.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        Directory with file templates used to prepare the Jbang distribution
+        Defaults to `src/distribution/${distribution.name}/jbang`.
+        If specified, path must exist.
+        [optional]
+      --&gt;
+      &lt;templateDirectory&gt;&gt;path/to/jbang/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        [optional]
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
+        Git author used to commit to the repository.
+        [optional]
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        --&gt;
+        &lt;name&gt;jreleaser-bot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser-bot@jreleaser.org`.
+          [optional]
+        --&gt;
+        &lt;email&gt;jreleaser-bot@jreleaser.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Git repository to push the formula to.
+        Defaults are shown.
+        [optional]
+      --&gt;
+      &lt;catalog&gt;
+
+        &lt;!--
+          The owner of the catalog repository.
+          Defaults to the same owner as the release repository.
+          [optional]
+        --&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
+
+        &lt;!--
+          The name of the catalog repository.
+          Defaults to `jbang-catalog`.
+          [optional]
+        --&gt;
+        &lt;name&gt;jbang-catalog&lt;/name&gt;
+
+        &lt;!--
+          Username used for authoring commits. Must have write access to the catalog repository.
+          Defaults to the same username as the release repository.
+          [optional]
+        --&gt;
+        &lt;username&gt;duke&lt;/username&gt;
+
+        &lt;!--
+          Password or OAuth token with write access to the catalog repository.
+          If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+          environment variable may be defined.
+          [optional]
+        --&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+      &lt;/catalog&gt;
+    &lt;/jbang&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // [optional]
+  packagers {
+    // [optional]
+    jbang {
+      // Enables or disables Jbang.
+      // Defaults to `false`.
+      // [optional]
+      enabled = true
+
+      // Directory with file templates used to prepare the Jbang distribution
+      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // If specified, path must exist.
+      // [optional]
+      templateDirectory = 'path/to/jbang/templates'
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+
+      // Git author used to commit to the catalog repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // If left undefined, will use the releaser's commit name.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // If left undefined, will use the releaser's commit email.
+        // [optional]
+        email = 'jreleaser-bot@jreleaser.org'
+      }
+
+      // Git repository to push the formula to.
+      // Defaults are shown.
+      // [optional]
+      catalog {
+
+        // The owner of the catalog repository.
+        // Defaults to the same owner as the release repository.
+        // [optional]
+        owner = 'duke'
+
+        // The name of the catalog repository.
+        // Defaults to `jbang-catalog`.
+        // [optional]
+        name = 'jbang-catalog'
+
+        // Username used for authoring commits. Must have write access to the catalog repository.
+        // Defaults to the same username as the release repository.
+        // [optional]
+        username = 'duke'
+
+        // Password or OAuth token with write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_GITHUB_TOKEN`
+        // environment variable may be defined.
+        // [optional]
+        token = '__DO_NOT_SET_HERE__'
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -253,7 +528,7 @@ packagers:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You must define a value for <code>mainClass</code> in the owning distribution.
+You must define a value for <code>java.mainClass</code> in the owning distribution.
 </td>
 </tr>
 </table>
@@ -341,7 +616,10 @@ public class app_snapshot {
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>

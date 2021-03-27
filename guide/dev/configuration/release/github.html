@@ -7,6 +7,9 @@
     <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/release/github.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../../_/css/all.css">
     <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
@@ -44,6 +47,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Configuration</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../environment.html">Environment</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../project.html">Project</a>
   </li>
@@ -100,6 +106,9 @@
     <a class="nav-link" href="../announce/zulip.html">Zulip</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates.html">Templates</a>
   </li>
 </ul>
   </li>
@@ -173,6 +182,25 @@
 </aside>
 <article class="doc">
 <h1 class="page">Github</h1>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [required]
@@ -203,11 +231,13 @@ release:
     username: duke
 
     # Password or OAuth token with write access to the repository.
-    # If left unspecified, the JRELEASER_GITHUB_TOKEN environment variable must be defined.
+    # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+    # environment variable must be defined.
     # [required]
-    token: 1n$3cUrEP@s$w0rd
+    token: __DO_NOT_SET_HERE__
 
     # The tag associated with the release.
+    # May define a `JRELEASER_TAG_NAME` environment variable instead.
     # If left unspecified, will use `v${project.version}`.
     # [optional]
     tagName: v1.0.0
@@ -310,6 +340,502 @@ release:
     issueTrackerUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues</code></pre>
 </div>
 </div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // [required]
+  "release": {
+    // Repo in which the release will be created.
+    // [required]
+    "github": {
+      // Disables or enables publication to GitHub.
+      // defaults to `true`.
+      "enabled": true,
+
+      // The user or organization that owns the repository.
+      // [required]
+      "owner": "duke",
+
+      // The name of the repository.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      "name": "app",
+
+      // The GitHub host url.
+      // Defaults to `github.com`.
+      // [required]
+      "host": "github.com",
+
+      // Username used for authoring commits. Must have write access to the repository.
+      // [required]
+      "username": "duke",
+
+      // Password or OAuth token with write access to the repository.
+      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      "token": "__DO_NOT_SET_HERE__",
+
+      // The tag associated with the release.
+      // May define a `JRELEASER_TAG_NAME` environment variable instead.
+      // If left unspecified, will use `v${project.version}`.
+      // [optional]
+      "tagName": "v1.0.0",
+
+      // The name of the release.
+      // If left unspecified, will use `Release ${tagName}`.
+      // [optional]
+      "releaseName": "Release v1.0.0",
+
+      // Drops and creates an existing release with matching tag.
+      // Defaults to `false`.
+      // [optional]
+      "overwrite": true,
+
+      // Appends artifacts to an existing release with matching tag,
+      // useful if `overwrite` is set to `false`.
+      // Defaults to `false`.
+      // [optional]
+      "allowUploadToExisting": true,
+
+      // The GitHub API endpoint to use.
+      // Update it if using GitHub Enterprise.
+      // Defaults to `https://api.github.com`.
+      // [optional]
+      "apiEndpoint": "https://api.github.com",
+
+      // Git author used to commit to the repository.
+      // [optional]
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        "name": "jreleaser-bot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser-bot@jreleaser.org`.
+        // [optional]
+        "email": "jreleaser-bot@jreleaser.org"
+      },
+
+      // Signs commits with the configured credentials.
+      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+      // Defaults to `false`.
+      // [optional]
+      "sign": false,
+
+      // Changelog customization.
+      // [optional]
+      "changelog": {
+        // Disables or enables the changelog.
+        // defaults to `true`.
+        // [optional]
+        "enabled": true,
+
+        // Sorts commits in ascending (oldest first) or descending (newer first).
+        // Valid values are: `ASC`, `DESC`.
+        // Defaults to `DESC`.
+        // [optional]
+        "sort": "DESC",
+
+        // Path to an external file that contains the changelog, read as is.
+        // May be a relative path to the configuration file or an absolute path.
+        // If unspecified, JReleaser will automatically calculate the changelog.
+        // [optional]
+        "external": "path/to/changelog.md",
+
+        // Create explicit markdown links for commit hashes.
+        // Defaults to `false`.
+        // [optional]
+        "links": false
+      },
+
+      // The target branch to use.
+      // Defaults to `main`.
+      // [optional]
+      "targetCommitish": "main",
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // [optional]
+      "draft": false,
+
+      // Marks the release as prerelease.
+      // Defaults to `false`.
+      // [optional]
+      "prerelease": false,
+
+      // The following properties define [optional] URL formats.
+      // Defaults are shown.
+      // Review the available <a href="../templates.html" class="page">Templates</a>.
+
+      "repoUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}",
+
+      "commitUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits",
+
+      "downloadUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}",
+
+      "releaseNotesUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}",
+
+      "latestReleaseUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest",
+
+      "issueTrackerUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    [required]
+  --&gt;
+  &lt;release&gt;
+    &lt;!--
+      Repo in which the release will be created.
+      [required]
+    --&gt;
+    &lt;github&gt;
+
+      &lt;!--
+        Disables or enables publication to GitHub.
+        defaults to `true`.
+      --&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+
+      &lt;!--
+        The user or organization that owns the repository.
+        [required]
+      --&gt;
+      &lt;owner&gt;duke&lt;/owner&gt;
+
+      &lt;!--
+        The name of the repository.
+        If unspecified, will use ${project.name}.
+        [optional]
+      --&gt;
+      &lt;name&gt;app&lt;/name&gt;
+
+      &lt;!--
+        The GitHub host url.
+        Defaults to `github.com`.
+        [required]
+      --&gt;
+      &lt;host&gt;github.com&lt;/host&gt;
+
+      &lt;!--
+        Username used for authoring commits. Must have write access to the repository.
+        [required]
+      --&gt;
+      &lt;username&gt;duke&lt;/username&gt;
+
+      &lt;!--
+        Password or OAuth token with write access to the repository.
+        If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+        environment variable must be defined.
+        [required]
+      --&gt;
+      &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+      &lt;!--
+        The tag associated with the release.
+        May define a `JRELEASER_TAG_NAME` environment variable instead.
+        If left unspecified, will use `v${project.version}`.
+        [optional]
+      --&gt;
+      &lt;tagName&gt;v1.0.0&lt;/tagName&gt;
+
+      &lt;!--
+        The name of the release.
+        If left unspecified, will use `Release ${tagName}`.
+        [optional]
+      --&gt;
+      &lt;releaseName&gt;Release v1.0.0&lt;/releaseName&gt;
+
+      &lt;!--
+        Drops and creates an existing release with matching tag.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;overwrite&gt;true&lt;/overwrite&gt;
+
+      &lt;!--
+        Appends artifacts to an existing release with matching tag,
+        useful if `overwrite` is set to `false`.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;allowUploadToExisting&gt;true&lt;/allowUploadToExisting&gt;
+
+      &lt;!--
+        The GitHub API endpoint to use.
+        Update it if using GitHub Enterprise.
+        Defaults to `https://api.github.com`.
+        [optional]
+      --&gt;
+      &lt;apiEndpoint&gt;https://api.github.com&lt;/apiEndpoint&gt;
+
+      &lt;!--
+        Git author used to commit to the repository.
+        [optional]
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaser-bot`.
+          [optional]
+        --&gt;
+        &lt;name&gt;jreleaser-bot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser-bot@jreleaser.org`.
+          [optional]
+        --&gt;
+        &lt;email&gt;jreleaser-bot@jreleaser.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Signs commits with the configured credentials.
+        The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;sign&gt;false&lt;/sign&gt;
+
+      &lt;!--
+        Changelog customization.
+        [optional]
+      --&gt;
+      &lt;changelog&gt;
+
+        &lt;!--
+           Disables or enables the changelog.
+          defaults to `true`.
+          [optional]
+        --&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+
+        &lt;!--
+          Sorts commits in ascending (oldest first) or descending (newer first).
+          Valid values are&gt;`ASC`, `DESC`.
+          Defaults to `DESC`.
+          [optional]
+        --&gt;
+        &lt;sort&gt;DESC&lt;/sort&gt;
+
+        &lt;!--
+          Path to an external file that contains the changelog, read as is.
+          May be a relative path to the configuration file or an absolute path.
+          If unspecified, JReleaser will automatically calculate the changelog.
+          [optional]
+        --&gt;
+        &lt;external&gt;path/to/changelog.md&lt;/external&gt;
+
+        &lt;!--
+          Create explicit markdown links for commit hashes.
+          Defaults to `false`.
+          [optional]
+        --&gt;
+        &lt;links&gt;false&lt;/links&gt;
+      &lt;/changelog&gt;
+
+      &lt;!--
+        The target branch to use.
+        Defaults to `main`.
+        [optional]
+      --&gt;
+      &lt;targetCommitish&gt;main&lt;/targetCommitish&gt;
+
+      &lt;!--
+        Marks the release as a draft.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;draft&gt;false&lt;/draft&gt;
+
+      &lt;!--
+        Marks the release as prerelease.
+        Defaults to `false`.
+        [optional]
+      --&gt;
+      &lt;prerelease&gt;false&lt;/prerelease&gt;
+
+      &lt;!--
+        The following properties define [optional] URL formats.
+        Defaults are shown.
+        Review the available <a href="../templates.html" class="page">Templates</a>.
+      --&gt;
+      &lt;repoUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}&lt;/repoUrlFormat&gt;
+
+      &lt;commitUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits&lt;/commitUrlFormat&gt;
+
+      &lt;downloadUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}&lt;/downloadUrlFormat&gt;
+
+      &lt;releaseNotesUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}&lt;/releaseNotesUrlFormat&gt;
+
+      &lt;latestReleaseUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest&lt;/latestReleaseUrlFormat&gt;
+
+      &lt;issueTrackerUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues&lt;/issueTrackerUrlFormat&gt;
+    &lt;/github&gt;
+  &lt;/release&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // [required]
+  release {
+    // Repo in which the release will be created.
+    // [required]
+    github {
+      // Disables or enables publication to GitHub.
+      // defaults to `true`.
+      enabled = true
+
+      // The user or organization that owns the repository.
+      // [required]
+      owner = 'duke'
+
+      // The name of the repository.
+      // If unspecified, will use ${project.name}.
+      // [optional]
+      name = 'app'
+
+      // The GitHub host url.
+      // Defaults to `github.com`.
+      // [required]
+      host = 'github.com'
+
+      // Username used for authoring commits. Must have write access to the repository.
+      // [required]
+      username = 'duke'
+
+      // Password or OAuth token with write access to the repository.
+      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // environment variable must be defined.
+      // [required]
+      token = '__DO_NOT_SET_HERE__'
+
+      // The tag associated with the release.
+      // May define a `JRELEASER_TAG_NAME` environment variable instead.
+      // If left unspecified, will use `v${project.version}`.
+      // [optional]
+      tagName = 'v1.0.0'
+
+      // The name of the release.
+      // If left unspecified, will use `Release ${tagName}`.
+      // [optional]
+      releaseName = 'Release v1.0.0'
+
+      // Drops and creates an existing release with matching tag.
+      // Defaults to `false`.
+      // [optional]
+      overwrite = true
+
+      // Appends artifacts to an existing release with matching tag,
+      // useful if `overwrite` is set to `false`.
+      // Defaults to `false`.
+      // [optional]
+      allowUploadToExisting = true
+
+      // The GitHub API endpoint to use.
+      // Update it if using GitHub Enterprise.
+      // Defaults to `https://api.github.com`.
+      // [optional]
+      apiEndpoint = 'https://api.github.com'
+
+      // Git author used to commit to the repository.
+      // [optional]
+      commitAuthor {
+        // Name used when authoring commits.
+        // Defaults to `jreleaser-bot`.
+        // [optional]
+        name = 'jreleaser-bot'
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser-bot@jreleaser.org`.
+        // [optional]
+        email = 'jreleaser-bot@jreleaser.org'
+      }
+
+      // Signs commits with the configured credentials.
+      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+      // Defaults to `false`.
+      // [optional]
+      sign = false
+
+      // Changelog customization.
+      // [optional]
+      changelog {
+        // Disables or enables the changelog.
+        // defaults to `true`.
+        // [optional]
+        enabled = true
+
+        // Sorts commits in ascending (oldest first) or descending (newer first).
+        // Valid values are = `ASC`, `DESC`.
+        // Defaults to `DESC`.
+        // [optional]
+        sort = 'DESC'
+
+        // Path to an external file that contains the changelog, read as is.
+        // May be a relative path to the configuration file or an absolute path.
+        // If unspecified, JReleaser will automatically calculate the changelog.
+        // [optional]
+        external = 'path/to/changelog.md'
+
+        // Create explicit markdown links for commit hashes.
+        // Defaults to `false`.
+        // [optional]
+        links = false
+      }
+
+      // The target branch to use.
+      // Defaults to `main`.
+      // [optional]
+      targetCommitish = 'main'
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // [optional]
+      draft = false
+
+      // Marks the release as prerelease.
+      // Defaults to `false`.
+      // [optional]
+      prerelease = false
+
+      // The following properties define [optional] URL formats.
+      // Defaults are shown.
+      // Review the available <a href="../templates.html" class="page">Templates</a>.
+
+      repoUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}'
+
+      commitUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits'
+
+      downloadUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}'
+
+      releaseNotesUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}'
+
+      latestReleaseUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest'
+
+       issueTrackerUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues'
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>
@@ -318,7 +844,10 @@ release:
   <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
   <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
 </footer>
+<!--script src="../../../../_/js/fontawesome.js"></script>
+<script src="../../../../_/js/all.js"></script-->
 <script src="../../../../_/js/site.js"></script>
 <script async src="../../../../_/js/vendor/highlight.js"></script>
+
   </body>
 </html>
