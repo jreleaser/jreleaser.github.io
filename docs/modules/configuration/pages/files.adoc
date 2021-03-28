@@ -10,13 +10,31 @@ YAML::
 [source,yaml]
 [subs="+macros"]
 ----
-# Defines a list of files.
-# Each entry must define a path: field.
-# The path may be relative to the project's basedir or absolute.
 # [optional]
 files:
-  - path: path/to/some/file.txt
-  - path: path/to/another/file.md
+
+  # Defines a list of artifacts.
+  # Each entry must define a path: field.
+  # The path may be relative to the project's basedir or absolute.
+  # [optional]
+  artifacts:
+    - path: path/to/some/file.txt
+    - path: path/to/another/file.md
+
+  # Defines a list of globs.
+  # [optional]
+  globs:
+      # The directory to search.
+      # If undefined, will use the project's basedir.
+      # [optional]
+    - directory: some/directory
+      # The pattern to apply.
+      # [required]
+      pattern: '*.txt'
+      # Recursive search.
+      # Defaults to `false`.
+      # [optional]
+      recursive: true
 ----
 JSON::
 +
@@ -24,18 +42,42 @@ JSON::
 [subs="+macros"]
 ----
 {
-  // Defines a list of files.
-  // Each entry must define a path: field.
-  // The path may be relative to the project's basedir or absolute.
   // [optional]
-  "files": [
-    {
-      "path": "path/to/some/file.txt"
-    },
-    {
-      "path": "path/to/another/file.md"
-    }
-  ]
+  "files": {
+
+     // Defines a list of files.
+     // Each entry must define a path: field.
+     // The path may be relative to the project's basedir or absolute.
+     // [optional]
+    "artifacts": [
+      {
+        "path": "path/to/some/file.txt"
+      },
+      {
+        "path": "path/to/another/file.md"
+      }
+    ],
+
+    // Defines a list of globs.
+    // [optional]
+    "globs": [
+      {
+        // The directory to search.
+        // If undefined, will use the project's basedir.
+        // [optional]
+        "directory": "some/directory",
+
+        // The pattern to apply.
+        // [required]
+        "pattern": "*.txt",
+
+        // Recursive search.
+        // Defaults to `false`.
+        // [optional]
+        "recursive": true
+      }
+    ]
+  }
 }
 ----
 Maven::
@@ -45,18 +87,52 @@ Maven::
 ----
 <jreleaser>
   <!--
-    Defines a list of files.
-    Each entry must define a path: field.
-    The path may be relative to the project's basedir or absolute.
     [optional]
   -->
   <files>
-    <file>
-      <path>path/to/some/file.txt</path>
-    <file>
-    </file>
-      <path>path/to/another/file.md</path>
-    </file>
+
+    <!--
+      Defines a list of files.
+      Each entry must define a path: field.
+      The path may be relative to the project's basedir or absolute.
+      [optional]
+    -->
+    <artifacts>
+      <artifact>
+        <path>path/to/some/file.txt</path>
+      <artifact>
+      </artifact>
+        <path>path/to/another/file.md</path>
+      </artifact>
+    </artifacts>
+
+    <!--
+      Defines a list of globs.
+      [optional]
+    -->
+    <globs>
+      <glob>
+        <!--
+          The directory to search.
+          If undefined, will use the project's basedir.
+          [optional]
+        -->
+        <directory>some/directory</directory>
+
+        <!--
+          The pattern to apply.
+          [required]
+        -->
+        <pattern>*.txt</pattern>
+
+        <!--
+          Recursive search.
+          Defaults to `false`.
+          [optional]
+        -->
+        <recursive>true</recursive>
+      </glob>
+    </globs>
   </files>
 </jreleaser>
 ----
@@ -66,15 +142,35 @@ Gradle::
 [subs="+macros"]
 ----
 jreleaser {
-  // Defines a list of files.
-  // Each entry must define a path: field.
-  // The path may be relative to the project's basedir or absolute.
   // [optional]
-  file {
-    path = 'path/to/some/file.txt'
-  }
-  file {
-    path = 'path/to/another/file.md'
+  files {
+    // Defines a file entry
+    // The path may be relative to the project's basedir or absolute.
+    // [optional]
+    artifact {
+      path = 'path/to/some/file.txt'
+    }
+    artifact {
+      path = 'path/to/another/file.md'
+    }
+
+    // Defines a glob entry
+    // [optional]
+    glob {
+      // The directory to search.
+      // If undefined, will use the project's basedir.
+      // [optional]
+
+      directory = 'some/directory'
+      // The pattern to apply.
+      // [required]
+      pattern = '*.txt'
+
+      // Recursive search.
+      // Defaults to `false`.
+      // [optional]
+      recursive = true
+    }
   }
 }
 ----
