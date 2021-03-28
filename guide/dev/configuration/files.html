@@ -221,13 +221,31 @@ be checksumed and signed before uploading.</p>
 <div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Defines a list of files.
-# Each entry must define a path: field.
-# The path may be relative to the project's basedir or absolute.
-# [optional]
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
 files:
-  - path: path/to/some/file.txt
-  - path: path/to/another/file.md</code></pre>
+
+  # Defines a list of artifacts.
+  # Each entry must define a path: field.
+  # The path may be relative to the project's basedir or absolute.
+  # [optional]
+  artifacts:
+    - path: path/to/some/file.txt
+    - path: path/to/another/file.md
+
+  # Defines a list of globs.
+  # [optional]
+  globs:
+      # The directory to search.
+      # If undefined, will use the project's basedir.
+      # [optional]
+    - directory: some/directory
+      # The pattern to apply.
+      # [required]
+      pattern: '*.txt'
+      # Recursive search.
+      # Defaults to `false`.
+      # [optional]
+      recursive: true</code></pre>
 </div>
 </div>
 </div>
@@ -235,18 +253,42 @@ files:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  // Defines a list of files.
-  // Each entry must define a path: field.
-  // The path may be relative to the project's basedir or absolute.
   // [optional]
-  "files": [
-    {
-      "path": "path/to/some/file.txt"
-    },
-    {
-      "path": "path/to/another/file.md"
-    }
-  ]
+  "files": {
+
+     // Defines a list of files.
+     // Each entry must define a path: field.
+     // The path may be relative to the project's basedir or absolute.
+     // [optional]
+    "artifacts": [
+      {
+        "path": "path/to/some/file.txt"
+      },
+      {
+        "path": "path/to/another/file.md"
+      }
+    ],
+
+    // Defines a list of globs.
+    // [optional]
+    "globs": [
+      {
+        // The directory to search.
+        // If undefined, will use the project's basedir.
+        // [optional]
+        "directory": "some/directory",
+
+        // The pattern to apply.
+        // [required]
+        "pattern": "*.txt",
+
+        // Recursive search.
+        // Defaults to `false`.
+        // [optional]
+        "recursive": true
+      }
+    ]
+  }
 }</code></pre>
 </div>
 </div>
@@ -256,18 +298,52 @@ files:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
   &lt;!--
-    Defines a list of files.
-    Each entry must define a path: field.
-    The path may be relative to the project's basedir or absolute.
     [optional]
   --&gt;
   &lt;files&gt;
-    &lt;file&gt;
-      &lt;path&gt;path/to/some/file.txt&lt;/path&gt;
-    &lt;file&gt;
-    &lt;/file&gt;
-      &lt;path&gt;path/to/another/file.md&lt;/path&gt;
-    &lt;/file&gt;
+
+    &lt;!--
+      Defines a list of files.
+      Each entry must define a path: field.
+      The path may be relative to the project's basedir or absolute.
+      [optional]
+    --&gt;
+    &lt;artifacts&gt;
+      &lt;artifact&gt;
+        &lt;path&gt;path/to/some/file.txt&lt;/path&gt;
+      &lt;artifact&gt;
+      &lt;/artifact&gt;
+        &lt;path&gt;path/to/another/file.md&lt;/path&gt;
+      &lt;/artifact&gt;
+    &lt;/artifacts&gt;
+
+    &lt;!--
+      Defines a list of globs.
+      [optional]
+    --&gt;
+    &lt;globs&gt;
+      &lt;glob&gt;
+        &lt;!--
+          The directory to search.
+          If undefined, will use the project's basedir.
+          [optional]
+        --&gt;
+        &lt;directory&gt;some/directory&lt;/directory&gt;
+
+        &lt;!--
+          The pattern to apply.
+          [required]
+        --&gt;
+        &lt;pattern&gt;*.txt&lt;/pattern&gt;
+
+        &lt;!--
+          Recursive search.
+          Defaults to `false`.
+          [optional]
+        --&gt;
+        &lt;recursive&gt;true&lt;/recursive&gt;
+      &lt;/glob&gt;
+    &lt;/globs&gt;
   &lt;/files&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -277,15 +353,35 @@ files:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  // Defines a list of files.
-  // Each entry must define a path: field.
-  // The path may be relative to the project's basedir or absolute.
   // [optional]
-  file {
-    path = 'path/to/some/file.txt'
-  }
-  file {
-    path = 'path/to/another/file.md'
+  files {
+    // Defines a file entry
+    // The path may be relative to the project's basedir or absolute.
+    // [optional]
+    artifact {
+      path = 'path/to/some/file.txt'
+    }
+    artifact {
+      path = 'path/to/another/file.md'
+    }
+
+    // Defines a glob entry
+    // [optional]
+    glob {
+      // The directory to search.
+      // If undefined, will use the project's basedir.
+      // [optional]
+
+      directory = 'some/directory'
+      // The pattern to apply.
+      // [required]
+      pattern = '*.txt'
+
+      // Recursive search.
+      // Defaults to `false`.
+      // [optional]
+      recursive = true
+    }
   }
 }</code></pre>
 </div>
