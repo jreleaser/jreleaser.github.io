@@ -28,9 +28,13 @@ files:
       # If undefined, will use the project's basedir.
       # [optional]
     - directory: some/directory
-      # The pattern to apply.
-      # [required]
-      pattern: '*.txt'
+      # The pattern to apply for inclusion.
+      # If undefined, will use `*`.
+      # [optional]
+      include: '*.txt'
+      # The pattern to apply for exclusion.
+      # [optional]
+      exclude: 'secret'
       # Recursive search.
       # Defaults to `false`.
       # [optional]
@@ -67,9 +71,14 @@ JSON::
         // [optional]
         "directory": "some/directory",
 
-        // The pattern to apply.
+        // The pattern to apply for inclusion.
+        // If undefined, will use `*`.
         // [required]
-        "pattern": "*.txt",
+        "include": "*.txt",
+
+        // The pattern to apply for exclusion.
+        // [optional]
+        "exclude": "secret",
 
         // Recursive search.
         // Defaults to `false`.
@@ -120,10 +129,17 @@ Maven::
         <directory>some/directory</directory>
 
         <!--
-          The pattern to apply.
+          The pattern to apply for inclusion.
+          If undefined, will use `*`.
           [required]
         -->
-        <pattern>*.txt</pattern>
+        <include>*.txt</include>
+
+        <!--
+         The pattern to apply for exclusion.
+         [optional]
+        -->
+        <exclude>secret</exclude>
 
         <!--
           Recursive search.
@@ -162,9 +178,14 @@ jreleaser {
       // [optional]
 
       directory = 'some/directory'
-      // The pattern to apply.
+      // The pattern to apply for inclusion.
+      // If undefined, will use `*`.
       // [required]
-      pattern = '*.txt'
+      include = '*.txt'
+
+      // The pattern to apply for exclusion.
+      // [optional]
+      exclude = 'secret'
 
       // Recursive search.
       // Defaults to `false`.
@@ -175,3 +196,88 @@ jreleaser {
 }
 ----
 ====
+
+WARNING: One of `glob.directory`, `glob.include`, `glob.exclude` must be defined at the very least, otherwise the search
+would encompass the whole project.
+
+Use the `include` and `exclude` patterns to narrow the search, for example given the following structure:
+
+[source]
+----
+src/files
+├── secret
+│   └── waldos-location.txt
+└── todo.txt
+----
+
+We'd like to include all `*.txt` files without giving away Waldo's location; we can do this by using `include` and `exclude`
+like so:
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+files:
+  globs:
+    - directory: src/files
+      include: '*.txt'
+      exclude: 'secret'
+      recursive: true
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "files": {
+    "globs": [
+      {
+        "directory": "src/files",
+        "include": "*.txt",
+        "exclude": "secret",
+        "recursive": true
+      }
+    ]
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <files>
+    <globs>
+      <glob>
+        <directory>src/files</directory>
+        <include>*.txt</include>
+        <exclude>secret</exclude>
+        <recursive>true</recursive>
+      </glob>
+    </globs>
+  </files>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  files {
+    glob {
+      directory = 'src/files'
+      include = '*.txt'
+      exclude = 'secret'
+      recursive = true
+    }
+  }
+}
+----
+====
+
