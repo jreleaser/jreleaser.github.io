@@ -1,0 +1,32 @@
+name: Push
+
+on:
+  push:
+
+jobs:
+  push:
+    name: push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Run Antora
+        uses: kameshsampath/antora-site-action@master
+        with:
+          antora_playbook: antora-playbook.yml
+
+      - name: Copy landing page
+        run: |
+          mkdir $GITHUB_WORKSPACE/website
+          cp -rf $GITHUB_WORKSPACE/build/site/* $GITHUB_WORKSPACE/website
+          cp -rf $GITHUB_WORKSPACE/landing/* $GITHUB_WORKSPACE/website
+          touch $GITHUB_WORKSPACE/website/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          folder: website
+          branch: 'gh-pages'
+          commit-message: "[CI] Publish Documentation for ${{ github.sha }}"
