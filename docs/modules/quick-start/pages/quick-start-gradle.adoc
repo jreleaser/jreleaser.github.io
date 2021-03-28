@@ -1,0 +1,180 @@
+= Quick Start - Gradle
+
+Your project should be able to produce binary distributions, a feat typically achieved by configuring
+the `link:https://docs.gradle.org/current/userguide/application_plugin.html[application]` plugin.
+
+You also have to configure the xref:tools:gradle.adoc[jreleaser-gradle-plugin]. We recommend using the
+link:https://kordamp.org/kordamp-gradle-plugins/[Kordamp plugins] as they provide additional benefits,
+however their use is optional. A sample project using Kordamp may look like this:
+
+[source,groovy]
+[subs="attributes"]
+.build.gradle
+----
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.kordamp.gradle.java-project' version '0.44.0'
+    id 'org.jreleaser' version '{jreleaser-version}'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+config {
+    info {
+        name          = 'app'
+        description   = 'App'
+        inceptionYear = '2021'
+        vendor        = 'Acme'
+
+        links {
+            website      = 'https://acme.com/app'
+            issueTracker = 'https://github.com/duke/app/issues'
+            scm          = 'https://github.com/duke/app.git'
+        }
+
+        scm {
+            url                 = 'https://github.com/duke/app'
+            connection          = 'scm:git:https://github.com/duke/app.git'
+            developerConnection = 'scm:git:git@github.com:duke/app.git'
+        }
+        
+        people {
+            person {
+                id    = 'duke'
+                name  = 'Java Duke'
+                roles = ['developer', 'author']
+            }
+        }
+    }
+
+    licensing {
+        licenses {
+            license {
+                id = 'Apache-2.0'
+            }
+        }
+    }
+}
+
+jreleaser {
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+}
+----
+
+This setup configures the project with the following
+
+* Generate additional JAR manifest entries.
+* Generate a `-sources` JAR file with all sources per project.
+* Configure the javadoc task for each project using information found in the config block, such as author,
+  copyright year, default settings.
+* Generate a `-javadoc` JAR file with the output of the javadoc task, per project.
+* Configure the license plugin with the license details
+* Configure the maven-publish plugin. The `-sources` and `-javadoc` JARs are automatically added to the default publication.
+* Configure the generated POM.
+* Configure the jacoco plugin.
+* Generate a source stats task.
+* Generate a task to collect pretty-printed sources.
+
+Whereas a plain project would look like this:
+
+[source,groovy]
+[subs="attributes"]
+.build.gradle
+----
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.jreleaser' version '{jreleaser-version}'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+jreleaser {
+    project {
+        website = 'https://acme.com/app'
+        authors = ['Duke']
+        license = 'Apache-2.0'
+    }
+
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+}
+----
+
+The JReleaser Gradle plugin detects the use of the `application` plugin and automatically configures the output files
+from the `assembleDist` task.
+
+Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking
+
+[source]
+----
+$ gradle jreleaserConfig
+----
+
+At any time you may invoke any of the other commands, but when it's time to make a release you have to invoke
+
+[source]
+----
+$ gradle jreleaseFullRelease
+[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+> Task :compileJava
+> Task :processResources NO-SOURCE
+> Task :classes
+> Task :minpom
+> Task :jar
+> Task :startScripts
+> Task :distTar
+> Task :distZip
+> Task :assembleDist
+
+> Task :jreleaserFullRelease
+jreleaser.dryrun set to false
+[INFO]  Calculating checksums
+[INFO]  Signing files
+[INFO]  Signing is not enabled
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - Generating changelog: build/jreleaser/release/CHANGELOG.md
+[INFO]   - Uploading app-1.0.0.zip
+[INFO]   - Uploading app-1.0.0.tar.gz
+[INFO]   - Uploading checksums.txt
+[INFO]  Preparing distributions
+[INFO]    - Preparing app distribution
+[INFO]  Packaging distributions
+[INFO]    - Packaging app distribution
+[INFO]  Uploading distributions
+[INFO]    - Uploading app distribution
+[INFO]  Announcing release
+[INFO]  Announcing is not enabled. Skipping.
+
+--------------------------------------------------------------------
+1 projects                                       CONF        EXEC
+--------------------------------------------------------------------
+: .................................. SUCCESS [  0.287 s] [  2.182 s]
+--------------------------------------------------------------------
+----
+
+This command performs the following actions:
+
+* checksums all artifacts.
+* signs all files (if signing is enabled).
+* creates a release at the chosen Git repository.
+* prepares, packages, and uploads configured packagers (brew, jbang, etc).
+* announces the release (if configured).
+

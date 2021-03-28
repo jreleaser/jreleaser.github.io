@@ -1,0 +1,102 @@
+= Quick Start - Ant
+
+Yiur Ant build must be configured to create binary distributions (Zips and Tars). Review the
+link:http://ant.apache.org/[Ant] documentation to find out how to do that. Follow the instructions
+in the xref:ROOT:install.adoc[] section to download and install the JReleaser Ant tasks. Once configured
+you an bootstrap a configuration file
+
+[source]
+----
+$ ant jreleaser-init -Djreleaser.format=yml
+Buildfile: /Home/duke/app/build.xml
+
+jreleaser-init:
+Writing file /Home/duke/app/jreleaser.yml
+JReleaser initialized at /Home/duke/app
+
+BUILD SUCCESSFUL
+Total time: 0 seconds
+----
+
+This generates a `jreleaser.yml` file with the following configuration
+
+[source,yaml]
+.jreleaser.yml
+----
+project:
+  name: app
+  version: 1.0.0-SNAPSHOT
+  description: Awesome App
+  longDescription: Awesome App
+  website: https://acme.com/app
+  authors:
+    - Duke
+  license: Apache-2
+  java:
+    groupId: com.acme
+    version: 8
+
+release:
+  github:
+    owner: duke
+
+distributions:
+  app:
+    artifacts:
+      - path: path/to/{{distributionName}}-{{projectVersion}}.zip
+----
+
+Edit the file to suite your needs. JReleaser *does not* create artifact files for you. It assumes those are created using
+Ant; JReleaser only cares if the resolved artifact paths exist. Once you have edited the file you may verify its
+configuration by invoking
+
+[source]
+----
+$ ant jreleaser-config
+----
+
+At any time you may invoke any of the other commands, but when it's time to make a release you have to invoke
+
+[source]
+----
+$ ant jreleaser-full-release
+Buildfile: /Home/duke/app/build.xml
+
+jreleaser-full-release:
+Configuring with jreleaser.yml
+ - basedir set to /Home/duke/app
+ - dryrun set to false
+Reading configuration
+Loading properties from /Home/duke/.jreleaser/config.properties
+Validating configuration
+Project version set to 1.0.0
+Release is not snapshot
+Calculating checksums
+Signing files
+Signing is not enabled
+Releasing to https://github.com/duke/app
+ - Generating changelog: out/jreleaser/release/CHANGELOG.md
+ - Uploading app-1.0.0.zip
+ - Uploading app-1.0.0.tar.gz
+ - Uploading checksums.txt
+Preparing distributions
+  - Preparing app distribution
+Packaging distributions
+  - Packaging app distribution
+Uploading distributions
+  - Uploading app distribution
+Announcing release
+Announcing is not enabled. Skipping.
+
+BUILD SUCCESSFUL
+Total time: 2 seconds
+----
+
+This command performs the following actions:
+
+* checksums all artifacts.
+* signs all files (if signing is enabled).
+* creates a release at the chosen Git repository.
+* prepares, packages, and uploads configured packagers (brew, jbang, etc).
+* announces the release.
+

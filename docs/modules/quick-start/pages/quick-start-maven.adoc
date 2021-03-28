@@ -1,0 +1,254 @@
+= Quick Start - Maven
+
+Your project should be able to compile, package, and assemble a distribution. We recommend configuring the
+following Maven plugins:
+
+ * link:https://www.mojohaus.org/exec-maven-plugin/[exec-maven-plugin]: execute a main class.
+ * link:https://www.mojohaus.org/appassembler/appassembler-maven-plugin/[appassembler-maven-plugin]: collects application
+ dependencies and generates launcher scripts.
+ * link:http://maven.apache.org/plugins/maven-assembly-plugin/[maven-assembly-plugin]: creates Zip and Tar distributions.
+
+You also have to configure the xref:tools:maven.adoc[jreleaser-maven-plugin]. A sample project may look like this:
+
+[source,xml]
+[subs="attributes,verbatim"]
+.pom.xml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>app</artifactId>
+  <version>1.0.0</version>
+
+  <name>app</name>
+  <description>Sample app</description>
+  <url>https://acme.com/app</url>
+  <inceptionYear>2021</inceptionYear>
+
+  <properties>
+    <app.main.class>com.acme.Main</app.main.class>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <app.distribution.directory>${project.build.directory}/distributions/app</app.distribution.directory>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://spdx.org/licenses/Apache-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>duke</id>
+      <name>Java Duke</name>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <mainClass>${app.main.class}</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${app.main.class}</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>2.1.0</version>
+        <configuration>
+          <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
+          <repositoryLayout>flat</repositoryLayout>
+          <repositoryName>lib</repositoryName>
+          <programs>
+            <program>
+              <mainClass>${app.main.class}</mainClass>
+              <id>app</id>
+            </program>
+          </programs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <attach>false</attach>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+          <outputDirectory>${app.distribution.directory}</outputDirectory>
+          <workDirectory>${project.build.directory}/assembly/work</workDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jreleaser-maven-plugin</artifactId>
+        <version>{jreleaser-version}</version>
+        <configuration>
+          <jreleaser>
+            <project>
+              <java>
+                <mainClass>${app.main.class}</mainClass>
+              </java>
+            </project>
+            <release>
+              <github>
+                <owner>duke</owner>
+                <overwrite>true</overwrite>
+              </github>
+            </release>
+            <distributions>
+              <distribution>
+                <name>app</name>
+                <artifacts>
+                  <artifact>
+                    <path>
+                      ${app.distribution.directory}/${project.artifactId}-${project.version}.zip
+                    </path>
+                  </artifact>
+                  <artifact>
+                    <path>
+                      ${app.distribution.directory}/${project.artifactId}-${project.version}.tar.gz
+                    </path>
+                  </artifact>
+                </artifacts>
+              </distribution>
+            </distributions>
+          </jreleaser>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+----
+
+Make adjustments as needed. Once you have edited the `pom.xml` you may verify its configuration by invoking
+
+[source]
+----
+$ mvn jreleaser:config
+----
+
+At any time you may invoke any of the other commands, but when it's time to make a release you have to invoke
+
+[source]
+[subs="attributes"]
+----
+$ mvn jreleaser:full-release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------------< com.acme:app >----------------------------
+[INFO] Building app 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ app ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Home/duke/app/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ app ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /Home/duke/app/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ app ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Home/duke/app/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ app ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ app ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.2.0:jar (default-jar) @ app ---
+[INFO] Building jar: /Home/duke/app/target/app-1.0.0.jar
+[INFO] 
+[INFO] --- appassembler-maven-plugin:2.1.0:assemble (make-distribution) @ app ---
+[INFO] Installing artifact /Home/duke/app/target/app-1.0.0.jar to /Home/duke/app/target/binary/lib/app-1.0.0.jar
+[INFO] 
+[INFO] --- maven-assembly-plugin:3.2.0:single (make-distribution) @ app ---
+[INFO] Reading assembly descriptor: src/main/assembly/assembly.xml
+[INFO] Building tar: /Home/duke/app/target/distributions/app/app-1.0.0.tar.gz
+[INFO] Building zip: /Home/duke/app/target/distributions/app/app-1.0.0.zip
+[INFO] Copying files to /Home/duke/app/target/distributions/app/app-1.0.0
+[INFO] 
+[INFO] --- jreleaser-maven-plugin:{jreleaser-version}:full-release (default-cli) @ app ---
+[INFO] Loading properties from /Home/duke/.jreleaser/config.properties
+[INFO] Validating configuration
+[INFO] Project version set to 1.0.0
+[INFO] Release is not snapshot
+[INFO] dryrun set to false
+[INFO] Calculating checksums
+[INFO] Signing files
+[INFO] Signing is not enabled
+[INFO] Releasing to https://github.com/duke/app
+[INFO]  - Generating changelog: target/jreleaser/release/CHANGELOG.md
+[INFO]  - Uploading app-1.0.0.zip
+[INFO]  - Uploading app-1.0.0.tar.gz
+[INFO]  - Uploading checksums.txt
+[INFO] Preparing distributions
+[INFO]   - Preparing app distribution
+[INFO] Packaging distributions
+[INFO]   - Packaging app distribution
+[INFO] Uploading distributions
+[INFO]   - Uploading app distribution
+[INFO] Announcing release
+[INFO] Announcing is not enabled. Skipping.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+----
+
+This command performs the following actions:
+
+* checksums all artifacts.
+* signs all files (if signing is enabled).
+* creates a release at the chosen Git repository.
+* prepares, packages, and uploads configured packagers (brew, jbang, etc).
+* announces the release (if configured).
+
