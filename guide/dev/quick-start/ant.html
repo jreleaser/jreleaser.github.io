@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Quick Start - CLI :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/dev/quick-start/quick-start-cli.html">
+    <title>Quick Start - Ant :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/quick-start/ant.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -44,17 +44,17 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Quick Start</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="cli.html">Quick Start - CLI</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="maven.html">Quick Start - Maven</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gradle.html">Quick Start - Gradle</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="quick-start-cli.html">Quick Start - CLI</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="quick-start-maven.html">Quick Start - Maven</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="quick-start-gradle.html">Quick Start - Gradle</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="quick-start-ant.html">Quick Start - Ant</a>
+    <a class="nav-link" href="ant.html">Quick Start - Ant</a>
   </li>
 </ul>
   </li>
@@ -185,25 +185,34 @@
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
     <li>Quick Start</li>
-    <li><a href="quick-start-cli.html">Quick Start - CLI</a></li>
+    <li><a href="ant.html">Quick Start - Ant</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/quick-start-cli.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/ant.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Quick Start - CLI</h1>
+<h1 class="page">Quick Start - Ant</h1>
 <div class="paragraph">
-<p>Once JReleaser is installed you may initialize its config file by invoking the following command:</p>
+<p>Yiur Ant build must be configured to create binary distributions (Zips and Tars). Review the
+<a href="http://ant.apache.org/">Ant</a> documentation to find out how to do that. Follow the instructions
+in the <a href="../install.html" class="page">Install</a> section to download and install the JReleaser Ant tasks. Once configured
+you an bootstrap a configuration file</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser init --format yml
-[INFO]  Writing file /Home/duke/app/jreleaser.yml
-[INFO]  JReleaser initialized at /Home/duke/app</code></pre>
+<pre class="highlightjs highlight"><code>$ ant jreleaser-init -Djreleaser.format=yml
+Buildfile: /Home/duke/app/build.xml
+
+jreleaser-init:
+Writing file /Home/duke/app/jreleaser.yml
+JReleaser initialized at /Home/duke/app
+
+BUILD SUCCESSFUL
+Total time: 0 seconds</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -237,12 +246,12 @@ distributions:
 </div>
 <div class="paragraph">
 <p>Edit the file to suite your needs. JReleaser <strong>does not</strong> create artifact files for you. It assumes those are created using
-other tools; JReleaser only cares if the resolved artifact paths exist. Once you have edited the file you may verify its
+Ant; JReleaser only cares if the resolved artifact paths exist. Once you have edited the file you may verify its
 configuration by invoking</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser config</code></pre>
+<pre class="highlightjs highlight"><code>$ ant jreleaser-config</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -250,31 +259,37 @@ configuration by invoking</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser full-release
-[INFO]  Configuring with jreleaser.yml
-[INFO]    - basedir set to /Home/duke/app
-[INFO]    - dryrun set to false
-[INFO]  Reading configuration
-[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
-[INFO]  Validating configuration
-[INFO]  Project version set to 1.0.0
-[INFO]  Release is not snapshot
-[INFO]  Calculating checksums
-[INFO]  Signing files
-[INFO]  Signing is not enabled
-[INFO]  Releasing to https://github.com/duke/app
-[INFO]   - Generating changelog: out/jreleaser/release/CHANGELOG.md
-[INFO]   - Uploading app-1.0.0.zip
-[INFO]   - Uploading app-1.0.0.tar.gz
-[INFO]   - Uploading checksums.txt
-[INFO]  Preparing distributions
-[INFO]    - Preparing app distribution
-[INFO]  Packaging distributions
-[INFO]    - Packaging app distribution
-[INFO]  Uploading distributions
-[INFO]    - Uploading app distribution
-[INFO]  Announcing release
-[INFO]  Announcing is not enabled. Skipping.</code></pre>
+<pre class="highlightjs highlight"><code>$ ant jreleaser-full-release
+Buildfile: /Home/duke/app/build.xml
+
+jreleaser-full-release:
+Configuring with jreleaser.yml
+ - basedir set to /Home/duke/app
+ - dryrun set to false
+Reading configuration
+Loading properties from /Home/duke/.jreleaser/config.properties
+Validating configuration
+Project version set to 1.0.0
+Release is not snapshot
+Calculating checksums
+Signing files
+Signing is not enabled
+Releasing to https://github.com/duke/app
+ - Generating changelog: out/jreleaser/release/CHANGELOG.md
+ - Uploading app-1.0.0.zip
+ - Uploading app-1.0.0.tar.gz
+ - Uploading checksums.txt
+Preparing distributions
+  - Preparing app distribution
+Packaging distributions
+  - Packaging app distribution
+Uploading distributions
+  - Uploading app distribution
+Announcing release
+Announcing is not enabled. Skipping.
+
+BUILD SUCCESSFUL
+Total time: 2 seconds</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -295,7 +310,7 @@ configuration by invoking</p>
 <p>prepares, packages, and uploads configured packagers (brew, jbang, etc).</p>
 </li>
 <li>
-<p>announces the release (if configured).</p>
+<p>announces the release.</p>
 </li>
 </ul>
 </div>
