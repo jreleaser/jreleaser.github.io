@@ -214,6 +214,10 @@
 <div class="paragraph">
 <p>You can create a workflow for pushing your releases by putting YAML configuration to <code>.github/workflows/release.yml</code>.</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><a class="image" href="https://github.com/jreleaser/release-action/actions"><img src="https://github.com/jreleaser/release-action/workflows/Test/badge.svg" alt="Build Status"></a></span>
+<span class="image"><img src="https://img.shields.io/github/v/release/jreleaser/release-action" alt="GitHub release"></span></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -262,10 +266,17 @@ jobs:
           git config user.email "${{ github.event.head_commit.committer.email }}"
           mvn -B --file pom.xml release:prepare release:perform
 
+      # IMPORTANT!
+
+      - name: Setup Java for JReleaser
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11
+
       # Create a release
 
       - name: Run JReleaser
-        uses: jreleaser/github-action@v1
+        uses: jreleaser/release-action@v1
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}</code></pre>
 </div>
@@ -273,6 +284,19 @@ jobs:
 <div class="paragraph">
 <p>The last step executes a <code>full-release</code> with the default <code>jreleaser.yml</code> configuration that&#8217;s expected
 to be located at the root of the repository.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This action requires Java 11+ to download and execute JReleaser. If your project already builds with Java 11+
+then you can skip the second "setup" step.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -365,7 +389,7 @@ If you create a secret named <code>GH_PAT</code>, the step will look like this</
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">      - name: Run JReleaser
-        uses: jreleaser/github-action@v1
+        uses: jreleaser/release-action@v1
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}</code></pre>
 </div>
@@ -377,7 +401,7 @@ you may apply the <code>GH_PAT</code> token as follows</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">      - name: Run JReleaser
-        uses: jreleaser/github-action@v1
+        uses: jreleaser/release-action@v1
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_HOMEBREW_GITHUB_TOKEN: ${{ secrets.GH_PAT }}</code></pre>
