@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Install :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/dev/install.html">
+    <title>Workflow :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/workflow.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/admonitions.css">
@@ -35,7 +35,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="install.html">Install</a>
   </li>
 </ul>
@@ -60,7 +60,7 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="workflow.html">Workflow</a>
   </li>
 </ul>
@@ -200,129 +200,164 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">JReleaser</a></li>
-    <li><a href="install.html">Install</a></li>
+    <li><a href="workflow.html">Workflow</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/install.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/workflow.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Install</h1>
+<h1 class="page">Workflow</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are multiple choices depending on your preference.</p>
+<p>JReleaser follows a series of steps to create and upload a release. You may invoke all steps in one go
+(the preferred way) or each step individually and separate from the others. The following sections describe
+these steps.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cli"><a class="anchor" href="#_cli"></a>CLI</h2>
+<h2 id="_checksum"><a class="anchor" href="#_checksum"></a>Checksum</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <a href="tools/cli.html" class="page">CLI</a> can be installed in the following ways:</p>
+<p>Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
+file configured in the <a href="configuration/files.html" class="page">Files</a> section.</p>
 </div>
 <div class="paragraph">
-<p><strong>homebrew tap</strong> (only on OSX for now):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>brew install jreleaser/tap/jreleaser</code></pre>
-</div>
+<p>All files must exist by the time Checksum is invoked, otherwise an error will occur.</p>
 </div>
 <div class="paragraph">
-<p><strong>scoop</strong>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>scoop bucket add jreleaser https://github.com/jreleaser/scoop-bucket.git
-scoop install jreleaser</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>sdkman</strong>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>sdk install jreleaser</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>jbang</strong></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>// Download, cache, and run
-jbang jreleaser@jreleaser &lt;args&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>manually</strong>:</p>
-</div>
-<div class="paragraph">
-<p>Download the pre-compiled binary from the <a href="https://github.com/jreleaser/jreleaser/releases">releases page</a>,
-uncompress and copy to the desired location.</p>
+<p>Checksums will be placed at <code>${basedir}/out/jreleaser/checksums</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_maven"><a class="anchor" href="#_maven"></a>Maven</h2>
+<h2 id="_sign"><a class="anchor" href="#_sign"></a>Sign</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Configure the <a href="tools/maven.html" class="page">jreleaser-maven-plugin</a> in your POM file</p>
+<p>Creates PGP signatures for all input files. This includes all artifacts per distribution and every matching
+file configured in the <a href="configuration/files.html" class="page">Files</a> section, plus the output file from the <a href="#_checksum">Checksum</a>
+step (<code>"checksums.txt"</code>). This step is optional and can be disabled if needed. Review the <a href="configuration/signing.html" class="page">Signing</a>
+section found in the configuration.</p>
 </div>
-<div class="listingblock">
-<div class="title">pom.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-  &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
-  &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;0.1.0-SNAPSHOT&lt;/version&gt;
-&lt;/plugin&gt;</code></pre>
+<div class="paragraph">
+<p>Signatures will be placed at <code>${basedir}/out/jreleaser/signatures</code>.</p>
 </div>
+<div class="paragraph">
+<p>Depends on <a href="#_checksum">Checksum</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_gradle"><a class="anchor" href="#_gradle"></a>Gradle</h2>
+<h2 id="_release"><a class="anchor" href="#_release"></a>Release</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Configure the <a href="tools/gradle.html" class="page">jreleaser-gradle-plugin</a> in your <code>build.gradle</code> or <code>settings.gradle</code> file</p>
+<p>Creates a release at the configured remote Git repository (see <a href="configuration/release/index.html" class="page">Release</a>). This step uploads
+all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
+<a href="configuration/files.html" class="page">Files</a> section. Automatically calculates a changelog &amp; tags the release.</p>
 </div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'org.jreleaser' version '0.1.0-SNAPSHOT'
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Depends on <a href="#_checksum">Checksum</a>, <a href="#_sign">Sign</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ant"><a class="anchor" href="#_ant"></a>Ant</h2>
+<h2 id="_prepare"><a class="anchor" href="#_prepare"></a>Prepare</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Download the <a href="tools/ant.html" class="page">jreleaser-ant-tasks</a> ZIP bundle from the
-<a href="https://github.com/jreleaser/jreleaser/releases">releases page</a> and unzip it in your project. Place all JARs inside
-the <code>lib</code> folder. Create this folder if there is none. Add the following elements to your <code>build.xml</code> file</p>
+<p>Generates files required by <a href="configuration/packagers/index.html" class="page">Packagers</a> such as <a href="configuration/packagers/homebrew.html" class="page">Homebrew</a>.
+These files will be generated from templates existing in your project at a configured location (the <code>templateDirectory</code> of
+each packager) and default templates bundled in the JReleaser distribution. These template files rely on
+<a href="configuration/name-templates.html" class="page">Name Templates</a> to parameterize their contents.</p>
 </div>
-<div class="listingblock">
-<div class="title">build.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;path id="jreleaser.classpath"&gt;
-    &lt;fileset dir="lib"&gt;
-        &lt;include name="jreleaser-ant-tasks-0.1.0-SNAPSHOT/*.jar"/&gt;
-    &lt;/fileset&gt;
-&lt;/path&gt;
-
-&lt;import&gt;
-  &lt;javaresource name="org/jreleaser/ant/targets.xml"
-                classpathref="jreleaser.classpath"/&gt;
-&lt;/import&gt;</code></pre>
+<div class="paragraph">
+<p>Prepared files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
 </div>
+<div class="paragraph">
+<p>Depends on <a href="#_checksum">Checksum</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_package"><a class="anchor" href="#_package"></a>Package</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Processes the files created by the <a href="#_prepare">Prepare</a> step to create specific packages. The <a href="configuration/packagers/snap.html" class="page">Snap</a>
+packager may log into the Snapcraft store and publish a snap if its <code>remotebBuild</code> filed is set to <code>false</code> for example.
+Other packagers do not require additional customization of the prepared files and simply copy the files over from their
+matching prepared directory to their respective package directory.</p>
+</div>
+<div class="paragraph">
+<p>Packaged files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
+</div>
+<div class="paragraph">
+<p>Does not explicitly depend on <a href="#_prepare">Prepare</a> to give you the opportunity to tweak prepared files, however prepared files
+must exist before this step is invoked.</p>
+</div>
+<div class="paragraph">
+<p>Does not explicitly depend on <a href="#_release">Release</a> however some packagers such as Snap require downloading distribution files
+to locally build a snap.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upload"><a class="anchor" href="#_upload"></a>Upload</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Publishes packaged files to their respective destinations. For example, for <a href="configuration/packagers/homebrew.html" class="page">Homebrew</a>
+this means creating or updating a "hombrew-tap" repository, for <a href="configuration/packagers/jbang.html" class="page">Jbang</a> this means
+creating or merging a "jbang-catalog" repository.</p>
+</div>
+<div class="paragraph">
+<p>Does not explicitly depend on <a href="#_package">Package</a> to give you the opportunity to tweak packaged files, however packaged files
+must exist before this step is invoked.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_announce"><a class="anchor" href="#_announce"></a>Announce</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Announces the release to different media such as <a href="configuration/announce/twitter.html" class="page">Twitter</a> or
+<a href="configuration/announce/zulip.html" class="page">Zulip</a>. <a href="configuration/announce/sdkman.html" class="page">Sdkman</a> requires that distribution
+files had been released.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_full_release"><a class="anchor" href="#_full_release"></a>Full Release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executes all steps in single session in the following order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#_checksum">Checksum</a></p>
+</li>
+<li>
+<p><a href="#_sign">Sign</a></p>
+</li>
+<li>
+<p><a href="#_release">Release</a></p>
+</li>
+<li>
+<p><a href="#_prepare">Prepare</a></p>
+</li>
+<li>
+<p><a href="#_package">Package</a></p>
+</li>
+<li>
+<p><a href="#_upload">Upload</a></p>
+</li>
+<li>
+<p><a href="#_announce">Announce</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
