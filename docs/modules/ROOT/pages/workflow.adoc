@@ -1,0 +1,86 @@
+= Workflow
+
+JReleaser follows a series of steps to create and upload a release. You may invoke all steps in one go
+(the preferred way) or each step individually and separate from the others. The following sections describe
+these steps.
+
+== Checksum
+
+Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
+file configured in the xref:configuration:files.adoc[] section.
+
+All files must exist by the time Checksum is invoked, otherwise an error will occur.
+
+Checksums will be placed at `${basedir}/out/jreleaser/checksums`.
+
+== Sign
+
+Creates PGP signatures for all input files. This includes all artifacts per distribution and every matching
+file configured in the xref:configuration:files.adoc[] section, plus the output file from the <<_checksum>>
+step (`"checksums.txt"`). This step is optional and can be disabled if needed. Review the xref:configuration:signing.adoc[]
+section found in the configuration.
+
+Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
+
+Depends on <<_checksum>>.
+
+== Release
+
+Creates a release at the configured remote Git repository (see xref:configuration:release/index.adoc[]). This step uploads
+all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
+xref:configuration:files.adoc[] section. Automatically calculates a changelog & tags the release.
+
+Depends on <<_checksum>>, <<_sign>>.
+
+== Prepare
+
+Generates files required by xref:configuration:packagers/index.adoc[] such as xref:configuration:packagers/homebrew.adoc[].
+These files will be generated from templates existing in your project at a configured location (the `templateDirectory` of
+each packager) and default templates bundled in the JReleaser distribution. These template files rely on
+xref:configuration:name-templates.adoc[] to parameterize their contents.
+
+Prepared files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
+
+Depends on <<_checksum>>.
+
+== Package
+
+Processes the files created by the <<_prepare>> step to create specific packages. The xref:configuration:packagers/snap.adoc[]
+packager may log into the Snapcraft store and publish a snap if its `remotebBuild` filed is set to `false` for example.
+Other packagers do not require additional customization of the prepared files and simply copy the files over from their
+matching prepared directory to their respective package directory.
+
+Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
+
+Does not explicitly depend on <<_prepare>> to give you the opportunity to tweak prepared files, however prepared files
+must exist before this step is invoked.
+
+Does not explicitly depend on <<_release>> however some packagers such as Snap require downloading distribution files
+to locally build a snap.
+
+== Upload
+
+Publishes packaged files to their respective destinations. For example, for xref:configuration:packagers/homebrew.adoc[]
+this means creating or updating a "hombrew-tap" repository, for xref:configuration:packagers/jbang.adoc[] this means
+creating or merging a "jbang-catalog" repository.
+
+Does not explicitly depend on <<_package>> to give you the opportunity to tweak packaged files, however packaged files
+must exist before this step is invoked.
+
+== Announce
+
+Announces the release to different media such as xref:configuration:announce/twitter.adoc[] or
+xref:configuration:announce/zulip.adoc[]. xref:configuration:announce/sdkman.adoc[] requires that distribution
+files had been released.
+
+== Full Release
+
+Executes all steps in single session in the following order:
+
+* <<_checksum>>
+* <<_sign>>
+* <<_release>>
+* <<_prepare>>
+* <<_package>>
+* <<_upload>>
+* <<_announce>>
