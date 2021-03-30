@@ -41,12 +41,18 @@ announce:
     # The messages' subject.
     # Review the available xref:configuration:name-templates.adoc[].
     # [optional]
-    subject: {{projectNameCapitalized}} {{projectVersion}}
+    subject: {{projectNameCapitalized}} {{projectVersion}} released!
 
     # The announcement message.
     # Review the available xref:configuration:name-templates.adoc[].
     # [optional]
     message: icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+
+    # Path to a template file that contains the message.
+    # Review the available xref:configuration:name-templates.adoc[].
+    # Defaults to `src/jreleaser/templates/zulip.tpl`.
+    # [optional]
+    messageTemplate: path/to/template/zulip.tpl
 ----
 JSON::
 +
@@ -85,12 +91,18 @@ JSON::
       // The messages' subject.
       // Review the available xref:configuration:name-templates.adoc[].
       // [optional]
-      "subject": "{{projectNameCapitalized}} {{projectVersion}}",
+      "subject": "{{projectNameCapitalized}} {{projectVersion}} released!",
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
       // [optional]
-      "message": "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+      "message": "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // [optional]
+      "messageTemplate": "path/to/template/zulip.tpl",
     }
   }
 }
@@ -145,7 +157,7 @@ Maven::
         Review the available xref:configuration>templates.adoc[].
         [optional]
       -->
-      <subject>{{projectNameCapitalized}} {{projectVersion}}</subject>
+      <subject>{{projectNameCapitalized}} {{projectVersion}} released!</subject>
 
       <!--
         The announcement message.
@@ -153,6 +165,14 @@ Maven::
         [optional]
       -->
       <message>icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+
+      <!--
+        Path to a template file that contains the message.
+        Review the available xref:configuration:name-templates.adoc[].
+        Defaults to `src/jreleaser/templates/zulip.tpl`.
+        [optional]
+      -->
+      <messageTemplate>path/to/template/zulip.tpl</messageTemplate>
     </zulip>
   </announce>
 </jreleaser>
@@ -194,14 +214,22 @@ jreleaser {
       // The messages' subject.
       // Review the available xref:configuration:name-templates.adoc[].
       // [optional]
-      subject = '{{projectNameCapitalized}} {{projectVersion}}'
+      subject = '{{projectNameCapitalized}} {{projectVersion}} released!'
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
       // [optional]
       message = 'icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // [optional]
+      messageTemplate = 'path/to/template/zulip.tpl'
+    }
   }
 }
 ----
 ====
 
+You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
