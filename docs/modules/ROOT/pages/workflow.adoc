@@ -4,6 +4,13 @@ JReleaser follows a series of steps to create and upload a release. You may invo
 (the preferred way) or each step individually and separate from the others. The following sections describe
 these steps.
 
+TIP: The preferred option is to invoke <<_full_release>>.
+
+== Changelog
+
+Creates the changelog, either by taking a supplemented external file or calculates it based on the last tag that matches
+the configuration.
+
 == Checksum
 
 Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
@@ -12,6 +19,8 @@ file configured in the xref:configuration:files.adoc[] section.
 All files must exist by the time Checksum is invoked, otherwise an error will occur.
 
 Checksums will be placed at `${basedir}/out/jreleaser/checksums`.
+
+Depends on <<_changelog>>.
 
 == Sign
 
@@ -22,7 +31,7 @@ section found in the configuration.
 
 Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
 
-Depends on <<_checksum>>.
+Depends on <<_changelog>>, <<_checksum>>.
 
 == Release
 
@@ -30,7 +39,7 @@ Creates a release at the configured remote Git repository (see xref:configuratio
 all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
 xref:configuration:files.adoc[] section. Automatically calculates a changelog & tags the release.
 
-Depends on <<_checksum>>, <<_sign>>.
+Depends on <<_changelog>>, <<_checksum>>, <<_sign>>.
 
 == Prepare
 
@@ -41,7 +50,7 @@ xref:configuration:name-templates.adoc[] to parameterize their contents.
 
 Prepared files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
 
-Depends on <<_checksum>>.
+Depends on <<_changelog>>, <<_checksum>>.
 
 == Package
 
@@ -51,6 +60,8 @@ Other packagers do not require additional customization of the prepared files an
 matching prepared directory to their respective package directory.
 
 Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
+
+Depends on <<_changelog>>.
 
 Does not explicitly depend on <<_prepare>> to give you the opportunity to tweak prepared files, however prepared files
 must exist before this step is invoked.
@@ -64,6 +75,8 @@ Publishes packaged files to their respective destinations. For example, for xref
 this means creating or updating a "hombrew-tap" repository, for xref:configuration:packagers/jbang.adoc[] this means
 creating or merging a "jbang-catalog" repository.
 
+Depends on <<_changelog>>.
+
 Does not explicitly depend on <<_package>> to give you the opportunity to tweak packaged files, however packaged files
 must exist before this step is invoked.
 
@@ -73,10 +86,13 @@ Announces the release to different media such as xref:configuration:announce/twi
 xref:configuration:announce/zulip.adoc[]. xref:configuration:announce/sdkman.adoc[] requires that distribution
 files had been released.
 
+Depends on <<_changelog>>.
+
 == Full Release
 
 Executes all steps in single session in the following order:
 
+* <<_changelog>>
 * <<_checksum>>
 * <<_sign>>
 * <<_release>>
