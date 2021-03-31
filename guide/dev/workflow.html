@@ -218,8 +218,12 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>JReleaser follows a series of steps to create and upload a release. You may invoke all steps in one go
-(the preferred way) or each step individually and separate from the others. The following sections describe
-these steps.</p>
+(the preferred way) or each step individually and separate from the others. Steps are executed sequentially;
+if one of them fails then the build fails. You may decide to resume from the start or from the last failed step.</p>
+</div>
+<div class="paragraph">
+<p>Announcers are the only exception, if one of them fails then the build may continue however a warning is printed
+out. You may decide to rerun all announcers or just the one that failed.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -228,10 +232,21 @@ these steps.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The preferred option is to invoke <a href="#_full_release">Full Release</a>.
+The preferred option is to invoke <a href="#_full_release">Full Release</a> as it runs all steps in the expected sequence.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The following diagram shows the steps and their dependencies with one another:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/jreleaser-workflow.png" alt="jreleaser workflow">
+</div>
+</div>
+<div class="paragraph">
+<p>The following sections describe these steps:</p>
 </div>
 </div>
 </div>
@@ -275,7 +290,7 @@ section found in the configuration.</p>
 <p>Signatures will be placed at <code>${basedir}/out/jreleaser/signatures</code>.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>, <a href="#_checksum">Checksum</a>.</p>
+<p>Depends on <a href="#_checksum">Checksum</a>.</p>
 </div>
 </div>
 </div>
@@ -288,7 +303,7 @@ all checksums, signatures (if enabled), all distribution artifacts, and every ma
 <a href="configuration/files.html" class="page">Files</a> section. Automatically calculates a changelog &amp; tags the release.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>, <a href="#_checksum">Checksum</a>, <a href="#_sign">Sign</a>.</p>
+<p>Depends on <a href="#_sign">Sign</a>.</p>
 </div>
 </div>
 </div>
@@ -305,7 +320,7 @@ each packager) and default templates bundled in the JReleaser distribution. Thes
 <p>Prepared files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>, <a href="#_checksum">Checksum</a>.</p>
+<p>Depends on <a href="#_checksum">Checksum</a>.</p>
 </div>
 </div>
 </div>
@@ -322,15 +337,7 @@ matching prepared directory to their respective package directory.</p>
 <p>Packaged files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>.</p>
-</div>
-<div class="paragraph">
-<p>Does not explicitly depend on <a href="#_prepare">Prepare</a> to give you the opportunity to tweak prepared files, however prepared files
-must exist before this step is invoked.</p>
-</div>
-<div class="paragraph">
-<p>Does not explicitly depend on <a href="#_release">Release</a> however some packagers such as Snap require downloading distribution files
-to locally build a snap.</p>
+<p>Depends on <a href="#_prepare">Prepare</a>.</p>
 </div>
 </div>
 </div>
@@ -343,11 +350,11 @@ this means creating or updating a "hombrew-tap" repository, for <a href="configu
 creating or merging a "jbang-catalog" repository.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>.</p>
+<p>Depends on <a href="#_package">Package</a>.</p>
 </div>
 <div class="paragraph">
-<p>Does not explicitly depend on <a href="#_package">Package</a> to give you the opportunity to tweak packaged files, however packaged files
-must exist before this step is invoked.</p>
+<p>Does not explicitly depend on <a href="#_release">Release</a> however some packagers such as Snap require downloading distribution files
+to locally build a snap.</p>
 </div>
 </div>
 </div>
