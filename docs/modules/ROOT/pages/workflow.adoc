@@ -1,10 +1,19 @@
 = Workflow
 
 JReleaser follows a series of steps to create and upload a release. You may invoke all steps in one go
-(the preferred way) or each step individually and separate from the others. The following sections describe
-these steps.
+(the preferred way) or each step individually and separate from the others. Steps are executed sequentially;
+if one of them fails then the build fails. You may decide to resume from the start or from the last failed step.
 
-TIP: The preferred option is to invoke <<_full_release>>.
+Announcers are the only exception, if one of them fails then the build may continue however a warning is printed
+out. You may decide to rerun all announcers or just the one that failed.
+
+TIP: The preferred option is to invoke <<_full_release>> as it runs all steps in the expected sequence.
+
+The following diagram shows the steps and their dependencies with one another:
+
+image::jreleaser-workflow.png[]
+
+The following sections describe these steps:
 
 == Changelog
 
@@ -31,7 +40,7 @@ section found in the configuration.
 
 Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
 
-Depends on <<_changelog>>, <<_checksum>>.
+Depends on <<_checksum>>.
 
 == Release
 
@@ -39,7 +48,7 @@ Creates a release at the configured remote Git repository (see xref:configuratio
 all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
 xref:configuration:files.adoc[] section. Automatically calculates a changelog & tags the release.
 
-Depends on <<_changelog>>, <<_checksum>>, <<_sign>>.
+Depends on <<_sign>>.
 
 == Prepare
 
@@ -50,7 +59,7 @@ xref:configuration:name-templates.adoc[] to parameterize their contents.
 
 Prepared files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
 
-Depends on <<_changelog>>, <<_checksum>>.
+Depends on <<_checksum>>.
 
 == Package
 
@@ -61,13 +70,7 @@ matching prepared directory to their respective package directory.
 
 Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
 
-Depends on <<_changelog>>.
-
-Does not explicitly depend on <<_prepare>> to give you the opportunity to tweak prepared files, however prepared files
-must exist before this step is invoked.
-
-Does not explicitly depend on <<_release>> however some packagers such as Snap require downloading distribution files
-to locally build a snap.
+Depends on <<_prepare>>.
 
 == Upload
 
@@ -75,10 +78,10 @@ Publishes packaged files to their respective destinations. For example, for xref
 this means creating or updating a "hombrew-tap" repository, for xref:configuration:packagers/jbang.adoc[] this means
 creating or merging a "jbang-catalog" repository.
 
-Depends on <<_changelog>>.
+Depends on <<_package>>.
 
-Does not explicitly depend on <<_package>> to give you the opportunity to tweak packaged files, however packaged files
-must exist before this step is invoked.
+Does not explicitly depend on <<_release>> however some packagers such as Snap require downloading distribution files
+to locally build a snap.
 
 == Announce
 
