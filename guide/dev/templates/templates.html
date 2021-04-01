@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Quick Start - Ant :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/dev/quick-start/ant.html">
+    <title>Template Basics :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/templates/templates.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -45,16 +45,16 @@
     <span class="nav-text">Quick Start</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="cli.html">Quick Start - CLI</a>
+    <a class="nav-link" href="../quick-start/cli.html">Quick Start - CLI</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="maven.html">Quick Start - Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html">Quick Start - Maven</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="gradle.html">Quick Start - Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html">Quick Start - Gradle</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="ant.html">Quick Start - Ant</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quick-start/ant.html">Quick Start - Ant</a>
   </li>
 </ul>
   </li>
@@ -141,11 +141,11 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Templates</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../templates/templates.html">Template Basics</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="templates.html">Template Basics</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../templates/mustache.html">Mustache Primer</a>
+    <a class="nav-link" href="mustache.html">Mustache Primer</a>
   </li>
 </ul>
   </li>
@@ -215,140 +215,210 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li>Quick Start</li>
-    <li><a href="ant.html">Quick Start - Ant</a></li>
+    <li>Templates</li>
+    <li><a href="templates.html">Template Basics</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/ant.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/templates/pages/templates.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Quick Start - Ant</h1>
+<h1 class="page">Template Basics</h1>
 <div class="paragraph">
-<p>Your Ant build must be configured to create binary distributions (Zips and Tars). Review the
-<a href="http://ant.apache.org/">Ant</a> documentation to find out how to do that. Follow the instructions
-in the <a href="../install.html" class="page">Install</a> section to download and install the JReleaser Ant tasks. Once configured
-you can bootstrap a configuration file</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>$ ant jreleaser-init -Djreleaser.format=yml
-Buildfile: /Home/duke/app/build.xml
-
-jreleaser-init:
-Writing file /Home/duke/app/jreleaser.yml
-JReleaser initialized at /Home/duke/app
-
-BUILD SUCCESSFUL
-Total time: 0 seconds</code></pre>
-</div>
+<p>Once size does not fit all as no two build are setup identically. JReleaser recognizes this and lets you customize
+every single aspect of the release process, by means of parameterizable configuration settings and file templates.</p>
 </div>
 <div class="paragraph">
-<p>This generates a <code>jreleaser.yml</code> file with the following configuration</p>
-</div>
-<div class="listingblock">
-<div class="title">jreleaser.yml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  name: app
-  version: 1.0.0-SNAPSHOT
-  description: Awesome App
-  longDescription: Awesome App
-  website: https://acme.com/app
-  authors:
-    - Duke
-  license: Apache-2
-  java:
-    groupId: com.acme
-    version: 8
-
-release:
-  github:
-    owner: duke
-
-distributions:
-  app:
-    artifacts:
-      - path: path/to/{{distributionName}}-{{projectVersion}}.zip</code></pre>
-</div>
+<p>Many fields found in the <a href="../configuration/index.html" class="page">Configuration</a> options can be parameterized using
+<a href="https://mustache.github.io/">Mustache</a> templates. Basically you write down text as you&#8217;d normally do and use
+the <code>{{placeholder}}</code> syntax in places where you&#8217;d want to have a value placeholder be replace by
+the actual value as computed/exposed by JReleaser.</p>
 </div>
 <div class="paragraph">
-<p>Edit the file to suite your needs. JReleaser <strong>does not</strong> create artifact files for you. It assumes those are created using
-Ant; JReleaser only cares if the resolved artifact paths exist. Once you have edited the file you may verify its
-configuration by invoking</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>$ ant jreleaser-config</code></pre>
-</div>
+<p>There are several predefined <a href="../configuration/name-templates.html" class="page">Name Templates</a> that can be used as placeholders in configuration
+field names. You may also use these placeholders in template files, such as those that may be used by the
+<a href="../configuration/announce/mail.html" class="page">Mail</a> announcer, or the <a href="../configuration/packagers/homebrew.html" class="page">Homebrew</a> packager.</p>
 </div>
 <div class="paragraph">
-<p>At any time you may invoke any of the other commands, but when it&#8217;s time to make a release you have to invoke</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>$ ant jreleaser-full-release
-Buildfile: /Home/duke/app/build.xml
-
-jreleaser-full-release:
-JReleaser 0.1.0-SNAPSHOT
-Configuring with jreleaser.yml
- - basedir set to /Home/duke/app
-Reading configuration
-Loading properties from /Home/duke/.jreleaser/config.properties
-Validating configuration
-Project version set to 1.0.0
-Release is not snapshot
-Timestamp is 2021-03-28T12:25:16.219+02:00
-HEAD is at c3e39f1
-dryrun set to false
-Generating changelog: out/jreleaser/release/CHANGELOG.md
-Calculating checksums
-Signing files
-Signing is not enabled
-Releasing to https://github.com/duke/app
- - Uploading app-1.0.0.zip
- - Uploading app-1.0.0.tar.gz
- - Uploading checksums.txt
-Preparing distributions
-  - Preparing app distribution
-Packaging distributions
-  - Packaging app distribution
-Uploading distributions
-  - Uploading app distribution
-Announcing release
-Announcing is not enabled. Skipping.
-JReleaser succeeded after 3.007s
-Writing output properties to out/jreleaser/output.properties
-
-BUILD SUCCESSFUL
-Total time: 4 seconds</code></pre>
-</div>
+<p>JReleaser provides built-in file templates for all packagers which will be automatically selected when preparing files
+for a particular packager. You may override this behavior by providing your own templates, either at the default location
+expected by each packager, or by pointing the packager to a different template source.</p>
 </div>
 <div class="paragraph">
-<p>This command performs the following actions:</p>
+<p>Template files may be generated using the appropriate command exposed by your tool of choice:
+<a href="../tools/cli.html" class="page">CLI</a>, <a href="../tools/maven.html" class="page">Maven</a>, <a href="../tools/gradle.html" class="page">Gradle</a>, <a href="../tools/ant.html" class="page">Ant</a>.</p>
 </div>
-<div class="ulist">
+<div class="paragraph">
+<p>Some configuration elements let you define custom properties that may be used as placeholders, for example</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
 <ul>
 <li>
-<p>checksums all artifacts.</p>
+<p><a id="tabset1_yaml"></a>YAML</p>
 </li>
 <li>
-<p>signs all files (if signing is enabled).</p>
+<p><a id="tabset1_json"></a>JSON</p>
 </li>
 <li>
-<p>creates a release at the chosen Git repository.</p>
+<p><a id="tabset1_maven"></a>Maven</p>
 </li>
 <li>
-<p>prepares, packages, and uploads configured packagers (brew, jbang, etc).</p>
-</li>
-<li>
-<p>announces the release.</p>
+<p><a id="tabset1_gradle"></a>Gradle</p>
 </li>
 </ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
+  extraProperties:
+    foo: bar</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "project": {
+    "extraProperties": {
+      "foo": "bar"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;project&gt;
+    &lt;extraProperties&gt;
+      &lt;foo&gt;bar&lt;/foo&gt;
+    &lt;/extraProperties&gt;
+  &lt;/project&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  project {
+    extraProperties.put('foo', 'bar')
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>These extra properties will always be prefixed by their containing element, in this case <code>project</code>, thus the <code>foo</code>
+resolves to <code>projectFoo</code> and can be consumed as <code>{{projectFoo}}</code> from any template.</p>
+</div>
+<div class="paragraph">
+<p>A property name may use the special <code>_split</code> suffix in which case it&#8217;s assumed that the value is a literal that should
+be treated as a collection. The last character in the value is used as the separator.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset2_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset2_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset2_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset2_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset2_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
+  extraProperties:
+    foo_split: '1,2,3,4,5,'</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "project": {
+    "extraProperties": {
+      "foo_split": "1,2,3,4,5,"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;project&gt;
+    &lt;extraProperties&gt;
+      &lt;foo_split&gt;1,2,3,4,5,&lt;/foo_split&gt;
+    &lt;/extraProperties&gt;
+  &lt;/project&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  project {
+    extraProperties.put('foo_split', '1,2,3,4,5,')
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Given this input and the following template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>{{projectFoo}}
+
+{{#projectFoo}}
+{{.}}
+{{/projectFoo}}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then the resulting evalution will be</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>[1, 2, 3, 4, 5]
+
+1
+2
+3
+4
+5</code></pre>
+</div>
 </div>
 </article>
   </div>
