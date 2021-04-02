@@ -243,7 +243,620 @@
 </aside>
 <article class="doc">
 <h1 class="page">JReleaser CLI</h1>
-
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executes a JReleaser workflow as a command-line interface (CLI).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser -h
+Usage: jreleaser [-hV] [COMMAND]
+jreleaser
+  -h, --help      Show this help message and exit.
+  -V, --version   Print version information and exit.
+Commands:
+  init          Create a jreleaser config file
+  config        Display current configuration
+  template      Generate a tool template
+  changelog     Calculate the changelog
+  checksum      Calculate checksums
+  sign          Sign release artifacts
+  release       Create or update a release
+  prepare       Prepare all distributions
+  package       Package all distributions
+  upload        Upload all distributions
+  announce      Announce a release
+  full-release  Perform a full release</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following commands are supported:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_init"><a class="anchor" href="#_init"></a>init</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser init -h
+Usage: jreleaser init [-dhioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;]
+Create a jreleaser config file
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -d, --debug               Set log level to debug.
+  -f, --format=&lt;format&gt;     Configuration file format
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -o, --overwrite           Overwrite existing files
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Currently supported formats are: <code>yml</code>, <code>json</code>.</p>
+</div>
+<div class="paragraph">
+<p>The file will be generated at <code>&lt;basedir&gt;</code> if specified, otherwise at the current directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_config"><a class="anchor" href="#_config"></a>config</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser config -h
+Usage: jreleaser config [-dhiqVw] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Display current configuration
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_template"><a class="anchor" href="#_template"></a>template</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser template -h
+Usage: jreleaser template [-dhioqsVw] [-b=&lt;basedir&gt;] -dn=&lt;distributionName&gt;
+                          [-dt=&lt;distributionType&gt;] -tn=&lt;toolName&gt;
+Generate a tool template
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -d, --debug               Set log level to debug.
+      -dn, --distribution-name=&lt;distributionName&gt;
+                            The name of the distribution
+      -dt, --distribution-type=&lt;distributionType&gt;
+                            The type of the distribution
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -o, --overwrite           Overwrite existing files
+  -q, --quiet               Log errors only.
+  -s, --snapshot            Use snapshot templates
+      -tn, --tool-name=&lt;toolName&gt;
+                            The name of the tool
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the current directory.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> must eventually match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-type</code> must match any of the available
+<a href="../distributions/index.html" class="page">distribution types</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_changelog"><a class="anchor" href="#_changelog"></a>changelog</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser changelog -h
+Usage: jreleaser changelog [-dhiqVw] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Calculate the changelog
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_checksum"><a class="anchor" href="#_checksum"></a>checksum</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser checksum -h
+Usage: jreleaser checksum [-dhiqVw] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Calculate checksums
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sign"><a class="anchor" href="#_sign"></a>sign</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser sign -h
+Usage: jreleaser sign [-dhiqVw] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Sign release artifacts
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_release"><a class="anchor" href="#_release"></a>release</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser release -h
+Usage: jreleaser release [-dhiqVwy] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Create or update a release
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skips remote operations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prepare"><a class="anchor" href="#_prepare"></a>prepare</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser prepare -h
+Usage: jreleaser prepare [-dhiqVw] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                         [-dn=&lt;distributionName&gt;] [-tn=&lt;toolName&gt;]
+Prepare all distributions
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+      -dn, --distribution-name=&lt;distributionName&gt;
+                            The name of the distribution
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+      -tn, --tool-name=&lt;toolName&gt;
+                            The name of the tool
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+</div>
+<div class="paragraph">
+<p>You may invoke this command in the following ways:</p>
+</div>
+<div class="paragraph">
+<p>Prepare all distributions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser prepare</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prepare a single distribution with all configured tools:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser prepare --distribution-name app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prepare all distributions with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser prepare --tool-name brew</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prepare a single distribution with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser prepare --distribution-name app --tool-name brew</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_package"><a class="anchor" href="#_package"></a>package</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser package -h
+Usage: jreleaser package [-dhiqVwy] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                         [-dn=&lt;distributionName&gt;] [-tn=&lt;toolName&gt;]
+Package all distributions
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+      -dn, --distribution-name=&lt;distributionName&gt;
+                            The name of the distribution
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+      -tn, --tool-name=&lt;toolName&gt;
+                            The name of the tool
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skips remote operations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+</div>
+<div class="paragraph">
+<p>You may invoke this command in the following ways:</p>
+</div>
+<div class="paragraph">
+<p>Package all distributions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Package a single distribution with all configured tools:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser package --distribution-name app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Package all distributions with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser package --tool-name brew</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Package a single distribution with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser package --distribution-name app --tool-name brew</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upload"><a class="anchor" href="#_upload"></a>upload</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser upload -h
+Usage: jreleaser upload [-dhiqVwy] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                        [-dn=&lt;distributionName&gt;] [-tn=&lt;toolName&gt;]
+Upload all distributions
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+      -dn, --distribution-name=&lt;distributionName&gt;
+                            The name of the distribution
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+      -tn, --tool-name=&lt;toolName&gt;
+                            The name of the tool
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skips remote operations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+</div>
+<div class="paragraph">
+<p>You may invoke this command in the following ways:</p>
+</div>
+<div class="paragraph">
+<p>Upload all distributions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser upload</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upload a single distribution with all configured tools:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser upload --distribution-name app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upload all distributions with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser upload --tool-name brew</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upload a single distribution with a single tool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser upload --distribution-name app --tool-name brew</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_announce"><a class="anchor" href="#_announce"></a>announce</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser announce -h
+Usage: jreleaser announce [-dhiqVwy] [-an=&lt;announcerName&gt;] [-b=&lt;basedir&gt;]
+                          [-c=&lt;configFile&gt;]
+Announce a release
+      -an, --announcer-name=&lt;announcerName&gt;
+                            The name of the announcer
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skips remote operations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--announcer-name</code> must match any of the available <a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
+</div>
+<div class="paragraph">
+<p>You may invoke this command in the following ways:</p>
+</div>
+<div class="paragraph">
+<p>Announce with all configured announcers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser announce</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Announce with a single announcer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ jreleaser announce --announcer-name brew</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_full_release"><a class="anchor" href="#_full_release"></a>full-release</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jreleaser full-release -h
+Usage: jreleaser full-release [-dhiqVwy] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Perform a full release
+  -b, --basedir=&lt;basedir&gt;   Base directory
+  -c, --config-file=&lt;configFile&gt;
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skips remote operations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>
