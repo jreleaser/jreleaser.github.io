@@ -1,0 +1,135 @@
+= Simple Release
+
+The following configuration creates and tags a release at the chosen Git repository, in this case it will be
+pass:[https://github.com/duke/app]. The changelog will be automatically computed. No additional files nor
+distributions will be checksumed, signed, nor uploaded.
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  name: app
+  version: 1.0.0
+  description: My awesome app
+  website: pass:[https://acme.com/app]
+  authors:
+    - Duke
+  license: Apache-2.0
+
+release:
+  github:
+    owner: duke
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "name": "app",
+    "version": "1.0.0",
+    "description": "My awesome app",
+    "website": "pass:[https://acme.com/app]",
+    "authors": [
+      "Duke"
+    ],
+    "license": "Apache-2.0"
+  },
+
+  "release": {
+    "github": {
+      "owner": "duke"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim,attributes"]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>app</artifactId>
+  <version>1.0.0</version>
+
+  <name>app</name>
+  <description>Sample app</description>
+  <url>https://acme.com/app</url>
+  <inceptionYear>2020</inceptionYear>
+
+  <licenses>
+    <license>
+       <name>Apache-2.0</name>
+       <url>https://spdx.org/licenses/Apache-2.0.html</url>
+       <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>duke</id>
+      <name>dule</name>
+      <roles>
+        <role>author</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jreleaser-maven-plugin</artifactId>
+        <version>{jreleaser-version}</version>
+        <configuration>
+          <jreleaser>
+            <release>
+              <github>
+                <owner>duke</owner>
+              </github>
+            </release>
+          </jreleaser>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+plugins {
+    id 'org.jreleaser'
+}
+
+version = '1.0.0'
+
+jreleaser {
+  project {
+    name = 'app'
+    description = 'My awesome app'
+    website = 'pass:[https://acme.com/app]'
+    authors = ['Duke']
+    license = 'Apache-2.0'
+
+    release {
+      github {
+        owner = 'duke'
+      }
+    }
+  }
+}
+----
+====
+
