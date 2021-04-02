@@ -50,7 +50,12 @@ The following names are related to xref:configuration:project.adoc[]
 Additionally, every key/value from `project.extraProperties` is mapped with `project` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 project:
   extraProperties:
@@ -58,6 +63,52 @@ project:
     # with `project`, i.e, `projectFoo`.
     foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "extraProperties": {
+      // Key will be capitalized and prefixed
+      // with `project`, i.e, `projectFoo`.
+      "foo": "bar"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <project>
+    <extraProperties>
+      <!--
+        Key will be capitalized and prefixed
+        with `project`, i.e, `projectFoo`.
+      -->
+      <foo>bar</foo>
+    </extraProperties>
+  </project>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    // Key will be capitalized and prefixed
+    // with `project`, i.e, `projectFoo`.
+    extraProperties.put('foo', 'bar')
+  }
+}
+----
+====
 
 == Release
 
@@ -101,15 +152,72 @@ The following names are related to xref:configuration:distributions.adoc[]
 Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix 
 and the capitalized key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 distributions:
-  theName:
+  app:
     extraProperties:
       # Key will be capitalized and prefixed
       # with `distribution`, i.e, `distributionFoo`.
       foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `distribution`, i.e, `distributionFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `distribution`, i.e, `distributionFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      // Key will be capitalized and prefixed
+      // with `distribution`, i.e, `distributionFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
 
 == Artifact
 
@@ -145,7 +253,12 @@ Additional names become available when the artifact defines a `platform`
 
 Thus, for artifacts defined as
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 distributions:
   app:
@@ -154,6 +267,70 @@ distributions:
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "artifacts": [
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
+          "platform": "osx"
+        }
+      ],
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <artifacts>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}.zip</path>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
+          <platform>osx</platform>
+        </artifact>
+      </artifacts>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      artifacts {
+        artifact {
+          path = "path/to/${project.name}-${project.version}.zip"
+        }
+        artifact {
+          path = "path/to/${project.name}-${project.version}-mac.zip"
+          platform = 'osx'
+        }
+      }
+    }
+  }
+}
+----
+====
 
 The following names will be calculated:
 
@@ -185,7 +362,12 @@ The following names are related to xref:configuration:packagers/homebrew.adoc[]
 Additionally, every key/value from `brew.extraProperties` is mapped with `brew` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 packagers:
   brew:
@@ -194,6 +376,58 @@ packagers:
       # with `brew`, i.e, `brewFoo`.
       foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "brew": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `brew`, i.e, `brewFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <brew>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `brew`, i.e, `brewFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </brew>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    brew {
+      // Key will be capitalized and prefixed
+      // with `brew`, i.e, `brewFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
 
 == Chocolatey
 
@@ -208,7 +442,12 @@ The following names are related to xref:configuration:packagers/chocolatey.adoc[
 Additionally, every key/value from `chocolatey.extraProperties` is mapped with `chocolatey` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 packagers:
   chocolatey:
@@ -217,6 +456,58 @@ packagers:
       # with `chocolatey`, i.e, `chocolateyFoo`.
       foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "chocolatey": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `chocolatey`, i.e, `chocolateyFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <chocolatey>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `chocolatey`, i.e, `chocolateyFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </chocolatey>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    chocolatey {
+      // Key will be capitalized and prefixed
+      // with `chocolatey`, i.e, `chocolateyFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
 
 == Jbang
 
@@ -236,7 +527,12 @@ multi:: `{{reverseRepoHost}}.{{repoOwner}}.{{repoName}}:{{distributionArtifactId
 Additionally, every key/value from `jbang.extraProperties` is mapped with `jbang` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 packagers:
   jbang:
@@ -245,6 +541,58 @@ packagers:
       # with `jbang`, i.e, `jbangFoo`.
       foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "jbang": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `jbang`, i.e, `jbangFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <jbang>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `jbang`, i.e, `jbangFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </jbang>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    jbang {
+      // Key will be capitalized and prefixed
+      // with `jbang`, i.e, `jbangFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
 
 == Scoop
 
@@ -260,7 +608,12 @@ The following names are related to xref:configuration:packagers/scoop.adoc[]
 Additionally, every key/value from `scoop.extraProperties` is mapped with `scoop` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 packagers:
   scoop:
@@ -269,6 +622,58 @@ packagers:
       # with `scoop`, i.e, `scoopFoo`.
       foo: bar
 ----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "scoop": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `scoop`, i.e, `scoopFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <scoop>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `scoop`, i.e, `scoopFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </scoop>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    scoop {
+      // Key will be capitalized and prefixed
+      // with `scoop`, i.e, `scoopFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
 
 == Snap
 
@@ -315,7 +720,12 @@ A `Slot` defines the following fields
 Additionally, every key/value from `snap.extraProperties` is mapped with `snap` as key prefix and the capitalized
 key, such that
 
+[tabs]
+====
+YAML::
++
 [source,yaml]
+[subs="+macros"]
 ----
 packagers:
   snap:
@@ -324,4 +734,55 @@ packagers:
       # with `snap`, i.e, `snapFoo`.
       foo: bar
 ----
-
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "snap": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `snap`, i.e, `snapFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <snap>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `snap`, i.e, `snapFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </snap>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    snap {
+      // Key will be capitalized and prefixed
+      // with `snap`, i.e, `snapFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
