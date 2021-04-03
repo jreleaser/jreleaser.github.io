@@ -1,0 +1,188 @@
+= Discussions
+
+Posts a message to link:https://docs.github.com/en/discussions[GitHub Discussions]. You must provide a GitHub token with
+the `write:discussion` scope enabled. Will use the same token set in xref:configuration:release/github.adoc[].
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  # [optional]
+  discussions:
+
+    # Enable or disable this announcer.
+    # Defaults to `true`.
+    # [optional]
+    enabled: true
+
+    # The GitHub organization that owns the discussion.
+    # [required]
+    organization: some-org
+
+    # The GitHub team that owns the discussion.
+    # [required]
+    team: some-team
+
+    # The messages' title.
+    # Review the available xref:configuration:name-templates.adoc[].
+    # [optional]
+    title: {{projectNameCapitalized}} {{projectVersion}} released!
+
+    # The announcement message.
+    # Review the available xref:configuration:name-templates.adoc[].
+    # [optional]
+    message: icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+
+    # Path to a template file that contains the message.
+    # Review the available xref:configuration:name-templates.adoc[].
+    # Defaults to `src/jreleaser/templates/discussions.tpl`.
+    # [optional]
+    messageTemplate: path/to/template/discussions.tpl
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    // [optional]
+    "discussions": {
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      "enabled": true,
+
+      // The GitHub organization that owns the discussion.
+      // [required]
+      "organization": some-org,
+
+      // The GitHub team that owns the discussion.
+      // [required]
+      "team": "some-team",
+
+      // The messages' title.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // [optional]
+      "title": "{{projectNameCapitalized}} {{projectVersion}} released!",
+
+      // The announcement message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // [optional]
+      "message": "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/discussions.tpl`.
+      // [optional]
+      "messageTemplate": "path/to/template/discussions.tpl",
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <announce>
+    <!--
+      [optional]
+    -->
+    <discussions>
+
+      <!--
+        Enable or disable this announcer.
+        Defaults to `true`.
+        [optional]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        The GitHub organization that owns the discussion.
+        [required]
+      -->
+      <organization>some-org</organization>
+
+      <!--
+        The GitHub team that owns the discussion.
+        [required]
+      -->
+      <team>https>my.discussionschat.com/api/v1</team>
+
+      <!--
+        The messages' title.
+        Review the available xref:configuration>templates.adoc[].
+        [optional]
+      -->
+      <title>{{projectNameCapitalized}} {{projectVersion}} released!</title>
+
+      <!--
+        The announcement message.
+        Review the available xref:configuration>templates.adoc[].
+        [optional]
+      -->
+      <message>icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+
+      <!--
+        Path to a template file that contains the message.
+        Review the available xref:configuration:name-templates.adoc[].
+        Defaults to `src/jreleaser/templates/discussions.tpl`.
+        [optional]
+      -->
+      <messageTemplate>path/to/template/discussions.tpl</messageTemplate>
+    </discussions>
+  </announce>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    // [optional]
+    discussions {
+
+      // Enable or disable this announcer.
+      // Defaults to `true`.
+      // [optional]
+      enabled = true
+
+      // The GitHub organization that owns the discussion.
+      // [required]
+      organization = 'some-org'
+
+      // The GitHub team that owns the discussion.
+      // [required]
+      team = 'some-team'
+
+      // The messages' title.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // [optional]
+      title = '{{projectNameCapitalized}} {{projectVersion}} released!'
+
+      // The announcement message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // [optional]
+      message = 'icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available xref:configuration:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/discussions.tpl`.
+      // [optional]
+      messageTemplate = 'path/to/template/discussions.tpl'
+    }
+  }
+}
+----
+====
+
+You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
