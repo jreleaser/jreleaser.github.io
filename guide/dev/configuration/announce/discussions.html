@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Twitter :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/announce/twitter.html">
+    <title>Discussions :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/announce/discussions.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
@@ -134,7 +134,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Announce</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="discussions.html">Discussions</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -143,7 +143,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="twitter.html">Twitter</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -245,20 +245,20 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li>Configuration</li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="twitter.html">Twitter</a></li>
+    <li><a href="discussions.html">Discussions</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/twitter.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/discussions.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Twitter</h1>
+<h1 class="page">Discussions</h1>
 <div class="paragraph">
-<p>Tweets a new release. You must register a new Twitter application and obtain the set of credentials. Follow the
-instructions from <a href="https://developer.twitter.com/en/portal/projects-and-apps">Twitter</a> to complete this task.</p>
+<p>Posts a message to <a href="https://docs.github.com/en/discussions">GitHub Discussions</a>. You must provide a GitHub token with
+the <code>write:discussion</code> scope enabled. Will use the same token set in <a href="../release/github.html" class="page">Github</a>.</p>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -283,41 +283,36 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
   # [optional]
-  twitter:
+  discussions:
 
     # Enable or disable this announcer.
     # Defaults to `true`.
     # [optional]
     enabled: true
 
-    # The consumer key.
-    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
-    # environment variable must be defined.
+    # The GitHub organization that owns the discussion.
     # [required]
-    consumerKey:
+    organization: some-org
 
-    # The consumer token.
-    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
-    # environment variable must be defined.
+    # The GitHub team that owns the discussion.
     # [required]
-    consumerToken:
+    team: some-team
 
-    # The access token.
-    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-    # environment variable must be defined.
-    # [required]
-    accessToken:
-
-    # The access token secret.
-    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
-    # environment variable must be defined.
-    # [required]
-    accessTokenSecret:
+    # The messages' title.
+    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+    # [optional]
+    title: {{projectNameCapitalized}} {{projectVersion}} released!
 
     # The announcement message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
     # [optional]
-    status: <span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</code></pre>
+    message: <span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+
+    # Path to a template file that contains the message.
+    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+    # Defaults to `src/jreleaser/templates/discussions.tpl`.
+    # [optional]
+    messageTemplate: path/to/template/discussions.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -327,41 +322,36 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "announce": {
     // [optional]
-    "twitter": {
+    "discussions": {
 
       // Enable or disable this announcer.
       // Defaults to `true`.
       // [optional]
       "enabled": true,
 
-      // The consumer key.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
-      // environment variable must be defined.
+      // The GitHub organization that owns the discussion.
       // [required]
-      "consumerKey": "twitterConsumerKey",
+      "organization": some-org,
 
-      // The consumer token.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
-      // environment variable must be defined.
+      // The GitHub team that owns the discussion.
       // [required]
-      "consumerToken": "twitterConsumerToken",
+      "team": "some-team",
 
-      // The access token.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // [required]
-      "accessToken": "twitterAccessToken",
-
-      // The access token secret.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
-      // environment variable must be defined.
-      // [required]
-      "accessTokenSecret": "twitterAccessTokenSecret",
+      // The messages' title.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // [optional]
+      "title": "{{projectNameCapitalized}} {{projectVersion}} released!",
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // [optional]
-      "status": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+      "message": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/discussions.tpl`.
+      // [optional]
+      "messageTemplate": "path/to/template/discussions.tpl",
     }
   }
 }</code></pre>
@@ -376,7 +366,7 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
     &lt;!--
       [optional]
     --&gt;
-    &lt;twitter&gt;
+    &lt;discussions&gt;
 
       &lt;!--
         Enable or disable this announcer.
@@ -386,44 +376,39 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
       &lt;enabled&gt;true&lt;/enabled&gt;
 
       &lt;!--
-        The consumer key.
-        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
-        environment variable must be defined.
+        The GitHub organization that owns the discussion.
         [required]
       --&gt;
-      &lt;consumerKey&gt;twitterConsumerKey&lt;/consumerKey&gt;
+      &lt;organization&gt;some-org&lt;/organization&gt;
 
       &lt;!--
-        The consumer token.
-        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
-        environment variable must be defined.
+        The GitHub team that owns the discussion.
         [required]
       --&gt;
-      &lt;consumerToken&gt;twitterConsumerToken&lt;/consumerToken&gt;
+      &lt;team&gt;https&gt;my.discussionschat.com/api/v1&lt;/team&gt;
 
       &lt;!--
-        The access token.
-        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-        environment variable must be defined.
-        [required]
+        The messages' title.
+        Review the available <a href="#configuration&gt;templates.adoc" class="page unresolved">configuration&gt;templates.adoc</a>.
+        [optional]
       --&gt;
-      &lt;accessToken&gt;twitterAccessToken&lt;/accessToken&gt;
-
-      &lt;!--
-        The access token secret.
-        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
-        environment variable must be defined.
-        [required]
-      --&gt;
-      &lt;accessTokenSecret&gt;twitterAccessTokenSecret&lt;/accessTokenSecret&gt;
+      &lt;title&gt;{{projectNameCapitalized}} {{projectVersion}} released!&lt;/title&gt;
 
       &lt;!--
         The announcement message.
-        Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        Review the available <a href="#configuration&gt;templates.adoc" class="page unresolved">configuration&gt;templates.adoc</a>.
         [optional]
       --&gt;
-      &lt;status&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
-    &lt;/twitter&gt;
+      &lt;message&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/message&gt;
+
+      &lt;!--
+        Path to a template file that contains the message.
+        Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        Defaults to `src/jreleaser/templates/discussions.tpl`.
+        [optional]
+      --&gt;
+      &lt;messageTemplate&gt;path/to/template/discussions.tpl&lt;/messageTemplate&gt;
+    &lt;/discussions&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -433,48 +418,48 @@ instructions from <a href="https://developer.twitter.com/en/portal/projects-and-
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  announce =
+  announce {
     // [optional]
-    twitter =
+    discussions {
 
       // Enable or disable this announcer.
       // Defaults to `true`.
       // [optional]
-      enabled =  true
+      enabled = true
 
-      // The consumer key.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
-      // environment variable must be defined.
+      // The GitHub organization that owns the discussion.
       // [required]
-      consumerKey = 'twitterConsumerKey'
+      organization = 'some-org'
 
-      // The consumer token.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
-      // environment variable must be defined.
+      // The GitHub team that owns the discussion.
       // [required]
-      consumerToken = 'twitterConsumerToken'
+      team = 'some-team'
 
-      // The access token.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // [required]
-      accessToken = 'twitterAccessToken'
-
-      // The access token secret.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
-      // environment variable must be defined.
-      // [required]
-      accessTokenSecret = 'twitterAccessTokenSecret'
+      // The messages' title.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // [optional]
+      title = '{{projectNameCapitalized}} {{projectVersion}} released!'
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // [optional]
-      status = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      message = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/discussions.tpl`.
+      // [optional]
+      messageTemplate = 'path/to/template/discussions.tpl'
+    }
+  }
 }</code></pre>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>You may define either <code>message</code> or <code>messageTemplate</code>, with the former taking precedence over the latter.</p>
 </div>
 </article>
   </div>
