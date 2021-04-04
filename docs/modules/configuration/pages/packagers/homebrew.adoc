@@ -31,7 +31,7 @@ packagers:
     templateDirectory: path/to/brew/templates
 
     # A map of Homebrew dependencies.
-    # The key `:java` will be added automatically if not defined.
+    # The key `openjdk@${java.version}` will be added automatically if not defined.
     # [optional]
     dependencies:
       # key in symbol format
@@ -90,7 +90,7 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the tap repository.
-      # If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+      # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
       # environment variable may be defined.
       # [optional]
       token: __DO_NOT_SET_HERE__
@@ -117,7 +117,7 @@ JSON::
       "templateDirectory": "path/to/brew/templates",
 
       // A map of Homebrew dependencies.
-      // The key `:java` will be added automatically if not defined.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
       // [optional]
       "dependencies": {
         // key in symbol format
@@ -179,7 +179,7 @@ JSON::
         "username": "duke",
 
         // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable may be defined.
         // [optional]
         "token": "__DO_NOT_SET_HERE__"
@@ -219,7 +219,7 @@ Maven::
 
       <!--
         A map of Homebrew dependencies.
-        The key `:java` will be added automatically if not defined.
+        The key `openjdk@${java.version}` will be added automatically if not defined.
         [optional]
       -->
       <dependencies>
@@ -320,7 +320,7 @@ Maven::
 
         <!--
           Password or OAuth token with write access to the tap repository.
-          If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
           environment variable may be defined.
           [optional]
         -->
@@ -352,7 +352,7 @@ jreleaser {
       templateDirectory = 'path/to/brew/templates'
 
       // A map of Homebrew dependencies.
-      // The key `:java` will be added automatically if not defined.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
       // [optional]
       dependencies {
         // key in symbol format
@@ -412,7 +412,7 @@ jreleaser {
         username = 'duke'
 
         // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable may be defined.
         // [optional]
         token = '__DO_NOT_SET_HERE__'
@@ -423,6 +423,8 @@ jreleaser {
 ----
 ====
 
+NOTE: The tap token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
+be one of [`JRELEASER_HOMEBREW_GITHUB_TOKEN`, `JRELEASER_HOMEBREW_GITLAB_TOKEN`].
 
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a `app.rb` formula in the `duke/homebrew-tap` repository:
@@ -439,7 +441,7 @@ class App < Formula
 
   bottle :unneeded
 
-  depends_on :java => "8"
+  depends_on "openjdk@8"
 
   def install
     libexec.install Dir["*"]
