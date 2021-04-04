@@ -99,7 +99,10 @@
     <a class="nav-link" href="../release/index.html">Release</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../release/github.html">Github</a>
+    <a class="nav-link" href="../release/github.html">GitHub</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../release/gitlab.html">Gitlab</a>
   </li>
 </ul>
   </li>
@@ -325,7 +328,7 @@ packagers:
     templateDirectory: path/to/brew/templates
 
     # A map of Homebrew dependencies.
-    # The key `:java` will be added automatically if not defined.
+    # The key `openjdk@${java.version}` will be added automatically if not defined.
     # [optional]
     dependencies:
       # key in symbol format
@@ -384,7 +387,7 @@ packagers:
       username: duke
 
       # Password or OAuth token with write access to the tap repository.
-      # If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+      # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
       # environment variable may be defined.
       # [optional]
       token: __DO_NOT_SET_HERE__</code></pre>
@@ -411,7 +414,7 @@ packagers:
       "templateDirectory": "path/to/brew/templates",
 
       // A map of Homebrew dependencies.
-      // The key `:java` will be added automatically if not defined.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
       // [optional]
       "dependencies": {
         // key in symbol format
@@ -473,7 +476,7 @@ packagers:
         "username": "duke",
 
         // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable may be defined.
         // [optional]
         "token": "__DO_NOT_SET_HERE__"
@@ -513,7 +516,7 @@ packagers:
 
       &lt;!--
         A map of Homebrew dependencies.
-        The key `:java` will be added automatically if not defined.
+        The key `openjdk@${java.version}` will be added automatically if not defined.
         [optional]
       --&gt;
       &lt;dependencies&gt;
@@ -614,7 +617,7 @@ packagers:
 
         &lt;!--
           Password or OAuth token with write access to the tap repository.
-          If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
           environment variable may be defined.
           [optional]
         --&gt;
@@ -646,7 +649,7 @@ packagers:
       templateDirectory = 'path/to/brew/templates'
 
       // A map of Homebrew dependencies.
-      // The key `:java` will be added automatically if not defined.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
       // [optional]
       dependencies {
         // key in symbol format
@@ -706,7 +709,7 @@ packagers:
         username = 'duke'
 
         // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_GITHUB_TOKEN`
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable may be defined.
         // [optional]
         token = '__DO_NOT_SET_HERE__'
@@ -718,6 +721,19 @@ packagers:
 </div>
 </div>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The tap token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
+be one of [<code>JRELEASER_HOMEBREW_GITHUB_TOKEN</code>, <code>JRELEASER_HOMEBREW_GITLAB_TOKEN</code>].
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
@@ -735,7 +751,7 @@ a <code>app.rb</code> formula in the <code>duke/homebrew-tap</code> repository:<
 
   bottle :unneeded
 
-  depends_on :java =&gt; "8"
+  depends_on "openjdk@8"
 
   def install
     libexec.install Dir["*"]

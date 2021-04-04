@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GitHub :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/release/github.html">
+    <title>Gitlab :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/dev/configuration/release/gitlab.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
@@ -98,10 +98,10 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Release</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="github.html">GitHub</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="gitlab.html">Gitlab</a>
   </li>
 </ul>
@@ -251,17 +251,17 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li>Configuration</li>
     <li><a href="index.html">Release</a></li>
-    <li><a href="github.html">GitHub</a></li>
+    <li><a href="gitlab.html">Gitlab</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/release/github.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/release/gitlab.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">GitHub</h1>
+<h1 class="page">Gitlab</h1>
 <div class="tabset is-loading">
 <div class="ulist tabs">
 <ul>
@@ -287,8 +287,8 @@
 release:
   # Repo in which the release will be created.
   # [required]
-  github:
-    # Disables or enables publication to GitHub.
+  gitlab:
+    # Disables or enables publication to Gitlab.
     # defaults to `true`.
     enabled: true
 
@@ -301,17 +301,17 @@ release:
     # [optional]
     name: app
 
-    # The GitHub host url.
-    # Defaults to `github.com`.
+    # The Gitlab host url.
+    # Defaults to `gitlab.com`.
     # [required]
-    host: github.com
+    host: gitlab.com
 
     # Username used for authoring commits. Must have write access to the repository.
     # [required]
     username: duke
 
     # Password or OAuth token with write access to the repository.
-    # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+    # If left unspecified, the `JRELEASER_GITLAB_TOKEN`
     # environment variable must be defined.
     # [required]
     token: __DO_NOT_SET_HERE__
@@ -343,11 +343,11 @@ release:
     # [optional]
     skipTagging: false
 
-    # The GitHub API endpoint to use.
-    # Update it if using GitHub Enterprise.
-    # Defaults to `https://api.github.com`.
+    # The Gitlab API endpoint to use.
+    # You can skip `/api/v4` as it will be added by default.
+    # Defaults to `https://gitlab.com`.
     # [optional]
-    apiEndpoint: https://api.github.com
+    apiEndpoint: https://gitlab.com
 
     # Git author used to commit to the repository.
     # [optional]
@@ -396,17 +396,7 @@ release:
     # The target branch to use.
     # Defaults to `main`.
     # [optional]
-    targetCommitish: main
-
-    # Marks the release as a draft.
-    # Defaults to `false`.
-    # [optional]
-    draft: false
-
-    # Marks the release as prerelease.
-    # Defaults to `false`.
-    # [optional]
-    prerelease: false
+    ref: main
 
     # The following properties define [optional] URL formats.
     # Defaults are shown.
@@ -414,15 +404,15 @@ release:
 
     repoUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}
 
-    commitUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits
+    commitUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/commits
 
-    downloadUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}
+    downloadUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}
 
-    releaseNotesUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}
+    releaseNotesUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}
 
-    latestReleaseUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest
+    latestReleaseUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}
 
-    issueTrackerUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues</code></pre>
+    issueTrackerUrlFormat: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues</code></pre>
 </div>
 </div>
 </div>
@@ -434,8 +424,8 @@ release:
   "release": {
     // Repo in which the release will be created.
     // [required]
-    "github": {
-      // Disables or enables publication to GitHub.
+    "gitlab": {
+      // Disables or enables publication to Gitlab.
       // defaults to `true`.
       "enabled": true,
 
@@ -448,17 +438,17 @@ release:
       // [optional]
       "name": "app",
 
-      // The GitHub host url.
-      // Defaults to `github.com`.
+      // The Gitlab host url.
+      // Defaults to `gitlab.com`.
       // [required]
-      "host": "github.com",
+      "host": "gitlab.com",
 
       // Username used for authoring commits. Must have write access to the repository.
       // [required]
       "username": "duke",
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // If left unspecified, the `JRELEASER_GITLAB_TOKEN`
       // environment variable must be defined.
       // [required]
       "token": "__DO_NOT_SET_HERE__",
@@ -490,11 +480,11 @@ release:
       // [optional]
       "skipTagging": false,
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `https://api.github.com`.
+      // The Gitlab API endpoint to use.
+      // You can skip `/api/v4` as it will be added by default.
+      // Defaults to `https://gitlab.com`.
       // [optional]
-      "apiEndpoint": "https://api.github.com",
+      "apiEndpoint": "https://gitlab.com",
 
       // Git author used to commit to the repository.
       // [optional]
@@ -545,17 +535,7 @@ release:
       // The target branch to use.
       // Defaults to `main`.
       // [optional]
-      "targetCommitish": "main",
-
-      // Marks the release as a draft.
-      // Defaults to `false`.
-      // [optional]
-      "draft": false,
-
-      // Marks the release as prerelease.
-      // Defaults to `false`.
-      // [optional]
-      "prerelease": false,
+      "ref": "main",
 
       // The following properties define [optional] URL formats.
       // Defaults are shown.
@@ -563,15 +543,15 @@ release:
 
       "repoUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}",
 
-      "commitUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits",
+      "commitUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/commits",
 
-      "downloadUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}",
+      "downloadUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}",
 
-      "releaseNotesUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}",
+      "releaseNotesUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}",
 
-      "latestReleaseUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest",
+      "latestReleaseUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}",
 
-      "issueTrackerUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues"
+      "issueTrackerUrlFormat": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues"
     }
   }
 }</code></pre>
@@ -590,10 +570,10 @@ release:
       Repo in which the release will be created.
       [required]
     --&gt;
-    &lt;github&gt;
+    &lt;gitlab&gt;
 
       &lt;!--
-        Disables or enables publication to GitHub.
+        Disables or enables publication to Gitlab.
         defaults to `true`.
       --&gt;
       &lt;enabled&gt;true&lt;/enabled&gt;
@@ -612,11 +592,11 @@ release:
       &lt;name&gt;app&lt;/name&gt;
 
       &lt;!--
-        The GitHub host url.
-        Defaults to `github.com`.
+        The Gitlab host url.
+        Defaults to `gitlab.com`.
         [required]
       --&gt;
-      &lt;host&gt;github.com&lt;/host&gt;
+      &lt;host&gt;gitlab.com&lt;/host&gt;
 
       &lt;!--
         Username used for authoring commits. Must have write access to the repository.
@@ -626,7 +606,7 @@ release:
 
       &lt;!--
         Password or OAuth token with write access to the repository.
-        If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+        If left unspecified, the `JRELEASER_GITLAB_TOKEN`
         environment variable must be defined.
         [required]
       --&gt;
@@ -670,12 +650,12 @@ release:
       &lt;skipTagging&gt;false&lt;/skipTagging&gt;
 
       &lt;!--
-        The GitHub API endpoint to use.
-        Update it if using GitHub Enterprise.
-        Defaults to `https://api.github.com`.
+        The Gitlab API endpoint to use.
+        You can skip `/api/v4` as it will be added by default.
+        Defaults to `https://gitlab.com`.
         [optional]
       --&gt;
-      &lt;apiEndpoint&gt;https://api.github.com&lt;/apiEndpoint&gt;
+      &lt;apiEndpoint&gt;https://gitlab.com&lt;/apiEndpoint&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -748,21 +728,7 @@ release:
         Defaults to `main`.
         [optional]
       --&gt;
-      &lt;targetCommitish&gt;main&lt;/targetCommitish&gt;
-
-      &lt;!--
-        Marks the release as a draft.
-        Defaults to `false`.
-        [optional]
-      --&gt;
-      &lt;draft&gt;false&lt;/draft&gt;
-
-      &lt;!--
-        Marks the release as prerelease.
-        Defaults to `false`.
-        [optional]
-      --&gt;
-      &lt;prerelease&gt;false&lt;/prerelease&gt;
+      &lt;ref&gt;main&lt;/ref&gt;
 
       &lt;!--
         The following properties define [optional] URL formats.
@@ -771,16 +737,16 @@ release:
       --&gt;
       &lt;repoUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}&lt;/repoUrlFormat&gt;
 
-      &lt;commitUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits&lt;/commitUrlFormat&gt;
+      &lt;commitUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/commits&lt;/commitUrlFormat&gt;
 
-      &lt;downloadUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}&lt;/downloadUrlFormat&gt;
+      &lt;downloadUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}&lt;/downloadUrlFormat&gt;
 
-      &lt;releaseNotesUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}&lt;/releaseNotesUrlFormat&gt;
+      &lt;releaseNotesUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}&lt;/releaseNotesUrlFormat&gt;
 
-      &lt;latestReleaseUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest&lt;/latestReleaseUrlFormat&gt;
+      &lt;latestReleaseUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}&lt;/latestReleaseUrlFormat&gt;
 
-      &lt;issueTrackerUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues&lt;/issueTrackerUrlFormat&gt;
-    &lt;/github&gt;
+      &lt;issueTrackerUrlFormat&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues&lt;/issueTrackerUrlFormat&gt;
+    &lt;/gitlab&gt;
   &lt;/release&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -794,8 +760,8 @@ release:
   release {
     // Repo in which the release will be created.
     // [required]
-    github {
-      // Disables or enables publication to GitHub.
+    gitlab {
+      // Disables or enables publication to Gitlab.
       // defaults to `true`.
       enabled = true
 
@@ -808,17 +774,17 @@ release:
       // [optional]
       name = 'app'
 
-      // The GitHub host url.
-      // Defaults to `github.com`.
+      // The Gitlab host url.
+      // Defaults to `gitlab.com`.
       // [required]
-      host = 'github.com'
+      host = 'gitlab.com'
 
       // Username used for authoring commits. Must have write access to the repository.
       // [required]
       username = 'duke'
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // If left unspecified, the `JRELEASER_GITLAB_TOKEN`
       // environment variable must be defined.
       // [required]
       token = '__DO_NOT_SET_HERE__'
@@ -850,11 +816,11 @@ release:
       // [optional]
       skipTagging = false
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `https://api.github.com`.
+      // The Gitlab API endpoint to use.
+      // You can skip `/api/v4` as it will be added by default.
+      // Defaults to `https://gitlab.com`.
       // [optional]
-      apiEndpoint = 'https://api.github.com'
+      apiEndpoint = 'https://gitlab.com'
 
       // Git author used to commit to the repository.
       // [optional]
@@ -905,17 +871,7 @@ release:
       // The target branch to use.
       // Defaults to `main`.
       // [optional]
-      targetCommitish = 'main'
-
-      // Marks the release as a draft.
-      // Defaults to `false`.
-      // [optional]
-      draft = false
-
-      // Marks the release as prerelease.
-      // Defaults to `false`.
-      // [optional]
-      prerelease = false
+      ref = 'main'
 
       // The following properties define [optional] URL formats.
       // Defaults are shown.
@@ -923,15 +879,15 @@ release:
 
       repoUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}'
 
-      commitUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits'
+      commitUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/commits'
 
-      downloadUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}'
+      downloadUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}'
 
-      releaseNotesUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}'
+      releaseNotesUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}'
 
-      latestReleaseUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest'
+      latestReleaseUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}'
 
-      issueTrackerUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues'
+      issueTrackerUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues'
 }</code></pre>
 </div>
 </div>
