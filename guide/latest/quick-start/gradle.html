@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quick Start - Gradle :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/quick-start/gradle.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../_/css/all.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://jreleaser.org">JReleaser</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="guide" data-version="latest">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">JReleaser</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../install.html">Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Quick Start</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="cli.html">Quick Start - CLI</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="maven.html">Quick Start - Maven</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="gradle.html">Quick Start - Gradle</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="ant.html">Quick Start - Ant</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../workflow.html">Workflow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../distributions/index.html">Distributions</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/java-binary.html">Java Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/jlink.html">Jlink</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Configuration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/environment.html">Environment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/project.html">Project</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/signing.html">Signing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/release/index.html">Release</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/release/github.html">GitHub</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/release/gitlab.html">Gitlab</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/packagers/index.html">Packagers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/packagers/chocolatey.html">Chocolatey</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/packagers/homebrew.html">Homebrew</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/packagers/jbang.html">Jbang</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/distributions.html">Distributions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/files.html">Files</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/announce/index.html">Announce</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/discussions.html">Discussions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/mail.html">Mail</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/sdkman.html">Sdkman</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/slack.html">Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/twitter.html">Twitter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/announce/zulip.html">Zulip</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../configuration/name-templates.html">Name Templates</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Templates</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/templates.html">Template Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/mustache.html">Mustache Primer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Continuous Integration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tools</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tools/cli.html">JReleaser CLI</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tools/maven.html">JReleaser Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tools/gradle.html">JReleaser Gradle Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tools/ant.html">JReleaser Ant Tasks</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../tools/tool-provider.html">JReleaser Tool Provider</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Examples</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../examples/simple-release.html">Simple Release</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../links.html">Links</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JReleaser</span>
+    <span class="version">latest</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">JReleaser</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">latest</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">JReleaser</a></li>
+    <li>Quick Start</li>
+    <li><a href="gradle.html">Quick Start - Gradle</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/gradle.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Quick Start - Gradle</h1>
+<div class="paragraph">
+<p>Your project should be able to produce binary distributions, a feat typically achieved by configuring
+the <code><a href="https://docs.gradle.org/current/userguide/application_plugin.html">application</a></code> plugin.</p>
+</div>
+<div class="paragraph">
+<p>You also have to configure the <a href="../tools/gradle.html" class="page">jreleaser-gradle-plugin</a>. We recommend using the
+<a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp plugins</a> as they provide additional benefits,
+however their use is optional. A sample project using Kordamp may look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.kordamp.gradle.java-project' version '0.44.0'
+    id 'org.jreleaser' version '0.1.0-SNAPSHOT'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+config {
+    info {
+        name          = 'app'
+        description   = 'App'
+        inceptionYear = '2021'
+        vendor        = 'Acme'
+
+        links {
+            website      = 'https://acme.com/app'
+            issueTracker = 'https://github.com/duke/app/issues'
+            scm          = 'https://github.com/duke/app.git'
+        }
+
+        scm {
+            url                 = 'https://github.com/duke/app'
+            connection          = 'scm:git:https://github.com/duke/app.git'
+            developerConnection = 'scm:git:git@github.com:duke/app.git'
+        }
+
+        people {
+            person {
+                id    = 'duke'
+                name  = 'Java Duke'
+                roles = ['developer', 'author']
+            }
+        }
+    }
+
+    licensing {
+        licenses {
+            license {
+                id = 'Apache-2.0'
+            }
+        }
+    }
+}
+
+jreleaser {
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This setup configures the project with the following</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generate additional JAR manifest entries.</p>
+</li>
+<li>
+<p>Generate a <code>-sources</code> JAR file with all sources per project.</p>
+</li>
+<li>
+<p>Configure the javadoc task for each project using information found in the config block, such as author,
+copyright year, default settings.</p>
+</li>
+<li>
+<p>Generate a <code>-javadoc</code> JAR file with the output of the javadoc task, per project.</p>
+</li>
+<li>
+<p>Configure the license plugin with the license details</p>
+</li>
+<li>
+<p>Configure the maven-publish plugin. The <code>-sources</code> and <code>-javadoc</code> JARs are automatically added to the default publication.</p>
+</li>
+<li>
+<p>Configure the generated POM.</p>
+</li>
+<li>
+<p>Configure the jacoco plugin.</p>
+</li>
+<li>
+<p>Generate a source stats task.</p>
+</li>
+<li>
+<p>Generate a task to collect pretty-printed sources.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Whereas a plain project would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.jreleaser' version '0.1.0-SNAPSHOT'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+jreleaser {
+    project {
+        website = 'https://acme.com/app'
+        authors = ['Duke']
+        license = 'Apache-2.0'
+    }
+
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JReleaser Gradle plugin detects the use of the <code>application</code> plugin and automatically configures the output files
+from the <code>assembleDist</code> task.</p>
+</div>
+<div class="paragraph">
+<p>Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>$ gradle jreleaserConfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At any time you may invoke any of the other commands, but when it&#8217;s time to make a release you have to invoke</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>$ gradle jreleaseFullRelease
+[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-03-28T12:25:16.219+02:00
+[INFO]  HEAD is at c3e39f1
+&gt; Task :compileJava
+&gt; Task :processResources NO-SOURCE
+&gt; Task :classes
+&gt; Task :minpom
+&gt; Task :jar
+&gt; Task :startScripts
+&gt; Task :distTar
+&gt; Task :distZip
+&gt; Task :assembleDist
+
+&gt; Task :jreleaserFullRelease
+[INFO]  dryrun set to false
+[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Calculating checksums
+[INFO]  Signing files
+[INFO]  Signing is not enabled
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - Uploading app-1.0.0.zip
+[INFO]   - Uploading app-1.0.0.tar.gz
+[INFO]   - Uploading checksums.txt
+[INFO]  Preparing distributions
+[INFO]    - Preparing app distribution
+[INFO]  Packaging distributions
+[INFO]    - Packaging app distribution
+[INFO]  Uploading distributions
+[INFO]    - Uploading app distribution
+[INFO]  Announcing release
+[INFO]  Announcing is not enabled. Skipping.
+[INFO]  JReleaser succeeded after 3.007s
+[INFO]  Writing output properties to build/jreleaser/output.properties
+
+--------------------------------------------------------------------
+1 projects                                       CONF        EXEC
+--------------------------------------------------------------------
+: .................................. SUCCESS [  0.287 s] [  2.182 s]
+--------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>checksums all artifacts.</p>
+</li>
+<li>
+<p>signs all files (if signing is enabled).</p>
+</li>
+<li>
+<p>creates a release at the chosen Git repository.</p>
+</li>
+<li>
+<p>prepares, packages, and uploads configured packagers (brew, jbang, etc).</p>
+</li>
+<li>
+<p>announces the release (if configured).</p>
+</li>
+</ul>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2021 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
+</footer>
+<!--script src="../../../_/js/fontawesome.js"></script>
+<script src="../../../_/js/all.js"></script-->
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+
+  </body>
+</html>
