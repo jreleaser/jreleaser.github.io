@@ -295,12 +295,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       # Configure build steps as you'd normally do
 
       - name: Setup Java
-        uses: actions/setup-java@v1.4.3
+        uses: actions/setup-java@v1
         with:
           java-version: 1.8
           server-id: central
@@ -325,7 +327,7 @@ jobs:
       # IMPORTANT!
 
       - name: Setup Java for JReleaser
-        uses: actions/setup-java@v1.4.3
+        uses: actions/setup-java@v1
         with:
           java-version: 11
 
@@ -336,6 +338,19 @@ jobs:
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Note the <code>fetch-depth: 0</code> option on the <code>Checkout</code> workflow step. It is required for JReleaser to work properly.
+Without that, JReleaser might fail or behave incorrectly.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The last step executes a <code>full-release</code> with the default <code>jreleaser.yml</code> configuration that&#8217;s expected
