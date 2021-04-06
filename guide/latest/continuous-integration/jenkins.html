@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Java Binary :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/distributions/java-binary.html">
+    <title>Jenkins :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/continuous-integration/jenkins.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -69,13 +69,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Distributions</a>
+    <a class="nav-link" href="../distributions/index.html">Distributions</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="java-binary.html">Java Binary</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/java-binary.html">Java Binary</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="jlink.html">Jlink</a>
+    <a class="nav-link" href="../distributions/jlink.html">Jlink</a>
   </li>
 </ul>
   </li>
@@ -182,10 +182,10 @@
     <span class="nav-text">Continuous Integration</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
+    <a class="nav-link" href="github-actions.html">GitHub Actions</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/jenkins.html">Jenkins</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="jenkins.html">Jenkins</a>
   </li>
 </ul>
   </li>
@@ -255,121 +255,125 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li><a href="index.html">Distributions</a></li>
-    <li><a href="java-binary.html">Java Binary</a></li>
+    <li>Continuous Integration</li>
+    <li><a href="jenkins.html">Jenkins</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="file:///Users/aalmiray/dev/github/jreleaser.github.io/docs/modules/ROOT/pages/distributions/java-binary.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="file:///Users/aalmiray/dev/github/jreleaser.github.io/docs/modules/continuous-integration/pages/jenkins.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Java Binary</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Jenkins</h1>
 <div class="paragraph">
-<p>Distributions of this type conform to the following file structure:</p>
+<p>You can setup a <a href="https://www.jenkins.io">Jenkins</a> pipeline for Linux and Windows agents:</p>
 </div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_linux-agent"></a>Linux Agent</p>
+</li>
+<li>
+<p><a id="tabset1_windows-agent"></a>Windows Agent</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_linux-agent">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>.
-├── LICENSE
-├── README
-├── bin
-│   ├── app
-│   └── app.bat
-└── lib
-    └── app-1.0.0.jar</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Where:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>the <code>bin</code> folder contains executable launcher scripts.</p>
-</li>
-<li>
-<p>the <code>lib</code> folder contains all required JARs.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Java binary distributions <strong>require</strong> a suitable Java runtime to be installed on the consumer side; they are usually
-packaged as Zip or Tar files.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_a_distribution"><a class="anchor" href="#_creating_a_distribution"></a>Creating a Distribution</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>We recommend using the following plugins to create suitable Java binary distributions:</p>
-</div>
-<div class="ulist">
-<div class="title">Maven</div>
-<ul>
-<li>
-<p><a href="https://www.mojohaus.org/appassembler/appassembler-maven-plugin/">appassembler-maven-plugin</a>: generates distribution
-files that follow the expected structure.</p>
-</li>
-<li>
-<p><a href="http://maven.apache.org/plugins/maven-assembly-plugin/">maven-assembly-plugin</a>: packages the distribution as a Zip
-or Tar.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title">Gradle</div>
-<ul>
-<li>
-<p><a href="https://docs.gradle.org/current/userguide/application_plugin.html">application</a> plugin: generates distribution
-files that follow the expected structure. Also, packages the distribution as a Zip or Tar.</p>
-</li>
-</ul>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">pipeline {
+  ...
+
+  stages {
+    stage('Build') {
+      steps {
+        // Define your build step as you'd normally would.
+        // example:
+        git url: 'http://github.com/duke/app.git', branch: 'main'
+        sh 'mvn verify'
+      }
+    }
+
+    stage('Release') {
+      tools {
+        // JRelease requires Java 11 to run.
+        // Configure your own JDK 11+ installation
+        // and refer to it here
+        jdk '11'
+      }
+
+      environment {
+        // Setup required environment variables
+        JRELEASER_GITHUB_TOKEN = credentials('github-token')
+      }
+
+      steps {
+        // Get the jreleaser downloader
+        sh 'curl -sL https://git.io/get-jreleaser &gt; get_jreleaser.java'
+        // Download JReleaser with version = ${version}
+        // Change ${version} to a tagged JReleaser release
+        sh 'java get_jreleaser.java ${version}'
+        // Let's check we've got the right version
+        sh 'java -jar jreleaser-cli.jar --version'
+        // Execute a JReleaser command such as 'full-release'
+        sh 'java -jar jreleaser-cli.jar full-release'
+      }
+    }
+  }
+}</code></pre>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_packager_support"><a class="anchor" href="#_packager_support"></a>Packager Support</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Packager</th>
-<th class="tableblock halign-center valign-top">Supported</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../configuration/packagers/chocolatey.html" class="page">Chocolatey</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../configuration/packagers/homebrew.html" class="page">Homebrew</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../configuration/packagers/jbang.html" class="page">Jbang</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../configuration/packagers/scoop.html" class="page">Scoop</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../configuration/packagers/snap.html" class="page">Snap</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
-</tr>
-</tbody>
-</table>
+<div class="tab-pane" aria-labelledby="tabset1_windows-agent">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">pipeline {
+  ...
+
+  stages {
+    stage('Build') {
+      steps {
+        // Define your build step as you'd normally would.
+        // example:
+        git url: 'http://github.com/duke/app.git', branch: 'main'
+        bat 'mvn verify'
+      }
+    }
+
+    stage('Release') {
+      tools {
+        // JRelease requires Java 11 to run.
+        // Configure your own JDK 11+ installation
+        // and refer to it here
+        jdk '11'
+      }
+
+      environment {
+        // Setup required environment variables
+        JRELEASER_GITHUB_TOKEN = credentials('github-token')
+      }
+
+      steps {
+        // Get the jreleaser downloader
+        bat 'powershell -Command "(new-object net.webclient).DownloadString(\'https://git.io/get-jreleaser\')" &gt; get_jreleaser.java'
+        // Download JReleaser with version = ${version}
+        // Change ${version} to a tagged JReleaser release
+        bat 'java get_jreleaser.java ${version}'
+        // Let's check we've got the right version
+        bat 'java -jar jreleaser-cli.jar --version'
+        // Execute a JReleaser command such as 'full-release'
+        bat 'java -jar jreleaser-cli.jar full-release'
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </article>
