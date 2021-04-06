@@ -1,0 +1,101 @@
+= Jenkins
+
+You can setup a link:https://www.jenkins.io[Jenkins] pipeline for Linux and Windows agents:
+
+[tabs]
+====
+Linux Agent::
++
+--
+[source,groovy]
+----
+pipeline {
+  ...
+
+  stages {
+    stage('Build') {
+      steps {
+        // Define your build step as you'd normally would.
+        // example:
+        git url: 'http://github.com/duke/app.git', branch: 'main'
+        sh 'mvn verify'
+      }
+    }
+
+    stage('Release') {
+      tools {
+        // JRelease requires Java 11 to run.
+        // Configure your own JDK 11+ installation
+        // and refer to it here
+        jdk '11'
+      }
+
+      environment {
+        // Setup required environment variables
+        JRELEASER_GITHUB_TOKEN = credentials('github-token')
+      }
+
+      steps {
+        // Get the jreleaser downloader
+        sh 'curl -sL https://git.io/get-jreleaser > get_jreleaser.java'
+        // Download JReleaser with version = ${version}
+        // Change ${version} to a tagged JReleaser release
+        sh 'java get_jreleaser.java ${version}'
+        // Let's check we've got the right version
+        sh 'java -jar jreleaser-cli.jar --version'
+        // Execute a JReleaser command such as 'full-release'
+        sh 'java -jar jreleaser-cli.jar full-release'
+      }
+    }
+  }
+}
+----
+--
+Windows Agent::
++
+--
+[source,groovy]
+----
+pipeline {
+  ...
+
+  stages {
+    stage('Build') {
+      steps {
+        // Define your build step as you'd normally would.
+        // example:
+        git url: 'http://github.com/duke/app.git', branch: 'main'
+        bat 'mvn verify'
+      }
+    }
+
+    stage('Release') {
+      tools {
+        // JRelease requires Java 11 to run.
+        // Configure your own JDK 11+ installation
+        // and refer to it here
+        jdk '11'
+      }
+
+      environment {
+        // Setup required environment variables
+        JRELEASER_GITHUB_TOKEN = credentials('github-token')
+      }
+
+      steps {
+        // Get the jreleaser downloader
+        bat 'powershell -Command "(new-object net.webclient).DownloadString(\'https://git.io/get-jreleaser\')" > get_jreleaser.java'
+        // Download JReleaser with version = ${version}
+        // Change ${version} to a tagged JReleaser release
+        bat 'java get_jreleaser.java ${version}'
+        // Let's check we've got the right version
+        bat 'java -jar jreleaser-cli.jar --version'
+        // Execute a JReleaser command such as 'full-release'
+        bat 'java -jar jreleaser-cli.jar full-release'
+      }
+    }
+  }
+}
+----
+--
+====
