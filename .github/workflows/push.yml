@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2
 
       - name: Run Antora
         uses: kameshsampath/antora-site-action@master
@@ -19,9 +19,10 @@ jobs:
 
       - name: Copy landing page
         run: |
-          mkdir $GITHUB_WORKSPACE/website
+          mkdir -p $GITHUB_WORKSPACE/website/releases/latest/download/VERSION
           cp -rf $GITHUB_WORKSPACE/build/site/* $GITHUB_WORKSPACE/website
           cp -rf $GITHUB_WORKSPACE/landing/* $GITHUB_WORKSPACE/website
+          cp -rf $GITHUB_WORKSPACE/version/index.html $GITHUB_WORKSPACE/website/releases/latest/download/VERSION
           touch $GITHUB_WORKSPACE/website/.nojekyll
 
       - name: Deploy to GitHub Pages
