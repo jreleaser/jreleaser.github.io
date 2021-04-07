@@ -1,0 +1,454 @@
+= Docker
+
+Creates Docker images.
+
+NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Docker.
+
+WARNING: Snapshots are not supported.
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+# [optional]
+packagers:
+  # [optional]
+  docker:
+    # Enables or disables Docker.
+    # Defaults to `false`.
+    # [optional]
+    enabled: true
+
+    # Directory with file templates used to prepare the Docker distribution
+    # Defaults to `src/distribution/${distribution.name}/docker`.
+    # If specified, path must exist.
+    # [optional]
+    templateDirectory: path/to/docker/templates
+
+    # The base Docker image to use.
+    # [optional]
+    baseImage: "alpine:3.5"
+
+    # A list of image names.
+    # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+    # will be created.
+    # [optional]
+    imageNames:
+      - "{{repoOwner}}/{{distributionName}}:{{tagName}}"
+      - "duke/app:latest"
+
+    # A list of build arguments
+    # [optional]
+    buildArgs:
+      - "--pull"
+
+    # A map of Docker labels.
+    # [optional]
+    labels:
+      foo: bar
+
+    # Additional properties used when evaluating templates.
+    # [optional]
+    extraProperties:
+      # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+      foo: bar
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // [optional]
+  "packagers": {
+    // [optional]
+    "docker": {
+      // Enables or disables Docker.
+      // Defaults to `false`.
+      // [optional]
+      "enabled": true,
+
+      // Directory with file templates used to prepare the Docker distribution
+      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // If specified, path must exist.
+      // [optional]
+      "templateDirectory": "path/to/docker/templates",
+
+      // The base Docker image to use.
+      // [optional]
+      "baseImage": "alpine:3.5",
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // [optional]
+      "imageNames": [
+        "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+        "duke/app:latest"
+      ],
+
+      // A list of build arguments
+      // [optional]
+      "buildArgs": [
+        "--pull"
+      ],
+
+      // A map of Docker labels.
+      // [optional]
+      "labels": {
+        "foo": "bar"
+      },
+
+      // Additional properties used when evaluating templates.
+      // [optional]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <!--
+    [optional]
+  -->
+  <packagers>
+    <!--
+      [optional]
+    -->
+    <docker>
+      <!--
+        Enables or disables Docker.
+        Defaults to `false`.
+        [optional]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        Directory with file templates used to prepare the Docker distribution
+        Defaults to `src/distribution/${distribution.name}/docker`.
+        If specified, path must exist.
+        [optional]
+      -->
+      <templateDirectory>>path/to/docker/templates</templateDirectory>
+
+      <!--
+        The base Docker image to use.
+        [optional]
+      -->
+      <baseImage>alpine:3.5</baseImage>
+
+      <!--
+        A list of image names.
+        If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+        will be created.
+        [optional]
+      -->
+      <imageNames>
+        <imageName>{{repoOwner}}/{{distributionName}}:{{tagName}}</imageName>
+        <imageName>duke/app:latest</imageName>
+      </imageNames>
+
+      <!--
+        A list of build arguments
+        [optional]
+      -->
+      <buildArgs>
+        <buildArg>--pull</buildArg>
+      </buildArgs>
+
+      <!--
+        A map of Docker labels.
+        [optional]
+      -->
+      <labels>
+        <foo>bar</foo>
+      </labels>
+
+      <!--
+        Additional properties used when evaluating templates.
+        [optional]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </docker>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // [optional]
+  packagers {
+    // [optional]
+    docker {
+      // Enables or disables Docker.
+      // Defaults to `false`.
+      // [optional]
+      enabled = true
+
+      // Directory with file templates used to prepare the Docker distribution
+      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // If specified, path must exist.
+      // [optional]
+      templateDirectory = 'path/to/docker/templates'
+
+      // The base Docker image to use.
+      // [optional]
+      baseImage = 'alpine:3.5'
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // [optional]
+      addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
+      addImageName('duke/app:latest')
+
+      // A list of build arguments
+      // [optional]
+      addBuildArg('--pull')
+
+      // A map of Docker labels.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
+      // [optional]
+      addLabel('foo', 'bar')
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+      // [optional]
+      extraProperties.put('foo', 'bar')
+    }
+  }      
+}
+----
+====
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a Dockerfile like the following one:
+
+[source,dockerfile]
+----
+FROM azul/zulu-openjdk-alpine:8-jre
+
+LABEL "org.opencontainers.image.title"="app"
+LABEL "org.opencontainers.image.description"="Awesome App"
+LABEL "org.opencontainers.image.url"="https://acme.com/app"
+LABEL "org.opencontainers.image.licenses"="Apache-2.0"
+LABEL "org.opencontainers.image.version"="1.2.3"
+LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
+
+COPY assembly/app-1.2.3.zip /app-1.2.3.zip
+
+RUN unzip app-1.2.3.zip && \
+    rm app-1.2.3.zip && \
+    mv app-* app && \
+    chmod +x app/bin/app
+
+ENV PATH="${PATH}:/app/bin"
+
+ENTRYPOINT ["/app/bin/app"]
+----
+
+== Default Labels
+
+JReleaser will add the following labels if they are not explicitly defined:
+
+ * org.opencontainers.image.title = {{distributionName}}
+ * org.opencontainers.image.description = {{projectDescription}}
+ * org.opencontainers.image.url = {{projectWebsite}}
+ * org.opencontainers.image.licenses = {{projectLicense}}
+ * org.opencontainers.image.version = {{projectVersion}}
+ * org.opencontainers.image.revision = {{commitFullHash}}
+
+You may use any xref:configuration:name-templates.adoc[] as part of the label value.
+
+== Generic Image Names
+
+Some users might want to keep their image name as generic as possible. That can be accomplished simply by adding
+a template to the `imageNames` field.
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  name: app
+
+packagers:
+  docker:
+    enabled: true
+    imageNames:
+      - "myuser/{{projectName}}"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "name": "app"
+  },
+
+  "packagers": {
+    "docker": {
+      "enabled": true,
+      "imageNames": [
+        "myuser/{{projectName}}"
+      ]
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<!-- project.artifactId = app -->
+<jreleaser>
+  <packagers>
+    <docker>
+      <enabled>true</enabled>
+      <imageNames>
+        <imageName>myuser/{{projectName}}</imageName>
+      </imageNames>
+    </docker>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+// project.name = app
+jreleaser {
+  packagers {
+    docker {
+      enabled = true
+      addImageName('myuser/{{projectName}}')
+    }
+  }
+}
+----
+====
+
+This will build the following images:
+
+* `myuser/app`
+
+== Keeping docker images updated for current major
+
+Some users might want to when version to push docker tags `:v1`, `:v1.6`, `:v1.6.4` and `:latest` when `v1.6.4`
+(for example) is built. That can be accomplished by using multiple image names:
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  name: app
+
+packagers:
+  docker:
+    enabled: true
+    imageNames:
+    - "myuser/myimage:{{tagName}}"
+    - "myuser/myimage:v{{projectVersionMajor}}"
+    - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
+    - "myuser/myimage:latest"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "name": "app"
+  },
+
+  "packagers": {
+    "docker": {
+      "enabled": true,
+      "imageNames": [
+        "myuser/myimage:{{tagName}}",
+        "myuser/myimage:v{{projectVersionMajor}}",
+        "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+        "myuser/myimage:latest"
+      ]
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<!-- project.artifactId = app -->
+<jreleaser>
+  <packagers>
+    <docker>
+      <enabled>true</enabled>
+      <imageNames>
+        <imageName>myuser/myimage:{{tagName}}</imageName>
+        <imageName>myuser/myimage:v{{projectVersionMajor}}</imageName>
+        <imageName>myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}</imageName>
+        <imageName>myuser/myimage:latest</imageName>
+      </imageNames>
+    </docker>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+// project.name = app
+jreleaser {
+  packagers {
+    docker {
+      enabled = true
+      addImageName('myuser/myimage:{{tagName}}')
+      addImageName('myuser/myimage:v{{projectVersionMajor}}')
+      addImageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
+      addImageName('myuser/myimage:latest')
+    }
+  }
+}
+----
+====
+
+This will build the following images:
+
+* `myuser/myimage:v1.6.4`
+* `myuser/myimage:v1`
+* `myuser/myimage:v1.6`
+* `myuser/myimage:latest`
+
+

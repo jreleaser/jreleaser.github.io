@@ -515,6 +515,87 @@ jreleaser {
 ----
 ====
 
+== Docker
+
+The following names are related to xref:configuration:packagers/homedocker.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key             | Description
+| dockerBaseImage | the base Dcker image
+| dockerLabels    | a list of formatted labels
+|===
+
+Additionally, every key/value from `docker.extraProperties` is mapped with `docker` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  docker:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `docker`, i.e, `dockerFoo`.
+      foo: bar
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "docker": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `docker`, i.e, `dockerFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <docker>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `docker`, i.e, `dockerFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </docker>
+  </packagers>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    docker {
+      // Key will be capitalized and prefixed
+      // with `docker`, i.e, `dockerFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
+
 == Jbang
 
 The following names are related to xref:configuration:packagers/jbang.adoc[]
