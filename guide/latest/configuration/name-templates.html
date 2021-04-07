@@ -117,6 +117,9 @@
     <a class="nav-link" href="packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -259,8 +262,8 @@
     <li><a href="name-templates.html">Name Templates</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="file:///Users/aalmiray/dev/github/jreleaser.github.io/docs/modules/configuration/pages/name-templates.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/name-templates.adoc">Edit this Page</a></div>
+  </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
@@ -351,6 +354,26 @@ becomes <code>{{Env.JAVA_OPTS}}</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">projectVersion</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the project version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectVersionMajor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the major number of the project&#8217;s version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectVersionMinor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the minor number (if any) of the project&#8217;s version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectVersionPatch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the patch number (if any) of the project&#8217;s version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectVersionTag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the tag (if any) of the project&#8217;s version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectVersionBuild</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the build info (if any) of the project&#8217;s version</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">projectDescription</p></td>
@@ -525,6 +548,10 @@ key, such that</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">releaseName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the release name, defaults to <code>Release {{tagName}}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">milestoneName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the milestone name/title, defaults to <code>{{tagName}}</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">repoCanonicalName</p></td>
@@ -1160,6 +1187,123 @@ key, such that</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_docker"><a class="anchor" href="#_docker"></a>Docker</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following names are related to <a href="#configuration:packagers/homedocker.adoc" class="page unresolved">configuration:packagers/homedocker.adoc</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dockerBaseImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the base Dcker image</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dockerLabels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of formatted labels</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Additionally, every key/value from <code>docker.extraProperties</code> is mapped with <code>docker</code> as key prefix and the capitalized
+key, such that</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset6_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset6_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset6_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset6_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset6_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
+  docker:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `docker`, i.e, `dockerFoo`.
+      foo: bar</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset6_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "packagers": {
+    "docker": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `docker`, i.e, `dockerFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset6_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;docker&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed
+          with `docker`, i.e, `dockerFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+    &lt;/docker&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset6_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  packagers {
+    docker {
+      // Key will be capitalized and prefixed
+      // with `docker`, i.e, `dockerFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_jbang"><a class="anchor" href="#_jbang"></a>Jbang</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1213,21 +1357,21 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset6_yaml"></a>YAML</p>
+<p><a id="tabset7_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset6_json"></a>JSON</p>
+<p><a id="tabset7_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset6_maven"></a>Maven</p>
+<p><a id="tabset7_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset6_gradle"></a>Gradle</p>
+<p><a id="tabset7_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset6_yaml">
+<div class="tab-pane" aria-labelledby="tabset7_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -1239,7 +1383,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset6_json">
+<div class="tab-pane" aria-labelledby="tabset7_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1256,7 +1400,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset6_maven">
+<div class="tab-pane" aria-labelledby="tabset7_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -1275,7 +1419,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset6_gradle">
+<div class="tab-pane" aria-labelledby="tabset7_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -1330,21 +1474,21 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset7_yaml"></a>YAML</p>
+<p><a id="tabset8_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset7_json"></a>JSON</p>
+<p><a id="tabset8_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset7_maven"></a>Maven</p>
+<p><a id="tabset8_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset7_gradle"></a>Gradle</p>
+<p><a id="tabset8_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset7_yaml">
+<div class="tab-pane" aria-labelledby="tabset8_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -1356,7 +1500,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset7_json">
+<div class="tab-pane" aria-labelledby="tabset8_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1373,7 +1517,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset7_maven">
+<div class="tab-pane" aria-labelledby="tabset8_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -1392,7 +1536,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset7_gradle">
+<div class="tab-pane" aria-labelledby="tabset8_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -1549,21 +1693,21 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset8_yaml"></a>YAML</p>
+<p><a id="tabset9_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset8_json"></a>JSON</p>
+<p><a id="tabset9_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset8_maven"></a>Maven</p>
+<p><a id="tabset9_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset8_gradle"></a>Gradle</p>
+<p><a id="tabset9_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset8_yaml">
+<div class="tab-pane" aria-labelledby="tabset9_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -1575,7 +1719,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset8_json">
+<div class="tab-pane" aria-labelledby="tabset9_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1592,7 +1736,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset8_maven">
+<div class="tab-pane" aria-labelledby="tabset9_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -1611,7 +1755,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset8_gradle">
+<div class="tab-pane" aria-labelledby="tabset9_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {

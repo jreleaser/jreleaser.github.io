@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Jbang :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/packagers/jbang.html">
+    <title>Docker :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/packagers/docker.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
@@ -116,13 +116,13 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="chocolatey.html">Chocolatey</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="homebrew.html">Homebrew</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="jbang.html">Jbang</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -260,27 +260,45 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li>Configuration</li>
     <li><a href="index.html">Packagers</a></li>
-    <li><a href="jbang.html">Jbang</a></li>
+    <li><a href="docker.html">Docker</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/packagers/jbang.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/packagers/docker.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Jbang</h1>
+<h1 class="page">Docker</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Unleash the power of Java with <a href="https://github.com/jbangdev/jbang">jbang</a>. You can publish distributions as jbang
-catalogs.</p>
+<p>Creates Docker images.</p>
 </div>
-<div class="paragraph">
-<p>Each separate executable will have its own jbang script. All executables will be collected in the same catalog. Existing
-catalogs located at the target repository will be merged into a single catalog.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+At the moment, only artifacts with <code>.zip</code> extension may be packaged with Docker.
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p>Snapshots are supported, in which case executables will bear the <code>-snapshot</code> suffix in their alias.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Snapshots are not supported.
+</td>
+</tr>
+</table>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -306,67 +324,45 @@ catalogs located at the target repository will be merged into a single catalog.<
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># [optional]
 packagers:
   # [optional]
-  jbang:
-    # Enables or disables Jbang.
+  docker:
+    # Enables or disables Docker.
     # Defaults to `false`.
     # [optional]
     enabled: true
 
-    # Directory with file templates used to prepare the Jbang distribution
-    # Defaults to `src/distribution/${distribution.name}/jbang`.
+    # Directory with file templates used to prepare the Docker distribution
+    # Defaults to `src/distribution/${distribution.name}/docker`.
     # If specified, path must exist.
     # [optional]
-    templateDirectory: path/to/jbang/templates
+    templateDirectory: path/to/docker/templates
+
+    # The base Docker image to use.
+    # [optional]
+    baseImage: "alpine:3.5"
+
+    # A list of image names.
+    # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+    # will be created.
+    # [optional]
+    imageNames:
+      - "{{repoOwner}}/{{distributionName}}:{{tagName}}"
+      - "duke/app:latest"
+
+    # A list of build arguments
+    # [optional]
+    buildArgs:
+      - "--pull"
+
+    # A map of Docker labels.
+    # [optional]
+    labels:
+      foo: bar
 
     # Additional properties used when evaluating templates.
     # [optional]
     extraProperties:
-      # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
-      foo: bar
-
-    # The jbang executable alias.
-    # If left undefined, will use `${distribution.name}`
-    # [optional]
-    alias: cli
-
-    # Git author used to commit to the catalog repository.
-    # [optional]
-    commitAuthor:
-      # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
-      # [optional]
-      name: jreleaser-bot
-
-      # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
-      # [optional]
-      email: jreleaser-bot@jreleaser.org
-
-    # Git repository to push the formula to.
-    # Defaults are shown.
-    # [optional]
-    catalog:
-
-      # The owner of the catalog repository.
-      # Defaults to the same owner as the release repository.
-      # [optional]
-      owner: duke
-
-      # The name of the catalog repository.
-      # Defaults to `jbang-catalog`.
-      # [optional]
-      name: jbang-catalog
-
-      # Username used for authoring commits. Must have write access to the catalog repository.
-      # Defaults to the same username as the release repository.
-      # [optional]
-      username: duke
-
-      # Password or OAuth token with write access to the catalog repository.
-      # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-      # environment variable may be defined.
-      # [optional]
-      token: __DO_NOT_SET_HERE__</code></pre>
+      # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+      foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -377,69 +373,48 @@ packagers:
   // [optional]
   "packagers": {
     // [optional]
-    "jbang": {
-      // Enables or disables Jbang.
+    "docker": {
+      // Enables or disables Docker.
       // Defaults to `false`.
       // [optional]
       "enabled": true,
 
-      // Directory with file templates used to prepare the Jbang distribution
-      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // Directory with file templates used to prepare the Docker distribution
+      // Defaults to `src/distribution/${distribution.name}/docker`.
       // If specified, path must exist.
       // [optional]
-      "templateDirectory": "path/to/jbang/templates",
+      "templateDirectory": "path/to/docker/templates",
+
+      // The base Docker image to use.
+      // [optional]
+      "baseImage": "alpine:3.5",
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // [optional]
+      "imageNames": [
+        "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+        "duke/app:latest"
+      ],
+
+      // A list of build arguments
+      // [optional]
+      "buildArgs": [
+        "--pull"
+      ],
+
+      // A map of Docker labels.
+      // [optional]
+      "labels": {
+        "foo": "bar"
+      },
 
       // Additional properties used when evaluating templates.
       // [optional]
       "extraProperties": {
-        // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+        // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
         "foo": "bar"
-      },
-
-      // The jbang executable alias.
-      // If left undefined, will use `${distribution.name}`
-      // [optional]
-      "alias": "cli",
-
-      // Git author used to commit to the catalog repository.
-      // [optional]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
-        // [optional]
-        "name": "jreleaser-bot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `jreleaser-bot@jreleaser.org`.
-        // [optional]
-        "email": "jreleaser-bot@jreleaser.org"
-      },
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // [optional]
-      "catalog": {
-
-        // The owner of the catalog repository.
-        // Defaults to the same owner as the release repository.
-        // [optional]
-        "owner": "duke",
-
-        // The name of the catalog repository.
-        // Defaults to `jbang-catalog`.
-        // [optional]
-        "name": "jbang-catalog",
-
-        // Username used for authoring commits. Must have write access to the catalog repository.
-        // Defaults to the same username as the release repository.
-        // [optional]
-        "username": "duke",
-
-        // Password or OAuth token with write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-        // environment variable may be defined.
-        // [optional]
-        "token": "__DO_NOT_SET_HERE__"
       }
     }
   }
@@ -458,21 +433,54 @@ packagers:
     &lt;!--
       [optional]
     --&gt;
-    &lt;jbang&gt;
+    &lt;docker&gt;
       &lt;!--
-        Enables or disables Jbang.
+        Enables or disables Docker.
         Defaults to `false`.
         [optional]
       --&gt;
       &lt;enabled&gt;true&lt;/enabled&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the Jbang distribution
-        Defaults to `src/distribution/${distribution.name}/jbang`.
+        Directory with file templates used to prepare the Docker distribution
+        Defaults to `src/distribution/${distribution.name}/docker`.
         If specified, path must exist.
         [optional]
       --&gt;
-      &lt;templateDirectory&gt;&gt;path/to/jbang/templates&lt;/templateDirectory&gt;
+      &lt;templateDirectory&gt;&gt;path/to/docker/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        The base Docker image to use.
+        [optional]
+      --&gt;
+      &lt;baseImage&gt;alpine:3.5&lt;/baseImage&gt;
+
+      &lt;!--
+        A list of image names.
+        If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+        will be created.
+        [optional]
+      --&gt;
+      &lt;imageNames&gt;
+        &lt;imageName&gt;{{repoOwner}}/{{distributionName}}:{{tagName}}&lt;/imageName&gt;
+        &lt;imageName&gt;duke/app:latest&lt;/imageName&gt;
+      &lt;/imageNames&gt;
+
+      &lt;!--
+        A list of build arguments
+        [optional]
+      --&gt;
+      &lt;buildArgs&gt;
+        &lt;buildArg&gt;--pull&lt;/buildArg&gt;
+      &lt;/buildArgs&gt;
+
+      &lt;!--
+        A map of Docker labels.
+        [optional]
+      --&gt;
+      &lt;labels&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/labels&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -480,76 +488,11 @@ packagers:
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+          Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
-
-      &lt;!--
-        The jbang executable alias.
-        If left undefined, will use `${distribution.name}`
-        [optional]
-      --&gt;
-      &lt;alias&gt;cli&lt;/alias&gt;
-
-      &lt;!--
-        Git author used to commit to the repository.
-        [optional]
-      --&gt;
-      &lt;commitAuthor&gt;
-
-        &lt;!--
-           Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
-          [optional]
-        --&gt;
-        &lt;name&gt;jreleaser-bot&lt;/name&gt;
-
-        &lt;!--
-          E-mail used when authoring commits.
-          Defaults to `jreleaser-bot@jreleaser.org`.
-          [optional]
-        --&gt;
-        &lt;email&gt;jreleaser-bot@jreleaser.org&lt;/email&gt;
-      &lt;/commitAuthor&gt;
-
-      &lt;!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        [optional]
-      --&gt;
-      &lt;catalog&gt;
-
-        &lt;!--
-          The owner of the catalog repository.
-          Defaults to the same owner as the release repository.
-          [optional]
-        --&gt;
-        &lt;owner&gt;duke&lt;/owner&gt;
-
-        &lt;!--
-          The name of the catalog repository.
-          Defaults to `jbang-catalog`.
-          [optional]
-        --&gt;
-        &lt;name&gt;jbang-catalog&lt;/name&gt;
-
-        &lt;!--
-          Username used for authoring commits. Must have write access to the catalog repository.
-          Defaults to the same username as the release repository.
-          [optional]
-        --&gt;
-        &lt;username&gt;duke&lt;/username&gt;
-
-        &lt;!--
-          Password or OAuth token with write access to the catalog repository.
-          If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-          environment variable may be defined.
-          [optional]
-        --&gt;
-        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
-      &lt;/catalog&gt;
-    &lt;/jbang&gt;
+    &lt;/docker&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -562,68 +505,42 @@ packagers:
   // [optional]
   packagers {
     // [optional]
-    jbang {
-      // Enables or disables Jbang.
+    docker {
+      // Enables or disables Docker.
       // Defaults to `false`.
       // [optional]
       enabled = true
 
-      // Directory with file templates used to prepare the Jbang distribution
-      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // Directory with file templates used to prepare the Docker distribution
+      // Defaults to `src/distribution/${distribution.name}/docker`.
       // If specified, path must exist.
       // [optional]
-      templateDirectory = 'path/to/jbang/templates'
+      templateDirectory = 'path/to/docker/templates'
+
+      // The base Docker image to use.
+      // [optional]
+      baseImage = 'alpine:3.5'
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // [optional]
+      addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
+      addImageName('duke/app:latest')
+
+      // A list of build arguments
+      // [optional]
+      addBuildArg('--pull')
+
+      // A map of Docker labels.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
+      // [optional]
+      addLabel('foo', 'bar')
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
       // [optional]
       extraProperties.put('foo', 'bar')
-
-      // The jbang executable alias.
-      // If left undefined, will use `${distribution.name}`
-      // [optional]
-      alias = 'cli'
-
-      // Git author used to commit to the catalog repository.
-      // [optional]
-      commitAuthor {
-        // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
-        // [optional]
-        name = 'jreleaser-bot'
-
-        // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
-        // [optional]
-        email = 'jreleaser-bot@jreleaser.org'
-      }
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // [optional]
-      catalog {
-
-        // The owner of the catalog repository.
-        // Defaults to the same owner as the release repository.
-        // [optional]
-        owner = 'duke'
-
-        // The name of the catalog repository.
-        // Defaults to `jbang-catalog`.
-        // [optional]
-        name = 'jbang-catalog'
-
-        // Username used for authoring commits. Must have write access to the catalog repository.
-        // Defaults to the same username as the release repository.
-        // [optional]
-        username = 'duke'
-
-        // Password or OAuth token with write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-        // environment variable may be defined.
-        // [optional]
-        token = '__DO_NOT_SET_HERE__'
-      }
     }
   }
 }</code></pre>
@@ -631,105 +548,298 @@ packagers:
 </div>
 </div>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The catalog token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
-be one of [<code>JRELEASER_JBANG_GITHUB_TOKEN</code>, <code>JRELEASER_JBANG_GITLAB_TOKEN</code>, <code>JRELEASER_JBANG_GITEA_TOKEN</code>].
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You must define a value for <code>java.mainClass</code> in the owning distribution.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-When the project&#8217;s version is snapshot, unless manually updated, the default prepared template assumes JARs may be
-resolved from <a href="https://jitpack.io" class="bare">https://jitpack.io</a>.
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
-a <code>app.java</code> file in the <code>duke/jbang-catalog</code> repository:</p>
+a Dockerfile like the following one:</p>
 </div>
 <div class="listingblock">
-<div class="title">jbang-catalog.json</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM azul/zulu-openjdk-alpine:8-jre
+
+LABEL "org.opencontainers.image.title"="app"
+LABEL "org.opencontainers.image.description"="Awesome App"
+LABEL "org.opencontainers.image.url"="https://acme.com/app"
+LABEL "org.opencontainers.image.licenses"="Apache-2.0"
+LABEL "org.opencontainers.image.version"="1.2.3"
+LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
+
+COPY assembly/app-1.2.3.zip /app-1.2.3.zip
+
+RUN unzip app-1.2.3.zip &amp;&amp; \
+    rm app-1.2.3.zip &amp;&amp; \
+    mv app-* app &amp;&amp; \
+    chmod +x app/bin/app
+
+ENV PATH="${PATH}:/app/bin"
+
+ENTRYPOINT ["/app/bin/app"]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_default_labels"><a class="anchor" href="#_default_labels"></a>Default Labels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser will add the following labels if they are not explicitly defined:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>org.opencontainers.image.title = {{distributionName}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.description = {{projectDescription}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.url = {{projectWebsite}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.licenses = {{projectLicense}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.version = {{projectVersion}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.revision = {{commitFullHash}}</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You may use any <a href="../name-templates.html" class="page">Name Templates</a> as part of the label value.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generic_image_names"><a class="anchor" href="#_generic_image_names"></a>Generic Image Names</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some users might want to keep their image name as generic as possible. That can be accomplished simply by adding
+a template to the <code>imageNames</code> field.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset2_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset2_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset2_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset2_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset2_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
+  name: app
+
+packagers:
+  docker:
+    enabled: true
+    imageNames:
+      - "myuser/{{projectName}}"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_json">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "aliases": {
-    "app": {
-      "script-ref": "app.java",
-      "description": "Sample app"
+  "project": {
+    "name": "app"
+  },
+
+  "packagers": {
+    "docker": {
+      "enabled": true,
+      "imageNames": [
+        "myuser/{{projectName}}"
+      ]
     }
   }
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_maven">
 <div class="listingblock">
-<div class="title">app.java</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//usr/bin/env jbang "$0" "$@" ; exit $?
-//JAVA 8
-//DEPS com.acme:app:1.2.3
-
-public class app {
-    public static void main(String... args) throws Exception {
-        com.acme.Main.main(args);
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- project.artifactId = app --&gt;
+&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;docker&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;imageNames&gt;
+        &lt;imageName&gt;myuser/{{projectName}}&lt;/imageName&gt;
+      &lt;/imageNames&gt;
+    &lt;/docker&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">// project.name = app
+jreleaser {
+  packagers {
+    docker {
+      enabled = true
+      addImageName('myuser/{{projectName}}')
     }
+  }
 }</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
-<p>When the version is snapshot then the catalog and the script template change to:</p>
+<p>This will build the following images:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>myuser/app</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_keeping_docker_images_updated_for_current_major"><a class="anchor" href="#_keeping_docker_images_updated_for_current_major"></a>Keeping docker images updated for current major</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some users might want to when version to push docker tags <code>:v1</code>, <code>:v1.6</code>, <code>:v1.6.4</code> and <code>:latest</code> when <code>v1.6.4</code>
+(for example) is built. That can be accomplished by using multiple image names:</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset3_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset3_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset3_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset3_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset3_yaml">
 <div class="listingblock">
-<div class="title">jbang-catalog.json</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
+  name: app
+
+packagers:
+  docker:
+    enabled: true
+    imageNames:
+    - "myuser/myimage:{{tagName}}"
+    - "myuser/myimage:v{{projectVersionMajor}}"
+    - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
+    - "myuser/myimage:latest"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_json">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "aliases": {
-    "app-snapshot": {
-      "script-ref": "app_snapshot.java",
-      "description": "Sample app"
+  "project": {
+    "name": "app"
+  },
+
+  "packagers": {
+    "docker": {
+      "enabled": true,
+      "imageNames": [
+        "myuser/myimage:{{tagName}}",
+        "myuser/myimage:v{{projectVersionMajor}}",
+        "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+        "myuser/myimage:latest"
+      ]
     }
   }
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_maven">
 <div class="listingblock">
-<div class="title">app_snapshot.java</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//usr/bin/env jbang "$0" "$@" ; exit $?
-//JAVA 8
-//REPOS jitpack
-//DEPS com.github.duke:app:main-SNAPSHOT
-
-public class app_snapshot {
-    public static void main(String... args) throws Exception {
-        com.acme.Main.main(args);
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;!-- project.artifactId = app --&gt;
+&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;docker&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;imageNames&gt;
+        &lt;imageName&gt;myuser/myimage:{{tagName}}&lt;/imageName&gt;
+        &lt;imageName&gt;myuser/myimage:v{{projectVersionMajor}}&lt;/imageName&gt;
+        &lt;imageName&gt;myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}&lt;/imageName&gt;
+        &lt;imageName&gt;myuser/myimage:latest&lt;/imageName&gt;
+      &lt;/imageNames&gt;
+    &lt;/docker&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">// project.name = app
+jreleaser {
+  packagers {
+    docker {
+      enabled = true
+      addImageName('myuser/myimage:{{tagName}}')
+      addImageName('myuser/myimage:v{{projectVersionMajor}}')
+      addImageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
+      addImageName('myuser/myimage:latest')
     }
+  }
 }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This will build the following images:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>myuser/myimage:v1.6.4</code></p>
+</li>
+<li>
+<p><code>myuser/myimage:v1</code></p>
+</li>
+<li>
+<p><code>myuser/myimage:v1.6</code></p>
+</li>
+<li>
+<p><code>myuser/myimage:latest</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </article>

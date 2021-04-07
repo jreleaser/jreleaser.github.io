@@ -117,6 +117,9 @@
     <a class="nav-link" href="../packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -260,8 +263,8 @@
     <li><a href="gitea.html">Gitea</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="file:///Users/aalmiray/dev/github/jreleaser.github.io/docs/modules/configuration/pages/release/gitea.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/release/gitea.adoc">Edit this Page</a></div>
+  </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
@@ -329,6 +332,7 @@ release:
 
     # The name of the release.
     # If left unspecified, will use `Release ${tagName}`.
+    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # [optional]
     releaseName: Release v1.0.0
 
@@ -397,6 +401,20 @@ release:
       # [optional]
       links: false
 
+    # A milestone associated with the release
+    # [optional]
+    milestone:
+      # Close the milestone (if it exists and still open) upon release.
+      # Defaults to `true`.
+      # [optional]
+      close: true
+
+      # The name/title of the milestone.
+      # May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
+      # Defaults to `{{ tagName }}`.
+      # [optional]
+      name: {{ tagName }}
+
     # The target branch to use.
     # Defaults to `main`.
     # [optional]
@@ -463,6 +481,7 @@ release:
       "tagName": "v1.0.0",
 
       // The name of the release.
+      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
       // If left unspecified, will use `Release ${tagName}`.
       // [optional]
       "releaseName": "Release v1.0.0",
@@ -532,6 +551,20 @@ release:
         // Defaults to `false`.
         // [optional]
         "links": false
+      },
+
+      // A milestone associated with the release
+      // [optional]
+      "milestone": {
+        // Close the milestone (if it exists and still open) upon release.
+        // Defaults to `true`.
+        // [optional]
+        "close": true,
+
+        // The name/title of the milestone.
+        // May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
+        // Defaults to `{{ tagName }}`.
+        "name": "{{ tagName }}"
       },
 
       // The target branch to use.
@@ -623,6 +656,7 @@ release:
 
       &lt;!--
         The name of the release.
+        May define a `JRELEASER_RELEASE_NAME` environment variable instead.
         If left unspecified, will use `Release ${tagName}`.
         [optional]
       --&gt;
@@ -724,6 +758,27 @@ release:
       &lt;/changelog&gt;
 
       &lt;!--
+        A milestone associated with the release
+        [optional]
+      --&gt;
+      &lt;milestone&gt;
+
+        &lt;!--
+          Close the milestone (if it exists and still open) upon release.
+          Defaults to `true`.
+          [optional]
+         --&gt;
+        &lt;close&gt;true&lt;/close&gt;
+
+        &lt;!--
+          The name/title of the milestone.
+          May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
+          Defaults to `{{ tagName }}`.
+          [optional]
+         --&gt;
+        &lt;name&gt;{{ tagName }}&lt;/name&gt;
+      &lt;/milestone&gt;
+      &lt;!--
         The target branch to use.
         Defaults to `main`.
         [optional]
@@ -795,6 +850,7 @@ release:
       tagName = 'v1.0.0'
 
       // The name of the release.
+      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
       // If left unspecified, will use `Release ${tagName}`.
       // [optional]
       releaseName = 'Release v1.0.0'
@@ -864,6 +920,21 @@ release:
         // Defaults to `false`.
         // [optional]
         links = false
+      }
+
+      // A milestone associated with the release
+      // [optional]
+      milestone {
+        // Close the milestone (if it exists and still open) upon release.
+        // Defaults to `true`.
+        // [optional]
+        close = true
+
+        // The name/title of the milestone.
+        // May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
+        // Defaults to `{{ tagName }}`.
+        // [optional]
+        name = '{{ tagName }}'
       }
 
       // The target branch to use.
