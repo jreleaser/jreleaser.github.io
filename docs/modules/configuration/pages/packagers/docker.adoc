@@ -1,10 +1,13 @@
 = Docker
 
-Creates Docker images.
+Creates link:https://www.docker.com/[Docker] images.
 
 NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Docker.
 
 WARNING: Snapshots are not supported.
+
+IMPORTANT: Building and publishing docker images requires the `docker` command and a running Docker deamon.
+JReleaser will not install these tools.
 
 include::partial$legend.adoc[]
 
@@ -57,6 +60,37 @@ packagers:
     extraProperties:
       # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
       foo: bar
+
+    # A list of docker registries where images will be published.
+    # Image publication will be disabled if no registries are configured.
+    # icon:dot-circle[]
+    registries:
+
+        # The name of the registry. Must be unique.
+        # Use `DEFAULT` to match the default registry
+        # provided by the Docker daemon.
+        # icon:exclamation-triangle[]
+      - serverName: myRegistry
+
+        # The address of the docker registry.
+        # icon:exclamation-triangle[] if `serverName != DEFAULT`.
+        server: pass:[https://myregistry.com]
+
+        # The user that can publish images.
+        # Defaults to the same username as the release repository.
+        # icon:dot-circle[]
+        username: duke
+
+        # Password for login into the registry
+        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+        # environment variable must be defined.
+        # icon:dot-circle[] icon:eye-slash[]
+        password: __DO_NOT_SET_HERE__
+
+        # The name of the repository
+        # Defaults to the same owner as the release repository.
+        # icon:dot-circle[]
+        repositoryName: duke
 ----
 JSON::
 +
@@ -109,7 +143,41 @@ JSON::
       "extraProperties": {
         // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
         "foo": "bar"
-      }
+      },
+
+      // A list of docker registries where images will be published.
+      // Image publication will be disabled if no registries are configured.
+      // icon:dot-circle[]
+      "registries": [
+
+        {
+          // The name of the registry. Must be unique.
+          // Use `DEFAULT` to match the default registry
+          // provided by the Docker daemon.
+          // icon:exclamation-triangle[]
+          "serverName": "someName",
+
+          // The address of the docker registry.
+          // icon:exclamation-triangle[] if `serverName != DEFAULT`.
+          "server": "pass:[https://myregistry.com]",
+
+          // The user that can publish images.
+          // Defaults to the same username as the release repository.
+          // icon:dot-circle[]
+          "username": "duke",
+
+          // Password for login into the registry
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+          // environment variable must be defined.
+          // icon:dot-circle[] icon:eye-slash[]
+          "password": "__DO_NOT_SET_HERE__",
+
+          // The name of the repository
+          // Defaults to the same owner as the release repository.
+          // icon:dot-circle[]
+          "repositoryName": "duke"
+        }
+      ]
     }
   }
 }
@@ -186,6 +254,51 @@ Maven::
         -->
         <foo>bar</foo>
       </extraProperties>
+
+      <!--
+        A list of docker registries where images will be published.
+        Image publication will be disabled if no registries are configured.
+        icon:dot-circle[]
+      -->
+      <registries>
+        <registry>
+          <!--
+             The name of the registry. Must be unique.
+             Use `DEFAULT` to match the default registry
+             provided by the Docker daemon.
+             icon:exclamation-triangle[]
+          -->
+          <serverName>myRegistry</serverName>
+
+          <!--
+            The address of the docker registry.
+            icon:exclamation-triangle[] if `serverName != DEFAULT`.
+          -->
+          <server>pass[https: myregistry.com]</server>
+
+          <!--
+            The user that can publish images.
+            Defaults to the same username as the release repository.
+            icon:dot-circle[]
+          -->
+          <username>duke</username>
+
+          <!--
+            Password for login into the registry
+            If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+            environment variable must be defined.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <password>__DO_NOT_SET_HERE__</password>
+
+          <!--
+            The name of the repository
+            Defaults to the same owner as the release repository.
+            icon:dot-circle[]
+          -->
+          <repositoryName>duke</repositoryName>
+        </registry>
+      </registries>
     </docker>
   </packagers>
 </jreleaser>
@@ -235,6 +348,39 @@ jreleaser {
       // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
       // icon:dot-circle[]
       extraProperties.put('foo', 'bar')
+
+      // A list of docker registries where images will be published.
+      // Image publication will be disabled if no registries are configured.
+      // icon:dot-circle[]
+      registries {
+
+        // The name of the registry. Must be unique.
+        // Use `DEFAULT` to match the default registry
+        // provided by the Docker daemon.
+        // icon:exclamation-triangle[]
+        someName {
+
+          // The address of the docker registry.
+          // icon:exclamation-triangle[] if `serverName != DEFAULT`.
+          server = 'pass:[https://myregistry.com]'
+
+          // The user that can publish images.
+          // Defaults to the same username as the release repository.
+          // icon:dot-circle[]
+          username = 'duke'
+
+          // Password for login into the registry
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+          // environment variable must be defined.
+          // icon:dot-circle[] icon:eye-slash[]
+          password = '__DO_NOT_SET_HERE__'
+
+          // The name of the repository
+          // Defaults to the same owner as the release repository.
+          // icon:dot-circle[]
+          repositoryName = 'duke'
+        }
+      }
     }
   }      
 }
