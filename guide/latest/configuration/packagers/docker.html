@@ -274,7 +274,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Creates Docker images.</p>
+<p>Creates <a href="https://www.docker.com/">Docker</a> images.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -296,6 +296,19 @@ At the moment, only artifacts with <code>.zip</code> extension may be packaged w
 </td>
 <td class="content">
 Snapshots are not supported.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Building and publishing docker images requires the <code>docker</code> command and a running Docker deamon.
+JReleaser will not install these tools.
 </td>
 </tr>
 </table>
@@ -381,7 +394,38 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     extraProperties:
       # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-      foo: bar</code></pre>
+      foo: bar
+
+    # A list of docker registries where images will be published.
+    # Image publication will be disabled if no registries are configured.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    registries:
+
+        # The name of the registry. Must be unique.
+        # Use `DEFAULT` to match the default registry
+        # provided by the Docker daemon.
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      - serverName: myRegistry
+
+        # The address of the docker registry.
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
+        server: https://myregistry.com
+
+        # The user that can publish images.
+        # Defaults to the same username as the release repository.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        username: duke
+
+        # Password for login into the registry
+        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+        # environment variable must be defined.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        password: __DO_NOT_SET_HERE__
+
+        # The name of the repository
+        # Defaults to the same owner as the release repository.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        repositoryName: duke</code></pre>
 </div>
 </div>
 </div>
@@ -434,7 +478,41 @@ packagers:
       "extraProperties": {
         // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
         "foo": "bar"
-      }
+      },
+
+      // A list of docker registries where images will be published.
+      // Image publication will be disabled if no registries are configured.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "registries": [
+
+        {
+          // The name of the registry. Must be unique.
+          // Use `DEFAULT` to match the default registry
+          // provided by the Docker daemon.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          "serverName": "someName",
+
+          // The address of the docker registry.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
+          "server": "https://myregistry.com",
+
+          // The user that can publish images.
+          // Defaults to the same username as the release repository.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "username": "duke",
+
+          // Password for login into the registry
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+          // environment variable must be defined.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          "password": "__DO_NOT_SET_HERE__",
+
+          // The name of the repository
+          // Defaults to the same owner as the release repository.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "repositoryName": "duke"
+        }
+      ]
     }
   }
 }</code></pre>
@@ -511,6 +589,51 @@ packagers:
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
+
+      &lt;!--
+        A list of docker registries where images will be published.
+        Image publication will be disabled if no registries are configured.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;registries&gt;
+        &lt;registry&gt;
+          &lt;!--
+             The name of the registry. Must be unique.
+             Use `DEFAULT` to match the default registry
+             provided by the Docker daemon.
+             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          --&gt;
+          &lt;serverName&gt;myRegistry&lt;/serverName&gt;
+
+          &lt;!--
+            The address of the docker registry.
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
+          --&gt;
+          &lt;server&gt;pass[https: myregistry.com]&lt;/server&gt;
+
+          &lt;!--
+            The user that can publish images.
+            Defaults to the same username as the release repository.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;username&gt;duke&lt;/username&gt;
+
+          &lt;!--
+            Password for login into the registry
+            If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+            environment variable must be defined.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          --&gt;
+          &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
+
+          &lt;!--
+            The name of the repository
+            Defaults to the same owner as the release repository.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;repositoryName&gt;duke&lt;/repositoryName&gt;
+        &lt;/registry&gt;
+      &lt;/registries&gt;
     &lt;/docker&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -560,6 +683,39 @@ packagers:
       // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       extraProperties.put('foo', 'bar')
+
+      // A list of docker registries where images will be published.
+      // Image publication will be disabled if no registries are configured.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      registries {
+
+        // The name of the registry. Must be unique.
+        // Use `DEFAULT` to match the default registry
+        // provided by the Docker daemon.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        someName {
+
+          // The address of the docker registry.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
+          server = 'https://myregistry.com'
+
+          // The user that can publish images.
+          // Defaults to the same username as the release repository.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          username = 'duke'
+
+          // Password for login into the registry
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+          // environment variable must be defined.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          password = '__DO_NOT_SET_HERE__'
+
+          // The name of the repository
+          // Defaults to the same owner as the release repository.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          repositoryName = 'duke'
+        }
+      }
     }
   }
 }</code></pre>
