@@ -1,0 +1,72 @@
+= GitLab CI
+
+You can setup a link:https://docs.gitlab.com/ee/ci/README.html[GitLab CI] job as well.
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:maven.adoc[] or the xref:tools:gradle.adoc[] plugin instead.
+
+[source,yaml]
+[subs="+macros"]
+..gitlab-ci.yml
+----
+# Define a build step
+build:
+  # Specify an image that contains Java
+  # Alternatively you may use a maven image if
+  # your project does not rely on the Maven wrapper
+  image: azul/zulu-openjdk:11
+  # Bind to `build` stage
+  stage: build
+  # Full build
+  script:
+    - ./mvnw --batch-mode verify
+  # Save artifacts for release
+  artifacts:
+    paths:
+      - target/distributions/app/*.zip
+
+# Get the JReleaser bootstrapper
+get-jreleaser:
+  # Bind to `build` stage to make it run in parallel
+  stage: build
+  script:
+    - curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+  # Save the downloaded file
+  artifacts:
+    paths:
+      - '*.java'
+
+# Download JReleaser
+download-jreleaser:
+  # The JReleaser bootstrapper requires JDK 11+
+  image: azul/zulu-openjdk:11
+  # Bind to `test` stage
+  stage: test
+  # Invoke the bootstrapper and check it works
+  script:
+    - java get_jreleaser.java
+    - java -jar jreleaser-cli.jar --version
+  # Save the downloaded JAR
+  artifacts:
+    paths:
+      - jreleaser-cli.jar
+
+# Create a release
+release:
+  # JReleaser requires JDK 11+
+  image: azul/zulu-openjdk:11
+  # Bind to `deploy` stage
+  stage: deploy
+  # Set environment variables accordingly
+  variables:
+    JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
+    JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
+    JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
+    JRELEASER_GITLAB_TOKEN: $GL_PAT
+    # Disable shallow cloning so that JReleaser can diff between tags
+    # to generate a changelog
+    GIT_DEPTH: 0
+  # icon:rocket[] Execute JReleaser
+  script:
+    - java -jar jreleaser-cli.jar full-release
+----
