@@ -18,7 +18,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        // Define your build step as usual.
+        // Define your build step as you'd normally do.
         // example:
         git url: 'http://github.com/duke/app.git', branch: 'main'
         sh 'mvn verify'
@@ -41,9 +41,10 @@ pipeline {
       steps {
         // Get the jreleaser downloader
         sh 'curl -sL https://git.io/get-jreleaser > get_jreleaser.java'
-        // Download JReleaser with version = ${version}
-        // Change ${version} to a tagged JReleaser release
-        sh 'java get_jreleaser.java ${version}'
+        // Download JReleaser with version = <version>
+        // Change <version> to a tagged JReleaser release
+        // or leave it out to pull `latest`.
+        sh 'java get_jreleaser.java <version>'
         // Let's check we've got the right version
         sh 'java -jar jreleaser-cli.jar --version'
         // Execute a JReleaser command such as 'full-release'
@@ -65,7 +66,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        // Define your build step as usual.
+        // Define your build step as you'd normally do.
         // example:
         git url: 'http://github.com/duke/app.git', branch: 'main'
         bat 'mvn verify'
@@ -88,9 +89,10 @@ pipeline {
       steps {
         // Get the jreleaser downloader
         bat 'powershell -Command "(new-object net.webclient).DownloadString(\'https://git.io/get-jreleaser\')" > get_jreleaser.java'
-        // Download JReleaser with version = ${version}
-        // Change ${version} to a tagged JReleaser release
-        bat 'java get_jreleaser.java ${version}'
+        // Download JReleaser with version = <version>
+        // Change <version> to a tagged JReleaser release
+        // or leave it out to pull `latest`.
+        bat 'java get_jreleaser.java <version>'
         // Let's check we've got the right version
         bat 'java -jar jreleaser-cli.jar --version'
         // Execute a JReleaser command such as 'full-release'

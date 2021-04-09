@@ -1,0 +1,51 @@
+= Circle CI
+
+You can setup a link:https://circleci.com[Circle CI] pipeline.
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:maven.adoc[] or the xref:tools:gradle.adoc[] plugin instead.
+
+[source,yaml]
+[subs="+macros"]
+..circleci/config.yml
+----
+version: 2.0
+
+jobs:
+  build:
+    docker:
+      # Specify an image that contains Java
+      # JReleaser requires Java 11+
+      - image: circleci/openjdk:11
+    # Set environment variables accordingly
+    environment:
+      JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
+      JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
+      JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
+      JRELEASER_GITHUB_TOKEN: $GH_PATH
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+      - run: ./mvnw verify
+      - save_cache:
+            paths:
+              - ~/.m2
+            key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: |
+          # Get the jreleaser downloader
+          curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+          # Download JReleaser with version = <version>
+          # Change <version> to a tagged JReleaser release
+          # or leave it out to pull `latest`.
+          java get_jreleaser.java <version>
+          # Let's check we've got the right version
+          java -jar jreleaser-cli.jar --version
+          # icon:rocket[] Execute JReleaser
+          java -jar jreleaser-cli.jar full-release
+----
+
+You may split the pipeline into multiple steps if a different version of Java is required for building and testing.
+
