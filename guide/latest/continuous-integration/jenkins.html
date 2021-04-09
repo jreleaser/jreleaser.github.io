@@ -191,6 +191,9 @@
     <a class="nav-link" href="jenkins.html">Jenkins</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="circle-ci.html">Circle CI</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="gitlab-ci.html">GitLab CI</a>
   </li>
 </ul>
@@ -310,7 +313,7 @@ If you&#8217;re already building with either Maven or Gradle then you might use 
   stages {
     stage('Build') {
       steps {
-        // Define your build step as usual.
+        // Define your build step as you'd normally do.
         // example:
         git url: 'http://github.com/duke/app.git', branch: 'main'
         sh 'mvn verify'
@@ -333,9 +336,10 @@ If you&#8217;re already building with either Maven or Gradle then you might use 
       steps {
         // Get the jreleaser downloader
         sh 'curl -sL https://git.io/get-jreleaser &gt; get_jreleaser.java'
-        // Download JReleaser with version = ${version}
-        // Change ${version} to a tagged JReleaser release
-        sh 'java get_jreleaser.java ${version}'
+        // Download JReleaser with version = &lt;version&gt;
+        // Change &lt;version&gt; to a tagged JReleaser release
+        // or leave it out to pull `latest`.
+        sh 'java get_jreleaser.java &lt;version&gt;'
         // Let's check we've got the right version
         sh 'java -jar jreleaser-cli.jar --version'
         // Execute a JReleaser command such as 'full-release'
@@ -356,7 +360,7 @@ If you&#8217;re already building with either Maven or Gradle then you might use 
   stages {
     stage('Build') {
       steps {
-        // Define your build step as usual.
+        // Define your build step as you'd normally do.
         // example:
         git url: 'http://github.com/duke/app.git', branch: 'main'
         bat 'mvn verify'
@@ -379,9 +383,10 @@ If you&#8217;re already building with either Maven or Gradle then you might use 
       steps {
         // Get the jreleaser downloader
         bat 'powershell -Command "(new-object net.webclient).DownloadString(\'https://git.io/get-jreleaser\')" &gt; get_jreleaser.java'
-        // Download JReleaser with version = ${version}
-        // Change ${version} to a tagged JReleaser release
-        bat 'java get_jreleaser.java ${version}'
+        // Download JReleaser with version = &lt;version&gt;
+        // Change &lt;version&gt; to a tagged JReleaser release
+        // or leave it out to pull `latest`.
+        bat 'java get_jreleaser.java &lt;version&gt;'
         // Let's check we've got the right version
         bat 'java -jar jreleaser-cli.jar --version'
         // Execute a JReleaser command such as 'full-release'

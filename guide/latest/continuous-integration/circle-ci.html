@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Template Basics :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/templates/templates.html">
+    <title>Circle CI :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/continuous-integration/circle-ci.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -172,11 +172,11 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Templates</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="templates.html">Template Basics</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/templates.html">Template Basics</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="mustache.html">Mustache Primer</a>
+    <a class="nav-link" href="../templates/mustache.html">Mustache Primer</a>
   </li>
 </ul>
   </li>
@@ -185,16 +185,16 @@
     <span class="nav-text">Continuous Integration</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
+    <a class="nav-link" href="github-actions.html">GitHub Actions</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/jenkins.html">Jenkins</a>
+    <a class="nav-link" href="jenkins.html">Jenkins</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="circle-ci.html">Circle CI</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/circle-ci.html">Circle CI</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/gitlab-ci.html">GitLab CI</a>
+    <a class="nav-link" href="gitlab-ci.html">GitLab CI</a>
   </li>
 </ul>
   </li>
@@ -264,210 +264,77 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li>Templates</li>
-    <li><a href="templates.html">Template Basics</a></li>
+    <li>Continuous Integration</li>
+    <li><a href="circle-ci.html">Circle CI</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/templates/pages/templates.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/continuous-integration/pages/circle-ci.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Template Basics</h1>
+<h1 class="page">Circle CI</h1>
 <div class="paragraph">
-<p>Once size does not fit all as no two build are setup identically. JReleaser recognizes this and lets you customize
-every single aspect of the release process, by means of parameterizable configuration settings and file templates.</p>
+<p>You can setup a <a href="https://circleci.com">Circle CI</a> pipeline.</p>
 </div>
-<div class="paragraph">
-<p>Many fields found in the <a href="../configuration/index.html" class="page">Configuration</a> options can be parameterized using
-<a href="https://mustache.github.io/">Mustache</a> templates. Basically you write down text as you&#8217;d normally do and use
-the <code>{{placeholder}}</code> syntax in places where you&#8217;d want to have a value placeholder be replace by
-the actual value as computed/exposed by JReleaser.</p>
-</div>
-<div class="paragraph">
-<p>There are several predefined <a href="../configuration/name-templates.html" class="page">Name Templates</a> that can be used as placeholders in configuration
-field names. You may also use these placeholders in template files, such as those that may be used by the
-<a href="../configuration/announce/mail.html" class="page">Mail</a> announcer, or the <a href="../configuration/packagers/homebrew.html" class="page">Homebrew</a> packager.</p>
-</div>
-<div class="paragraph">
-<p>JReleaser provides built-in file templates for all packagers which will be automatically selected when preparing files
-for a particular packager. You may override this behavior by providing your own templates, either at the default location
-expected by each packager, or by pointing the packager to a different template source.</p>
-</div>
-<div class="paragraph">
-<p>Template files may be generated using the appropriate command exposed by your tool of choice:
-<a href="../tools/cli.html" class="page">CLI</a>, <a href="../tools/maven.html" class="page">Maven</a>, <a href="../tools/gradle.html" class="page">Gradle</a>, <a href="../tools/ant.html" class="page">Ant</a>.</p>
-</div>
-<div class="paragraph">
-<p>Some configuration elements let you define custom properties that may be used as placeholders, for example</p>
-</div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
-<ul>
-<li>
-<p><a id="tabset1_yaml"></a>YAML</p>
-</li>
-<li>
-<p><a id="tabset1_json"></a>JSON</p>
-</li>
-<li>
-<p><a id="tabset1_maven"></a>Maven</p>
-</li>
-<li>
-<p><a id="tabset1_gradle"></a>Gradle</p>
-</li>
-</ul>
-</div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset1_yaml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  extraProperties:
-    foo: bar</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_json">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "project": {
-    "extraProperties": {
-      "foo": "bar"
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_maven">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;project&gt;
-    &lt;extraProperties&gt;
-      &lt;foo&gt;bar&lt;/foo&gt;
-    &lt;/extraProperties&gt;
-  &lt;/project&gt;
-&lt;/jreleaser&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_gradle">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  project {
-    extraProperties.put('foo', 'bar')
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>These extra properties will always be prefixed by their containing element, in this case <code>project</code>, thus the <code>foo</code>
-resolves to <code>projectFoo</code> and can be consumed as <code>{{projectFoo}}</code> from any template.</p>
-</div>
-<div class="paragraph">
-<p>A property name may use the special <code>_split</code> suffix in which case it&#8217;s assumed that the value is a literal that should
-be treated as a collection. The last character in the value is used as the separator.</p>
-</div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
-<ul>
-<li>
-<p><a id="tabset2_yaml"></a>YAML</p>
-</li>
-<li>
-<p><a id="tabset2_json"></a>JSON</p>
-</li>
-<li>
-<p><a id="tabset2_maven"></a>Maven</p>
-</li>
-<li>
-<p><a id="tabset2_gradle"></a>Gradle</p>
-</li>
-</ul>
-</div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset2_yaml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  extraProperties:
-    foo_split: '1,2,3,4,5,'</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_json">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "project": {
-    "extraProperties": {
-      "foo_split": "1,2,3,4,5,"
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_maven">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;project&gt;
-    &lt;extraProperties&gt;
-      &lt;foo_split&gt;1,2,3,4,5,&lt;/foo_split&gt;
-    &lt;/extraProperties&gt;
-  &lt;/project&gt;
-&lt;/jreleaser&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_gradle">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  project {
-    extraProperties.put('foo_split', '1,2,3,4,5,')
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>Given this input and the following template:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you&#8217;re already building with either Maven or Gradle then you might use the
+<a href="../tools/maven.html" class="page">JReleaser Maven Plugin</a> or the <a href="../tools/gradle.html" class="page">JReleaser Gradle Plugin</a> plugin instead.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
+<div class="title">.circleci/config.yml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>{{projectFoo}}
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">version: 2.0
 
-{{#projectFoo}}
-{{.}}
-{{/projectFoo}}</code></pre>
+jobs:
+  build:
+    docker:
+      # Specify an image that contains Java
+      # JReleaser requires Java 11+
+      - image: circleci/openjdk:11
+    # Set environment variables accordingly
+    environment:
+      JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
+      JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
+      JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
+      JRELEASER_GITHUB_TOKEN: $GH_PATH
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+      - run: ./mvnw verify
+      - save_cache:
+            paths:
+              - ~/.m2
+            key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: |
+          # Get the jreleaser downloader
+          curl -sL <a href="https://git.io/get-jreleaser" class="bare">https://git.io/get-jreleaser</a> &gt; get_jreleaser.java
+          # Download JReleaser with version = &lt;version&gt;
+          # Change &lt;version&gt; to a tagged JReleaser release
+          # or leave it out to pull `latest`.
+          java get_jreleaser.java &lt;version&gt;
+          # Let's check we've got the right version
+          java -jar jreleaser-cli.jar --version
+          # <span class="icon"><i class="fa fa-rocket"></i></span> Execute JReleaser
+          java -jar jreleaser-cli.jar full-release</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then the resulting evalution will be</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>[1, 2, 3, 4, 5]
-
-1
-2
-3
-4
-5</code></pre>
-</div>
+<p>You may split the pipeline into multiple steps if a different version of Java is required for building and testing.</p>
 </div>
 </article>
   </div>
