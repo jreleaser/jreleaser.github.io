@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Distributions :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/distributions/index.html">
+    <title>GitLab CI :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/continuous-integration/gitlab-ci.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -67,15 +67,15 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Distributions</a>
+    <a class="nav-link" href="../distributions/index.html">Distributions</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="java-binary.html">Java Binary</a>
+    <a class="nav-link" href="../distributions/java-binary.html">Java Binary</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="jlink.html">Jlink</a>
+    <a class="nav-link" href="../distributions/jlink.html">Jlink</a>
   </li>
 </ul>
   </li>
@@ -185,13 +185,13 @@
     <span class="nav-text">Continuous Integration</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
+    <a class="nav-link" href="github-actions.html">GitHub Actions</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/jenkins.html">Jenkins</a>
+    <a class="nav-link" href="jenkins.html">Jenkins</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../continuous-integration/gitlab-ci.html">GitLab CI</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="gitlab-ci.html">GitLab CI</a>
   </li>
 </ul>
   </li>
@@ -261,37 +261,98 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li><a href="index.html">Distributions</a></li>
+    <li>Continuous Integration</li>
+    <li><a href="gitlab-ci.html">GitLab CI</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/distributions/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/continuous-integration/pages/gitlab-ci.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Distributions</h1>
+<h1 class="page">GitLab CI</h1>
 <div class="paragraph">
-<p>A distribution is a set of artifacts that contain the program/application that consumers will run.
-Typically, distributions package executable launcher scripts, required JAR dependencies, sometimes even
-a Java runtime. Distributions are often packaged as either Zip or Tar files.</p>
+<p>You can setup a <a href="https://docs.gitlab.com/ee/ci/README.html">GitLab CI</a> job as well.</p>
 </div>
-<div class="paragraph">
-<p>A typical distribution defines the following properties:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you&#8217;re already building with either Maven or Gradle then you might use the
+<a href="../tools/maven.html" class="page">JReleaser Maven Plugin</a> or the <a href="../tools/gradle.html" class="page">JReleaser Gradle Plugin</a> plugin instead.
+</td>
+</tr>
+</table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>a unique name identifying the distribution.</p>
-</li>
-<li>
-<p>the platform they require to run. If not defined it means the distribution runs on all supported platforms.</p>
-</li>
-<li>
-<p>a type of distribution. Distribution types enable the use of certain packagers.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="title">.gitlab-ci.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Define a build step
+build:
+  # Specify an image that contains Java
+  # Alternatively you may use a maven image if
+  # your project does not rely on the Maven wrapper
+  image: azul/zulu-openjdk:11
+  # Bind to `build` stage
+  stage: build
+  # Full build
+  script:
+    - ./mvnw --batch-mode verify
+  # Save artifacts for release
+  artifacts:
+    paths:
+      - target/distributions/app/*.zip
+
+# Get the JReleaser bootstrapper
+get-jreleaser:
+  # Bind to `build` stage to make it run in parallel
+  stage: build
+  script:
+    - curl -sL <a href="https://git.io/get-jreleaser" class="bare">https://git.io/get-jreleaser</a> &gt; get_jreleaser.java
+  # Save the downloaded file
+  artifacts:
+    paths:
+      - '*.java'
+
+# Download JReleaser
+download-jreleaser:
+  # The JReleaser bootstrapper requires JDK 11+
+  image: azul/zulu-openjdk:11
+  # Bind to `test` stage
+  stage: test
+  # Invoke the bootstrapper and check it works
+  script:
+    - java get_jreleaser.java
+    - java -jar jreleaser-cli.jar --version
+  # Save the downloaded JAR
+  artifacts:
+    paths:
+      - jreleaser-cli.jar
+
+# Create a release
+release:
+  # JReleaser requires JDK 11+
+  image: azul/zulu-openjdk:11
+  # Bind to `deploy` stage
+  stage: deploy
+  # Set environment variables accordingly
+  variables:
+    JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
+    JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
+    JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
+    JRELEASER_GITLAB_TOKEN: $GL_PAT
+    # Disable shallow cloning so that JReleaser can diff between tags
+    # to generate a changelog
+    GIT_DEPTH: 0
+  # <span class="icon"><i class="fa fa-rocket"></i></span> Execute JReleaser
+  script:
+    - java -jar jreleaser-cli.jar full-release</code></pre>
+</div>
 </div>
 </article>
   </div>
