@@ -1,0 +1,61 @@
+= Codefresh
+
+Codefresh uses Docker based pipelines where all steps must be Docker containers.
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:maven.adoc[] or the xref:tools:gradle.adoc[] plugin instead.
+
+[source,yaml]
+[subs="+macros"]
+----
+version: '1.0'
+
+stages:
+  - prepare
+  - test
+  - release
+
+steps:
+  checkout:
+    title: Checkout
+    stage: prepare
+    type: git-clone
+    repo: 'duke/app'
+    revision: main
+    git: github
+
+  build:
+    title: Build
+    stage: test
+    image: 'azul/zulu-openjdk:11'
+    commands:
+      - 'cd test'
+      - './mvnw -Dmaven.repo.local=/codefresh/volume/m2_repository verify'
+
+  bootstrap:
+    title: Bootstrap
+    stage: release
+    image: 'curlimages/curl'
+    commands:
+      - 'cd test'
+      # Get the jreleaser downloader
+      - 'curl -sL https://git.io/get-jreleaser > get_jreleaser.java'
+
+  release:
+    title: Release
+    stage: release
+    image: 'azul/zulu-openjdk:11'
+    commands:
+      - 'cd test'
+      # Download JReleaser with version = <version>
+      # Change <version> to a tagged JReleaser release
+      # or leave it out to pull `latest`.
+      - 'java get_jreleaser.java'
+      # Let's check we've got the right version
+      - 'java -jar jreleaser-cli.jar --version'
+      # icon:rocket[] Execute JReleaser
+      - 'java -jar jreleaser-cli.jar full-release'
+----
+
+You need to pass the `JRELEASER_*` variables in the Codefresh UI or load them from a
+link:https://codefresh.io/docs/docs/configure-ci-cd-pipeline/shared-configuration/[shared configuration].
