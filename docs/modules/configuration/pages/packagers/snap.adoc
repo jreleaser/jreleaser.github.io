@@ -708,9 +708,10 @@ description: Sample app
 
 apps:
   app:
-    command: bin/app
+    command: $SNAP/bin/app
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java
+      JAVA_HOME: "$SNAP/usr/lib/jvm/java/jre/"
+      PATH: "$SNAP/bin:$PATH:$SNAP/usr/lib/jvm/java/jre/bin"
 
 parts:
   app:
@@ -719,6 +720,11 @@ parts:
     source-checksum: sha256/8e74020ca5e7d01d25c34cf1bd53adcf78c77adf7b53530ae5e0baeb841cb43e
     stage-packages:
       - openjdk-8-jdk
+      - ca-certificates
+      - ca-certificates-java
     organize:
       usr/lib/jvm/java-8-openjdk*: usr/lib/jvm/java
+    prime:
+      - -usr/lib/jvm/java/lib/security/cacerts
+      - -usr/lib/jvm/java/jre/lib/security/cacerts
 ----
