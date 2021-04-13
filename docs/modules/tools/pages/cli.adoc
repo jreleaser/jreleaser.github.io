@@ -66,7 +66,7 @@ Display current configuration
   -w, --warn                Set log level to warn.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -124,7 +124,7 @@ Calculate the changelog
   -w, --warn                Set log level to warn.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -147,7 +147,7 @@ Calculate checksums
   -w, --warn                Set log level to warn.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -170,7 +170,7 @@ Sign release artifacts
   -w, --warn                Set log level to warn.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -180,24 +180,70 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source,bash]
 ----
 jreleaser release -h
-Usage: jreleaser release [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser release [-dhiqVwy] [--auto-config] [--overwrite]
+                         [--prerelease] [--signing-armored] [--signing-enabled]
+                         [--skip-tag] [--update] [-b=<basedir>]
+                         [-c=<configFile>] [--changelog=<changelog>]
+                         [--commit-author-email=<commitAuthorEmail>]
+                         [--commit-author-name=<commitAuthorName>]
+                         [--milestone-name=<milestoneName>]
+                         [--project-name=<projectName>]
+                         [--project-version=<projectVersion>]
+                         [--release-name=<releaseName>] [--tag-name=<tagName>]
+                         [--file=<files>]...
 Create or update a release
-  -b, --basedir=<basedir>   Base directory
+      --auto-config          Model auto configuration
+  -b, --basedir=<basedir>    Base directory
   -c, --config-file=<configFile>
-                            The config file
-  -d, --debug               Set log level to debug.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-  -q, --quiet               Log errors only.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
-  -y, --dryrun              Skips remote operations.
+                             The config file
+      --changelog=<changelog>
+                             Path to changelog file
+      --commit-author-email=<commitAuthorEmail>
+                             Commit author e-mail
+      --commit-author-name=<commitAuthorName>
+                             Commit author name
+  -d, --debug                Set log level to debug.
+      --file=<files>         Input file(s) to be uploaded
+  -h, --help                 Show this help message and exit.
+  -i, --info                 Set log level to info.
+      --milestone-name=<milestoneName>
+                             The milestone name
+      --overwrite            Overwrite an existing release
+      --prerelease           If the release is a prerelease
+      --project-name=<projectName>
+                             The projects name
+      --project-version=<projectVersion>
+                             The projects version
+  -q, --quiet                Log errors only.
+      --release-name=<releaseName>
+                             The release name
+      --signing-armored      Generate ascii armored signatures
+      --signing-enabled      Sign files
+      --skip-tag             Skip tagging the release
+      --tag-name=<tagName>   The release tag
+      --update               Update an existing release
+  -V, --version              Print version information and exit.
+  -w, --warn                 Set log level to warn.
+  -y, --dryrun               Skips remote operations.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+There are two usage modes:
+
+ * auto config
+ * with explicit configuration file
+
+*AutoConfig*
+
+If `--basedir` is undefined then the command assumes it's the same directory where the command is run.
+
+*Explicit Configuration file*
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+IMPORTANT: None of the command flags that override model properties can be used in this mode.
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
@@ -225,7 +271,7 @@ Prepare all distributions
   -w, --warn                Set log level to warn.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -284,7 +330,7 @@ Package all distributions
   -y, --dryrun              Skips remote operations.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -346,7 +392,7 @@ Upload all distributions
   -y, --dryrun              Skips remote operations.
 ----
  
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -406,7 +452,7 @@ Announce a release
   -y, --dryrun              Skips remote operations.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
@@ -449,7 +495,7 @@ Perform a full release
   -y, --dryrun              Skips remote operations.
 ----
 
-If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|json]` and it's
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
