@@ -62,7 +62,7 @@ packagers:
       # icon:dot-circle[]
       email: pass:[jreleaser-bot@jreleaser.org]
 
-    # Git repository to push the formula to.
+    # Git repository to push the manifest to.
     # Defaults are shown.
     # icon:dot-circle[]
     bucket:
@@ -87,6 +87,75 @@ packagers:
       # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.chocolatey]
+  # Enables or disables Chocolatey.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # Directory with file templates used to prepare the Chocolatey distribution
+  # Defaults to `src/distribution/${distribution.name}/chocolatey`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/chocolatey/templates"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+
+  # The username that can publish Chocolatey packages.
+  # If left unspecified, the release owner will be used.
+  # icon:exclamation-triangle[]
+  username = "duke"
+
+  # Whether to build the package on a remote server or locally.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  remoteBuild = false
+
+  # Git author used to commit to the bucket repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaser-bot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser-bot@jreleaser.org]"
+
+  # Git repository to push the manifest to.
+  # Defaults are shown.
+
+  # The owner of the bucket repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  bucket.owner = "duke"
+
+  # The name of the bucket repository.
+  # Defaults to `chocolatey-bucket`.
+  # icon:dot-circle[]
+  bucket.name = "chocolatey-bucket"
+
+  # Username used for authoring commits. Must have write access to the bucket repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  bucket.username = "duke"
+
+  # Password or OAuth token with write access to the bucket repository.
+  # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  bucket.token = "__DO_NOT_SET_HERE__"
 ----
 JSON::
 +
@@ -140,7 +209,7 @@ JSON::
         "email": "pass:[jreleaser-bot@jreleaser.org]"
       },
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // icon:dot-circle[]
       "bucket": {
@@ -246,7 +315,7 @@ Maven::
       </commitAuthor>
 
       <!--
-        Git repository to push the formula to.
+        Git repository to push the manifest to.
         Defaults are shown.
         icon:dot-circle[]
       -->
@@ -335,7 +404,7 @@ jreleaser {
         email = 'pass:[jreleaser-bot@jreleaser.org]'
       }
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // icon:dot-circle[]
       bucket {

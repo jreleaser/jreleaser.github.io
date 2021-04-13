@@ -102,6 +102,86 @@ packagers:
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.brew]
+  # Enables or disables Homebrew.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # Directory with file templates used to prepare the Homebrew distribution
+  # Defaults to `src/distribution/${distribution.name}/brew`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/brew/templates"
+
+  # The class name of the generated formula.
+  # If left unspecified, will use `{{projectNameCapitalized}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  formulaName = "App"
+
+  # A map of Homebrew dependencies.
+  # The key `openjdk@${java.version}` will be added automatically if not defined.
+  # icon:dot-circle[]
+  # key in symbol format
+  # mapped as `depends_on :key1 => "value1"`
+  dependencies.":key1" = "value1"
+  # plain key
+  # mapped as `depends_on "key2" => "value2"`
+  dependencies.key2 = "value2"
+  # key in symbol format without value
+  # mapped as `depends_on :key3`
+  dependencies.":key3" = "null"
+  # plain key without value
+  # mapped as `depends_on "key4"`
+  dependencies.key4 = "null"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+
+  # Git author used to commit to the tap repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaser-bot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser-bot@jreleaser.org]"
+
+  # Git repository to push the formula to.
+  # Defaults are shown.
+
+  # The owner of the tap repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  tap.owner = "duke"
+
+  # The name of the tap repository.
+  # Defaults to `homebrew-tap`.
+  # icon:dot-circle[]
+  tap.name = "homebrew-tap"
+
+  # Username used for authoring commits. Must have write access to the tap repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  tap.username = "duke"
+
+  # Password or OAuth token with write access to the tap repository.
+  # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  tap.token = "__DO_NOT_SET_HERE__"
+----
 JSON::
 +
 [source,json]

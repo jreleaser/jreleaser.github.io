@@ -92,6 +92,79 @@ packagers:
         # icon:dot-circle[]
         repositoryName: duke
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.docker]
+  # Enables or disables Docker.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # Directory with file templates used to prepare the Docker distribution
+  # Defaults to `src/distribution/${distribution.name}/docker`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/docker/templates"
+
+  # The base Docker image to use.
+  # icon:dot-circle[] icon:file-alt[]
+  baseImage = "alpine:3.5"
+
+  # A list of image names.
+  # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+  # will be created.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNames = [
+    "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+    "duke/app:latest"]
+
+  # A list of build arguments
+  # icon:dot-circle[] icon:file-alt[]
+  buildArgs = ["--pull"]
+
+  # A map of Docker labels.
+  # icon:dot-circle[]
+  labels.foo = "bar"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+
+  # A list of docker registries where images will be published.
+  # Image publication will be disabled if no registries are configured.
+  # icon:dot-circle[]
+  pass:[[[packagers.docker.registries]]]
+    # The name of the registry. Must be unique.
+    # Use `DEFAULT` to match the default registry
+    # provided by the Docker daemon.
+    # icon:exclamation-triangle[]
+    serverName = "myRegistry"
+
+    # The address of the docker registry.
+    # icon:exclamation-triangle[] if `serverName != DEFAULT`.
+    server = "pass:[https://myregistry.com]"
+
+    # The user that can publish images.
+    # Defaults to the same username as the release repository.
+    # icon:dot-circle[]
+    username = "duke"
+
+    # Password for login into the registry
+    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+    # environment variable must be defined.
+    # icon:dot-circle[] icon:eye-slash[]
+    password = "__DO_NOT_SET_HERE__"
+
+    # The name of the repository
+    # Defaults to the same owner as the release repository.
+    # icon:dot-circle[]
+    repositoryName = "duke"
+----
 JSON::
 +
 [source,json]
@@ -447,6 +520,18 @@ packagers:
     imageNames:
       - "myuser/{{projectName}}"
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  name = "app"
+
+[packagers.docker]
+  enabled = true
+  imageNames = ["myuser/{{projectName}}"]
+----
 JSON::
 +
 [source,json]
@@ -528,6 +613,22 @@ packagers:
     - "myuser/myimage:v{{projectVersionMajor}}"
     - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
     - "myuser/myimage:latest"
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  name = "app"
+
+[packagers.docker]
+  enabled = true
+  imageNames = [
+    "myuser/myimage:{{tagName}}",
+    "myuser/myimage:v{{projectVersionMajor}}",
+    "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+    "myuser/myimage:latest"]
 ----
 JSON::
 +

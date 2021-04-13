@@ -86,7 +86,75 @@ distributions:
       # Identifies the project as being member of a multi-project build.
       # If left undefined, will use ${project.java.multiProject}.
       # icon:dot-circle[]
-      multiProject : false
+      multiProject: false
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# A named distribution
+# icon:exclamation-triangle[]
+[distributions.app]
+
+  # Enables or disables the distribution.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # The distribution type.
+  # Used to determine packager templates.
+  # Supported values are: [JAVA_BINARY].
+  # icon:exclamation-triangle[]
+  type = "JAVA_BINARY"
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${distribution.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # A list of tags.
+  # icon:dot-circle[]
+  tags = ["cli", "awesome"]
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+
+  # A list of artifacts.
+  # At least on entry must be present
+  # icon:exclamation-triangle[] icon:file-alt[]
+  artifacts = [
+    { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip", platform = "osx" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-win.zip", platform = "windows" }
+  ]
+
+  # Maven coordinates: groupId.
+  # If left undefined, will use ${project.java.groupId}.
+  # icon:dot-circle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If left undefined, will use ${project.java.artifactId}.
+  # icon:dot-circle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # If left undefined, will use ${project.java.version}.
+  # icon:dot-circle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # If left undefined, will use ${project.java.mainClass}.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # If left undefined, will use ${project.java.multiProject}.
+  # icon:dot-circle[]
+  java.multiProject = false
 ----
 JSON::
 +
