@@ -11,6 +11,68 @@ The following is a list of pre-defined template names:
 All environment variables are accessible with the `Env.` prefix, for example an environment variable named `JAVA_OPTS`
 becomes `{{Env.JAVA_OPTS}}`.
 
+Additionally, every key/value from `environment.properties` becomes available
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+environment:
+  properties:
+    foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[environment]
+  properties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "environment": {
+    "properties": {
+      "foo": "bar"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <environment>
+    <properties>
+      <foo>bar</foo>
+    </properties>
+  </environment>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  environment {
+    properties.put('foo', 'bar')
+  }
+}
+----
+====
+
+The key `foo` becomes `{{foo}}` and will be evaluated to the String `bar`.
+
 == Build
 
 The following names are related to the current build
@@ -125,6 +187,86 @@ jreleaser {
     // Key will be capitalized and prefixed
     // with `project`, i.e, `projectFoo`.
     extraProperties.put('foo', 'bar')
+  }
+}
+----
+====
+
+Additionally, every key/value from `project.java.extraProperties` is mapped with `java` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  java:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `java`, i.e, `javaFoo`.
+      foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "java": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <project>
+    <java>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `java`, i.e, `javaFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </java>
+  </project>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    java {
+      // Key will be capitalized and prefixed
+      // with `java`, i.e, `javaFoo`.
+      extraProperties.put('foo', 'bar')
+    }
   }
 }
 ----
@@ -256,6 +398,93 @@ jreleaser {
 ----
 ====
 
+Additionally, every key/value from `distribution.<name>.java.extraProperties` is mapped with `java` as key prefix
+and the capitalized key, such that
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+distributions:
+  app:
+    java:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `java`, i.e, `javaFoo`.
+        foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "java": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <java>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </java>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      java {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+====
+
 == Artifact
 
 The following names identify an artifact without explicit `platform`
@@ -266,16 +495,18 @@ The following names identify an artifact without explicit `platform`
 | artifactUrl      | the URL required to download the artifact
 | artifactSha256   | the SHA256 checksum of the artifact's file
 | artifactFileName | the name of the artifact file
+| artifactName     | the name of the artifact file without extension
 |===
 
 The following names match the first artifact in a distribution
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                  | Description
-| distributionUrl      | the URL required to download the artifact
-| distributionSha256   | the SHA256 checksum of the artifact's file
-| distributionFileName | the name of the artifact file
+| Key                          | Description
+| distributionUrl              | the URL required to download the artifact
+| distributionSha256           | the SHA256 checksum of the artifact's file
+| distributionArtifactFileName | the name of the artifact file
+| distributionArtifactName     | the name of the artifact file without extension
 |===
 
 Additional names become available when the artifact defines a `platform`
@@ -286,6 +517,7 @@ Additional names become available when the artifact defines a `platform`
 | artifact{{CapitalizedPlatform}}Url      | the URL required to download the artifact
 | artifact{{CapitalizedPlatform}}Sha256   | the SHA256 checksum of the artifact's file
 | artifact{{CapitalizedPlatform}}FileName | the name of the artifact file
+| artifact{{CapitalizedPlatform}}Name     | the name of the artifact file without extension
 |===
 
 Thus, for artifacts defined as
@@ -386,16 +618,19 @@ The following names will be calculated:
 
 * artifactUrl
 * artifactSha256
-* artifactFileName
+* artifactFileName: `${project.name}-${project.version}.zip`
+* artifactName: `${project.name}-${project.version}`
 * distributionUrl
 * distributionSha256
-* distributionFileName
+* distributionArtifactFileName: `${project.name}-${project.version}.zip`
+* distributionArtifactName: `${project.name}-${project.version}`
 
 *Platform specific artifact*
 
 * artifactOsxUrl
 * artifactOsxSha256
-* artifactOsxFileName
+* artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
+* artifactOsxName: `${project.name}-${project.version}-mac`
 
 == Brew
 

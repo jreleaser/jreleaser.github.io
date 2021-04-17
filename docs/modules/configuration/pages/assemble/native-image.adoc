@@ -1,0 +1,627 @@
+= Native Image
+
+Creates a Native Image binary using link:https://www.graalvm.org/reference-manual/native-image/[GraalVM Native Image].
+
+IMPORTANT: You need a local installation of GraalVM. JReleaser will *not* install GraalVM for you, however it can
+install the `native-image` command if needed.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+assemble:
+  # icon:dot-circle[]
+  nativeImage:
+    # Assemblers require a name.
+    # icon:exclamation-triangle[]
+    app:
+
+      # Enables or disables the assembler.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[]
+      active: ALWAYS
+
+      # Name of the executable launcher.
+      # If left undefined, will use ${assembler.name}.
+      # icon:dot-circle[]
+      executable: app
+
+      # Directory with file templates used to prepare the NativeImage assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+      # If specified, path must exist.
+      # icon:dot-circle[]
+      templateDirectory: path/to/nativeImage/templates
+
+      # The GraalVM JDK to use.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      graal:
+        path: path/to/graalvm
+
+      # A list of build arguments.
+      # The `-H:Name` argument will always be replaced with the
+      # value of $executable.
+      # icon:dot-circle[]
+      args:
+        - "--install-exit-handlers"
+
+      # The executable JAR that contains the application.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      mainJar:
+        path: path/to/app.jar
+
+      # Defines a list of additional JARs as globs.
+      # icon:dot-circle[]
+      jars:
+          # The directory to search.
+          # If undefined, will use the project's basedir.
+          # icon:dot-circle[] icon:file-alt[]
+        - directory: some/directory
+
+          # The pattern to apply for inclusion.
+          # If undefined, will use `*`.
+          # icon:dot-circle[]
+          include: '*.jar'
+
+          # The pattern to apply for exclusion.
+          # icon:dot-circle[]
+          exclude: 'secret'
+
+          # Recursive search.
+          # Defaults to `false`.
+          # icon:dot-circle[]
+          recursive: true
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+        foo: bar
+
+      # icon:dot-circle[]
+      java:
+        # Maven coordinates: groupId.
+        # If left undefined, will use ${project.java.groupId}.
+        # icon:dot-circle[]
+        groupId: com.acme
+
+        # Maven coordinates: artifactId.
+        # If left undefined, will use ${project.java.artifactId}.
+        # icon:dot-circle[]
+        artifactId: app
+
+        # The minimum Java version required by consumers to run the application.
+        # If left undefined, will use ${project.java.version}.
+        # icon:dot-circle[]
+        version: 8
+
+        # The application's entry point.
+        # If left undefined, will use ${project.java.mainClass}.
+        # icon:dot-circle[]
+        mainClass: com.acme.Main
+
+        # Identifies the project as being member of a multi-project build.
+        # If left undefined, will use ${project.java.multiProject}.
+        # icon:dot-circle[]
+        multiProject: false
+
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# Assemblers require a name.
+# icon:exclamation-triangle[]
+[assemble.nativeImage.app]
+
+  # Enables or disables the assembler.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${assembler.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # Directory with file templates used to prepare the NativeImage assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/nativeImage/templates"
+
+  # The GraalVM JDK to use.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  graal = { path = "path/to/graalvm" }
+
+  # A list of build arguments.
+  # The `-H:Name` argument will always be replaced with the
+  # value of $executable.
+  # icon:dot-circle[]
+  args = ["--install-exit-handlers"]
+
+  # The executable JAR that contains the application.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  mainJar = { path = "path/to/app.jar" }
+
+  # Defines a list of additional JARs as globs.
+  # icon:dot-circle[]
+  pass:[[[assemble.nativeImage.app.jars]]]
+    # The directory to search.
+    # If undefined, will use the project's basedir.
+    # icon:dot-circle[] icon:file-alt[]
+    directory = "some/directory"
+
+    # The pattern to apply for inclusion.
+    # If undefined, will use `*`.
+    # icon:dot-circle[]
+    include = "*.jar"
+
+    # The pattern to apply for exclusion.
+    # icon:dot-circle[]
+    exclude = "secret"
+
+    # Recursive search.
+    # Defaults to `false`.
+    # icon:dot-circle[]
+    recursive = true
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+
+  # Maven coordinates: groupId.
+  # If left undefined, will use ${project.java.groupId}.
+  # icon:dot-circle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If left undefined, will use ${project.java.artifactId}.
+  # icon:dot-circle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # If left undefined, will use ${project.java.version}.
+  # icon:dot-circle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # If left undefined, will use ${project.java.mainClass}.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # If left undefined, will use ${project.java.multiProject}.
+  # icon:dot-circle[]
+  java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "assemble": {
+    // icon:dot-circle[]
+    "nativeImage": {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      "app": {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "active": "ALWAYS",
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        "executable": "app",
+
+        // Directory with file templates used to prepare the NativeImage assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        "templateDirectory": "path/to/nativeImage/templates",
+
+        // The GraalVM JDK to use.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "graal": {
+          "path": "path/to/graalvm"
+        },
+
+        // A list of build arguments.
+        // The `-H:Name` argument will always be replaced with the
+        // value of $executable.
+        // icon:dot-circle[]
+        "args": [
+          "--install-exit-handlers"
+        ],
+
+        // The executable JAR that contains the application.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "mainJar": {
+          "path": "path/to/app.jar"
+        },
+
+        // Defines a list of additional JARs as globs.
+        // icon:dot-circle[]
+        "jars": [
+          {
+            // The directory to search.
+            // If undefined, will use the project's basedir.
+            // icon:dot-circle[] icon:file-alt[]
+            "directory": "some/directory",
+
+            // The pattern to apply for inclusion.
+            // If undefined, will use `*`.
+            // icon:dot-circle[]
+            "include": "*.jar",
+
+            // The pattern to apply for exclusion.
+            // icon:dot-circle[]
+            "exclude": "secret",
+
+            // Recursive search.
+            // Defaults to `false`.
+            // icon:dot-circle[]
+            "recursive": true
+          }
+        ],
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+          "foo": "bar"
+        },
+
+        // icon:dot-circle[]
+        "java": {
+          // Maven coordinates: groupId.
+          // If left undefined, will use ${project.java.groupId}.
+          // icon:dot-circle[]
+          "groupId": "com.acme",
+
+          // Maven coordinates: artifactId.
+          // If left undefined, will use ${project.java.artifactId}.
+          // icon:dot-circle[]
+          "artifactId": "app",
+
+          // The minimum Java version required by consumers to run the application.
+          // If left undefined, will use ${project.java.version}.
+          // icon:dot-circle[]
+          "version": "8",
+
+          // The application's entry point.
+          // If left undefined, will use ${project.java.mainClass}.
+          // icon:dot-circle[]
+          "mainClass": "com.acme.Main",
+
+          // Identifies the project as being member of a multi-project build.
+          // If left undefined, will use ${project.java.multiProject}.
+          // icon:dot-circle[]
+          "multiProject": false,
+
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+            "foo": "bar"
+          }
+        }
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <assemble>
+    <!--
+      icon:dot-circle[]
+    -->
+    <nativeImage>
+      <!--
+        Assemblers require a name.
+        icon:exclamation-triangle[]
+      -->
+      <app>
+        <!--
+          Enables or disables the distribution.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `ALWAYS`.
+          icon:dot-circle[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          The distribution type.
+          Used to determine packager templates.
+          Supported values are>[JAVA_BINARY].
+          icon:exclamation-triangle[]
+        -->
+        <type>JAVA_BINARY</type>
+
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use ${distribution.name}.
+          icon:dot-circle[]
+        -->
+        <executable>app</executable>
+
+        <!--
+          Directory with file templates used to prepare the NativeImage assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+          If specified, path must exist.
+          icon:dot-circle[]
+        -->
+        <templateDirectory>>path/to/brew/templates</templateDirectory>
+
+        <!--
+          The GraalVM JDK to use.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <graal>
+          <path>path/to/graalvm</path>
+        </graal>
+
+        <!--
+          The executable JAR that contains the application.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <mainJar>
+          <path>path/to/app.jar</path>
+        </mainJar>
+
+        <!--
+          A list of build arguments.
+          The `-H =Name` argument will always be replaced with the
+          value of $executable.
+          icon:dot-circle[]
+        -->
+        <args>
+          <arg>--install-exit-handlers</arg>
+        </args>
+
+        <!--
+          Defines a list of additional JARs as globs.
+          icon:dot-circle[]
+        -->
+        <jars>
+          <jar>
+            <!--
+              The directory to search.
+              If undefined, will use the project's basedir.
+              icon:dot-circle[] icon:file-alt[]
+            -->
+            <directory>some/directory</directory>
+
+            <!--
+              The pattern to apply for inclusion.
+              If undefined, will use `*`.
+              icon:dot-circle[]
+            -->
+            <include>*.jar</include>
+
+            <!--
+             The pattern to apply for exclusion.
+             icon:dot-circle[]
+            -->
+            <exclude>secret</exclude>
+
+            <!--
+              Recursive search.
+              Defaults to `false`.
+              icon:dot-circle[]
+            -->
+            <recursive>true</recursive>
+          </jar>
+        </jars>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
+          icon:dot-circle[]
+        -->
+        <java>
+          <!--
+            Maven coordinates>groupId.
+            If left undefined, will use ${project.java.groupId}.
+            icon:dot-circle[]
+          -->
+          <groupId>com.acme</groupId>
+
+          <!--
+            Maven coordinates>artifactId.
+            If left undefined, will use ${project.java.artifactId}.
+            icon:dot-circle[]
+          -->
+          <artifactId>app</artifactId>
+
+          <!--
+            The minimum Java version required by consumers to run the application.
+            If left undefined, will use ${project.java.version}.
+            icon:dot-circle[]
+          -->
+          <version>8</version>
+
+          <!--
+            The application's entry point.
+            If left undefined, will use ${project.java.mainClass}.
+            icon:dot-circle[]
+          -->
+          <mainClass>com.acme.Main</mainClass>
+
+          <!--
+            Identifies the project as being member of a multi-project build.
+            If left undefined, will use ${project.java.multiProject}.
+            icon:dot-circle[]
+          -->
+          <multiProject>false</multiProject>
+
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </java>
+      </app>
+    </nativeImage>
+  </assemble>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  assemble {
+    // icon:dot-circle[]
+    nativeImage {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      app {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        executable = 'app'
+
+        // Directory with file templates used to prepare the NativeImage assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        templateDirectory = 'path/to/nativeImage/templates'
+
+        // The GraalVM JDK to use.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        graal {
+          path = 'path/to/graalvm'
+        }
+
+        // A list of build arguments.
+        // The `-H =Name` argument will always be replaced with the
+        // value of $executable.
+        // icon:dot-circle[]
+        addArg('--install-exit-handlers')
+
+        // The executable JAR that contains the application.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        mainJar {
+          path = 'path/to/app.jar'
+        }
+
+        // Defines a list of additional JARs as globs.
+        // icon:dot-circle[]
+        jars {
+          // The directory to search.
+          // If undefined, will use the project's basedir.
+          // icon:dot-circle[] icon:file-alt[]
+          directory = 'some/directory'
+
+          // The pattern to apply for inclusion.
+          // If undefined, will use `*`.
+          // icon:dot-circle[]
+          include = '*.jar'
+
+          // The pattern to apply for exclusion.
+          // icon:dot-circle[]
+          exclude = 'secret'
+
+          // Recursive search.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          recursive = true
+        }
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+        // icon:dot-circle[]
+        extraProperties.put('foo', 'bar')
+
+        // icon:dot-circle[]
+        java {
+          // Maven coordinates = groupId.
+          // If left undefined, will use ${project.java.groupId}.
+          // icon:dot-circle[]
+          groupI = 'com.acme'
+
+          // Maven coordinates = artifactId.
+          // If left undefined, will use ${project.java.artifactId}.
+          // icon:dot-circle[]
+          artifactId = 'app'
+
+          // The minimum Java version required by consumers to run the application.
+          // If left undefined, will use ${project.java.version}.
+          // icon:dot-circle[]
+          version = '8'
+
+          // The application's entry point.
+          // If left undefined, will use ${project.java.mainClass}.
+          // icon:dot-circle[]
+          mainClass = 'com.acme.Main'
+
+          // Identifies the project as being member of a multi-project build.
+          // If left undefined, will use ${project.java.multiProject}.
+          // icon:dot-circle[]
+          multiProject = false
+
+          // Additional properties used when evaluating templates.
+          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          // icon:dot-circle[]
+          extraProperties.put('foo', 'bar')
+        }
+      }
+    }
+  }
+}
+----
+====

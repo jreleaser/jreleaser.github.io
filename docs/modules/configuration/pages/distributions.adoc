@@ -53,7 +53,7 @@ distributions:
       foo: bar
 
     # A list of artifacts.
-    # At least on entry must be present
+    # At least on entry must be present.
     # icon:exclamation-triangle[] icon:file-alt[]
     artifacts:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
@@ -88,6 +88,12 @@ distributions:
       # If left undefined, will use ${project.java.multiProject}.
       # icon:dot-circle[]
       multiProject: false
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        foo: bar
 ----
 TOML::
 +
@@ -125,7 +131,7 @@ TOML::
   # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
 
   # A list of artifacts.
-  # At least on entry must be present
+  # At least on entry must be present.
   # icon:exclamation-triangle[] icon:file-alt[]
   artifacts = [
     { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
@@ -157,6 +163,11 @@ TOML::
   # If left undefined, will use ${project.java.multiProject}.
   # icon:dot-circle[]
   java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
 ----
 JSON::
 +
@@ -197,12 +208,12 @@ JSON::
       // Additional properties used when evaluating templates.
       // icon:dot-circle[]
       "extraProperties": {
-        // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+        // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         "foo": "bar"
       },
 
       // A list of artifacts.
-      // At least on entry must be present
+      // At least on entry must be present.
       // icon:exclamation-triangle[] icon:file-alt[]
       "artifacts": [
         {
@@ -243,7 +254,14 @@ JSON::
         // Identifies the project as being member of a multi-project build.
         // If left undefined, will use ${project.java.multiProject}.
         // icon:dot-circle[]
-        "multiProject": false
+        "multiProject": false,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
       }
     }
   }
@@ -303,14 +321,14 @@ Maven::
       -->
       <extraProperties>
         <!--
-          Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
+          Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         -->
         <foo>bar</foo>
       </extraProperties>
 
       <!--
         A list of artifacts.
-        At least on entry must be present
+        At least on entry must be present.
         icon:exclamation-triangle[] icon:file-alt[]
       -->
       <artifacts>
@@ -365,6 +383,17 @@ Maven::
           icon:dot-circle[]
         -->
         <multiProject>false</multiProject>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
       </java>
     </app>
   </distributions>
@@ -404,12 +433,12 @@ jreleaser {
       tags = ['cli', 'awesome']
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+      // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       // icon:dot-circle[]
       extraProperties.put('foo', 'bar')
 
       // A list of artifacts.
-      // At least on entry must be present
+      // At least on entry must be present.
       // icon:exclamation-triangle[] icon:file-alt[]
       artifacts {
         artifact {
@@ -451,6 +480,11 @@ jreleaser {
         // If left undefined, will use ${project.java.multiProject}.
         // icon:dot-circle[]
         multiProject = false
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        // icon:dot-circle[]
+        extraProperties.put('foo', 'bar')
       }
     }
   }

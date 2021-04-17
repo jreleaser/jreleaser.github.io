@@ -28,8 +28,8 @@ packagers:
     # icon:dot-circle[]
     active: ALWAYS
 
-    # Directory with file templates used to prepare the Docker distribution
-    # Defaults to `src/distribution/${distribution.name}/docker`.
+    # Directory with file templates used to prepare the Docker distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/docker/templates
@@ -46,10 +46,21 @@ packagers:
       - "{{repoOwner}}/{{distributionName}}:{{tagName}}"
       - "duke/app:latest"
 
-    # A list of build arguments
+    # A list of build arguments.
     # icon:dot-circle[] icon:file-alt[]
     buildArgs:
       - "--pull"
+
+    # Dockerfile commands to run before the assembly.
+    # icon:dot-circle[] icon:file-alt[]
+    preCommands:
+      - "RUN apt-get update -y"
+      - "RUN apt-get install unzip"
+
+    # Dockerfile commands to run after the assembly, before ENTRYPOINT.
+    # icon:dot-circle[] icon:file-alt[]
+    postCommands:
+      - "VOLUME /workspace"
 
     # A map of Docker labels.
     # icon:dot-circle[]
@@ -106,8 +117,8 @@ TOML::
   # icon:dot-circle[]
   active = "ALWAYS"
 
-  # Directory with file templates used to prepare the Docker distribution
-  # Defaults to `src/distribution/${distribution.name}/docker`.
+  # Directory with file templates used to prepare the Docker distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
   # If specified, path must exist.
   # icon:dot-circle[]
   templateDirectory = "path/to/docker/templates"
@@ -124,9 +135,19 @@ TOML::
     "{{repoOwner}}/{{distributionName}}:{{tagName}}",
     "duke/app:latest"]
 
-  # A list of build arguments
+  # A list of build arguments.
   # icon:dot-circle[] icon:file-alt[]
   buildArgs = ["--pull"]
+
+  # Dockerfile commands to run before the assembly.
+  # icon:dot-circle[] icon:file-alt[]
+  preCommands = [
+    "RUN apt-get update -y",
+    "RUN apt-get install unzip"]
+
+  # Dockerfile commands to run after the assembly, before ENTRYPOINT.
+  # icon:dot-circle[] icon:file-alt[]
+  postCommands = ["VOLUME /workspace"]
 
   # A map of Docker labels.
   # icon:dot-circle[]
@@ -183,8 +204,8 @@ JSON::
       // icon:dot-circle[]
       "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Docker distribution
-      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // Directory with file templates used to prepare the Docker distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/docker/templates",
@@ -202,10 +223,23 @@ JSON::
         "duke/app:latest"
       ],
 
-      // A list of build arguments
+      // A list of build arguments.
       // icon:dot-circle[] icon:file-alt[]
       "buildArgs": [
         "--pull"
+      ],
+
+      // Dockerfile commands to run before the assembly.
+      // icon:dot-circle[] icon:file-alt[]
+      "preCommands": [
+        "RUN apt-get update -y",
+        "RUN apt-get install unzip"
+      ],
+
+      // Dockerfile commands to run after the assembly, before ENTRYPOINT.
+      // icon:dot-circle[] icon:file-alt[]
+      "postCommands": [
+        "VOLUME /workspace"
       ],
 
       // A map of Docker labels.
@@ -281,8 +315,8 @@ Maven::
       <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Docker distribution
-        Defaults to `src/distribution/${distribution.name}/docker`.
+        Directory with file templates used to prepare the Docker distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -306,12 +340,29 @@ Maven::
       </imageNames>
 
       <!--
-        A list of build arguments
+        A list of build arguments.
         icon:dot-circle[] icon:file-alt[]
       -->
       <buildArgs>
         <buildArg>--pull</buildArg>
       </buildArgs>
+
+      <!--
+        Dockerfile commands to run before the assembly.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <preCommands>
+        <preCommand>RUN apt-get update -y</preCommand>
+        <preCommand>RUN apt-get install unzip</preCommand>
+      </preCommands>
+
+      <!--
+        Dockerfile commands to run after the assembly, before ENTRYPOINT.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <postCommands>
+        <postCommand>VOLUME /workspace</postCommand>
+      </postCommands>
 
       <!--
         A map of Docker labels.
@@ -396,8 +447,8 @@ jreleaser {
       // icon:dot-circle[]
       active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Docker distribution
-      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // Directory with file templates used to prepare the Docker distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/docker/templates'
@@ -413,9 +464,18 @@ jreleaser {
       addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
       addImageName('duke/app:latest')
 
-      // A list of build arguments
+      // A list of build arguments.
       // icon:dot-circle[] icon:file-alt[]
       addBuildArg('--pull')
+
+      // Dockerfile commands to run before the assembly.
+      // icon:dot-circle[] icon:file-alt[]
+      addPreCommand('RUN apt-get update -y')
+      addPreCommand('RUN apt-get install unzip')
+
+      // Dockerfile commands to run after the assembly, before ENTRYPOINT.
+      // icon:dot-circle[] icon:file-alt[]
+      addPostCommand('VOLUME /workspace')
 
       // A map of Docker labels.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -483,12 +543,11 @@ COPY assembly/app-1.2.3.zip /app-1.2.3.zip
 
 RUN unzip app-1.2.3.zip && \
     rm app-1.2.3.zip && \
-    mv app-* app && \
-    chmod +x app/bin/app
+    chmod +x app-1.2.3/bin/app
 
-ENV PATH="${PATH}:/app/bin"
+ENV PATH="${PATH}:/app-1.2.3/bin"
 
-ENTRYPOINT ["/app/bin/app"]
+ENTRYPOINT ["/app-1.2.3/bin/app"]
 ----
 
 == Default Labels
