@@ -1,7 +1,15 @@
-= Zulip
+= Gitter
 
-Posts a message to a link:https://zulip.com/[Zulip] server. You must procure an account and apiKey to use
-this announcer.
+Posts a message to a link:https://gitter.im/[Gitter] room. You must create a custom webhook for this announcer to work.
+
+1. Log into link:https://gitter.im/[Gitter].
+2. Browse to the room you want to integrate to.
+3. Click on the `Settings` menu and select `Integrations`.
+4. Click on the `CUSTOM` button.
+5. Copy the generated webhook URL.
+
+IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the `JRELEASER_GITTER_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
 include::partial$legend.adoc[]
 
@@ -14,7 +22,7 @@ YAML::
 ----
 announce:
   # icon:dot-circle[]
-  zulip:
+  gitter:
 
     # Enable or disable this announcer.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -30,31 +38,13 @@ announce:
     # Defines the read timeout in seconds.
     # Defaults to `60`.
     # icon:dot-circle[]
-    readTimeout: 60
+    readTimeout: 6
 
-    # The Zulip account (typically an email address) to use.
-    # icon:exclamation-triangle[]
-    account: pass:[announce-bot@my.zulipchat.com]
-
-    # The Zulip server endpoint.
-    # icon:exclamation-triangle[]
-    apiHost: pass:[https://my.zulipchat.com/api/v1]
-
-    # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+    # The webhook associated with a specific Gitter room.
+    # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    apiKey: __DO_NOT_SET_HERE__
-
-    # The channel where the message will be sent to
-    # Defaults to `announce`.
-    # icon:dot-circle[]
-    channel: announce
-
-    # The messages' subject.
-    # Review the available xref:configuration:name-templates.adoc[].
-    # icon:dot-circle[] icon:file-alt[]
-    subject: {{projectNameCapitalized}} {{projectVersion}} released!
+    webhook: __DO_NOT_SET_HERE__
 
     # The announcement message.
     # Review the available xref:configuration:name-templates.adoc[].
@@ -63,9 +53,9 @@ announce:
 
     # Path to a template file that contains the message.
     # Review the available xref:configuration:name-templates.adoc[].
-    # Defaults to `src/jreleaser/templates/zulip.tpl`.
+    # Defaults to `src/jreleaser/templates/gitter.tpl`.
     # icon:dot-circle[]
-    messageTemplate: path/to/template/zulip.tpl
+    messageTemplate: path/to/template/gitter.tpl
 ----
 TOML::
 +
@@ -73,7 +63,7 @@ TOML::
 [subs="+macros"]
 ----
 # icon:dot-circle[]
-[announce.zulip]
+[announce.gitter]
 
   # Enable or disable this announcer.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -91,29 +81,11 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # The Zulip account (typically an email address) to use.
-  # icon:exclamation-triangle[]
-  account = "pass:[announce-bot@my.zulipchat.com]"
-
-  # The Zulip server endpoint.
-  # icon:exclamation-triangle[]
-  apiHost = "pass:[https://my.zulipchat.com/api/v1]"
-
-  # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+  # The webhook associated with a specific Gitter room.
+  # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  apiKey = "__DO_NOT_SET_HERE__"
-
-  # The channel where the message will be sent to
-  # Defaults to `announce`.
-  # icon:dot-circle[]
-  channel = "announce"
-
-  # The messages' subject.
-  # Review the available xref:configuration:name-templates.adoc[].
-  # icon:dot-circle[] icon:file-alt[]
-  subject = "{{projectNameCapitalized}} {{projectVersion}} released!"
+  webhook = "__DO_NOT_SET_HERE__"
 
   # The announcement message.
   # Review the available xref:configuration:name-templates.adoc[].
@@ -122,9 +94,9 @@ TOML::
 
   # Path to a template file that contains the message.
   # Review the available xref:configuration:name-templates.adoc[].
-  # Defaults to `src/jreleaser/templates/zulip.tpl`.
+  # Defaults to `src/jreleaser/templates/gitter.tpl`.
   # icon:dot-circle[]
-  messageTemplate = "path/to/template/zulip.tpl"
+  messageTemplate = "path/to/template/gitter.tpl"
 ----
 JSON::
 +
@@ -134,7 +106,7 @@ JSON::
 {
   "announce": {
     // icon:dot-circle[]
-    "zulip": {
+    "gitter": {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -152,29 +124,11 @@ JSON::
       // icon:dot-circle[]
       "readTimeout": 60,
 
-      // The Zulip account (typically an email address) to use.
-      // icon:exclamation-triangle[]
-      "account": pass:[announce-bot@my.zulipchat.com],
-
-      // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
-      "apiHost": "pass:[https://my.zulipchat.com/api/v1]",
-
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The webhook associated with a specific Gitter room.
+      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "apiKey": "__DO_NOT_SET_HERE__",
-
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // icon:dot-circle[]
-      "channel": "announce",
-
-      // The messages' subject.
-      // Review the available xref:configuration:name-templates.adoc[].
-      // icon:dot-circle[]
-      "subject": "{{projectNameCapitalized}} {{projectVersion}} released!",
+      "webhook": "__DO_NOT_SET_HERE__",
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -183,9 +137,9 @@ JSON::
 
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // Defaults to `src/jreleaser/templates/gitter.tpl`.
       // icon:dot-circle[]
-      "messageTemplate": "path/to/template/zulip.tpl",
+      "messageTemplate": "path/to/template/gitter.tpl",
     }
   }
 }
@@ -200,7 +154,7 @@ Maven::
     <!--
       icon:dot-circle[]
     -->
-    <zulip>
+    <gitter>
 
       <!--
         Enable or disable this announcer.
@@ -225,37 +179,11 @@ Maven::
       <readTimeout>60</readTimeout>
 
       <!--
-        The Zulip account (typically an email address) to use.
-        icon:exclamation-triangle[]
-      -->
-      <account>pass:[announce-bot@my.zulipchat.com]</account>
-
-      <!--
-        The Zulip server endpoint.
-        icon:exclamation-triangle[]
-      -->
-      <apiHost>pass:[https:my.zulipchat.com/api/v1]</apiHost>
-
-      <!--
-        The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_ZULIP_API_KEY` environment variable must be defined.
+        The webhook associated with a specific Gitter room.
+        If left unspecified, the `JRELEASER_GITTER_WEBHOOK` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <apiKey>__DO_NOT_SET_HERE__</apiKey>
-
-      <!--
-        The channel where the message will be sent to
-        Defaults to `announce`.
-        icon:dot-circle[]
-      -->
-      <channel>announce</channel>
-
-      <!--
-        The messages' subject.
-        Review the available xref:configuration>templates.adoc[].
-        icon:dot-circle[]
-      -->
-      <subject>{{projectNameCapitalized}} {{projectVersion}} released!</subject>
+      <webhook>__DO_NOT_SET_HERE__</webhook>
 
       <!--
         The announcement message.
@@ -267,11 +195,11 @@ Maven::
       <!--
         Path to a template file that contains the message.
         Review the available xref:configuration:name-templates.adoc[].
-        Defaults to `src/jreleaser/templates/zulip.tpl`.
+        Defaults to `src/jreleaser/templates/gitter.tpl`.
         icon:dot-circle[]
       -->
-      <messageTemplate>path/to/template/zulip.tpl</messageTemplate>
-    </zulip>
+      <messageTemplate>path/to/template/gitter.tpl</messageTemplate>
+    </gitter>
   </announce>
 </jreleaser>
 ----
@@ -283,7 +211,7 @@ Gradle::
 jreleaser {
   announce {
     // icon:dot-circle[]
-    zulip {
+    gitter {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -301,29 +229,11 @@ jreleaser {
       // icon:dot-circle[]
       readTimeout = 60
 
-      // The Zulip account (typically an email address) to use.
-      // icon:exclamation-triangle[]
-      account = 'pass:[announce-bot@my.zulipchat.com]'
-
-      // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
-      apiHost = 'pass:[https://my.zulipchat.com/api/v1]'
-
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The webhook associated with a specific Gitter room.
+      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      apiKey = '__DO_NOT_SET_HERE__'
-
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // icon:dot-circle[]
-      channel = 'announce'
-
-      // The messages' subject.
-      // Review the available xref:configuration:name-templates.adoc[].
-      // icon:dot-circle[]
-      subject = '{{projectNameCapitalized}} {{projectVersion}} released!'
+      webhook = '__DO_NOT_SET_HERE__'
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -332,9 +242,9 @@ jreleaser {
 
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // Defaults to `src/jreleaser/templates/gitter.tpl`.
       // icon:dot-circle[]
-      messageTemplate = 'path/to/template/zulip.tpl'
+      messageTemplate = 'path/to/template/gitter.tpl'
     }
   }
 }
