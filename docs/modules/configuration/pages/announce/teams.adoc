@@ -1,16 +1,16 @@
-= Discord
+= Teams
 
-Posts a message to a link:https://discord.com/[Discord] room. You must create a custom webhook for this announcer to work.
+Posts a message to a link:https://www.microsoft.com/en-ww/microsoft-teams[Teams] room. You must create a custom webhook for this announcer to work.
 
-1. Log into the target discord server.
-2. Select the channel you want to integrate to, click on its settings icon.
-3. Click on the `Integrations` menu item.
-4. Click on Webhooks.
-5. Create a new webhook.
+1. Log into Teams.
+2. Click on the `Apps` icon.
+3. Click on the `Connectors` menu item.
+4. Click on `Incoming Webhook` and add it to a team.
+5. Configure the webhook.
 6. Copy the generated webhook URL.
 
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
-setting the `JRELEASER_DISCORD_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
+setting the `JRELEASER_TEAMS_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
 include::partial$legend.adoc[]
 
@@ -23,7 +23,7 @@ YAML::
 ----
 announce:
   # icon:dot-circle[]
-  discord:
+  teams:
 
     # Enable or disable this announcer.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -41,22 +41,17 @@ announce:
     # icon:dot-circle[]
     readTimeout: 6
 
-    # The webhook associated with a specific Discord room.
-    # If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
+    # The webhook associated with a specific Teams room.
+    # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
     webhook: __DO_NOT_SET_HERE__
 
-    # The announcement message.
-    # Review the available xref:configuration:name-templates.adoc[].
-    # icon:dot-circle[] icon:file-alt[]
-    message: icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
-
     # Path to a template file that contains the message.
     # Review the available xref:configuration:name-templates.adoc[].
-    # Defaults to `src/jreleaser/templates/discord.tpl`.
-    # icon:dot-circle[]
-    messageTemplate: path/to/template/discord.tpl
+    # Defaults to `src/jreleaser/templates/teams.tpl`.
+    # icon:exclamation-triangle[]
+    messageTemplate: path/to/template/teams.tpl
 ----
 TOML::
 +
@@ -64,7 +59,7 @@ TOML::
 [subs="+macros"]
 ----
 # icon:dot-circle[]
-[announce.discord]
+[announce.teams]
 
   # Enable or disable this announcer.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -82,22 +77,17 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # The webhook associated with a specific Discord room.
-  # If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
+  # The webhook associated with a specific Teams room.
+  # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   webhook = "__DO_NOT_SET_HERE__"
 
-  # The announcement message.
-  # Review the available xref:configuration:name-templates.adoc[].
-  # icon:dot-circle[] icon:file-alt[]
-  message = "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
-
   # Path to a template file that contains the message.
   # Review the available xref:configuration:name-templates.adoc[].
-  # Defaults to `src/jreleaser/templates/discord.tpl`.
-  # icon:dot-circle[]
-  messageTemplate = "path/to/template/discord.tpl"
+  # Defaults to `src/jreleaser/templates/teams.tpl`.
+  # icon:exclamation-triangle[]
+  messageTemplate = "path/to/template/teams.tpl"
 ----
 JSON::
 +
@@ -107,7 +97,7 @@ JSON::
 {
   "announce": {
     // icon:dot-circle[]
-    "discord": {
+    "teams": {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -125,22 +115,17 @@ JSON::
       // icon:dot-circle[]
       "readTimeout": 60,
 
-      // The webhook associated with a specific Discord room.
-      // If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "webhook": "__DO_NOT_SET_HERE__",
 
-      // The announcement message.
-      // Review the available xref:configuration:name-templates.adoc[].
-      // icon:dot-circle[] icon:file-alt[]
-      "message": "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
-
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/discord.tpl`.
-      // icon:dot-circle[]
-      "messageTemplate": "path/to/template/discord.tpl"
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // icon:dot-circle[] icon:exclamation-triangle[]
+      "messageTemplate": "path/to/template/teams.tpl"
     }
   }
 }
@@ -155,7 +140,7 @@ Maven::
     <!--
       icon:dot-circle[]
     -->
-    <discord>
+    <teams>
 
       <!--
         Enable or disable this announcer.
@@ -180,27 +165,20 @@ Maven::
       <readTimeout>60</readTimeout>
 
       <!--
-        The webhook associated with a specific Discord room.
-        If left unspecified, the `JRELEASER_DISCORD_WEBHOOK` environment variable must be defined.
+        The webhook associated with a specific Teams room.
+        If left unspecified, the `JRELEASER_TEAMS_WEBHOOK` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <webhook>__DO_NOT_SET_HERE__</webhook>
 
       <!--
-        The announcement message.
-        Review the available xref:configuration>templates.adoc[].
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <message>icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
-
-      <!--
         Path to a template file that contains the message.
         Review the available xref:configuration:name-templates.adoc[].
-        Defaults to `src/jreleaser/templates/discord.tpl`.
-        icon:dot-circle[]
+        Defaults to `src/jreleaser/templates/teams.tpl`.
+        icon:dot-circle[] icon:exclamation-triangle[]
       -->
-      <messageTemplate>path/to/template/discord.tpl</messageTemplate>
-    </discord>
+      <messageTemplate>path/to/template/teams.tpl</messageTemplate>
+    </teams>
   </announce>
 </jreleaser>
 ----
@@ -212,7 +190,7 @@ Gradle::
 jreleaser {
   announce {
     // icon:dot-circle[]
-    discord {
+    teams {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -230,26 +208,20 @@ jreleaser {
       // icon:dot-circle[]
       readTimeout = 60
 
-      // The webhook associated with a specific Discord room.
-      // If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       webhook = '__DO_NOT_SET_HERE__'
 
-      // The announcement message.
-      // Review the available xref:configuration:name-templates.adoc[].
-      // icon:dot-circle[] icon:file-alt[]
-      message = 'icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
-
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/discord.tpl`.
-      // icon:dot-circle[]
-      messageTemplate = 'path/to/template/discord.tpl'
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // icon:dot-circle[] icon:exclamation-triangle[]
+      messageTemplate = 'path/to/template/teams.tpl'
     }
   }
 }
 ----
 ====
 
-You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
