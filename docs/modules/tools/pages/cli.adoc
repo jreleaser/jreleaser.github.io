@@ -12,7 +12,7 @@ jreleaser
 Commands:
   init          Create a jreleaser config file.
   config        Display current configuration.
-  template      Generate a tool template.
+  template      Generate a tool/announcer template.
   assemble      Assemble distributions.
   changelog     Calculate the changelog.
   checksum      Calculate checksums.
@@ -79,29 +79,38 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source,bash]
 ----
 $ jreleaser template -h
-Usage: jreleaser template [-dhioqsVw] [-b=<basedir>] -dn=<distributionName>
-                          [-dt=<distributionType>] -tn=<toolName>
-Generate a tool template.
+Usage: jreleaser template [-dhioqsVw] [-b=<basedir>] ([-an=<announcerName>] |
+                          [-dn=<distributionName> -tn=<toolName>
+                          [-dt=<distributionType>]])
+Generate a tool/announcer template.
   -b, --basedir=<basedir>   Base directory.
   -d, --debug               Set log level to debug.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
-      -dt, --distribution-type=<distributionType>
-                            The type of the distribution.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
   -q, --quiet               Log errors only.
   -s, --snapshot            Use snapshot templates.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+Announcer templates
+      -an, --announcer-name=<announcerName>
+                            The name of the announcer.
+Tool templates
+      -dn, --distribution-name=<distributionName>
+                            The name of the distribution.
+      -dt, --distribution-type=<distributionType>
+                            The type of the distribution.
+      -tn, --tool-name=<toolName>
+                            The name of the tool.
 ----
 
 If `--basedir` is undefined then the command assumes it's the current directory.
 
-The value of `--distribution-name` must eventually match the name of a configured
+Announcer and tool settings are mutually exclusive.
+
+The value of `--announcer-name` must match any of the available xref:configuration:announce/index.adoc[announcers].
+
+The value of `--distribution-name` must match the name of a configured
 xref:configuration:distributions.adoc[distribution].
 
 The value of `--distribution-type` must match any of the available
