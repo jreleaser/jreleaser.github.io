@@ -1,0 +1,246 @@
+= Artifacts
+
+Artifacts are at the heart of a release; they define files that may be:
+
+* added to a Git xref:configuration:release/index.adoc[release].
+* prepared, packaged, and uploaded using a xref:configuration:packagers/index.adoc[packager].
+
+== Properties
+
+Artifacts have the following properties:
+
+* `path`. Defines the location of the file. Path may be relative or absolute. We recomend defining paths
+that are relative to the `basedir` as much as possible, as that simplifies the setup on
+xref:continuous-integration:index.adoc[CI]. Its value may use xref:configuration:name-templates.adoc[].
+This property is *required*.
+
+* `transform`. Sometimes the source path does not have the exact name you'd looking for. You may apply a
+name transformation using this property. Its value may use xref:configuration:name-templates.adoc[].
+This property is *optional*.
+
+* `platform`. Defines the OS specific platform for this file. Some xref:configuration:assemble/index.adoc[assemblers]
+and xref:configuration:packagers/index.adoc[packagers] require that artifacts define a platform.
+
+include::configuration:partial$platform.adoc[]
+
+== Examples
+
+*Platform*
+
+Generating cross-platform JLink images require that each target JDK define a value for its corresponding platform.
+Target JDKs are of type `artifact`.
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+assemble:
+  jlinks:
+    app:
+      active: always
+      jdk:
+        path: '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+        platform: osx
+      targetJdks:
+        - path: '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform: osx
+        - path: '{{oracleJdks}}/jdk-16_linux-x64'
+          platform: linux
+        - path: '{{oracleJdks}}/jdk-16_windows-x64'
+          platform: windows
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[assemble.jlinks.app]
+  active = "ALWAYS"
+  mainJar = { path = "target/{{distributionName}}-{{projectVersion}}.jar" }
+  jdk = { path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home", platform = "osx" }
+  pass:[[[assemble.jlinks.app.targetJdks]]]
+    path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home"
+    platform = "osx"
+  pass:[[[assemble.jlinks.app.targetJdks]]]
+    path = "{{oracleJdks}}/jdk-16_linux-x64"
+    platform = "linux"
+  pass:[[[assemble.jlinks.app.targetJdks]]]
+    path = "{{oracleJdks}}/jdk-16_windows-x64"
+    platform = "windows"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "assemble": {
+    "jlinks": {
+      "app": {
+        "active": "ALWAYS",
+        "mainJar": {
+          "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+        },
+        "jdk": {
+          "path": "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home",
+          "platform": "osx"
+        },
+        "targetJdks": [
+          {
+            "path": "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home",
+            "platform": "osx"
+          },
+          {
+            "path": "{{oracleJdks}}/jdk-16_linux-x64",
+            "platform": "linux"
+          },
+          {
+            "path": "{{oracleJdks}}/jdk-16_windows-x64",
+            "platform": "windows"
+          }
+        ]
+      }
+    }
+  },
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim,attributes"]
+----
+<jreleaser>
+  <assemble>
+    <jlinks>
+      <jlink>
+        <name>app</name>
+        <active>ALWAYS</active>
+        <mainJar>
+          <path>target/{{distributionName}}-{{projectVersion}}.jar</path>
+        </mainJar>
+        <jdk>
+          <path>{{oracleJdks}}/jdk-16_osx-x64/Contents/Home</path>
+          <platform>osx</platform>
+        </jdk>
+        <targetJdks>
+          <targetJdk>
+            <path>{{oracleJdks}}/jdk-16_osx-x64/Contents/Home</path>
+            <platform>osx</platform>
+          </targetJdk>
+          <targetJdk>
+            <path>{{oracleJdks}}/jdk-16_linux-x64</path>
+            <platform>linux</platform>
+          </targetJdk>
+          <targetJdk>
+            <path>{{oracleJdks}}/jdk-16_windows-x64</path>
+            <platform>windows</platform>
+          </targetJdk>
+        </targetJdks>
+      </jlink>
+    </jlinks>
+  </assemble>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  assemble {
+    jlinks {
+      app {
+        active = 'ALWAYS'
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        jdk {
+          path = '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_linux-x64'
+          platform = 'linux'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_windows-x64'
+          platform = 'windows'
+        }
+      }
+    }
+  }
+}
+----
+====
+
+*Transform*
+
+JReleaser itself uses the `transform` property to rename its artifacts depending on the type of release.
+
+[source,yaml]
+.jreleaser.yml
+----
+distributions:
+  jreleaser:
+    artifacts:
+      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  jreleaser-ant-tasks:
+    artifacts:
+      - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  jreleaser-tool-provider:
+    type: SINGLE_JAR
+    artifacts:
+      - path: apps/jreleaser-tool-provider/build/libs/jreleaser-tool-provider-{{projectVersion}}.jar
+        transform: 'jreleaser-tool-provider/jreleaser-tool-provider-{{projectEffectiveVersion}}.jar'
+----
+
+Artifacts point to these files when the project version is snapshot:
+
+[source,sh]
+----
+out
+└── jreleaser
+    └── artifacts
+        ├── jreleaser
+        │   └── jreleaser-early-access.zip
+        ├── jreleaser-ant-tasks
+        │   └── jreleaser-ant-tasks-early-access.zip
+        └── jreleaser-tool-provider
+            └── jreleaser-tool-provider-early-access.jar
+----
+
+Whereas the following files will be used when the project is release:
+
+[source,sh]
+[subs="attributes"]
+----
+.
+├── apps
+│    ├── jreleaser
+│    │   └── build
+│    │       └── distributions
+│    │           └── jreleaser-{jreleaser-version}.zip
+│    └── jreleaser-tool-provider
+│        └── build
+│            └── libs
+│                └── jreleaser-tool-provider-{jreleaser-version}.jar
+└── plugins
+    └── jreleaser-ant-tasks
+        └── build
+            └── distributions
+                └── jreleaser-ant-tasks-{jreleaser-version}.zip
+----
+

@@ -1,0 +1,24 @@
+= JReleaser Docker Image
+
+Wraps the xref:cli.adoc[] with an Ubuntu based docker image:
+link:https://hub.docker.com/r/jreleaser/jreleaser-slim[jreleaser/jreleaser-slim]. This image may be used to run
+JReleaser without having a pre-installed Java runtime on your system.
+
+IMPORTANT: Additional packaging options such as xref:configuration:packagers/snap.adoc[Snapcraft] and
+xref:configuration:packagers/chocolatey.adoc[] are not available in this mode.
+
+Every command exposed by xref:cli.adoc[] can be invoked with this image.
+
+You must mount the working directory at the `/workspace` volume, for example assuming the current directory is the
+starting point:
+
+[source]
+----
+$ docker run -it --rm -v `(pwd)`:/workspace jreleaser/jreleaser-slim:<tag> <command> [<args>]
+----
+
+NOTE: The `--basedir` argument will be automatically set to `--basedir=/workspace`.
+
+You may also need to map environment variables to the container, such as `JRELEASER_PROJECT_VERSION`,
+`JRELEASER_GITHUB_TOKEN`, or others depending on your setup.
+
