@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Jenkins :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/continuous-integration/jenkins.html">
+    <title>AutoConfig Release :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/examples/auto-config-release.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -226,22 +226,22 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Continuous Integration</a>
+    <a class="nav-link" href="../continuous-integration/index.html">Continuous Integration</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="github-actions.html">GitHub Actions</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="jenkins.html">Jenkins</a>
+    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="circle-ci.html">Circle CI</a>
+    <a class="nav-link" href="../continuous-integration/jenkins.html">Jenkins</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="codefresh.html">Codefresh</a>
+    <a class="nav-link" href="../continuous-integration/circle-ci.html">Circle CI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="gitlab-ci.html">GitLab CI</a>
+    <a class="nav-link" href="../continuous-integration/codefresh.html">Codefresh</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/gitlab-ci.html">GitLab CI</a>
   </li>
 </ul>
   </li>
@@ -280,16 +280,16 @@
     <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/jreleaser.html">JReleaser&#8217;s Release</a>
+    <a class="nav-link" href="jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/simple-release.html">Simple Release</a>
+    <a class="nav-link" href="simple-release.html">Simple Release</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="auto-config-release.html">AutoConfig Release</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/auto-config-release.html">AutoConfig Release</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+    <a class="nav-link" href="cross-platform-jlink.html">Cross Platform Jlink</a>
   </li>
 </ul>
   </li>
@@ -329,141 +329,119 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li><a href="index.html">Continuous Integration</a></li>
-    <li><a href="jenkins.html">Jenkins</a></li>
+    <li>Examples</li>
+    <li><a href="auto-config-release.html">AutoConfig Release</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/continuous-integration/pages/jenkins.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/examples/pages/auto-config-release.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Jenkins</h1>
+<h1 class="page">AutoConfig Release</h1>
 <div class="paragraph">
-<p>You can setup a <a href="https://www.jenkins.io">Jenkins</a> pipeline for Linux and Windows agents:</p>
+<p>Assuming the project is hosted on GitHub with the "origin" remote set to
+https://github.com/duke/app.git</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If you&#8217;re already building with either Maven or Gradle then you might use the
-<a href="../tools/maven.html" class="page">JReleaser Maven Plugin</a> or the <a href="../tools/gradle.html" class="page">JReleaser Gradle Plugin</a> plugin instead.
-</td>
-</tr>
-</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ git remote -vv
+origin	https://github.com/duke/app.git (fetch)
+origin	https://github.com/duke/app.git (push)</code></pre>
 </div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
+</div>
+<div class="paragraph">
+<p>And the following file structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>.
+├── file1.txt
+└── file2.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may create and tag a release without a config file in the following way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ release --auto-config \
+  --project-name=app \
+  --project-version=1.0.0 \
+  --signing-enabled \
+  --signing-armored \
+  --file=file1.txt \
+  --file=file2.txt
+
+[INFO]  JReleaser 0.2.0
+[INFO]  Auto configure is ON
+[INFO]    - basedir set to /Home/duke/app
+[INFO]    - project.name: app
+[INFO]    - project.version: 1.0.0
+[INFO]    - signing.enabled: true
+[INFO]    - signing.armored: true
+[INFO]    - file: file1.txt
+[INFO]    - file: file2.txt
+[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-12T23:28:34.022+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Calculating checksums
+[INFO]    [checksum] file1.txt
+[INFO]    [checksum] file2.txt
+[INFO]  Signing files
+[INFO]    [sign] file1.txt
+[INFO]    [sign] file2.txt
+[INFO]    [sign] out/jreleaser/checksums/checksums.txt
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - uploading file1.txt
+[INFO]   - uploading file2.txt
+[INFO]   - uploading checksums.txt
+[INFO]   - uploading file1.txt.asc
+[INFO]   - uploading file2.txt.asc
+[INFO]   - uploading checksums.txt.asc
+[INFO]  JReleaser succeeded after 1.929s
+[INFO]  Writing output properties to out/jreleaser/output.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following environment variables must be provided:</p>
+</div>
+<div class="ulist">
 <ul>
 <li>
-<p><a id="tabset1_linux-agent"></a>Linux Agent</p>
+<p><code>JRELEASER_GITHUB_TOKEN</code></p>
 </li>
 <li>
-<p><a id="tabset1_windows-agent"></a>Windows Agent</p>
+<p><code>JRELEASER_GPG_PASSPHRASE</code></p>
+</li>
+<li>
+<p><code>JRELEASER_GPG_PUBLIC_KEY</code></p>
+</li>
+<li>
+<p><code>JRELEASER_GPG_SECRET_KEY</code></p>
 </li>
 </ul>
 </div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset1_linux-agent">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">pipeline {
-  ...
-
-  stages {
-    stage('Build') {
-      steps {
-        // Define your build step as you'd normally do.
-        // example:
-        git url: 'http://github.com/duke/app.git', branch: 'main'
-        sh 'mvn verify'
-      }
-    }
-
-    stage('Release') {
-      tools {
-        // JRelease requires Java 11 to run.
-        // Configure your own JDK 11+ installation
-        // and refer to it here
-        jdk '11'
-      }
-
-      environment {
-        // Setup required environment variables
-        JRELEASER_GITHUB_TOKEN = credentials('github-token')
-      }
-
-      steps {
-        // Get the jreleaser downloader
-        sh 'curl -sL https://git.io/get-jreleaser &gt; get_jreleaser.java'
-        // Download JReleaser with version = &lt;version&gt;
-        // Change &lt;version&gt; to a tagged JReleaser release
-        // or leave it out to pull `latest`.
-        sh 'java get_jreleaser.java &lt;version&gt;'
-        // Let's check we've got the right version
-        sh 'java -jar jreleaser-cli.jar --version'
-        // Execute a JReleaser command such as 'full-release'
-        sh 'java -jar jreleaser-cli.jar full-release'
-      }
-    }
-  }
-}</code></pre>
+<div class="paragraph">
+<p>If the signing flags are omitted then only the following environment variable must be provided:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_GITHUB_TOKEN</code></p>
+</li>
+</ul>
 </div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_windows-agent">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">pipeline {
-  ...
-
-  stages {
-    stage('Build') {
-      steps {
-        // Define your build step as you'd normally do.
-        // example:
-        git url: 'http://github.com/duke/app.git', branch: 'main'
-        bat 'mvn verify'
-      }
-    }
-
-    stage('Release') {
-      tools {
-        // JRelease requires Java 11 to run.
-        // Configure your own JDK 11+ installation
-        // and refer to it here
-        jdk '11'
-      }
-
-      environment {
-        // Setup required environment variables
-        JRELEASER_GITHUB_TOKEN = credentials('github-token')
-      }
-
-      steps {
-        // Get the jreleaser downloader
-        bat 'powershell -Command "(new-object net.webclient).DownloadString(\'https://git.io/get-jreleaser\')" &gt; get_jreleaser.java'
-        // Download JReleaser with version = &lt;version&gt;
-        // Change &lt;version&gt; to a tagged JReleaser release
-        // or leave it out to pull `latest`.
-        bat 'java get_jreleaser.java &lt;version&gt;'
-        // Let's check we've got the right version
-        bat 'java -jar jreleaser-cli.jar --version'
-        // Execute a JReleaser command such as 'full-release'
-        bat 'java -jar jreleaser-cli.jar full-release'
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
+<div class="paragraph">
+<p>Find more information about the options available for this type of releases
+<a href="../tools/cli.html#_release" class="page">here</a>.</p>
 </div>
 </article>
   </div>

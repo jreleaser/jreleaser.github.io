@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Template Basics :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/templates/templates.html">
+    <title>Cross Platform Jlink :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/examples/cross-platform-jlink.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -214,11 +214,11 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Templates</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="templates.html">Template Basics</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/templates.html">Template Basics</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="mustache.html">Mustache Primer</a>
+    <a class="nav-link" href="../templates/mustache.html">Mustache Primer</a>
   </li>
 </ul>
   </li>
@@ -280,16 +280,16 @@
     <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/jreleaser.html">JReleaser&#8217;s Release</a>
+    <a class="nav-link" href="jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/simple-release.html">Simple Release</a>
+    <a class="nav-link" href="simple-release.html">Simple Release</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/auto-config-release.html">AutoConfig Release</a>
+    <a class="nav-link" href="auto-config-release.html">AutoConfig Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="cross-platform-jlink.html">Cross Platform Jlink</a>
   </li>
 </ul>
   </li>
@@ -329,45 +329,22 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li>Templates</li>
-    <li><a href="templates.html">Template Basics</a></li>
+    <li>Examples</li>
+    <li><a href="cross-platform-jlink.html">Cross Platform Jlink</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/templates/pages/templates.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/examples/pages/cross-platform-jlink.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Template Basics</h1>
+<h1 class="page">Cross Platform Jlink</h1>
 <div class="paragraph">
-<p>Once size does not fit all as no two build are setup identically. JReleaser recognizes this and lets you customize
-every single aspect of the release process, by means of parameterizable configuration settings and file templates.</p>
-</div>
-<div class="paragraph">
-<p>Many fields found in the <a href="../configuration/index.html" class="page">Configuration</a> options can be parameterized using
-<a href="https://mustache.github.io/">Mustache</a> templates. Basically you write down text as you&#8217;d normally do and use
-the <code>{{placeholder}}</code> syntax in places where you&#8217;d want to have a value placeholder be replace by
-the actual value as computed/exposed by JReleaser.</p>
-</div>
-<div class="paragraph">
-<p>There are several predefined <a href="../configuration/name-templates.html" class="page">Name Templates</a> that can be used as placeholders in configuration
-field names. You may also use these placeholders in template files, such as those that may be used by the
-<a href="../configuration/announce/mail.html" class="page">Mail</a> announcer, or the <a href="../configuration/packagers/homebrew.html" class="page">Homebrew</a> packager.</p>
-</div>
-<div class="paragraph">
-<p>JReleaser provides built-in file templates for all packagers which will be automatically selected when preparing files
-for a particular packager. You may override this behavior by providing your own templates, either at the default location
-expected by each packager, or by pointing the packager to a different template source.</p>
-</div>
-<div class="paragraph">
-<p>Template files may be generated using the appropriate command exposed by your tool of choice:
-<a href="../tools/cli.html#_template" class="page">CLI</a>, <a href="../tools/maven.html#_jreleasertemplate" class="page">Maven</a>,
-<a href="../tools/gradle.html#_jreleasertemplate" class="page">Gradle</a>, <a href="../tools/ant.html#_jreleaser_template" class="page">Ant</a>.</p>
-</div>
-<div class="paragraph">
-<p>Some configuration elements let you define custom properties that may be used as placeholders, for example</p>
+<p>The following configuration defines a distribution named <code>app</code> that&#8217;s configured to generate 2 jlink Java runtimes,
+one for OSX, the other for Linux. The project source is kept at https://github.com/duke/app. The zip files of
+both distributions will be uploaded to the GitHub release, and a Docker image will be generated for the Linux zip.</p>
 </div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
@@ -394,8 +371,48 @@ expected by each packager, or by pointing the packager to a different template s
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  extraProperties:
-    foo: bar</code></pre>
+  name: app
+  version: 1.0.0
+  description: Awesome App
+  longDescription: Awesome App
+  website: https://acme.com/app
+  authors:
+    - Duke
+  license: Apache-2.0
+  java:
+    mainClass: com.acme.Main
+    groupId: com.acme
+    artifactId: app
+    version: 16
+
+release:
+  github:
+    overwrite: true
+
+assemble:
+  jlinks:
+    app:
+      active: always
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+      jdk:
+        path: /home/jdks/16.0.0-zulu-osx
+        platform: osx
+      targetJdks:
+        - path: /home/jdks/16.0.0-zulu-osx
+          platform: osx
+        - path: /home/jdks/16.0.0-zulu-linux_x64
+          platform: linux
+
+packagers:
+  docker:
+    active: always
+    baseImage: ubuntu:latest
+    preCommands:
+      - 'RUN apt-get update -y'
+      - 'RUN apt-get install unzip'
+    registries:
+      - serverName: DEFAULT</code></pre>
 </div>
 </div>
 </div>
@@ -403,7 +420,40 @@ expected by each packager, or by pointing the packager to a different template s
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[project]
-  extraProperties.foo = "bar"</code></pre>
+  name = "app"
+  version = "1.0.0"
+  description = "Awesome App"
+  longDescription = "Awesome App"
+  website = "https://acme.com/app"
+  authors = ["Duke"]
+  license = "Apache-2.0"
+  java.mainClass = "com.acme.Main"
+  java.groupId = "com.acme"
+  java.artifactId = "app"
+  java.version = "16"
+
+[release.github]
+  overwrite = true
+
+[assemble.jlinks.app]
+  active = "ALWAYS"
+  mainJar = { path = "target/{{distributionName}}-{{projectVersion}}.jar" }
+  jdk = { path = "/home/jdks/16.0.0-zulu-osx", platform = "osx" }
+  [[assemble.jlinks.app.targetJdks]]
+    path = "/home/jdks/16.0.0-zulu-osx"
+    platform = "osx"
+  [[assemble.jlinks.app.targetJdks]]
+    path = "/home/jdks/16.0.0-zulu-linux_x64"
+    platform = "linux"
+
+[packagers.docker]
+  active = "ALWAYS"
+  baseImage = "ubuntu:latest"
+  preCommands = [
+    "RUN apt-get update -y",
+    "RUN apt-get install unzip"]
+  [[packagers.docker.registries]]
+    serverName = "DEFAULT"</code></pre>
 </div>
 </div>
 </div>
@@ -412,8 +462,61 @@ expected by each packager, or by pointing the packager to a different template s
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "project": {
-    "extraProperties": {
-      "foo": "bar"
+    "name": "app",
+    "description": "Awesome App",
+    "longDescription": "Awesome App",
+    "website": "https://acme.com/app",
+    "authors": ["Duke"],
+    "license": "Apache-2.0",
+    "java": {
+      "mainClass": "com.acme.Main",
+      "groupId": "com.acme",
+      "artifactId": "app",
+      "version": "16"
+    }
+  },
+
+  "release": {
+    "github": {
+      "overwrite": true
+    }
+  },
+
+  "assemble": {
+    "jlinks": {
+      "app": {
+        "active": "ALWAYS",
+        "mainJar": {
+          "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+        },
+        "jdk": {
+          "path": "/home/jdks/16.0.0-zulu-osx",
+          "platform": "osx"
+        },
+        "targetJdks": [
+          {
+            "path": "/home/jdks/16.0.0-zulu-osx",
+            "platform": "osx"
+          },
+          {
+            "path": "/home/jdks/16.0.0-zulu-linux",
+            "platform": "linux"
+          }
+        ]
+      }
+    }
+  },
+
+  "packagers": {
+    "docker": {
+      "active": "ALWAYS",
+      "baseImage": "ubuntu:latest",
+      "preCommands": [
+        "RUN apt-get update -y",
+        "RUN apt-get install unzip"],
+      "registries": {
+        "DEFAULT": { }
+      }
     }
   }
 }</code></pre>
@@ -423,138 +526,250 @@ expected by each packager, or by pointing the packager to a different template s
 <div class="tab-pane" aria-labelledby="tabset1_maven">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;project&gt;
-    &lt;extraProperties&gt;
-      &lt;foo&gt;bar&lt;/foo&gt;
-    &lt;/extraProperties&gt;
-  &lt;/project&gt;
-&lt;/jreleaser&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 <a href="http://maven.apache.org/xsd/maven-4.0.0.xsd"" class="bare">http://maven.apache.org/xsd/maven-4.0.0.xsd"</a> xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;com.acme&lt;/groupId&gt;
+  &lt;artifactId&gt;app&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+
+  &lt;name&gt;app&lt;/name&gt;
+  &lt;description&gt;Sample app&lt;/description&gt;
+  &lt;url&gt;<a href="https://acme.com/app&lt;/url&gt" class="bare">https://acme.com/app&lt;/url&gt</a>;
+  &lt;inceptionYear&gt;2020&lt;/inceptionYear&gt;
+
+  &lt;properties&gt;
+    &lt;maven.compiler.release&gt;16&lt;/maven.compiler.release&gt;
+  &lt;/properties&gt;
+
+  &lt;licenses&gt;
+    &lt;license&gt;
+       &lt;name&gt;Apache-2.0&lt;/name&gt;
+       &lt;url&gt;<a href="https://spdx.org/licenses/Apache-2.0.html&lt;/url&gt" class="bare">https://spdx.org/licenses/Apache-2.0.html&lt;/url&gt</a>;
+       &lt;distribution&gt;repo&lt;/distribution&gt;
+    &lt;/license&gt;
+  &lt;/licenses&gt;
+
+  &lt;developers&gt;
+    &lt;developer&gt;
+      &lt;id&gt;duke&lt;/id&gt;
+      &lt;name&gt;Duke&lt;/name&gt;
+      &lt;roles&gt;
+        &lt;role&gt;author&lt;/role&gt;
+      &lt;/roles&gt;
+    &lt;/developer&gt;
+  &lt;/developers&gt;
+
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+        &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;0.2.0&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;jreleaser&gt;
+            &lt;project&gt;
+              &lt;java&gt;
+                &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
+              &lt;/java&gt;
+            &lt;/project&gt;
+            &lt;release&gt;
+              &lt;github&gt;
+                &lt;overwrite&gt;true&lt;/overwrite&gt;
+              &lt;/github&gt;
+            &lt;/release&gt;
+            &lt;assemble&gt;
+              &lt;jlinks&gt;
+                &lt;jlink&gt;
+                  &lt;name&gt;app&lt;/name&gt;
+                  &lt;active&gt;ALWAYS&lt;/active&gt;
+                  &lt;mainJar&gt;
+                    &lt;path&gt;target/{{distributionName}}-{{projectVersion}}.jar&lt;/path&gt;
+                  &lt;/mainJar&gt;
+                  &lt;jdk&gt;
+                    &lt;path&gt;/home/jdks/16.0.0-zulu-osx&lt;/path&gt;
+                    &lt;platform&gt;osx&lt;/platform&gt;
+                  &lt;/jdk&gt;
+                  &lt;targetJdks&gt;
+                    &lt;targetJdk&gt;
+                      &lt;path&gt;/home/jdks/16.0.0-zulu-osx&lt;/path&gt;
+                      &lt;platform&gt;osx&lt;/platform&gt;
+                    &lt;/targetJdk&gt;
+                    &lt;targetJdk&gt;
+                      &lt;path&gt;/home/jdks/16.0.0-zulu-linux&lt;/path&gt;
+                      &lt;platform&gt;linux&lt;/platform&gt;
+                    &lt;/targetJdk&gt;
+                  &lt;/targetJdks&gt;
+                &lt;/jlink&gt;
+              &lt;/jlinks&gt;
+            &lt;/assemble&gt;
+            &lt;packagers&gt;
+              &lt;docker&gt;
+                &lt;active&gt;ALWAYS&lt;/active&gt;
+                &lt;baseImage&gt;ubuntu:latest&lt;/baseImage&gt;
+                &lt;preCommands&gt;
+                  &lt;preCommand&gt;RUN apt-get update -y&lt;/preCommand&gt;
+                  &lt;preCommand&gt;RUN apt-get install unzip&lt;/preCommand&gt;
+                &lt;/preCommands&gt;
+                &lt;registries&gt;
+                  &lt;registry&gt;
+                    &lt;serverName&gt;DEFAULT&lt;/serverName&gt;
+                  &lt;/registry&gt;
+                &lt;/registries&gt;
+              &lt;/docker&gt;
+            &lt;/packagers&gt;
+          &lt;/jreleaser&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;</code></pre>
 </div>
 </div>
 </div>
 <div class="tab-pane" aria-labelledby="tabset1_gradle">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'org.jreleaser'
+}
+
+group = 'com.acme'
+version = '1.0.0'
+
+jreleaser {
   project {
-    extraProperties.put('foo', 'bar')
+    name = 'app'
+    description = 'Awesome App'
+    longDescription = 'Awesome App'
+    website = 'https://acme.com/app'
+    authors = ['Duke']
+    license = 'Apache-2.0'
+    java {
+      mainClass = 'com.acme.Main'
+      artifactId = 'app'
+      version = '16'
+    }
   }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>These extra properties will always be prefixed by their containing element, in this case <code>project</code>, thus the <code>foo</code>
-resolves to <code>projectFoo</code> and can be consumed as <code>{{projectFoo}}</code> from any template.</p>
-</div>
-<div class="paragraph">
-<p>A property name may use the special <code>_split</code> suffix in which case it&#8217;s assumed that the value is a literal that should
-be treated as a collection. The last character in the value is used as the separator.</p>
-</div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
-<ul>
-<li>
-<p><a id="tabset2_yaml"></a>YAML</p>
-</li>
-<li>
-<p><a id="tabset2_toml"></a>TOML</p>
-</li>
-<li>
-<p><a id="tabset2_json"></a>JSON</p>
-</li>
-<li>
-<p><a id="tabset2_maven"></a>Maven</p>
-</li>
-<li>
-<p><a id="tabset2_gradle"></a>Gradle</p>
-</li>
-</ul>
-</div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset2_yaml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  extraProperties:
-    foo_split: '1,2,3,4,5,'</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_toml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[project]
-  extraProperties.foo_split = "1,2,3,4,5,"</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_json">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "project": {
-    "extraProperties": {
-      "foo_split": "1,2,3,4,5,"
+
+  release {
+    github {
+      overwrite = true
+    }
+  }
+
+  assemble {
+    jlinks {
+      app {
+        active = 'ALWAYS'
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        jdk {
+          path = '/home/jdks/16.0.0-zulu-osx'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '/home/jdks/16.0.0-zulu-osx'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '/home/jdks/16.0.0-zulu-linux'
+          platform = 'linux'
+        }
+      }
+    }
+  }
+
+  packagers {
+    docker {
+      active = 'ALWAYS'
+      baseImage = 'ubuntu:latest'
+      preCommands = [
+        'RUN apt-get update -y',
+        'RUN apt-get install unzip']
+      registries {
+        DEFAULT { }
+      }
     }
   }
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset2_maven">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;project&gt;
-    &lt;extraProperties&gt;
-      &lt;foo_split&gt;1,2,3,4,5,&lt;/foo_split&gt;
-    &lt;/extraProperties&gt;
-  &lt;/project&gt;
-&lt;/jreleaser&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_gradle">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  project {
-    extraProperties.put('foo_split', '1,2,3,4,5,')
-  }
-}</code></pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="paragraph">
-<p>Given this input and the following template:</p>
+<p>Assembling the jlink Java Runtimes.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{{projectFoo}}
-
-{{#projectFoo}}
-{{.}}
-{{/projectFoo}}</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ jreleaser assemble
+[INFO]  JReleaser 0.2.0
+[INFO]  Configuring with jreleaser.yml
+[INFO]    - basedir set to /Users/duke/tmp/app
+[INFO]  Reading configuration
+[INFO]  Loading properties from /Users/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-16T23:41:20.220912+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Assembling all distributions
+[INFO]    [jlink] assembling app distribution
+[INFO]    [jlink] - com.acme.app-1.0.0-osx
+[INFO]    [jlink] - com.acme.app-1.0.0-linux
+[INFO]  JReleaser succeeded after 8.900s
+[INFO]  Writing output properties to out/jreleaser/output.properties</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then the resulting evalution will be</p>
+<p>Releasing all distributions.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>[1, 2, 3, 4, 5]
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ jreleaser full-release
 
-1
-2
-3
-4
-5</code></pre>
+[INFO]  JReleaser 0.2.0
+[INFO]  Configuring with jreleaser.yml
+[INFO]    - basedir set to /Users/duke/tmp/app
+[INFO]  Reading configuration
+[INFO]  Loading properties from /Users/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-16T23:41:39.744177+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Calculating checksums
+[INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-osx.zip
+[INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-linux.zip
+[INFO]  Signing files
+[INFO]  Signing is not enabled. Skipping
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - uploading com.acme.app-1.0.0-osx.zip
+[INFO]   - uploading com.acme.app-1.0.0-linux.zip
+[INFO]   - uploading checksums.txt
+[INFO]  Preparing distributions
+[INFO]    - Preparing app distribution
+[INFO]      [docker] preparing app distribution
+[INFO]  Packaging distributions
+[INFO]    - Packaging app distribution
+[INFO]      [docker] packaging app distribution
+[INFO]      [docker]  - duke/app:v1.0.0
+[INFO]      [docker] sha256:a8eb8c32b795b320a3b52e9c6e62e5c6845def2fee83fd30b2a82b20b7c542a9
+[INFO]  Uploading distributions
+[INFO]    - Uploading app distribution
+[INFO]      [docker] uploading app distribution
+[INFO]      [docker]  - duke/app:v1.0.0
+[INFO]      [docker] Removing login credentials for https://index.docker.io/v1/
+[INFO]  Announcing release
+[INFO]  Announcing is not enabled. Skipping.
+[INFO]  JReleaser succeeded after 5.527s
+[INFO]  Writing output properties to out/jreleaser/output.properties</code></pre>
 </div>
 </div>
 </article>

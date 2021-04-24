@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>JReleaser :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/index.html">
+    <title>Artifacts :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/artifacts.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/admonitions.css">
@@ -93,7 +93,7 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="artifacts.html">Artifacts</a>
   </li>
 </ul>
@@ -325,77 +325,350 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">JReleaser</a></li>
+    <li><a href="artifacts.html">Artifacts</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/artifacts.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">JReleaser</h1>
+<h1 class="page">Artifacts</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>JReleaser is a release automation tool for Java projects. Its goal is to simplify creating releases and publishing artifacts
-to multiple package managers while providing customizable options.</p>
+<p>Artifacts are at the heart of a release; they define files that may be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>added to a Git <a href="configuration/release/index.html" class="page">release</a>.</p>
+</li>
+<li>
+<p>prepared, packaged, and uploaded using a <a href="configuration/packagers/index.html" class="page">packager</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_what_it_does"><a class="anchor" href="#_what_it_does"></a>What it does</h2>
+<h2 id="_properties"><a class="anchor" href="#_properties"></a>Properties</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>JReleaser takes inputs from popular builds tools (Ant, Maven, Gradle) such as JAR files, binary distributions
-(<code>.zip</code>, <code>.tar</code>), JLink images, or any other file that you&#8217;d like to publish as a Git release on popular Git services
-such as GitHub, GitLab, or Gitea. Distribution files can additionally be published to be consumed by popular package managers
-as Homebrew, Snapcraft, Scoop, or get ready to be launched via Jbang. Releases may be announced in a variety of channels such
-as Twitter, Zulip, SDKMAN!, and others.</p>
+<p>Artifacts have the following properties:</p>
 </div>
-<div class="imageblock">
+<div class="ulist">
+<ul>
+<li>
+<p><code>path</code>. Defines the location of the file. Path may be relative or absolute. We recomend defining paths
+that are relative to the <code>basedir</code> as much as possible, as that simplifies the setup on
+<a href="continuous-integration/index.html" class="page">CI</a>. Its value may use <a href="configuration/name-templates.html" class="page">Name Templates</a>.
+This property is <strong>required</strong>.</p>
+</li>
+<li>
+<p><code>transform</code>. Sometimes the source path does not have the exact name you&#8217;d looking for. You may apply a
+name transformation using this property. Its value may use <a href="configuration/name-templates.html" class="page">Name Templates</a>.
+This property is <strong>optional</strong>.</p>
+</li>
+<li>
+<p><code>platform</code>. Defines the OS specific platform for this file. Some <a href="configuration/assemble/index.html" class="page">assemblers</a>
+and <a href="configuration/packagers/index.html" class="page">packagers</a> require that artifacts define a platform.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The value of <code>platform</code> is dictated by the normalized values detected by
+<a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
+<code>arch</code> classifier. The following values are currently recognized:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
+<p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>osx</code></p>
+</li>
+<li>
+<p><code>osx-arm</code></p>
+</li>
+<li>
+<p><code>windows</code></p>
+</li>
+<li>
+<p><code>linux</code></p>
+</li>
+<li>
+<p><code>linux-x86_64</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Platform</strong></p>
+</div>
+<div class="paragraph">
+<p>Generating cross-platform JLink images require that each target JDK define a value for its corresponding platform.
+Target JDKs are of type <code>artifact</code>.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_toml"></a>TOML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
 <div class="content">
-<img src="_images/jreleaser-tools.png" alt="jreleaser tools">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">assemble:
+  jlinks:
+    app:
+      active: always
+      jdk:
+        path: '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+        platform: osx
+      targetJdks:
+        - path: '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform: osx
+        - path: '{{oracleJdks}}/jdk-16_linux-x64'
+          platform: linux
+        - path: '{{oracleJdks}}/jdk-16_windows-x64'
+          platform: windows
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_toml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[assemble.jlinks.app]
+  active = "ALWAYS"
+  mainJar = { path = "target/{{distributionName}}-{{projectVersion}}.jar" }
+  jdk = { path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home", platform = "osx" }
+  [[assemble.jlinks.app.targetJdks]]
+    path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home"
+    platform = "osx"
+  [[assemble.jlinks.app.targetJdks]]
+    path = "{{oracleJdks}}/jdk-16_linux-x64"
+    platform = "linux"
+  [[assemble.jlinks.app.targetJdks]]
+    path = "{{oracleJdks}}/jdk-16_windows-x64"
+    platform = "windows"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "assemble": {
+    "jlinks": {
+      "app": {
+        "active": "ALWAYS",
+        "mainJar": {
+          "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+        },
+        "jdk": {
+          "path": "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home",
+          "platform": "osx"
+        },
+        "targetJdks": [
+          {
+            "path": "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home",
+            "platform": "osx"
+          },
+          {
+            "path": "{{oracleJdks}}/jdk-16_linux-x64",
+            "platform": "linux"
+          },
+          {
+            "path": "{{oracleJdks}}/jdk-16_windows-x64",
+            "platform": "windows"
+          }
+        ]
+      }
+    }
+  },
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;assemble&gt;
+    &lt;jlinks&gt;
+      &lt;jlink&gt;
+        &lt;name&gt;app&lt;/name&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+        &lt;mainJar&gt;
+          &lt;path&gt;target/{{distributionName}}-{{projectVersion}}.jar&lt;/path&gt;
+        &lt;/mainJar&gt;
+        &lt;jdk&gt;
+          &lt;path&gt;{{oracleJdks}}/jdk-16_osx-x64/Contents/Home&lt;/path&gt;
+          &lt;platform&gt;osx&lt;/platform&gt;
+        &lt;/jdk&gt;
+        &lt;targetJdks&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;{{oracleJdks}}/jdk-16_osx-x64/Contents/Home&lt;/path&gt;
+            &lt;platform&gt;osx&lt;/platform&gt;
+          &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;{{oracleJdks}}/jdk-16_linux-x64&lt;/path&gt;
+            &lt;platform&gt;linux&lt;/platform&gt;
+          &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;{{oracleJdks}}/jdk-16_windows-x64&lt;/path&gt;
+            &lt;platform&gt;windows&lt;/platform&gt;
+          &lt;/targetJdk&gt;
+        &lt;/targetJdks&gt;
+      &lt;/jlink&gt;
+    &lt;/jlinks&gt;
+  &lt;/assemble&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  assemble {
+    jlinks {
+      app {
+        active = 'ALWAYS'
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        jdk {
+          path = '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_linux-x64'
+          platform = 'linux'
+        }
+        targetJdk {
+          path = '{{oracleJdks}}/jdk-16_windows-x64'
+          platform = 'windows'
+        }
+      }
+    }
+  }
+}</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_how_does_it_work"><a class="anchor" href="#_how_does_it_work"></a>How does it work</h2>
-<div class="sectionbody">
+</div>
 <div class="paragraph">
-<p>A release process can be customized with a <code>jreleaser.[yml|toml|json]</code> file if using the <a href="tools/cli.html" class="page">CLI</a> or
-<a href="tools/ant.html" class="page">Ant</a> options, or direct DSL configuration inside a <code>pom.xml</code> (<a href="tools/maven.html" class="page">Maven</a>) or
-<code>build.gradle</code> (<a href="tools/gradle.html" class="page">Gradle</a>) file.</p>
+<p><strong>Transform</strong></p>
 </div>
 <div class="paragraph">
-<p>Once setup, you can create a new release by invoking the <code>full-release</code> command.</p>
+<p>JReleaser itself uses the <code>transform</code> property to rename its artifacts depending on the type of release.</p>
+</div>
+<div class="listingblock">
+<div class="title">jreleaser.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">distributions:
+  jreleaser:
+    artifacts:
+      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  jreleaser-ant-tasks:
+    artifacts:
+      - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  jreleaser-tool-provider:
+    type: SINGLE_JAR
+    artifacts:
+      - path: apps/jreleaser-tool-provider/build/libs/jreleaser-tool-provider-{{projectVersion}}.jar
+        transform: 'jreleaser-tool-provider/jreleaser-tool-provider-{{projectEffectiveVersion}}.jar'</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Every step of the release process is configurable. Inputs may be parameterized externally; several input files may be
-provided as templates.</p>
+<p>Artifacts point to these files when the project version is snapshot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">out
+└── jreleaser
+    └── artifacts
+        ├── jreleaser
+        │   └── jreleaser-early-access.zip
+        ├── jreleaser-ant-tasks
+        │   └── jreleaser-ant-tasks-early-access.zip
+        └── jreleaser-tool-provider
+            └── jreleaser-tool-provider-early-access.jar</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_how_it_looks"><a class="anchor" href="#_how_it_looks"></a>How it looks</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>A (moving) picture is worth a thousand words</p>
+<p>Whereas the following files will be used when the project is release:</p>
 </div>
-<script id="asciicast-409271" src="https://asciinema.org/a/409271.js" async></script>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">.
+├── apps
+│    ├── jreleaser
+│    │   └── build
+│    │       └── distributions
+│    │           └── jreleaser-0.2.0.zip
+│    └── jreleaser-tool-provider
+│        └── build
+│            └── libs
+│                └── jreleaser-tool-provider-0.2.0.jar
+└── plugins
+    └── jreleaser-ant-tasks
+        └── build
+            └── distributions
+                └── jreleaser-ant-tasks-0.2.0.zip</code></pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_acknowledgments"><a class="anchor" href="#_acknowledgments"></a>Acknowledgments</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>JReleaser is heavily inspired by <a href="https://goreleaser.com">GoReleaser</a>, it also builds on top of the lessons learned
-from <a href="github.com/jbangdev/jbang">jbang</a>'s build setup.</p>
 </div>
 </div>
 </div>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Zulip :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/zulip.html">
+    <title>Teams :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/teams.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
@@ -192,13 +192,13 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="slack.html">Slack</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="teams.html">Teams</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="twitter.html">Twitter</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="zulip.html">Zulip</a>
   </li>
 </ul>
@@ -331,20 +331,54 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="zulip.html">Zulip</a></li>
+    <li><a href="teams.html">Teams</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/zulip.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/teams.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Zulip</h1>
+<h1 class="page">Teams</h1>
 <div class="paragraph">
-<p>Posts a message to a <a href="https://zulip.com/">Zulip</a> server. You must procure an account and apiKey to use
-this announcer.</p>
+<p>Posts a message to a <a href="https://www.microsoft.com/en-ww/microsoft-teams">Teams</a> room. You must create a custom webhook for this announcer to work.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log into Teams.</p>
+</li>
+<li>
+<p>Click on the <code>Apps</code> icon.</p>
+</li>
+<li>
+<p>Click on the <code>Connectors</code> menu item.</p>
+</li>
+<li>
+<p>Click on <code>Incoming Webhook</code> and add it to a team.</p>
+</li>
+<li>
+<p>Configure the webhook.</p>
+</li>
+<li>
+<p>Copy the generated webhook URL.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the <code>JRELEASER_TEAMS_WEBHOOK</code> environment variable over explicitly setting a value in the configuration DSL.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -391,7 +425,7 @@ this announcer.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  zulip:
+  teams:
 
     # Enable or disable this announcer.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -407,42 +441,19 @@ this announcer.</p>
     # Defines the read timeout in seconds.
     # Defaults to `60`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    readTimeout: 60
+    readTimeout: 6
 
-    # The Zulip account (typically an email address) to use.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    account: announce-bot@my.zulipchat.com
-
-    # The Zulip server endpoint.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    apiHost: https://my.zulipchat.com/api/v1
-
-    # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+    # The webhook associated with a specific Teams room.
+    # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    apiKey: __DO_NOT_SET_HERE__
-
-    # The channel where the message will be sent to
-    # Defaults to `announce`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    channel: announce
-
-    # The messages' subject.
-    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    subject: {{projectNameCapitalized}} {{projectVersion}} released!
-
-    # The announcement message.
-    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    message: <span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+    webhook: __DO_NOT_SET_HERE__
 
     # Path to a template file that contains the message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-    # Defaults to `src/jreleaser/templates/zulip.tpl`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    messageTemplate: path/to/template/zulip.tpl</code></pre>
+    # Defaults to `src/jreleaser/templates/teams.tpl`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    messageTemplate: path/to/template/teams.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -450,7 +461,7 @@ this announcer.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[announce.zulip]
+[announce.teams]
 
   # Enable or disable this announcer.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -468,40 +479,17 @@ this announcer.</p>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
 
-  # The Zulip account (typically an email address) to use.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  account = "announce-bot@my.zulipchat.com"
-
-  # The Zulip server endpoint.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  apiHost = "https://my.zulipchat.com/api/v1"
-
-  # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+  # The webhook associated with a specific Teams room.
+  # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  apiKey = "__DO_NOT_SET_HERE__"
-
-  # The channel where the message will be sent to
-  # Defaults to `announce`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  channel = "announce"
-
-  # The messages' subject.
-  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  subject = "{{projectNameCapitalized}} {{projectVersion}} released!"
-
-  # The announcement message.
-  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  message = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+  webhook = "__DO_NOT_SET_HERE__"
 
   # Path to a template file that contains the message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-  # Defaults to `src/jreleaser/templates/zulip.tpl`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  messageTemplate = "path/to/template/zulip.tpl"</code></pre>
+  # Defaults to `src/jreleaser/templates/teams.tpl`.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  messageTemplate = "path/to/template/teams.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -511,7 +499,7 @@ this announcer.</p>
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "zulip": {
+    "teams": {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -529,40 +517,17 @@ this announcer.</p>
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "readTimeout": 60,
 
-      // The Zulip account (typically an email address) to use.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "account": announce-bot@my.zulipchat.com,
-
-      // The Zulip server endpoint.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "apiHost": "https://my.zulipchat.com/api/v1",
-
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "apiKey": "__DO_NOT_SET_HERE__",
-
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "channel": "announce",
-
-      // The messages' subject.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "subject": "{{projectNameCapitalized}} {{projectVersion}} released!",
-
-      // The announcement message.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "message": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+      "webhook": "__DO_NOT_SET_HERE__",
 
       // Path to a template file that contains the message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "messageTemplate": "path/to/template/zulip.tpl"
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      "messageTemplate": "path/to/template/teams.tpl"
     }
   }
 }</code></pre>
@@ -577,7 +542,7 @@ this announcer.</p>
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;zulip&gt;
+    &lt;teams&gt;
 
       &lt;!--
         Enable or disable this announcer.
@@ -602,53 +567,20 @@ this announcer.</p>
       &lt;readTimeout&gt;60&lt;/readTimeout&gt;
 
       &lt;!--
-        The Zulip account (typically an email address) to use.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;account&gt;announce-bot@my.zulipchat.com&lt;/account&gt;
-
-      &lt;!--
-        The Zulip server endpoint.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;apiHost&gt;https:my.zulipchat.com/api/v1&lt;/apiHost&gt;
-
-      &lt;!--
-        The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_ZULIP_API_KEY` environment variable must be defined.
+        The webhook associated with a specific Teams room.
+        If left unspecified, the `JRELEASER_TEAMS_WEBHOOK` environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;apiKey&gt;__DO_NOT_SET_HERE__&lt;/apiKey&gt;
-
-      &lt;!--
-        The channel where the message will be sent to
-        Defaults to `announce`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;channel&gt;announce&lt;/channel&gt;
-
-      &lt;!--
-        The messages' subject.
-        Review the available <a href="#configuration&gt;templates.adoc" class="page unresolved">configuration&gt;templates.adoc</a>.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;subject&gt;{{projectNameCapitalized}} {{projectVersion}} released!&lt;/subject&gt;
-
-      &lt;!--
-        The announcement message.
-        Review the available <a href="#configuration&gt;templates.adoc" class="page unresolved">configuration&gt;templates.adoc</a>.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;message&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/message&gt;
+      &lt;webhook&gt;__DO_NOT_SET_HERE__&lt;/webhook&gt;
 
       &lt;!--
         Path to a template file that contains the message.
         Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-        Defaults to `src/jreleaser/templates/zulip.tpl`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        Defaults to `src/jreleaser/templates/teams.tpl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
-      &lt;messageTemplate&gt;path/to/template/zulip.tpl&lt;/messageTemplate&gt;
-    &lt;/zulip&gt;
+      &lt;messageTemplate&gt;path/to/template/teams.tpl&lt;/messageTemplate&gt;
+    &lt;/teams&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -660,7 +592,7 @@ this announcer.</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    zulip {
+    teams {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -678,40 +610,17 @@ this announcer.</p>
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout = 60
 
-      // The Zulip account (typically an email address) to use.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      account = 'announce-bot@my.zulipchat.com'
-
-      // The Zulip server endpoint.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      apiHost = 'https://my.zulipchat.com/api/v1'
-
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      apiKey = '__DO_NOT_SET_HERE__'
-
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      channel = 'announce'
-
-      // The messages' subject.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      subject = '{{projectNameCapitalized}} {{projectVersion}} released!'
-
-      // The announcement message.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      message = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      webhook = '__DO_NOT_SET_HERE__'
 
       // Path to a template file that contains the message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      messageTemplate = 'path/to/template/zulip.tpl'
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      messageTemplate = 'path/to/template/teams.tpl'
     }
   }
 }</code></pre>
@@ -721,7 +630,8 @@ this announcer.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You may define either <code>message</code> or <code>messageTemplate</code>, with the former taking precedence over the latter.</p>
+<p>The message must follow the <a href="https://docs.microsoft.com/en-us/outlook/actionable-messages/adaptive-card">Adaptive Card</a>
+format.</p>
 </div>
 <div class="paragraph">
 <p>The template file may be initialized using the <code>template</code> command.</p>

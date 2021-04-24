@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Release :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/release/index.html">
+    <title>Assemble :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/assemble/index.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
@@ -113,30 +113,30 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../signing.html">Signing</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Release</a>
+    <a class="nav-link" href="../release/index.html">Release</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="github.html">GitHub</a>
+    <a class="nav-link" href="../release/github.html">GitHub</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="gitlab.html">GitLab</a>
+    <a class="nav-link" href="../release/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="gitea.html">Gitea</a>
+    <a class="nav-link" href="../release/gitea.html">Gitea</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../assemble/index.html">Assemble</a>
+    <a class="nav-link" href="index.html">Assemble</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../assemble/jlink.html">Jlink</a>
+    <a class="nav-link" href="jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../assemble/native-image.html">Native Image</a>
+    <a class="nav-link" href="native-image.html">Native Image</a>
   </li>
 </ul>
   </li>
@@ -330,46 +330,156 @@
   <ul>
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
-    <li><a href="index.html">Release</a></li>
+    <li><a href="index.html">Assemble</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/release/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/assemble/index.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Release</h1>
+<h1 class="page">Assemble</h1>
 <div class="paragraph">
-<p>JReleaser can create and tag a release, upload all files and generate the changelog based on the new commits since
-the previous tag. If a matching milestone is found then it&#8217;ll be closed as well.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Only a single release service can be configured at a time.
-</td>
-</tr>
-</table>
+<p>Some distribution types may be assembled by JReleaser.</p>
 </div>
 <div class="paragraph">
-<p>You can choose from the following release services:</p>
+<p>Legend:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="github.html" class="page">GitHub</a></p>
+<p><span class="icon"><i class="fa fa-exclamation-triangle"></i></span> required</p>
 </li>
 <li>
-<p><a href="gitlab.html" class="page">GitLab</a></p>
+<p><span class="icon"><i class="fa fa-dot-circle"></i></span> optional</p>
 </li>
 <li>
-<p><a href="gitea.html" class="page">Gitea</a></p>
+<p><span class="icon"><i class="fa fa-eye-slash"></i></span> may use environment variable</p>
+</li>
+<li>
+<p><span class="icon"><i class="fa fa-file-alt"></i></span> accepts <a href="../name-templates.html" class="page">Name Templates</a></p>
+</li>
+</ul>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset1_toml"></a>TOML</p>
+</li>
+<li>
+<p><a id="tabset1_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset1_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
+assemble:
+  # Enable or disable all configured assemblers.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  enabled: true</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_toml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[assemble]
+
+  # Enable or disable all configured assemblers.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  enable = true</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  "assemble": {
+    // Enable or disable all configured assemblers.
+    // Defaults to `true`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "enabled": true
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;!--
+    <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  --&gt;
+  &lt;assemble&gt;
+    &lt;!--
+      Enable or disable all configured assemblers.
+      Defaults to `true`.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/assemble&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // icon;dot-circle[]
+  assemble {
+    // Enable or disable all configured assemblers.
+    // Defaults to `true`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    enabled = true
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Assemblers will configure a matching distribution by name if it exists, otherwise they&#8217;ll create a new distribution
+with their respective name. Assemblers can configure the following distribution properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>active</p>
+</li>
+<li>
+<p>executable</p>
+</li>
+<li>
+<p>java</p>
+</li>
+<li>
+<p>artifacts</p>
+</li>
+<li>
+<p>extraProperties</p>
 </li>
 </ul>
 </div>
