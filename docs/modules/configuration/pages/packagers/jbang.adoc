@@ -22,12 +22,13 @@ packagers:
   # icon:dot-circle[]
   jbang:
     # Enables or disables Jbang.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Jbang distribution
-    # Defaults to `src/distribution/${distribution.name}/jbang`.
+    # Directory with file templates used to prepare the Jbang distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/jbang/templates
@@ -39,7 +40,7 @@ packagers:
       foo: bar
 
     # The jbang executable alias.
-    # If left undefined, will use `${distribution.name}`
+    # If left undefined, will use `${distribution.executable}`
     # icon:dot-circle[]
     alias: cli
 
@@ -49,12 +50,12 @@ packagers:
       # Name used when authoring commits.
       # If left undefined, will use the releaser's commit name.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
       # If left undefined, will use the releaser's commit email.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
     # Git repository to push the formula to.
     # Defaults are shown.
@@ -82,6 +83,71 @@ packagers:
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.jbang]
+
+  # Enables or disables Jbang.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Jbang distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/jbang/templates"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+
+  # The jbang executable alias.
+  # If left undefined, will use `${distribution.executable}`
+  # icon:dot-circle[]
+  alias = "cli"
+
+  # Git author used to commit to the catalog repository.
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Git repository to push the formula to.
+  # Defaults are shown
+
+  # The owner of the catalog repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  catalog.owner = "duke"
+
+  # The name of the catalog repository.
+  # Defaults to `jbang-catalog`.
+  # icon:dot-circle[]
+  catalog.name = "jbang-catalog"
+
+  # Username used for authoring commits. Must have write access to the catalog repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  catalog.username = "duke"
+
+  # Password or OAuth token with write access to the catalog repository.
+  # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  catalog.token = "__DO_NOT_SET_HERE__"
+----
 JSON::
 +
 [source,json]
@@ -93,12 +159,13 @@ JSON::
     // icon:dot-circle[]
     "jbang": {
       // Enables or disables Jbang.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Jbang distribution
-      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // Directory with file templates used to prepare the Jbang distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/jbang/templates",
@@ -111,7 +178,7 @@ JSON::
       },
 
       // The jbang executable alias.
-      // If left undefined, will use `${distribution.name}`
+      // If left undefined, will use `${distribution.executable}`
       // icon:dot-circle[]
       "alias": "cli",
 
@@ -119,14 +186,14 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
       // Git repository to push the formula to.
@@ -175,14 +242,15 @@ Maven::
     <jbang>
       <!--
         Enables or disables Jbang.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Jbang distribution
-        Defaults to `src/distribution/${distribution.name}/jbang`.
+        Directory with file templates used to prepare the Jbang distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -201,7 +269,7 @@ Maven::
 
       <!--
         The jbang executable alias.
-        If left undefined, will use `${distribution.name}`
+        If left undefined, will use `${distribution.executable}`
         icon:dot-circle[]
       -->
       <alias>cli</alias>
@@ -214,17 +282,17 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
@@ -278,12 +346,13 @@ jreleaser {
     // icon:dot-circle[]
     jbang {
       // Enables or disables Jbang.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Jbang distribution
-      // Defaults to `src/distribution/${distribution.name}/jbang`.
+      // Directory with file templates used to prepare the Jbang distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/jbang/templates'
@@ -294,7 +363,7 @@ jreleaser {
       extraProperties.put('foo', 'bar')
 
       // The jbang executable alias.
-      // If left undefined, will use `${distribution.name}`
+      // If left undefined, will use `${distribution.executable}`
       // icon:dot-circle[]
       alias = 'cli'
 
@@ -304,12 +373,12 @@ jreleaser {
         // Name used when authoring commits.
         // If left undefined, will use the releaser's commit name.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
         // If left undefined, will use the releaser's commit email.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }
 
       // Git repository to push the formula to.
@@ -344,6 +413,8 @@ jreleaser {
 ----
 ====
 
+Template files may be initialized using the `template` command.
+
 NOTE: The catalog token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
 be one of [`JRELEASER_JBANG_GITHUB_TOKEN`, `JRELEASER_JBANG_GITLAB_TOKEN`, `JRELEASER_JBANG_GITEA_TOKEN`].
 
@@ -351,6 +422,8 @@ NOTE: You must define a value for `java.mainClass` in the owning distribution.
 
 NOTE: When the project's version is snapshot, unless manually updated, the default prepared template assumes JARs may be
 resolved from link:https://jitpack.io[].
+
+IMPORTANT: Aliases must be unique!
 
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a `app.java` file in the `duke/jbang-catalog` repository:

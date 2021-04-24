@@ -1,0 +1,108 @@
+= JReleaser's Release
+
+It should be no surprise that JReleaser relies on itself to create its releases.
+
+The following link:https://raw.githubusercontent.com/jreleaser/jreleaser/main/jreleaser.yml[configuration file]
+is used to create both release and snapshot releases:
+
+[source,yaml]
+[subs="verbatim"]
+.jreleaser.yml
+----
+# General information about this project
+project:
+  name: jreleaser
+  description: Release Java projects quickly and easily with JReleaser
+  longDescription: Release Java projects quickly and easily with JReleaser
+  website: https://jreleaser.org
+  authors:
+    - Andres Almiray
+  license: Apache-2.0
+  java:
+    groupId: org.jreleaser
+    version: 8
+
+# The repository is hosted at https://github.com/jreleaser/jreleaser
+# which means the default username would be `jreleaser` however a
+# different username is required
+release:
+  github:
+    username: aalmiray
+    overwrite: true
+    sign: true
+
+# File signing is always active
+signing:
+  active: always
+  armored: true
+
+# Announcing a release only occurs whn it's not snapshot
+announce:
+  twitter:
+    active: release
+  sdkman:
+    active: release
+
+# Configure 3 distributions
+distributions:
+  # Distribution 1 is of type JAVA_BINARY
+  jreleaser:
+    java:
+      mainClass: org.jreleaser.cli.Main
+    brew:
+      # Active only on release
+      active: release
+    scoop:
+      # Active only on release
+      active: release
+    jbang:
+      # Always active
+      active: always
+    artifacts:
+      # Transform the artifact name
+      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  # Distribution 2 is of type JAVA_BINARY
+  jreleaser-ant-tasks:
+    extraProperties:
+      # Do not considerits artifacts for publication via SdkMan
+      sdkmanSkip: true
+    artifacts:
+      # Transform the artifact name
+      - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+
+  # Distribution 2 is of type SINGLE_JAR
+  jreleaser-tool-provider:
+    type: SINGLE_JAR
+    executable: jreleaser
+    java:
+      # A different Java version is required to run this distribution
+      version: 11
+    docker:
+      # Always active
+      active: always
+      imageNames:
+        - '{{repoOwner}}/{{projectName}}-slim:{{tagName}}'
+        - '{{repoOwner}}/{{projectName}}-slim:latest'
+      postCommands:
+        - 'VOLUME /workspace'
+      registries:
+        # Will publish to hub.docker.com
+        - serverName: DEFAULT
+          username: jreleaser
+    artifacts:
+      # Transform the artifact name
+      - path: apps/jreleaser-tool-provider/build/libs/jreleaser-tool-provider-{{projectVersion}}.jar
+        transform: 'jreleaser-tool-provider/jreleaser-tool-provider-{{projectEffectiveVersion}}.jar'
+
+files:
+  artifacts:
+    - path: VERSION
+----
+
+Which will create and tag a prerelease on GitHub when the project is snapshot
+
+image::ROOT:jreleaser-early-access.png[]
+

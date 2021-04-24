@@ -14,7 +14,8 @@ YAML::
 # icon:exclamation-triangle[]
 project:
   # The name of the project.
-  # icon:exclamation-triangle[]
+  # May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+  # icon:exclamation-triangle[] icon:eye-slash[]
   name: app
 
   # The version to be released.
@@ -28,22 +29,22 @@ project:
   snapShotPattern: .*-SNAPSHOT
 
   # A short description (60 chars max).
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
   description: My awesome app
 
   # A more thorough explanation of the project's capabilities.
   # May use markdown syntax.
   # If left unspecified, will use the value of `description`.
-  # icon:dot-circle[]
+  # icon:dot-circle[] Only if configured distributions or announcers.
   longDescription: |
     My Awesome app is the bees knees
 
   # The project's website.
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
   website: pass:[https://acme.com/app]
 
   # A list of author names.
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
   authors:
     - Duke
 
@@ -56,7 +57,7 @@ project:
   # The project's license.
   # It's recommended to use a valid SPDX identifier if the project is Open Source.
   # See link:https://spdx.org/licenses[].
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
   license: Apache-2.0
 
   # Additional properties used when evaluating templates.
@@ -90,7 +91,101 @@ project:
     # Identifies the project as being member of a multi-project build.
     # Defaults to `false`.
     # icon:dot-circle[]
-    multiProject : false
+    multiProject: false
+
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[]
+    extraProperties:
+      # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+      foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:exclamation-triangle[]
+[project]
+  # The name of the project.
+  # May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  name = "app"
+
+  # The version to be released.
+  # May define a `JRELEASER_PROJECT_VERSION` environment variable instead.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  version = "1.0.0"
+
+  # A regex to determine if the project version is snapshot
+  # May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+  # icon:dot-circle[] icon:eye-slash[]
+  snapShotPattern = ".*-SNAPSHOT"
+
+  # A short description (60 chars max).
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
+  description = "My awesome app"
+
+  # A more thorough explanation of the project's capabilities.
+  # May use markdown syntax.
+  # If left unspecified, will use the value of `description`.
+  # icon:dot-circle[] Only if configured distributions or announcers.
+  longDescription = """
+    My Awesome app is the bees knees
+  """
+
+  # The project's website.
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
+  website = "pass:[https://acme.com/app]"
+
+  # A list of author names.
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
+  authors = ["Duke"]
+
+  # A list of tags.
+  # icon:dot-circle[]
+  tags = ["cli", "awesome"]
+
+  # The project's license.
+  # It's recommended to use a valid SPDX identifier if the project is Open Source.
+  # See link:https://spdx.org/licenses[].
+  # icon:exclamation-triangle[] Only if configured distributions or announcers.
+  license = "Apache-2.0"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
+
+  # Required if there are configured distributions.
+
+  # Maven coordinates: groupId.
+  # Inherited by distributions if they do not define a value for it.
+  # icon:exclamation-triangle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If undefined, will use ${project.name}.
+  # Inherited by distributions if they do not define a value for it.
+  # icon:exclamation-triangle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # icon:exclamation-triangle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
 ----
 JSON::
 +
@@ -100,8 +195,8 @@ JSON::
 {
   // icon:exclamation-triangle[]
   "project": {
-    // The name of the project.
-    // icon:exclamation-triangle[]
+    // May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+    // icon:exclamation-triangle[] icon:eye-slash[]
     "name": "app",
 
     // The version to be released.
@@ -115,21 +210,21 @@ JSON::
     "snapShotPattern": ".*-SNAPSHOT",
 
     // A short description (60 chars max).
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     "description": "My awesome app",
 
     // A more thorough explanation of the project's capabilities.
     // May use markdown syntax.
     // If left unspecified, will use the value of `description`.
-    // icon:dot-circle[]
+    // icon:dot-circle[] Only if configured distributions or announcers.
     "longDescription": "My Awesome app is the bees knees",
 
     // The project's website.
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     "website": "pass:[https://acme.com/app]",
 
     // A list of author names.
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     "authors": [
       "Duke"
     ],
@@ -144,7 +239,7 @@ JSON::
     // The project's license.
     // It's recommended to use a valid SPDX identifier if the project is Open Source.
     // See link:https://spdx.org/licenses[].
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     "license": "Apache-2.0",
 
     // Additional properties used when evaluating templates.
@@ -179,7 +274,14 @@ JSON::
       // Identifies the project as being member of a multi-project build.
       // Defaults to `false`.
       // icon:dot-circle[]
-      "multiProject": false
+      "multiProject": false,
+
+      // Additional properties used when evaluating templates.
+      // icon:dot-circle[]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        "foo": "bar"
+      }
     }
   }
 }
@@ -195,8 +297,8 @@ Maven::
   -->
   <project>
     <!--
-      The name of the project.
-      icon:exclamation-triangle[]
+      May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+      icon:exclamation-triangle[] icon:eye-slash[]
     -->
     <name>app</name>
 
@@ -218,7 +320,7 @@ Maven::
     <!--
       A short description (60 chars max).
       If undefined, will use ${project.description} from Maven.
-      icon:exclamation-triangle[]
+      icon:exclamation-triangle[] Only if configured distributions or announcers.
     -->
     <description>My awesome app</description>
 
@@ -226,7 +328,7 @@ Maven::
       A more thorough explanation of the project's capabilities.
       May use markdown syntax.
       If left unspecified, will use the value of `description`.
-      icon:dot-circle[]
+      icon:dot-circle[] Only if configured distributions or announcers.
     -->
     <longDescription>
       My Awesome app is the bees knees
@@ -235,7 +337,7 @@ Maven::
     <!--
       The project's website.
       If undefined, will use ${project.url} from Maven.
-      icon:exclamation-triangle[]
+      icon:exclamation-triangle[] Only if configured distributions or announcers.
     -->
     <website>pass:[https://acme.com/app]</website>
 
@@ -243,7 +345,7 @@ Maven::
       A list of author names.
       If undefined, will use ${project.developers} from Maven, looking for
       matches of <role>author</role>
-      icon:exclamation-triangle[]
+      icon:exclamation-triangle[] Only if configured distributions or announcers.
     -->
     <authors>
       <author>Duke</author>
@@ -263,7 +365,7 @@ Maven::
       If undefined, will use ${project.licenses} from Maven.
       It's recommended to use a valid SPDX identifier if the project is Open Source.
       See link:https://spdx.org/licenses[].
-      icon:exclamation-triangle[]
+      icon:exclamation-triangle[] Only if configured distributions or announcers.
     -->
     <license>Apache-2.0</license>
 
@@ -323,6 +425,17 @@ Maven::
         icon:dot-circle[]
       -->
       <multiProject>false</multiProject>
+
+      <!--
+        Additional properties used when evaluating templates.
+        icon:dot-circle[]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
     </java>  
   </project>
 </jreleaser>
@@ -334,8 +447,8 @@ Gradle::
 ----
 jreleaser {
   project {
-    // The name of the project.
-    // icon:exclamation-triangle[]
+    // May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+    // icon:exclamation-triangle[] icon:eye-slash[]
     name = 'app'
 
     // The version to be released.
@@ -350,21 +463,21 @@ jreleaser {
     snapShotPattern = '.*-SNAPSHOT'
 
     // A short description (60 chars max).
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     description = 'My awesome app'
 
     // A more thorough explanation of the project's capabilities.
     // May use markdown syntax.
     // If left unspecified, will use the value of `description`.
-    // icon:dot-circle[]
+    // icon:dot-circle[] Only if configured distributions or announcers.
     longDescription = 'My Awesome app is the bees knees'
 
     // The project's website.
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     website = 'pass:[https://acme.com/app]'
 
     // A list of author names.
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     authors = ['Duke']
 
     // A list of tags.
@@ -374,7 +487,7 @@ jreleaser {
     // The project's license.
     // It's recommended to use a valid SPDX identifier if the project is Open Source.
     // See link:https://spdx.org/licenses[].
-    // icon:exclamation-triangle[]
+    // icon:exclamation-triangle[] Only if configured distributions or announcers.
     license = 'Apache-2.0'
 
     // Additional properties used when evaluating templates.
@@ -414,6 +527,11 @@ jreleaser {
       // If undefined, will be determine based on the Gradle setup.
       // icon:dot-circle[]
       multiProject = false
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+      // icon:dot-circle[]
+      extraProperties.put('foo', 'bar')
     }
   }
 }

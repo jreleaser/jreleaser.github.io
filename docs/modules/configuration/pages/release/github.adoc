@@ -19,12 +19,23 @@ release:
     # icon:dot-circle[]
     enabled: true
 
+    # Defines the connection timeout in seconds.
+    # Defaults to `20`.
+    # icon:dot-circle[]
+    connectTimeout: 20
+
+    # Defines the read timeout in seconds.
+    # Defaults to `60`.
+    # icon:dot-circle[]
+    readTimeout: 60
+
     # The user or organization that owns the repository.
-    # icon:exclamation-triangle[]
+    # If unspecified, will read it from the 'origin' git remote.
+    # icon:dot-circle[]
     owner: duke
 
     # The name of the repository.
-    # If unspecified, will use ${project.name}.
+    # If unspecified, will read it from the 'origin' git remote.
     # icon:dot-circle[]
     name: app
 
@@ -56,20 +67,24 @@ release:
     releaseName: Release v1.0.0
 
     # Drops and creates an existing release with matching tag.
+    # May define a `JRELEASER_OVERWRITE` environment variable instead.
     # Defaults to `false`.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     overwrite: true
 
     # Appends artifacts to an existing release with matching tag,
     # useful if `overwrite` is set to `false`.
+    # May define a `JRELEASER_UPDATE` environment variable instead.
     # Defaults to `false`.
-    # icon:dot-circle[]
-    allowUploadToExisting: true
+    # icon:dot-circle[] icon:eye-slash[]
+    update: true
 
     # Skips creating a tag.
     # Useful when the tag was created externally.
-    # icon:dot-circle[]
-    skipTagging: false
+    # May define a `JRELEASER_SKIP_TAG` environment variable instead.
+    # Defaults to `false`.
+    # icon:dot-circle[] icon:eye-slash[]
+    skipTag: false
 
     # The GitHub API endpoint to use.
     # Update it if using GitHub Enterprise.
@@ -81,14 +96,14 @@ release:
     # icon:dot-circle[]
     commitAuthor:
       # Name used when authoring commits.
-      # Defaults to `jreleaser-bot`.
+      # Defaults to `jreleaserbot`.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
-      # Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+      # Defaults to `pass:[jreleaser@kordamp.org]`.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
     # Signs commits with the configured credentials.
     # The xref:configuration:signing.adoc[] section must be configured as well.
@@ -136,8 +151,9 @@ release:
       name: {{tagName}}
 
     # The target branch to use.
-    # Defaults to `main`.
-    # icon:dot-circle[]
+    # May define a `JRELEASER_BRANCH` environment variable instead.
+    # Defaults to the branch pointed by HEAD.
+    # icon:dot-circle[] icon:eye-slash[]
     targetCommitish: main
 
     # Marks the release as a draft.
@@ -146,8 +162,9 @@ release:
     draft: false
 
     # Marks the release as prerelease.
+    # May define a `JRELEASER_PRERELEASE` environment variable instead.
     # Defaults to `false`.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     prerelease: false
 
     # The following properties define icon:dot-circle[] URL formats.
@@ -175,6 +192,187 @@ release:
     # icon:dot-circle[] icon:file-alt[]
     issueTrackerUrlFormat: pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# Repo in which the release will be created.
+# icon:exclamation-triangle[]
+[release.github]
+  # Disables or enables publication to GitHub.
+  # defaults to `true`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # icon:dot-circle[]
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  readTimeout = 60
+
+  # The user or organization that owns the repository.
+  # icon:exclamation-triangle[]
+  owner = "duke"
+
+  # The name of the repository.
+  # If unspecified, will use ${project.name}.
+  # icon:dot-circle[]
+  name = "app"
+
+  # The GitHub host url.
+  # Defaults to `github.com`.
+  # icon:exclamation-triangle[]
+  host = "github.com"
+
+  # Username used for authoring commits. Must have write access to the repository.
+  # icon:exclamation-triangle[]
+  username = "duke"
+
+  # Password or OAuth token with write access to the repository.
+  # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  token = "__DO_NOT_SET_HERE__"
+
+  # The tag associated with the release.
+  # May define a `JRELEASER_TAG_NAME` environment variable instead.
+  # If left unspecified, will use `v{{projectVersion}}`.
+  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
+  tagName = "v1.0.0"
+
+  # The name of the release.
+  # If left unspecified, will use `Release {{tagName}}`.
+  # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
+  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
+  releaseName = "Release v1.0.0"
+
+  # Drops and creates an existing release with matching tag.
+  # May define a `JRELEASER_OVERWRITE` environment variable instead.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  overwrit = true
+
+  # Appends artifacts to an existing release with matching tag,
+  # useful if `overwrite` is set to `false`.
+  # May define a `JRELEASER_UPDATE` environment variable instead.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  update = true
+
+  # Skips creating a tag.
+  # Useful when the tag was created externally.
+  # May define a `JRELEASER_SKIP_TAG` environment variable instead.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  skipTag = false
+
+  # The Gitea API endpoint to use.
+  # You can skip `/api/v4` as it will be added by default.
+  # icon:exclamation-triangle[]
+  apiEndpoint = "pass:[https://my.giteam.com]"
+
+  # Git author used to commit to the repository.
+
+  # Name used when authoring commits.
+  # Defaults to `jreleaserbot`.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # Defaults to `pass:[jreleaser@kordamp.org]`.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Signs commits with the configured credentials.
+  # The xref:configuration:signing.adoc[] section must be configured as well.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  sign = false
+
+  # Changelog customization.
+
+  # Disables or enables the changelog.
+  # defaults to `true`.
+  # icon:dot-circle[]
+  changelog.enabled = true
+
+  # Sorts commits in ascending (oldest first) or descending (newer first).
+  # Valid values are: `ASC`, `DESC`.
+  # Defaults to `DESC`.
+  # icon:dot-circle[]
+  changelog.sort = "DESC"
+
+  # Path to an external file that contains the changelog, read as is.
+  # May be a relative path to the configuration file or an absolute path.
+  # If unspecified, JReleaser will automatically calculate the changelog.
+  # icon:dot-circle[]
+  changelog.external = "path/to/changelog.md"
+
+  # Create explicit markdown links for commit hashes.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  changelog.links = false
+
+  # A milestone associated with the release
+
+  # Close the milestone (if it exists and still open) upon release.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  milestone.close = true
+
+  # The name/title of the milestone.
+  # May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
+  # Defaults to `{{tagName}}`.
+  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
+  milestone.name = "{{tagName}}"
+
+  # The target branch to use.
+  # May define a `JRELEASER_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # icon:dot-circle[] icon:eye-slash[]
+  targetCommitish = "main"
+
+  # Marks the release as a draft.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  draft = false
+
+  # Marks the release as prerelease.
+  # May define a `JRELEASER_PRERELEASE` environment variable instead.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  prerelease = false
+
+  # The following properties define icon:dot-circle[] URL formats.
+  # Defaults are shown.
+  # Review the available xref:configuration:name-templates.adoc[].
+
+  # icon:dot-circle[] icon:file-alt[]
+  repoUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  repoCloneUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  commitUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/commits]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  downloadUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  releaseNotesUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  latestReleaseUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/latest]"
+
+  # icon:dot-circle[] icon:file-alt[]
+  issueTrackerUrlFormat = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]"
+----
 JSON::
 +
 [source,json]
@@ -191,12 +389,23 @@ JSON::
       // icon:dot-circle[]
       "enabled": true,
 
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      "connectTimeout": 20,
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      "readTimeout": 60,
+
       // The user or organization that owns the repository.
-      // icon:exclamation-triangle[]
+      // If unspecified, will read it from the 'origin' git remote.
+      // icon:dot-circle[]
       "owner": "duke",
 
       // The name of the repository.
-      // If unspecified, will use ${project.name}.
+      // If unspecified, will read it from the 'origin' git remote.
       // icon:dot-circle[]
       "name": "app",
 
@@ -228,20 +437,24 @@ JSON::
       "releaseName": "Release v1.0.0",
 
       // Drops and creates an existing release with matching tag.
+      // May define a `JRELEASER_OVERWRITE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       "overwrite": true,
 
       // Appends artifacts to an existing release with matching tag,
       // useful if `overwrite` is set to `false`.
+      // May define a `JRELEASER_UPDATE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
-      "allowUploadToExisting": true,
+      // icon:dot-circle[] icon:eye-slash[]
+      "update": true,
 
       // Skips creating a tag.
       // Useful when the tag was created externally.
-      // icon:dot-circle[]
-      "skipTagging": false,
+      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
+      // Defaults to `false`.
+      // icon:dot-circle[] icon:eye-slash[]
+      "skipTag": false,
 
       // The GitHub API endpoint to use.
       // Update it if using GitHub Enterprise.
@@ -253,14 +466,14 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
       // Signs commits with the configured credentials.
@@ -311,8 +524,9 @@ JSON::
       },
 
       // The target branch to use.
-      // Defaults to `main`.
-      // icon:dot-circle[]
+      // May define a `JRELEASER_BRANCH` environment variable instead.
+      // Defaults to the branch pointed by HEAD.
+      // icon:dot-circle[] icon:eye-slash[]
       "targetCommitish": "main",
 
       // Marks the release as a draft.
@@ -321,8 +535,9 @@ JSON::
       "draft": false,
 
       // Marks the release as prerelease.
+      // May define a `JRELEASER_PRERELEASE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       "prerelease": false,
 
       // The following properties define icon:dot-circle[] URL formats.
@@ -377,14 +592,29 @@ Maven::
       <enabled>true</enabled>
 
       <!--
+        Defines the connection timeout in seconds.
+        Defaults to `20`.
+        icon:dot-circle[]
+      -->
+      <connectTimeout>20</connectTimeout>
+
+      <!--
+        Defines the read timeout in seconds.
+        Defaults to `60`.
+        icon:dot-circle[]
+      -->
+      <readTimeout>60</readTimeout>
+
+      <!--
         The user or organization that owns the repository.
-        icon:exclamation-triangle[]
+        If unspecified, will read it from the 'origin' git remote.
+        icon:dot-circle[]
       -->
       <owner>duke</owner>
 
       <!--
         The name of the repository.
-        If unspecified, will use ${project.name}.
+        If unspecified, will read it from the 'origin' git remote.
         icon:dot-circle[]
       -->
       <name>app</name>
@@ -428,25 +658,29 @@ Maven::
 
       <!--
         Drops and creates an existing release with matching tag.
+        May define a `JRELEASER_OVERWRITE` environment variable instead.
         Defaults to `false`.
-        icon:dot-circle[]
+        icon:dot-circle[] icon:eye-slash[]
       -->
       <overwrite>true</overwrite>
 
       <!--
         Appends artifacts to an existing release with matching tag,
         useful if `overwrite` is set to `false`.
+        May define a `JRELEASER_UPDATE` environment variable instead.
         Defaults to `false`.
-        icon:dot-circle[]
+        icon:dot-circle[] icon:eye-slash[]
       -->
-      <allowUploadToExisting>true</allowUploadToExisting>
+      <update>true</update>
 
       <!--
         Skips creating a tag.
         Useful when the tag was created externally.
-        icon:dot-circle[]
+        May define a `JRELEASER_SKIP_TAG` environment variable instead.
+        Defaults to `false`.
+        icon:dot-circle[] icon:eye-slash[]
       -->
-      <skipTagging>false</skipTagging>
+      <skipTag>false</skipTag>
 
       <!--
         The GitHub API endpoint to use.
@@ -464,17 +698,17 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
@@ -546,8 +780,9 @@ Maven::
 
       <!--
         The target branch to use.
-        Defaults to `main`.
-        icon:dot-circle[]
+        May define a `JRELEASER_BRANCH` environment variable instead.
+        Defaults to the branch pointed by HEAD.
+        icon:dot-circle[] icon:eye-slash[]
       -->
       <targetCommitish>main</targetCommitish>
 
@@ -560,8 +795,9 @@ Maven::
 
       <!--
         Marks the release as prerelease.
+        May define a `JRELEASER_PRERELEASE` environment variable instead.
         Defaults to `false`.
-        icon:dot-circle[]
+        icon:dot-circle[] icon:eye-slash[]
       -->
       <prerelease>false</prerelease>
 
@@ -625,12 +861,23 @@ jreleaser {
       // icon:dot-circle[]
       enabled = true
 
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      connectTimeout = 20
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      readTimeout = 60
+
       // The user or organization that owns the repository.
-      // icon:exclamation-triangle[]
+      // If unspecified, will read it from the 'origin' git remote.
+      // icon:dot-circle[]
       owner = 'duke'
 
       // The name of the repository.
-      // If unspecified, will use ${project.name}.
+      // If unspecified, will read it from the 'origin' git remote.
       // icon:dot-circle[]
       name = 'app'
 
@@ -662,20 +909,24 @@ jreleaser {
       releaseName = 'Release v1.0.0'
 
       // Drops and creates an existing release with matching tag.
+      // May define a `JRELEASER_OVERWRITE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       overwrite = true
 
       // Appends artifacts to an existing release with matching tag,
       // useful if `overwrite` is set to `false`.
+      // May define a `JRELEASER_UPDATE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
-      allowUploadToExisting = true
+      // icon:dot-circle[] icon:eye-slash[]
+      update = true
 
       // Skips creating a tag.
       // Useful when the tag was created externally.
-      // icon:dot-circle[]
-      skipTagging = false
+      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
+      // Defaults to `false`.
+      // icon:dot-circle[] icon:eye-slash[]
+      skipTag = false
 
       // The GitHub API endpoint to use.
       // Update it if using GitHub Enterprise.
@@ -687,14 +938,14 @@ jreleaser {
       // icon:dot-circle[]
       commitAuthor {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }
 
       // Signs commits with the configured credentials.
@@ -745,8 +996,9 @@ jreleaser {
       }
 
       // The target branch to use.
-      // Defaults to `main`.
-      // icon:dot-circle[]
+      // May define a `JRELEASER_BRANCH` environment variable instead.
+      // Defaults to the branch pointed by HEAD.
+      // icon:dot-circle[]v
       targetCommitish = 'main'
 
       // Marks the release as a draft.
@@ -755,8 +1007,9 @@ jreleaser {
       draft = false
 
       // Marks the release as prerelease.
+      // May define a `JRELEASER_PRERELEASE` environment variable instead.
       // Defaults to `false`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       prerelease = false
 
       // The following properties define icon:dot-circle[] URL formats.

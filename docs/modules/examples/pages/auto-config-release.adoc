@@ -1,0 +1,82 @@
+= AutoConfig Release
+
+Assuming the project is hosted on GitHub with the "origin" remote set to
+pass:[https://github.com/duke/app.git]
+
+[source,sh]
+----
+$ git remote -vv
+origin	https://github.com/duke/app.git (fetch)
+origin	https://github.com/duke/app.git (push)
+----
+
+And the following file structure:
+
+[source]
+----
+.
+├── file1.txt
+└── file2.txt
+----
+
+You may create and tag a release without a config file in the following way:
+
+[source,sh]
+[subs="attributes"]
+----
+$ release --auto-config \
+  --project-name=app \
+  --project-version=1.0.0 \
+  --signing-enabled \
+  --signing-armored \
+  --file=file1.txt \
+  --file=file2.txt
+
+[INFO]  JReleaser {jreleaser-version}
+[INFO]  Auto configure is ON
+[INFO]    - basedir set to /Home/duke/app
+[INFO]    - project.name: app
+[INFO]    - project.version: 1.0.0
+[INFO]    - signing.enabled: true
+[INFO]    - signing.armored: true
+[INFO]    - file: file1.txt
+[INFO]    - file: file2.txt
+[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-12T23:28:34.022+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Calculating checksums
+[INFO]    [checksum] file1.txt
+[INFO]    [checksum] file2.txt
+[INFO]  Signing files
+[INFO]    [sign] file1.txt
+[INFO]    [sign] file2.txt
+[INFO]    [sign] out/jreleaser/checksums/checksums.txt
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - uploading file1.txt
+[INFO]   - uploading file2.txt
+[INFO]   - uploading checksums.txt
+[INFO]   - uploading file1.txt.asc
+[INFO]   - uploading file2.txt.asc
+[INFO]   - uploading checksums.txt.asc
+[INFO]  JReleaser succeeded after 1.929s
+[INFO]  Writing output properties to out/jreleaser/output.properties
+----
+
+The following environment variables must be provided:
+
+ * `JRELEASER_GITHUB_TOKEN`
+ * `JRELEASER_GPG_PASSPHRASE`
+ * `JRELEASER_GPG_PUBLIC_KEY`
+ * `JRELEASER_GPG_SECRET_KEY`
+
+If the signing flags are omitted then only the following environment variable must be provided:
+
+ * `JRELEASER_GITHUB_TOKEN`
+
+Find more information about the options available for this type of releases
+xref:tools:cli.adoc#_release[here].

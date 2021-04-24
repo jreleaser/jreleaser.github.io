@@ -7,7 +7,7 @@ NOTE: At the moment, only artifacts with `.zip` extension may be packaged with C
 WARNING: Local publication of packages is currently not supported. Please set `remoteBuild` to `true` and trigger a
 build on CI. Local publication will be added at a later release.
 
-WARNING: Snapshots are not supported.
+WARNING: Snapshots are *not* supported.
 
 include::partial$legend.adoc[]
 
@@ -23,12 +23,13 @@ packagers:
   # icon:dot-circle[]
   chocolatey:
     # Enables or disables Chocolatey.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Chocolatey distribution
-    # Defaults to `src/distribution/${distribution.name}/chocolatey`.
+    # Directory with file templates used to prepare the Chocolatey distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/chocolatey`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/chocolatey/templates
@@ -55,14 +56,14 @@ packagers:
       # Name used when authoring commits.
       # If left undefined, will use the releaser's commit name.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
       # If left undefined, will use the releaser's commit email.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
-    # Git repository to push the formula to.
+    # Git repository to push the manifest to.
     # Defaults are shown.
     # icon:dot-circle[]
     bucket:
@@ -88,6 +89,76 @@ packagers:
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.chocolatey]
+  # Enables or disables Chocolatey.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Chocolatey distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/chocolatey`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/chocolatey/templates"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `chocolatey`, i.e, `chocolateyFoo`.
+
+  # The username that can publish Chocolatey packages.
+  # If left unspecified, the release owner will be used.
+  # icon:exclamation-triangle[]
+  username = "duke"
+
+  # Whether to build the package on a remote server or locally.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  remoteBuild = false
+
+  # Git author used to commit to the bucket repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Git repository to push the manifest to.
+  # Defaults are shown.
+
+  # The owner of the bucket repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  bucket.owner = "duke"
+
+  # The name of the bucket repository.
+  # Defaults to `chocolatey-bucket`.
+  # icon:dot-circle[]
+  bucket.name = "chocolatey-bucket"
+
+  # Username used for authoring commits. Must have write access to the bucket repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  bucket.username = "duke"
+
+  # Password or OAuth token with write access to the bucket repository.
+  # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  bucket.token = "__DO_NOT_SET_HERE__"
+----
 JSON::
 +
 [source,json]
@@ -99,12 +170,13 @@ JSON::
     // icon:dot-circle[]
     "chocolatey": {
       // Enables or disables Chocolatey.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Chocolatey distribution
-      // Defaults to `src/distribution/${distribution.name}/chocolatey`.
+      // Directory with file templates used to prepare the Chocolatey distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/chocolatey`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/chocolatey/templates",
@@ -130,17 +202,17 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // icon:dot-circle[]
       "bucket": {
@@ -186,14 +258,15 @@ Maven::
     <chocolatey>
       <!--
         Enables or disables Chocolatey.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Chocolatey distribution
-        Defaults to `src/distribution/${distribution.name}/chocolatey`.
+        Directory with file templates used to prepare the Chocolatey distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/chocolatey`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -232,21 +305,21 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
-        Git repository to push the formula to.
+        Git repository to push the manifest to.
         Defaults are shown.
         icon:dot-circle[]
       -->
@@ -296,12 +369,13 @@ jreleaser {
     // icon:dot-circle[]
     chocolatey {
       // Enables or disables Chocolatey.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Chocolatey distribution
-      // Defaults to `src/distribution/${distribution.name}/chocolatey`.
+      // Directory with file templates used to prepare the Chocolatey distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/chocolatey`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/chocolatey/templates'
@@ -327,15 +401,15 @@ jreleaser {
         // Name used when authoring commits.
         // If left undefined, will use the releaser's commit name.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
         // If left undefined, will use the releaser's commit email.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // icon:dot-circle[]
       bucket {
@@ -366,6 +440,8 @@ jreleaser {
 }
 ----
 ====
+
+Template files may be initialized using the `template` command.
 
 NOTE: The bucket token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
 be one of [`JRELEASER_CHOCOLATEY_GITHUB_TOKEN`, `JRELEASER_CHOCOLATEY_GITLAB_TOKEN`, `JRELEASER_CHOCOLATEY_GITEA_TOKEN`].

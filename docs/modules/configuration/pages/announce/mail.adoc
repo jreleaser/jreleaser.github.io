@@ -16,9 +16,10 @@ announce:
   mail:
 
     # Enable or disable this announcer.
-    # Defaults to `true`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
     # The e-mail transport.
     # Supported values are: [SMTP, SMTPS].
@@ -56,24 +57,24 @@ announce:
     # icon:exclamation-triangle[] Only if auth = `true`. icon:eye-slash[]
     password: __DO_NOT_SET_HERE__
 
-    # The message sender, i.e, `duke@jreleaser.org`.
+    # The message sender, i.e, `pass:[duke@jreleaser.org]`.
     # icon:exclamation-triangle[]
-    from: duke@jreleaser.org
+    from: pass:[duke@jreleaser.org]
 
     # The message recipient(s).
     # Multiple addresses may be specified as a comma-separated list.
     # icon:dot-circle[]
-    to: announce@acme.com
+    to: pass:[announce@acme.com]
 
     # The CC recipient(s).
     # Multiple addresses may be specified as a comma-separated list.
     # icon:dot-circle[]
-    cc: additional@acme.com
+    cc: pass:[additional@acme.com]
 
     # The BCC recipient(s).
     # Multiple addresses may be specified as a comma-separated list.
     # icon:dot-circle[]
-    bcc: hidden@acme.com
+    bcc: pass:[hidden@acme.com]
 
     # The messages' subject.
     # Review the available xref:configuration:name-templates.adoc[].
@@ -99,6 +100,98 @@ announce:
     properties:
       'mail.smtp.starttls.enable': true
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[announce.mail]
+
+  # Enable or disable this announcer.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # The e-mail transport.
+  # Supported values are: [SMTP, SMTPS].
+  # Defaults to SMTP.
+  # icon:dot-circle[]
+  transport = "SMTP"
+
+  # The mime-type of the message to be sent.
+  # Supported values are: [TEXT, HTML].
+  # Defaults to TEXT.
+  # icon:dot-circle[]
+  mimeType = "TEXT"
+
+  # The port where the mail server listens to incoming messages.
+  # icon:exclamation-triangle[]
+  port = "25"
+
+  # Whether authentication is required or not.
+  # If set to `true` then both `username` and `password` must be set.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  auth = true
+
+  # The address of the SMTP server, e.g. 'smtp.gmail.com'.
+  # icon:exclamation-triangle[]
+  host = "smtp.gmail.com"
+
+  # The username required for authentication.
+  # icon:exclamation-triangle[] Only if auth = `true`.
+  username = "duke"
+
+  # The password associated with the given username.
+  # If left unspecified, the `JRELEASER_MAIL_PASSWORD`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] Only if auth = `true`. icon:eye-slash[]
+  password = "__DO_NOT_SET_HERE__"
+
+  # The message sender, i.e, `pass:[duke@jreleaser.org]`.
+  # icon:exclamation-triangle[]
+  from = "pass:[duke@jreleaser.org]"
+
+  # The message recipient(s).
+  # Multiple addresses may be specified as a comma-separated list.
+  # icon:dot-circle[]
+  to = "pass:[announce@acme.com]"
+
+  # The CC recipient(s).
+  # Multiple addresses may be specified as a comma-separated list.
+  # icon:dot-circle[]
+  cc = "pass:[additional@acme.com]"
+
+  # The BCC recipient(s).
+  # Multiple addresses may be specified as a comma-separated list.
+  # icon:dot-circle[]
+  bcc = "pass:[hidden@acme.com]"
+
+  # The messages' subject.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  subject = "{{projectNameCapitalized}} {{projectVersion}} released!"
+
+  # The announcement message.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  message = """
+    We just launched {{projectNameCapitalized}} {{projectVersion}}!
+    {{changelog}}"""
+
+  # Path to a template file that contains the message.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/mail.tpl`.
+  # icon:dot-circle[]
+  messageTemplate = "path/to/template/mail.tpl"
+
+  # Additional mail properties to be configured.
+  # Use this field to set properties such as `mail.smtp.starttls.enable`.
+  # icon:dot-circle[]
+  properties."mail.smtp.starttls.enable" = "true"
+----
 JSON::
 +
 [source,json]
@@ -110,9 +203,10 @@ JSON::
     "mail": {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Defaults to `NEVER`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
       // The e-mail transport.
       // Supported values are: [SMTP, SMTPS].
@@ -150,24 +244,24 @@ JSON::
       // icon:exclamation-triangle[] Only if auth = `true`. icon:eye-slash[]
       "password": "__DO_NOT_SET_HERE__",
 
-      // The message sender, i.e, `duke@jreleaser.org`.
+      // The message sender, i.e, `pass:[duke@jreleaser.org]`.
       // icon:exclamation-triangle[]
-      "from": "duke@jreleaser.org",
+      "from": "pass:[duke@jreleaser.org]",
 
       // The message recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      "to": "announce@acme.com",
+      "to": "pass:[announce@acme.com]",
 
       // The CC recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      "cc": "additional@acme.com",
+      "cc": "pass:[additional@acme.com]",
 
       // The BCC recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      "bcc": "hidden@acme.com",
+      "bcc": "pass:[hidden@acme.com]",
 
       // The messages' subject.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -183,7 +277,7 @@ JSON::
       // Review the available xref:configuration:name-templates.adoc[].
       // Defaults to `src/jreleaser/templates/mail.tpl`.
       // icon:dot-circle[]
-      "messageTemplate": "path/to/template/mail.tpl",
+      "messageTemplate": "path/to/template/mail.tpl"
 
       // Additional mail properties to be configured.
       // Use this field to set properties such as `mail.smtp.starttls.enable`.
@@ -208,10 +302,11 @@ Maven::
     <mail>
       <!--
         Enable or disable this announcer.
-        Defaults to `true`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
         The e-mail transport.
@@ -264,31 +359,31 @@ Maven::
       <password>__DO_NOT_SET_HERE__</password>
 
       <!--
-        The message sender, i.e, `duke@jreleaser.org`.
+        The message sender, i.e, `pass:[duke@jreleaser.org]`.
         icon:exclamation-triangle[]
       -->
-      <from>duke@jreleaser.org</from>
+      <from>pass:[duke@jreleaser.org]</from>
 
       <!--
         The message recipient(s).
         Multiple addresses may be specified as a comma-separated list.
         icon:dot-circle[]
       -->
-      <to>announce@acme.com</to>
+      <to>pass:[announce@acme.com]</to>
 
       <!--
         The CC recipient(s).
         Multiple addresses may be specified as a comma-separated list.
         icon:dot-circle[]
       -->
-      <cc>additional@acme.com</cc>
+      <cc>pass:[additional@acme.com]</cc>
 
       <!--
         The BCC recipient(s).
         Multiple addresses may be specified as a comma-separated list.
         icon:dot-circle[]
       -->
-      <bcc>hidden@acme.com</bcc>
+      <bcc>pass:[hidden@acme.com]</bcc>
 
       <!--
         The messages' subject.
@@ -338,9 +433,10 @@ jreleaser {
     mail {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
       // The e-mail transport.
       // Supported values are = [SMTP, SMTPS].
@@ -378,24 +474,24 @@ jreleaser {
       // icon:exclamation-triangle[] Only if auth = `true`.v icon:eye-slash[]
       password = '__DO_NOT_SET_HERE__'
 
-      // The message sender, i.e, `duke@jreleaser.org`.
+      // The message sender, i.e, `pass:[duke@jreleaser.org]`.
       // icon:exclamation-triangle[]
-      from = 'duke@jreleaser.org'
+      from = 'pass:[duke@jreleaser.org]'
 
       // The message recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      to = 'announce@acme.com'
+      to = 'pass:[announce@acme.com]'
 
       // The CC recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      cc = 'additional@acme.com'
+      cc = 'pass:[additional@acme.com]'
 
       // The BCC recipient(s).
       // Multiple addresses may be specified as a comma-separated list.
       // icon:dot-circle[]
-      bcc = 'hidden@acme.com'
+      bcc = 'pass:[hidden@acme.com]'
 
       // The messages' subject.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -428,6 +524,8 @@ jreleaser {
 NOTE: At least one of `to`, `cc`, or `bcc` must be specified.
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+The template file may be initialized using the `template` command.
 
 The following mail properties will be set by default given these conditions:
 

@@ -7,6 +7,15 @@ scopes set:
 * chat:write
 * chat:write.public
 
+1. Log into the target Slack workspace.
+2. Create a link:https://api.slack.com/apps/new[Slack app].
+3. Click on Incoming Webhooks.
+4. Create a new webhook.
+5. Copy the generated webhook URL.
+
+IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the `JRELEASER_SLACK_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
+
 include::partial$legend.adoc[]
 
 [tabs]
@@ -21,14 +30,32 @@ announce:
   slack:
 
     # Enable or disable this announcer.
-    # Defaults to `true`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
+    active: ALWAYS
+
+    # Defines the connection timeout in seconds.
+    # Defaults to `20`.
+    # icon:dot-circle[]
+    connectTimeout: 20
+
+    # Defines the read timeout in seconds.
+    # Defaults to `60`.
+    # icon:dot-circle[]
+    readTimeout: 60
 
     # The ApiKey associated with the given account.
     # If left unspecified, the `JRELEASER_SLACK_TOKEN`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
     token: __DO_NOT_SET_HERE__
+
+    # The webhook associated with a specific Discord room.
+    # If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    webhook: __DO_NOT_SET_HERE__
 
     # The channel where the message will be sent to
     # Defaults to `#announce`.
@@ -46,6 +73,58 @@ announce:
     # icon:dot-circle[]
     messageTemplate: path/to/template/slack.tpl
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[announce.slack]
+
+  # Enable or disable this announcer.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # icon:dot-circle[]
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  readTimeout = 60
+
+  # The ApiKey associated with the given account.
+  # If left unspecified, the `JRELEASER_SLACK_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  token = "__DO_NOT_SET_HERE__"
+
+  # The webhook associated with a specific Discord room.
+  # If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  webhook = "__DO_NOT_SET_HERE__"
+
+  # The channel where the message will be sent to
+  # Defaults to `#announce`.
+  # icon:dot-circle[]
+  channel = "#announce"
+
+  # The announcement message.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  message = "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # Path to a template file that contains the message.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/slack.tpl`.
+  # icon:dot-circle[]
+  messageTemplate = "path/to/template/slack.tpl"
+----
 JSON::
 +
 [source,json]
@@ -57,15 +136,32 @@ JSON::
     "slack": {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
+
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      "connectTimeout": 20,
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      "readTimeout": 60,
 
       // The ApiKey associated with the given account.
       // If left unspecified, the `JRELEASER_SLACK_TOKEN`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "token": "__DO_NOT_SET_HERE__",
+
+      // The webhook associated with a specific Discord room.
+      // If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "webhook": "__DO_NOT_SET_HERE__",
 
       // The channel where the message will be sent to
       // Defaults to `#announce`.
@@ -81,7 +177,7 @@ JSON::
       // Review the available xref:configuration:name-templates.adoc[].
       // Defaults to `src/jreleaser/templates/slack.tpl`.
       // icon:dot-circle[]
-      "messageTemplate": "path/to/template/slack.tpl",
+      "messageTemplate": "path/to/template/slack.tpl"
     }
   }
 }
@@ -100,10 +196,25 @@ Maven::
 
       <!--
         Enable or disable this announcer.
-        Defaults to `true`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
+
+      <!--
+        Defines the connection timeout in seconds.
+        Defaults to `20`.
+        icon:dot-circle[]
+      -->
+      <connectTimeout>20</connectTimeout>
+
+      <!--
+        Defines the read timeout in seconds.
+        Defaults to `60`.
+        icon:dot-circle[]
+      -->
+      <readTimeout>60</readTimeout>
 
       <!--
         The ApiKey associated with the given account.
@@ -111,6 +222,13 @@ Maven::
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <token>__DO_NOT_SET_HERE__</token>
+
+      <!--
+        The webhook associated with a specific Discord room.
+        If left unspecified, the `JRELEASER_SLACK_WEBHOOK` environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <webhook>__DO_NOT_SET_HERE__</webhook>
 
       <!--
         The channel where the message will be sent to
@@ -148,15 +266,32 @@ jreleaser {
     slack {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
+
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      connectTimeout = 20
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      readTimeout = 60
 
       // The ApiKey associated with the given account.
       // If left unspecified, the `JRELEASER_SLACK_TOKEN`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       token = '__DO_NOT_SET_HERE__'
+
+      // The webhook associated with a specific Discord room.
+      // If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      webhook = '__DO_NOT_SET_HERE__'
 
       // The channel where the message will be sent to
       // Defaults to `#announce`.
@@ -180,3 +315,5 @@ jreleaser {
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+The template file may be initialized using the `template` command.

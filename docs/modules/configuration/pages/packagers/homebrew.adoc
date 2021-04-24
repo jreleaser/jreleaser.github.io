@@ -4,9 +4,9 @@ The `brew` section specifies how the formula should be created. You can check th
 link:https://github.com/Homebrew/brew/blob/master/docs/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
 link:https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md[formula cookbook] for more details.
 
-NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Homebrew.
+NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Homebrew.
 
-WARNING: Snapshots are not supported.
+WARNING: Snapshots are *not* supported.
 
 include::partial$legend.adoc[]
 
@@ -22,15 +22,21 @@ packagers:
   # icon:dot-circle[]
   brew:
     # Enables or disables Homebrew.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Homebrew distribution
-    # Defaults to `src/distribution/${distribution.name}/brew`.
+    # Directory with file templates used to prepare the Homebrew distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/brew/templates
+
+    # The class name of the generated formula.
+    # If left unspecified, will use `{{projectNameCapitalized}}`.
+    # icon:dot-circle[] icon:file-alt[]
+    formulaName: App
 
     # A map of Homebrew dependencies.
     # The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -64,12 +70,12 @@ packagers:
       # Name used when authoring commits.
       # If left undefined, will use the releaser's commit name.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
       # If left undefined, will use the releaser's commit email.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
     # Git repository to push the formula to.
     # Defaults are shown.
@@ -97,6 +103,87 @@ packagers:
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.brew]
+  # Enables or disables Homebrew.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Homebrew distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/brew/templates"
+
+  # The class name of the generated formula.
+  # If left unspecified, will use `{{projectNameCapitalized}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  formulaName = "App"
+
+  # A map of Homebrew dependencies.
+  # The key `openjdk@${java.version}` will be added automatically if not defined.
+  # icon:dot-circle[]
+  # key in symbol format
+  # mapped as `depends_on :key1 => "value1"`
+  dependencies.":key1" = "value1"
+  # plain key
+  # mapped as `depends_on "key2" => "value2"`
+  dependencies.key2 = "value2"
+  # key in symbol format without value
+  # mapped as `depends_on :key3`
+  dependencies.":key3" = "null"
+  # plain key without value
+  # mapped as `depends_on "key4"`
+  dependencies.key4 = "null"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+
+  # Git author used to commit to the tap repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Git repository to push the formula to.
+  # Defaults are shown.
+
+  # The owner of the tap repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  tap.owner = "duke"
+
+  # The name of the tap repository.
+  # Defaults to `homebrew-tap`.
+  # icon:dot-circle[]
+  tap.name = "homebrew-tap"
+
+  # Username used for authoring commits. Must have write access to the tap repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  tap.username = "duke"
+
+  # Password or OAuth token with write access to the tap repository.
+  # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  tap.token = "__DO_NOT_SET_HERE__"
+----
 JSON::
 +
 [source,json]
@@ -108,15 +195,21 @@ JSON::
     // icon:dot-circle[]
     "brew": {
       // Enables or disables Homebrew.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Homebrew distribution
-      // Defaults to `src/distribution/${distribution.name}/brew`.
+      // Directory with file templates used to prepare the Homebrew distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/brew/templates",
+
+      // The class name of the generated formula.
+      // If left unspecified, will use `{{projectNameCapitalized}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      "formulaName": "App",
 
       // A map of Homebrew dependencies.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -150,14 +243,14 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
       // Git repository to push the formula to.
@@ -206,18 +299,26 @@ Maven::
     <brew>
       <!--
         Enables or disables Homebrew.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Homebrew distribution
-        Defaults to `src/distribution/${distribution.name}/brew`.
+        Directory with file templates used to prepare the Homebrew distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
       <templateDirectory>>path/to/brew/templates</templateDirectory>
+
+      <!--
+        The class name of the generated formula.
+        If left unspecified, will use `{{projectNameCapitalized}}`.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <formulaName>App</formulaName>
 
       <!--
         A map of Homebrew dependencies.
@@ -279,17 +380,17 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
@@ -343,15 +444,21 @@ jreleaser {
     // icon:dot-circle[]
     brew {
       // Enables or disables Homebrew.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Homebrew distribution
-      // Defaults to `src/distribution/${distribution.name}/brew`.
+      // Directory with file templates used to prepare the Homebrew distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/brew/templates'
+
+      // The class name of the generated formula.
+      // If left unspecified, will use `{{projectNameCapitalized}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      formulaName = 'App'
 
       // A map of Homebrew dependencies.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -385,12 +492,12 @@ jreleaser {
         // Name used when authoring commits.
         // If left undefined, will use the releaser's commit name.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
         // If left undefined, will use the releaser's commit email.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }  
 
       // Git repository to push the formula to.
@@ -425,8 +532,12 @@ jreleaser {
 ----
 ====
 
+Template files may be initialized using the `template` command.
+
 NOTE: The tap token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
 be one of [`JRELEASER_HOMEBREW_GITHUB_TOKEN`, `JRELEASER_HOMEBREW_GITLAB_TOKEN`, `JRELEASER_HOMEBREW_GITEA_TOKEN`].
+
+IMPORTANT: Formula names must be unique!
 
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a `app.rb` formula in the `duke/homebrew-tap` repository:

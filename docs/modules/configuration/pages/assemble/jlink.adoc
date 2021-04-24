@@ -1,0 +1,803 @@
+= Jlink
+
+Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[Jlink].
+
+TIP: Cross platform Java runtime images may be created however you must ensure that all configured JDKs have the 
+same matching major version.
+
+IMPORTANT: You have to install additional JDKs to enable cross-platform images. JReleaser will *not* install these JDKS
+for you.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+assemble:
+  # icon:dot-circle[]
+  jlinks:
+    # Assemblers require a name.
+    # icon:exclamation-triangle[]
+    app:
+
+      # Enables or disables the assembler.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[]
+      active: ALWAYS
+
+      # Name of the executable launcher.
+      # If left undefined, will use ${assembler.name}.
+      # icon:dot-circle[]
+      executable: app
+
+      # Directory with file templates used to prepare the Jlink assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+      # If specified, path must exist.
+      # icon:dot-circle[]
+      templateDirectory: path/to/jlink/templates
+
+      # Name of the generated image.
+      # If left undefined, will use 
+      # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+      # icon:dot-circle[] icon:file-alt[]
+      imageName: app
+      
+      # Name of main module (if any).
+      # Define only if the application is modular.
+      # icon:dot-circle[]
+      moduleName: com.acme.demo
+      
+      # List of module names.
+      # Define only if jdeps can't find all required modules.
+      # icon:dot-circle[]
+      moduleNames: 
+        - java.base
+        - com.acme.demo
+
+      # List of JDKs for generating cross-platform images.
+      # icon:dot-circle[] icon:file-alt[]
+      targetJdks:
+        - path: path/to/jdk
+          platform: osx
+        - path: path/to/jdk
+          platform: linux
+
+      # The JDK to use.
+      # If undefined, will use the current JDK running JReleaser.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      jdk:
+        path: path/to/jdk
+        platform: linux
+
+      # A list of build arguments.
+      # Defaults are shown.
+      # icon:dot-circle[]
+      args:
+        - "--no-header-files"
+        - "--no-man-pages"
+        - "--compress=2"
+        - "--strip-debug"
+
+      # The executable JAR that contains the application.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      mainJar:
+        path: path/to/app.jar
+
+      # Defines a list of additional JARs as globs.
+      # icon:dot-circle[]
+      jars:
+          # The directory to search.
+          # If undefined, will use the project's basedir.
+          # icon:dot-circle[] icon:file-alt[]
+        - directory: some/directory
+
+          # The pattern to apply for inclusion.
+          # If undefined, will use `*`.
+          # icon:dot-circle[]
+          include: '*.jar'
+
+          # The pattern to apply for exclusion.
+          # icon:dot-circle[]
+          exclude: 'secret'
+
+          # Recursive search.
+          # Defaults to `false`.
+          # icon:dot-circle[]
+          recursive: true
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+        foo: bar
+
+      # icon:dot-circle[]
+      java:
+        # Maven coordinates: groupId.
+        # If left undefined, will use ${project.java.groupId}.
+        # icon:dot-circle[]
+        groupId: com.acme
+
+        # Maven coordinates: artifactId.
+        # If left undefined, will use ${project.java.artifactId}.
+        # icon:dot-circle[]
+        artifactId: app
+
+        # The minimum Java version required by consumers to run the application.
+        # If left undefined, will use ${project.java.version}.
+        # icon:dot-circle[]
+        version: 8
+
+        # The application's entry point.
+        # If left undefined, will use ${project.java.mainClass}.
+        # icon:dot-circle[]
+        mainClass: com.acme.Main
+
+        # Identifies the project as being member of a multi-project build.
+        # If left undefined, will use ${project.java.multiProject}.
+        # icon:dot-circle[]
+        multiProject: false
+
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# Assemblers require a name.
+# icon:exclamation-triangle[]
+[assemble.jlinks.app]
+
+  # Enables or disables the assembler.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${assembler.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # Directory with file templates used to prepare the Jlink assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/jlink/templates"
+
+  # Name of the generated image.
+  # If left undefined, will use
+  # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+  # icon:dot-circle[] icon:file-alt[]
+  imageName = "app"
+
+  # Name of main module (if any).
+  # Define only if the application is modular.
+  # icon:dot-circle[]
+  moduleName = "com.acme.demo"
+
+  # List of module names.
+  # Define only if jdeps can't find all required modules.
+  # icon:dot-circle[]
+  moduleName = [
+    "java.base",
+    "com.acme.demo"]
+
+  # List of JDKs for generating cross-platform images.
+  # icon:dot-circle[] icon:file-alt[]
+  targetJdks = [
+    { path = "path/to/jdk", platform = "osx" },
+    { path = "path/to/jdk", platform = "linux" }]
+
+  # The JDK to use.
+  # If undefined, will use the current JDK running JReleaser.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  jdk = { path = "path/to/jdk", platform = "linux" }
+
+  # A list of build arguments.
+  # Defaults are shown
+  # icon:dot-circle[]
+  args = ["--no-header-files",
+    "--no-man-pages",
+    "--compress=2",
+    "--strip-debug"]
+
+  # The executable JAR that contains the application.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  mainJar = { path = "path/to/app.jar" }
+
+  # Defines a list of additional JARs as globs.
+  # icon:dot-circle[]
+  pass:[[[assemble.jlink.app.jars]]]
+    # The directory to search.
+    # If undefined, will use the project's basedir.
+    # icon:dot-circle[] icon:file-alt[]
+    directory = "some/directory"
+
+    # The pattern to apply for inclusion.
+    # If undefined, will use `*`.
+    # icon:dot-circle[]
+    include = "*.jar"
+
+    # The pattern to apply for exclusion.
+    # icon:dot-circle[]
+    exclude = "secret"
+
+    # Recursive search.
+    # Defaults to `false`.
+    # icon:dot-circle[]
+    recursive = true
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+
+  # Maven coordinates: groupId.
+  # If left undefined, will use ${project.java.groupId}.
+  # icon:dot-circle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If left undefined, will use ${project.java.artifactId}.
+  # icon:dot-circle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # If left undefined, will use ${project.java.version}.
+  # icon:dot-circle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # If left undefined, will use ${project.java.mainClass}.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # If left undefined, will use ${project.java.multiProject}.
+  # icon:dot-circle[]
+  java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "assemble": {
+    // icon:dot-circle[]
+    "jlinks": {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      "app": {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "active": "ALWAYS",
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        "executable": "app",
+
+        // Directory with file templates used to prepare the Jlink assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        "templateDirectory": "path/to/jlink/templates",
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageName": "app",
+
+        // Name of main module (if any).
+        // Define only if the application is modular.
+        // icon:dot-circle[]
+        "moduleName": "com.acme.demo",
+
+        // List of module names.
+        // Define only if jdeps can't find all required modules.
+        // icon:dot-circle[]
+        "moduleNames": [
+           "java.base",
+           "com.acme.demo"
+         ],
+
+        // List of JDKs for generating cross-platform images.
+        // icon:dot-circle[] icon:file-alt[]
+        "targetJdks": [
+          {
+            "path": "path/to/jdk",
+            "platform": "osx"
+          },
+          {
+            "path": "path/to/jdk",
+            "platform": "linux"
+          }
+        ],
+
+        // The JDK to use.
+        // If undefined, will use the current JDK running JReleaser.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "jdk": {
+          "path": "path/to/jdk",
+          "platform": "linux"
+        },
+
+        // A list of build arguments.
+        // Defualts are shown.
+        // icon:dot-circle[]
+        "args": [
+          "--no-header-files",
+          "--no-man-pages",
+          "--compress=2",
+          "--strip-debug"
+        ],
+
+        // The executable JAR that contains the application.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "mainJar": {
+          "path": "path/to/app.jar"
+        },
+
+        // Defines a list of additional JARs as globs.
+        // icon:dot-circle[]
+        "jars": [
+          {
+            // The directory to search.
+            // If undefined, will use the project's basedir.
+            // icon:dot-circle[] icon:file-alt[]
+            "directory": "some/directory",
+
+            // The pattern to apply for inclusion.
+            // If undefined, will use `*`.
+            // icon:dot-circle[]
+            "include": "*.jar",
+
+            // The pattern to apply for exclusion.
+            // icon:dot-circle[]
+            "exclude": "secret",
+
+            // Recursive search.
+            // Defaults to `false`.
+            // icon:dot-circle[]
+            "recursive": true
+          }
+        ],
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+          "foo": "bar"
+        },
+
+        // icon:dot-circle[]
+        "java": {
+          // Maven coordinates: groupId.
+          // If left undefined, will use ${project.java.groupId}.
+          // icon:dot-circle[]
+          "groupId": "com.acme",
+
+          // Maven coordinates: artifactId.
+          // If left undefined, will use ${project.java.artifactId}.
+          // icon:dot-circle[]
+          "artifactId": "app",
+
+          // The minimum Java version required by consumers to run the application.
+          // If left undefined, will use ${project.java.version}.
+          // icon:dot-circle[]
+          "version": "8",
+
+          // The application's entry point.
+          // If left undefined, will use ${project.java.mainClass}.
+          // icon:dot-circle[]
+          "mainClass": "com.acme.Main",
+
+          // Identifies the project as being member of a multi-project build.
+          // If left undefined, will use ${project.java.multiProject}.
+          // icon:dot-circle[]
+          "multiProject": false,
+
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+            "foo": "bar"
+          }
+        }
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <assemble>
+    <!--
+      icon:dot-circle[]
+    -->
+    <jlinks>
+      <!--
+        Assemblers require a name.
+        icon:exclamation-triangle[]
+      -->
+      <app>
+        <!--
+          Enables or disables the distribution.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `ALWAYS`.
+          icon:dot-circle[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          The distribution type.
+          Used to determine packager templates.
+          Supported values are>[JAVA_BINARY].
+          icon:exclamation-triangle[]
+        -->
+        <type>JAVA_BINARY</type>
+
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use ${distribution.name}.
+          icon:dot-circle[]
+        -->
+        <executable>app</executable>
+
+        <!--
+          Directory with file templates used to prepare the Jlink assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+          If specified, path must exist.
+          icon:dot-circle[]
+        -->
+        <templateDirectory>>path/to/brew/templates</templateDirectory>
+
+        <!--
+          Name of the generated image.
+          If left undefined, will use
+          ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageName>app</imageName>
+
+        <!--
+          Name of main module (if any).
+          Define only if the application is modular.
+          icon:dot-circle[]
+        -->
+        <moduleName>com.acme.demo</moduleName>
+
+        <!--
+          List of module names.
+          Define only if jdeps can't find all required modules.
+          icon:dot-circle[]
+        -->
+        <moduleNames>
+          <moduleName>java.base</moduleName>
+          <moduleName>com.acme.demo</moduleName>
+        </moduleNames>
+
+        <!--
+          List of JDKs for generating cross-platform images.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <targetJdks>
+        <targetJdk>
+          <path>path/to/jdk</path>
+          <platform>osx</platform>
+        </targetJdk>
+        <targetJdk>
+          <path>path/to/jdk</path>
+          <platform>linux</platform>
+        </targetJdk>
+        </targetJdks>
+
+        <!--
+          The JDK to use.
+          If undefined, will use the current JDK running JReleaser.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <jdk>
+          <path>path/to/jdk</path>
+          <platform>linux</platform>
+        </jdk>
+
+        <!--
+          The executable JAR that contains the application.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <mainJar>
+          <path>path/to/app.jar</path>
+        </mainJar>
+
+        <!--
+          A list of build arguments.
+          Defaults are shown.
+          icon:dot-circle[]
+        -->
+        <args>
+          <arg>--no-header-files</arg>
+          <arg>--no-man-pages</arg>
+          <arg>--compress=2</arg>
+          <arg>--strip-debug</arg>
+        </args>
+
+        <!--
+          Defines a list of additional JARs as globs.
+          icon:dot-circle[]
+        -->
+        <jars>
+          <jar>
+            <!--
+              The directory to search.
+              If undefined, will use the project's basedir.
+              icon:dot-circle[] icon:file-alt[]
+            -->
+            <directory>some/directory</directory>
+
+            <!--
+              The pattern to apply for inclusion.
+              If undefined, will use `*`.
+              icon:dot-circle[]
+            -->
+            <include>*.jar</include>
+
+            <!--
+             The pattern to apply for exclusion.
+             icon:dot-circle[]
+            -->
+            <exclude>secret</exclude>
+
+            <!--
+              Recursive search.
+              Defaults to `false`.
+              icon:dot-circle[]
+            -->
+            <recursive>true</recursive>
+          </jar>
+        </jars>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
+          icon:dot-circle[]
+        -->
+        <java>
+          <!--
+            Maven coordinates>groupId.
+            If left undefined, will use ${project.java.groupId}.
+            icon:dot-circle[]
+          -->
+          <groupId>com.acme</groupId>
+
+          <!--
+            Maven coordinates>artifactId.
+            If left undefined, will use ${project.java.artifactId}.
+            icon:dot-circle[]
+          -->
+          <artifactId>app</artifactId>
+
+          <!--
+            The minimum Java version required by consumers to run the application.
+            If left undefined, will use ${project.java.version}.
+            icon:dot-circle[]
+          -->
+          <version>8</version>
+
+          <!--
+            The application's entry point.
+            If left undefined, will use ${project.java.mainClass}.
+            icon:dot-circle[]
+          -->
+          <mainClass>com.acme.Main</mainClass>
+
+          <!--
+            Identifies the project as being member of a multi-project build.
+            If left undefined, will use ${project.java.multiProject}.
+            icon:dot-circle[]
+          -->
+          <multiProject>false</multiProject>
+
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </java>
+      </app>
+    </jlinks>
+  </assemble>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  assemble {
+    // icon:dot-circle[]
+    jlinks {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      app {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        executable = 'app'
+
+        // Directory with file templates used to prepare the Jlink assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        templateDirectory = 'path/to/jlink/templates'
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // icon:dot-circle[] icon:file-alt[]
+        imageName = 'app'
+
+        // Name of main module (if any).
+        // Define only if the application is modular.
+        // icon:dot-circle[]
+        moduleName = 'com.acme.demo'
+
+        // List of module names.
+        // Define only if jdeps can't find all required modules.
+        // icon:dot-circle[]
+        moduleNames = [
+            'java.base',
+            'com.acme.demo'
+        ]
+
+        // List of JDKs for generating cross-platform images.
+        // icon:dot-circle[] icon:file-alt[]
+        targetJdk {
+          pat = 'path/to/jdk'
+          platform = 'osx'
+        }
+        targetJdk {
+          pat = 'path/to/jdk'
+          platform = 'linux'
+        }
+
+        // The JDK to use.
+        // If undefined, will use the current JDK running JReleaser.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        jdk {
+          path = 'path/to/jdk'
+          platform = 'linux'
+        }
+
+        // A list of build arguments.
+        // Defaults are shown.
+        // icon:dot-circle[]
+        addArg('--install-exit-handlers')
+        addArg('--no-header-files')
+        addArg('--no-man-pages')
+        addArg('--compress=2')
+        addArg('--strip-debug')
+
+        // The executable JAR that contains the application.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        mainJar {
+          path = 'path/to/app.jar'
+        }
+
+        // Defines a list of additional JARs as globs.
+        // icon:dot-circle[]
+        jars {
+          // The directory to search.
+          // If undefined, will use the project's basedir.
+          // icon:dot-circle[] icon:file-alt[]
+          directory = 'some/directory'
+
+          // The pattern to apply for inclusion.
+          // If undefined, will use `*`.
+          // icon:dot-circle[]
+          include = '*.jar'
+
+          // The pattern to apply for exclusion.
+          // icon:dot-circle[]
+          exclude = 'secret'
+
+          // Recursive search.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          recursive = true
+        }
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+        // icon:dot-circle[]
+        extraProperties.put('foo', 'bar')
+
+        // icon:dot-circle[]
+        java {
+          // Maven coordinates = groupId.
+          // If left undefined, will use ${project.java.groupId}.
+          // icon:dot-circle[]
+          groupI = 'com.acme'
+
+          // Maven coordinates = artifactId.
+          // If left undefined, will use ${project.java.artifactId}.
+          // icon:dot-circle[]
+          artifactId = 'app'
+
+          // The minimum Java version required by consumers to run the application.
+          // If left undefined, will use ${project.java.version}.
+          // icon:dot-circle[]
+          version = '8'
+
+          // The application's entry point.
+          // If left undefined, will use ${project.java.mainClass}.
+          // icon:dot-circle[]
+          mainClass = 'com.acme.Main'
+
+          // Identifies the project as being member of a multi-project build.
+          // If left undefined, will use ${project.java.multiProject}.
+          // icon:dot-circle[]
+          multiProject = false
+
+          // Additional properties used when evaluating templates.
+          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          // icon:dot-circle[]
+          extraProperties.put('foo', 'bar')
+        }
+      }
+    }
+  }
+}
+----
+====
+

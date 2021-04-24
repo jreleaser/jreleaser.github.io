@@ -24,9 +24,10 @@ distributions:
   app:
 
     # Enables or disables the distribution.
-    # Defaults to `true`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `ALWAYS`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
     # The distribution type.
     # Used to determine packager templates.
@@ -52,7 +53,7 @@ distributions:
       foo: bar
 
     # A list of artifacts.
-    # At least on entry must be present
+    # At least on entry must be present.
     # icon:exclamation-triangle[] icon:file-alt[]
     artifacts:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
@@ -86,7 +87,87 @@ distributions:
       # Identifies the project as being member of a multi-project build.
       # If left undefined, will use ${project.java.multiProject}.
       # icon:dot-circle[]
-      multiProject : false
+      multiProject: false
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# A named distribution
+# icon:exclamation-triangle[]
+[distributions.app]
+
+  # Enables or disables the distribution.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # The distribution type.
+  # Used to determine packager templates.
+  # Supported values are: [JAVA_BINARY].
+  # icon:exclamation-triangle[]
+  type = "JAVA_BINARY"
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${distribution.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # A list of tags.
+  # icon:dot-circle[]
+  tags = ["cli", "awesome"]
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+
+  # A list of artifacts.
+  # At least on entry must be present.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  artifacts = [
+    { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip", platform = "osx" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-win.zip", platform = "windows" }
+  ]
+
+  # Maven coordinates: groupId.
+  # If left undefined, will use ${project.java.groupId}.
+  # icon:dot-circle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If left undefined, will use ${project.java.artifactId}.
+  # icon:dot-circle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # If left undefined, will use ${project.java.version}.
+  # icon:dot-circle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # If left undefined, will use ${project.java.mainClass}.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # If left undefined, will use ${project.java.multiProject}.
+  # icon:dot-circle[]
+  java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
 ----
 JSON::
 +
@@ -101,9 +182,10 @@ JSON::
     "app": {
 
       // Enables or disables the distribution.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
       // The distribution type.
       // Used to determine packager templates.
@@ -126,12 +208,12 @@ JSON::
       // Additional properties used when evaluating templates.
       // icon:dot-circle[]
       "extraProperties": {
-        // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+        // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         "foo": "bar"
       },
 
       // A list of artifacts.
-      // At least on entry must be present
+      // At least on entry must be present.
       // icon:exclamation-triangle[] icon:file-alt[]
       "artifacts": [
         {
@@ -172,7 +254,14 @@ JSON::
         // Identifies the project as being member of a multi-project build.
         // If left undefined, will use ${project.java.multiProject}.
         // icon:dot-circle[]
-        "multiProject": false
+        "multiProject": false,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
       }
     }
   }
@@ -196,10 +285,11 @@ Maven::
 
       <!--
         Enables or disables the distribution.
-        Defaults to `true`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `ALWAYS`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
         The distribution type.
@@ -231,14 +321,14 @@ Maven::
       -->
       <extraProperties>
         <!--
-          Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
+          Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         -->
         <foo>bar</foo>
       </extraProperties>
 
       <!--
         A list of artifacts.
-        At least on entry must be present
+        At least on entry must be present.
         icon:exclamation-triangle[] icon:file-alt[]
       -->
       <artifacts>
@@ -293,6 +383,17 @@ Maven::
           icon:dot-circle[]
         -->
         <multiProject>false</multiProject>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
       </java>
     </app>
   </distributions>
@@ -311,9 +412,10 @@ jreleaser {
     app {
 
       // Enables or disables the distribution.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
       // The distribution type.
       // Used to determine packager templates.
@@ -331,12 +433,12 @@ jreleaser {
       tags = ['cli', 'awesome']
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `$distribution`, i.e, `$distributionFoo`.
+      // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       // icon:dot-circle[]
       extraProperties.put('foo', 'bar')
 
       // A list of artifacts.
-      // At least on entry must be present
+      // At least on entry must be present.
       // icon:exclamation-triangle[] icon:file-alt[]
       artifacts {
         artifact {
@@ -378,6 +480,11 @@ jreleaser {
         // If left undefined, will use ${project.java.multiProject}.
         // icon:dot-circle[]
         multiProject = false
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        // icon:dot-circle[]
+        extraProperties.put('foo', 'bar')
       }
     }
   }
@@ -387,20 +494,6 @@ jreleaser {
 
 It's recommended to list universal artifacts first, then platform specific.
 
-The value of `platform` is dictated by the normalized values detected by
-link:https://github.com/trustin/os-maven-plugin[os-maven-plugin]. You may use the plain `platform` value or append a
-`arch` classifier. The following values are currently recognized:
 
-platform:: `aix`, `hpux`, `os400`, `linux`, `osx`, `freebsd`, `openbsd`, `netbsd`, `sunos`, `windows`, `zos`.
-arch:: `x86_64`, `x86_32`, `itanium_64`, `itanium_32`, `sparc_32`, `sparc_64`, `arm_32`, `aarch_64`, `mips_32`,
-`mipsel_32`, `mips_64`, `mipsel_64`, `ppc_32`, `ppcle_32`, `ppc_64`, `ppcle_64`, `s390_32`, `s390_64`, `riscv`
-
-Examples:
-
-* `osx`
-* `osx-arm`
-* `windows`
-* `linux`
-* `linux-x86_32`
-
+include::partial$platform.adoc[]
 

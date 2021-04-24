@@ -1,0 +1,412 @@
+= Cross Platform Jlink
+
+The following configuration defines a distribution named `app` that's configured to generate 2 jlink Java runtimes,
+one for OSX, the other for Linux. The project source is kept at pass:[https://github.com/duke/app]. The zip files of
+both distributions will be uploaded to the GitHub release, and a Docker image will be generated for the Linux zip.
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  name: app
+  version: 1.0.0
+  description: Awesome App
+  longDescription: Awesome App
+  website: pass:[https://acme.com/app]
+  authors:
+    - Duke
+  license: Apache-2.0
+  java:
+    mainClass: com.acme.Main
+    groupId: com.acme
+    artifactId: app
+    version: 16
+
+release:
+  github:
+    overwrite: true
+
+assemble:
+  jlinks:
+    app:
+      active: always
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+      jdk:
+        path: /home/jdks/16.0.0-zulu-osx
+        platform: osx
+      targetJdks:
+        - path: /home/jdks/16.0.0-zulu-osx
+          platform: osx
+        - path: /home/jdks/16.0.0-zulu-linux_x64
+          platform: linux
+
+packagers:
+  docker:
+    active: always
+    baseImage: ubuntu:latest
+    preCommands:
+      - 'RUN apt-get update -y'
+      - 'RUN apt-get install unzip'
+    registries:
+      - serverName: DEFAULT
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  name = "app"
+  version = "1.0.0"
+  description = "Awesome App"
+  longDescription = "Awesome App"
+  website = "pass:[https://acme.com/app]"
+  authors = ["Duke"]
+  license = "Apache-2.0"
+  java.mainClass = "com.acme.Main"
+  java.groupId = "com.acme"
+  java.artifactId = "app"
+  java.version = "16"
+
+[release.github]
+  overwrite = true
+
+[assemble.jlinks.app]
+  active = "ALWAYS"
+  mainJar = { path = "target/{{distributionName}}-{{projectVersion}}.jar" }
+  jdk = { path = "/home/jdks/16.0.0-zulu-osx", platform = "osx" }
+  pass:[[[assemble.jlinks.app.targetJdks]]]
+    path = "/home/jdks/16.0.0-zulu-osx"
+    platform = "osx"
+  pass:[[[assemble.jlinks.app.targetJdks]]]
+    path = "/home/jdks/16.0.0-zulu-linux_x64"
+    platform = "linux"
+
+[packagers.docker]
+  active = "ALWAYS"
+  baseImage = "ubuntu:latest"
+  preCommands = [
+    "RUN apt-get update -y",
+    "RUN apt-get install unzip"]
+  pass:[[[packagers.docker.registries]]]
+    serverName = "DEFAULT"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "name": "app",
+    "description": "Awesome App",
+    "longDescription": "Awesome App",
+    "website": "pass:[https://acme.com/app]",
+    "authors": ["Duke"],
+    "license": "Apache-2.0",
+    "java": {
+      "mainClass": "com.acme.Main",
+      "groupId": "com.acme",
+      "artifactId": "app",
+      "version": "16"
+    }
+  },
+
+  "release": {
+    "github": {
+      "overwrite": true
+    }
+  },
+
+  "assemble": {
+    "jlinks": {
+      "app": {
+        "active": "ALWAYS",
+        "mainJar": {
+          "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+        },
+        "jdk": {
+          "path": "/home/jdks/16.0.0-zulu-osx",
+          "platform": "osx"
+        },
+        "targetJdks": [
+          {
+            "path": "/home/jdks/16.0.0-zulu-osx",
+            "platform": "osx"
+          },
+          {
+            "path": "/home/jdks/16.0.0-zulu-linux",
+            "platform": "linux"
+          }
+        ]
+      }
+    }
+  },
+
+  "packagers": {
+    "docker": {
+      "active": "ALWAYS",
+      "baseImage": "ubuntu:latest",
+      "preCommands": [
+        "RUN apt-get update -y",
+        "RUN apt-get install unzip"],
+      "registries": {
+        "DEFAULT": { }
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim,attributes"]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>app</artifactId>
+  <version>1.0.0</version>
+
+  <name>app</name>
+  <description>Sample app</description>
+  <url>https://acme.com/app</url>
+  <inceptionYear>2020</inceptionYear>
+
+  <properties>
+    <maven.compiler.release>16</maven.compiler.release>
+  </properties>
+
+  <licenses>
+    <license>
+       <name>Apache-2.0</name>
+       <url>https://spdx.org/licenses/Apache-2.0.html</url>
+       <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>duke</id>
+      <name>Duke</name>
+      <roles>
+        <role>author</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jreleaser-maven-plugin</artifactId>
+        <version>{jreleaser-version}</version>
+        <configuration>
+          <jreleaser>
+            <project>
+              <java>
+                <mainClass>com.acme.Main</mainClass>
+              </java>
+            </project>
+            <release>
+              <github>
+                <overwrite>true</overwrite>
+              </github>
+            </release>
+            <assemble>
+              <jlinks>
+                <jlink>
+                  <name>app</name>
+                  <active>ALWAYS</active>
+                  <mainJar>
+                    <path>target/{{distributionName}}-{{projectVersion}}.jar</path>
+                  </mainJar>
+                  <jdk>
+                    <path>/home/jdks/16.0.0-zulu-osx</path>
+                    <platform>osx</platform>
+                  </jdk>
+                  <targetJdks>
+                    <targetJdk>
+                      <path>/home/jdks/16.0.0-zulu-osx</path>
+                      <platform>osx</platform>
+                    </targetJdk>
+                    <targetJdk>
+                      <path>/home/jdks/16.0.0-zulu-linux</path>
+                      <platform>linux</platform>
+                    </targetJdk>
+                  </targetJdks>
+                </jlink>
+              </jlinks>
+            </assemble>
+            <packagers>
+              <docker>
+                <active>ALWAYS</active>
+                <baseImage>ubuntu:latest</baseImage>
+                <preCommands>
+                  <preCommand>RUN apt-get update -y</preCommand>
+                  <preCommand>RUN apt-get install unzip</preCommand>
+                </preCommands>
+                <registries>
+                  <registry>
+                    <serverName>DEFAULT</serverName>
+                  </registry>
+                </registries>
+              </docker>
+            </packagers>
+          </jreleaser>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+plugins {
+    id 'org.jreleaser'
+}
+
+group = 'com.acme'
+version = '1.0.0'
+
+jreleaser {
+  project {
+    name = 'app'
+    description = 'Awesome App'
+    longDescription = 'Awesome App'
+    website = 'pass:[https://acme.com/app]'
+    authors = ['Duke']
+    license = 'Apache-2.0'
+    java {
+      mainClass = 'com.acme.Main'
+      artifactId = 'app'
+      version = '16'
+    }
+  }
+
+  release {
+    github {
+      overwrite = true
+    }
+  }
+
+  assemble {
+    jlinks {
+      app {
+        active = 'ALWAYS'
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        jdk {
+          path = '/home/jdks/16.0.0-zulu-osx'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '/home/jdks/16.0.0-zulu-osx'
+          platform = 'osx'
+        }
+        targetJdk {
+          path = '/home/jdks/16.0.0-zulu-linux'
+          platform = 'linux'
+        }
+      }
+    }
+  }
+
+  packagers {
+    docker {
+      active = 'ALWAYS'
+      baseImage = 'ubuntu:latest'
+      preCommands = [
+        'RUN apt-get update -y',
+        'RUN apt-get install unzip']
+      registries {
+        DEFAULT { }
+      }
+    }
+  }
+}
+----
+====
+
+Assembling the jlink Java Runtimes.
+
+[source,sh]
+[subs="attributes"]
+----
+$ jreleaser assemble
+[INFO]  JReleaser {jreleaser-version}
+[INFO]  Configuring with jreleaser.yml
+[INFO]    - basedir set to /Users/duke/tmp/app
+[INFO]  Reading configuration
+[INFO]  Loading properties from /Users/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-16T23:41:20.220912+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Assembling all distributions
+[INFO]    [jlink] assembling app distribution
+[INFO]    [jlink] - com.acme.app-1.0.0-osx
+[INFO]    [jlink] - com.acme.app-1.0.0-linux
+[INFO]  JReleaser succeeded after 8.900s
+[INFO]  Writing output properties to out/jreleaser/output.properties
+----
+
+Releasing all distributions.
+
+[source,sh]
+[subs="attributes"]
+----
+$ jreleaser full-release
+
+[INFO]  JReleaser {jreleaser-version}
+[INFO]  Configuring with jreleaser.yml
+[INFO]    - basedir set to /Users/duke/tmp/app
+[INFO]  Reading configuration
+[INFO]  Loading properties from /Users/duke/.jreleaser/config.properties
+[INFO]  Validating configuration
+[INFO]  Project version set to 1.0.0
+[INFO]  Release is not snapshot
+[INFO]  Timestamp is 2021-04-16T23:41:39.744177+02:00
+[INFO]  HEAD is at 0357971
+[INFO]  dryrun set to false
+[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Calculating checksums
+[INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-osx.zip
+[INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-linux.zip
+[INFO]  Signing files
+[INFO]  Signing is not enabled. Skipping
+[INFO]  Releasing to https://github.com/duke/app
+[INFO]   - uploading com.acme.app-1.0.0-osx.zip
+[INFO]   - uploading com.acme.app-1.0.0-linux.zip
+[INFO]   - uploading checksums.txt
+[INFO]  Preparing distributions
+[INFO]    - Preparing app distribution
+[INFO]      [docker] preparing app distribution
+[INFO]  Packaging distributions
+[INFO]    - Packaging app distribution
+[INFO]      [docker] packaging app distribution
+[INFO]      [docker]  - duke/app:v1.0.0
+[INFO]      [docker] sha256:a8eb8c32b795b320a3b52e9c6e62e5c6845def2fee83fd30b2a82b20b7c542a9
+[INFO]  Uploading distributions
+[INFO]    - Uploading app distribution
+[INFO]      [docker] uploading app distribution
+[INFO]      [docker]  - duke/app:v1.0.0
+[INFO]      [docker] Removing login credentials for https://index.docker.io/v1/
+[INFO]  Announcing release
+[INFO]  Announcing is not enabled. Skipping.
+[INFO]  JReleaser succeeded after 5.527s
+[INFO]  Writing output properties to out/jreleaser/output.properties
+----

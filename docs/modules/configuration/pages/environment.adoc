@@ -1,7 +1,7 @@
 = Environment
 
 JReleaser can configure some of its fields from external sources. This allows keeping a stable configuration file and only
-update the external sources to produce a new release. Values may be read from a Java `.properties` file or from
+update the external sources to produce a new release. Values may be read from a Java properties file or from
 environment variables, the file has precendence over the environment variables.
 
 By default, the external properties file should be located at `~/.jreleaser/config.properties` however you may change
@@ -21,11 +21,35 @@ YAML::
 # icon:dot-circle[]
 environment:
 
-  # Location of a `.properties` file with key/value pairs
+  # Location of a properties file with key/value pairs
   # Each key must be prefixed with `JRELEASER_` and match
   # the environment variable it overrides.
   # icon:dot-circle[]
   variables: path/to/alternate/config.properties
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  properties:
+    foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# Configures environment sources.
+# icon:dot-circle[]
+[environment]
+
+  # Location of a properties file with key/value pairs
+  # Each key must be prefixed with `JRELEASER_` and match
+  # the environment variable it overrides.
+  # icon:dot-circle[]
+  variables = "path/to/alternate/config.properties"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  properties.foo = "bar"
 ----
 JSON::
 +
@@ -36,11 +60,17 @@ JSON::
   // Configures environment sources.
   // icon:dot-circle[]
   "environment": {
-    // Location of a `.properties` file with key/value pairs
+    // Location of a properties file with key/value pairs
     // Each key must be prefixed with `JRELEASER_` and match
     // the environment variable it overrides.
     // icon:dot-circle[]
-    "variables": "path/to/alternate/config.properties"
+    "variables": "path/to/alternate/config.properties",
+
+    // Additional properties used when evaluating templates.
+    // icon:dot-circle[]
+    "properties": {
+      "foo": "bar"
+    }
   }
 }
 ----
@@ -56,12 +86,20 @@ Maven::
   -->
   <environment>
     <!--
-      Location of a `.properties` file with key/value pairs
+      Location of a properties file with key/value pairs
       Each key must be prefixed with `JRELEASER_` and match
       the environment variable it overrides.
       icon:dot-circle[]
     -->
     <variables>path/to/alternate/config.properties</variables>
+
+    <!--
+     Additional properties used when evaluating templates.
+     icon:dot-circle[]
+    -->
+    <properties>
+      <foo>bar</foo>
+    </properties>
   </environment>
 </jreleaser>
 ----
@@ -74,21 +112,69 @@ jreleaser {
   // Configures environment sources.
   // icon:dot-circle[]
   environment {
-    // Location of a `.properties` file with key/value pairs
+    // Location of a properties file with key/value pairs
     // Each key must be prefixed with `JRELEASER_` and match
     // the environment variable it overrides.
     // icon:dot-circle[]
     variables = 'path/to/alternate/config.properties'
+
+    // Additional properties used when evaluating templates.
+    // icon:dot-circle[]
+    properties.put('foo', 'bar')
   }
 }
 ----
 ====
+
+Formats currently supported for the properties file are:
+
+* `.properties`
+* `.yml`
+* `.toml`
+* `.json`
+
+[tabs]
+====
+PROPERTIES::
++
+[source,yaml]
+[subs="+macros"]
+----
+JRELEASER_GITHUB_TOKEN = b9df0920aefcbfa69f57c4f02bae4396
+----
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+JRELEASER_GITHUB_TOKEN: b9df0920aefcbfa69f57c4f02bae4396
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+JRELEASER_GITHUB_TOKEN = "b9df0920aefcbfa69f57c4f02bae4396"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "JRELEASER_GITHUB_TOKEN": "b9df0920aefcbfa69f57c4f02bae4396"
+}
+----
+====
+
+The following key/values may be defined in the properties file or as environment variables:
 
 == Project
 
 [%header, cols="<1,<1", width="100%"]
 |===
 | Key                        | Description
+| JRELEASER_PROJECT_NAME     | the project name
 | JRELEASER_PROJECT_VERSION  | the project version
 | JRELEASER_SNAPSHOT_PATTERN | a regex to determine if the project version is snapshot
 |===
@@ -101,8 +187,13 @@ jreleaser {
 | JRELEASER_TAG_NAME       | the release tag name
 | JRELEASER_RELEASE_NAME   | the release name
 | JRELEASER_MILESTONE_NAME | the milestone name/title
+| JRELEASER_BRANCH         | the release branch (targetCommitish/ref)
+| JRELEASER_OVERWRITE      | overwrite an existing release
+| JRELEASER_UPDATE         | update an existing release
+| JRELEASER_SKIP_TAG       | skip tagging the release
+| JRELEASER_PRERELEASE     | release is a prerelease (github/gitea)
 | JRELEASER_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_GITLAB_TOKEN   | a Gitlab token with `api` scope
+| JRELEASER_GITLAB_TOKEN   | a GitLab token with `api` scope
 | JRELEASER_GITEA_TOKEN    | a Gitea personal token
 |===
 
@@ -130,7 +221,7 @@ jreleaser {
 |===
 | Key                             | Description
 | JRELEASER_HOMEBREW_GITHUB_TOKEN | a GitHub token with `repo` scope
-| JRELEASER_HOMEBREW_GITLAB_TOKEN | a Gitlab token with `api` scope
+| JRELEASER_HOMEBREW_GITLAB_TOKEN | a GitLab token with `api` scope
 | JRELEASER_HOMEBREW_GITEA_TOKEN  | a Gitea personal token
 |===
 
@@ -140,7 +231,7 @@ jreleaser {
 |===
 | Key                               | Description
 | JRELEASER_CHOCOLATEY_GITHUB_TOKEN | a GitHub token with `repo` scope
-| JRELEASER_CHOCOLATEY_GITLAB_TOKEN | a Gitlab token with `api` scope
+| JRELEASER_CHOCOLATEY_GITLAB_TOKEN | a GitLab token with `api` scope
 | JRELEASER_CHOCOLATEY_GITEA_TOKEN  | a Gitea personal token
 |===
 
@@ -150,7 +241,7 @@ jreleaser {
 |===
 | Key                          | Description
 | JRELEASER_JBANG_GITHUB_TOKEN | a GitHub token with `repo` scope
-| JRELEASER_JBANG_GITLAB_TOKEN | a Gitlab token with `api` scope
+| JRELEASER_JBANG_GITLAB_TOKEN | a GitLab token with `api` scope
 | JRELEASER_JBANG_GITEA_TOKEN  | a Gitea personal token
 |===
 
@@ -160,7 +251,7 @@ jreleaser {
 |===
 | Key                          | Description
 | JRELEASER_SCOOP_GITHUB_TOKEN | a GitHub token with `repo` scope
-| JRELEASER_SCOOP_GITLAB_TOKEN | a Gitlab token with `api` scope
+| JRELEASER_SCOOP_GITLAB_TOKEN | a GitLab token with `api` scope
 | JRELEASER_SCOOP_GITEA_TOKEN  | a Gitea personal token
 |===
 
@@ -170,8 +261,24 @@ jreleaser {
 |===
 | Key                         | Description
 | JRELEASER_SNAP_GITHUB_TOKEN | a GitHub token with `repo` scope
-| JRELEASER_SNAP_GITLAB_TOKEN | a Gitlab token with `api` scope
+| JRELEASER_SNAP_GITLAB_TOKEN | a GitLab token with `api` scope
 | JRELEASER_SNAP_GITEA_TOKEN  | a Gitea personal token
+|===
+
+== Discord
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_DISCORD_WEBHOOK | the webhook URL
+|===
+
+== Gitter
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                      | Description
+| JRELEASER_GITTER_WEBHOOK | the webhook URL
 |===
 
 == Mail
@@ -195,10 +302,18 @@ jreleaser {
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                   | Description
-| JRELEASER_SLACK_TOKEN | a bot or a personal Slack token
+| Key                     | Description
+| JRELEASER_SLACK_TOKEN   | a bot or a personal Slack token
+| JRELEASER_SLACK_WEBHOOK | the webhook URL
 |===
 
+== Teams
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_TEAMS_WEBHOOK | the webhook URL
+|===
 
 == Twitter
 

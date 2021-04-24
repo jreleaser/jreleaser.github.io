@@ -4,9 +4,9 @@ JReleaser can generate and publish a _Scoop App Manifest_ into a repository that
 
 The `scoop` section specifies how the manifest should be created.
 
-NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Scoop.
+NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Homebrew.
 
-WARNING: Snapshots are not supported.
+WARNING: Snapshots are *not* supported.
 
 include::partial$legend.adoc[]
 
@@ -22,12 +22,13 @@ packagers:
   # icon:dot-circle[]
   scoop:
     # Enables or disables Scoop.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Scoop distribution
-    # Defaults to `src/distribution/${distribution.name}/scoop`.
+    # Directory with file templates used to prepare the Scoop distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/scoop/templates
@@ -54,12 +55,12 @@ packagers:
       # Name used when authoring commits.
       # If left undefined, will use the releaser's commit name.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
       # If left undefined, will use the releaser's commit email.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
     # Git repository to push the formula to.
     # Defaults are shown.
@@ -87,6 +88,75 @@ packagers:
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.scoop]
+  # Enables or disables Scoop.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Scoop distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/scoop/templates"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+
+  # URL used to check the latest version.
+  # Defaults to the releaser's `latestReleaseUrlFormat`.
+  # icon:dot-circle[] icon:file-alt[]
+  checkverUrl = "pass:[https://host/path]"
+
+  # URL used to download a new version.
+  # Defaults to the releaser's `downloadUrlFormat`.
+  # icon:dot-circle[] icon:file-alt[]
+  autoupdateUrl = "pass:[https://host/path]"
+
+  # Git author used to commit to the bucket repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Git repository to push the formula to.
+
+  # The owner of the bucket repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  bucket.owner = "duke"
+
+  # The name of the bucket repository.
+  # Defaults to `scoop-${repoOwner}`.
+  # icon:dot-circle[]
+  bucket.nam = "scoop-duke"
+
+  # Username used for authoring commits. Must have write access to the bucket repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  bucket.username = "duke"
+
+  # Password or OAuth token with write access to the bucket repository.
+  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  bucket.token = "__DO_NOT_SET_HERE__"
+----
 JSON::
 +
 [source,json]
@@ -98,12 +168,13 @@ JSON::
     // icon:dot-circle[]
     "scoop": {
       // Enables or disables Scoop.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Scoop distribution
-      // Defaults to `src/distribution/${distribution.name}/scoop`.
+      // Directory with file templates used to prepare the Scoop distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/scoop/templates",
@@ -129,14 +200,14 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
       // Git repository to push the formula to.
@@ -185,14 +256,15 @@ Maven::
     <scoop>
       <!--
         Enables or disables Scoop.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Scoop distribution
-        Defaults to `src/distribution/${distribution.name}/scoop`.
+        Directory with file templates used to prepare the Scoop distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -231,17 +303,17 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
@@ -295,12 +367,13 @@ jreleaser {
     // icon:dot-circle[]
     scoop {
       // Enables or disables Scoop.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Scoop distribution
-      // Defaults to `src/distribution/${distribution.name}/scoop`.
+      // Directory with file templates used to prepare the Scoop distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/scoop/templates'
@@ -326,12 +399,12 @@ jreleaser {
         // Name used when authoring commits.
         // If left undefined, will use the releaser's commit name.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
         // If left undefined, will use the releaser's commit email.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }
 
       // Git repository to push the formula to.
@@ -365,6 +438,8 @@ jreleaser {
 }
 ----
 ====
+
+Template files may be initialized using the `template` command.
 
 NOTE: The bucket token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
 be one of [`JRELEASER_SCOOP_GITHUB_TOKEN`, `JRELEASER_SCOOP_GITLAB_TOKEN`, `JRELEASER_SCOOP_GITEA_TOKEN`].
@@ -411,7 +486,7 @@ scoop bucket add duke https://github.com/duke/scoop-duke.git
 scoop install app
 ----
 
-IMPORTANT: Gitlab does not yet offer an URL that resolves to a latest release. You may need to adapt the value of
+IMPORTANT: GitLab does not yet offer an URL that resolves to a latest release. You may need to adapt the value of
 `checkverUrl` or update the tool template by removing that section.
 Keep an eye on link:https://gitlab.com/gitlab-org/gitlab/-/issues/16821[].
 

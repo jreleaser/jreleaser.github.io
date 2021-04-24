@@ -4,7 +4,7 @@ After a release is created at the desired remote Git host, JReleaser can generat
 into their respective distribution media, such a Git repository you have access to, or a packager store.
 
 The sections defined here can be applied globally (for all distributions) or per distribution. Global configuration is
-inherited by distribution configuration. Here's for example how xref:packagers/homebrew.adoc[] and xref:packagers/scoop.adoc[]
+inherited by distributions. Here's for example how xref:packagers/homebrew.adoc[] and xref:packagers/scoop.adoc[]
 can be activated for all distributions:
 
 [tabs]
@@ -16,9 +16,18 @@ YAML::
 ----
 packagers:
   brew:
-    enabled: true
+    active: ALWAYS
   scoop:
-    enabled: true
+    active: ALWAYS
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers]
+  brew.active = "ALWAYS"
+  scoop.active = "ALWAYS"
 ----
 JSON::
 +
@@ -28,10 +37,10 @@ JSON::
 {
   "packagers": {
      "brew": {
-       "enabled": true
+       "active": "ALWAYS"
      },
      "scoop": {
-       "enabled": true
+       "active": "ALWAYS"
      }
   }
 }
@@ -44,10 +53,10 @@ Maven::
 <jreleaser>
   <packagers>
     <brew>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
     </brew>
     <scoop>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
     </scoop>
   </packagers>
 </jreleaser>
@@ -60,10 +69,10 @@ Gradle::
 jreleaser {
   packagers {
     brew {
-      enabled = true
+      active = 'ALWAYS'
     }
     scoop {
-      enabled = true
+      active = 'ALWAYS'
     }
   }
 }
@@ -81,14 +90,26 @@ YAML::
 ----
 packagers:
   brew:
-    enabled: true
+    active: ALWAYS
   scoop:
-    enabled: true
+    active: ALWAYS
 
 distributions:
   app:
     scoop:
-      enabled: false
+      active: NEVER
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers]
+  brew.active = "ALWAYS"
+  scoop.active = "ALWAYS"
+
+[distributions.app]
+  scoop.active = "NEVER"
 ----
 JSON::
 +
@@ -98,16 +119,16 @@ JSON::
 {
   "packagers": {
      "brew": {
-       "enabled": true
+       "active": "ALWAYS"
      },
      "scoop": {
-       "enabled": true
+       "active": "ALWAYS"
      }
   },
   "distributions": {
     "app": {
       "scoop": {
-        "enabled": false
+        "active": "NEVER"
       }
     }
   }
@@ -121,16 +142,16 @@ Maven::
 <jreleaser>
   <packagers>
     <brew>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
     </brew>
     <scoop>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
     </scoop>
   </packagers>
   <distributions>
     <app>
       <scoop>
-        <enabled>false</enabled>
+        <active>NEVER</active>
       </scoop>
     </app>
   </distributions>
@@ -144,16 +165,16 @@ Gradle::
 jreleaser {
   packagers {
     brew {
-      enabled = true
+      active = 'ALWAYS'
     }
     scoop {
-      enabled = true
+      active = 'ALWAYS'
     }
   }
   distributions {
     app {
       scoop {
-        enabled = false
+        active = 'NEVER'
       }
     }
   }

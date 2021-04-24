@@ -2,9 +2,9 @@
 
 Creates link:https://www.docker.com/[Docker] images.
 
-NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Docker.
+NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Docker.
 
-WARNING: Snapshots are not supported.
+WARNING: Snapshots are *not* supported.
 
 IMPORTANT: Building and publishing docker images requires the `docker` command and a running Docker deamon.
 JReleaser will not install these tools.
@@ -23,12 +23,13 @@ packagers:
   # icon:dot-circle[]
   docker:
     # Enables or disables Docker.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Docker distribution
-    # Defaults to `src/distribution/${distribution.name}/docker`.
+    # Directory with file templates used to prepare the Docker distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/docker/templates
@@ -45,10 +46,21 @@ packagers:
       - "{{repoOwner}}/{{distributionName}}:{{tagName}}"
       - "duke/app:latest"
 
-    # A list of build arguments
+    # A list of build arguments.
     # icon:dot-circle[] icon:file-alt[]
     buildArgs:
       - "--pull"
+
+    # Dockerfile commands to run before the assembly.
+    # icon:dot-circle[] icon:file-alt[]
+    preCommands:
+      - "RUN apt-get update -y"
+      - "RUN apt-get install unzip"
+
+    # Dockerfile commands to run after the assembly, before ENTRYPOINT.
+    # icon:dot-circle[] icon:file-alt[]
+    postCommands:
+      - "VOLUME /workspace"
 
     # A map of Docker labels.
     # icon:dot-circle[]
@@ -92,6 +104,90 @@ packagers:
         # icon:dot-circle[]
         repositoryName: duke
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.docker]
+  # Enables or disables Docker.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Docker distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/docker/templates"
+
+  # The base Docker image to use.
+  # icon:dot-circle[] icon:file-alt[]
+  baseImage = "alpine:3.5"
+
+  # A list of image names.
+  # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+  # will be created.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNames = [
+    "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+    "duke/app:latest"]
+
+  # A list of build arguments.
+  # icon:dot-circle[] icon:file-alt[]
+  buildArgs = ["--pull"]
+
+  # Dockerfile commands to run before the assembly.
+  # icon:dot-circle[] icon:file-alt[]
+  preCommands = [
+    "RUN apt-get update -y",
+    "RUN apt-get install unzip"]
+
+  # Dockerfile commands to run after the assembly, before ENTRYPOINT.
+  # icon:dot-circle[] icon:file-alt[]
+  postCommands = ["VOLUME /workspace"]
+
+  # A map of Docker labels.
+  # icon:dot-circle[]
+  labels.foo = "bar"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+
+  # A list of docker registries where images will be published.
+  # Image publication will be disabled if no registries are configured.
+  # icon:dot-circle[]
+  pass:[[[packagers.docker.registries]]]
+    # The name of the registry. Must be unique.
+    # Use `DEFAULT` to match the default registry
+    # provided by the Docker daemon.
+    # icon:exclamation-triangle[]
+    serverName = "myRegistry"
+
+    # The address of the docker registry.
+    # icon:exclamation-triangle[] if `serverName != DEFAULT`.
+    server = "pass:[https://myregistry.com]"
+
+    # The user that can publish images.
+    # Defaults to the same username as the release repository.
+    # icon:dot-circle[]
+    username = "duke"
+
+    # Password for login into the registry
+    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
+    # environment variable must be defined.
+    # icon:dot-circle[] icon:eye-slash[]
+    password = "__DO_NOT_SET_HERE__"
+
+    # The name of the repository
+    # Defaults to the same owner as the release repository.
+    # icon:dot-circle[]
+    repositoryName = "duke"
+----
 JSON::
 +
 [source,json]
@@ -103,12 +199,13 @@ JSON::
     // icon:dot-circle[]
     "docker": {
       // Enables or disables Docker.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Docker distribution
-      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // Directory with file templates used to prepare the Docker distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/docker/templates",
@@ -126,10 +223,23 @@ JSON::
         "duke/app:latest"
       ],
 
-      // A list of build arguments
+      // A list of build arguments.
       // icon:dot-circle[] icon:file-alt[]
       "buildArgs": [
         "--pull"
+      ],
+
+      // Dockerfile commands to run before the assembly.
+      // icon:dot-circle[] icon:file-alt[]
+      "preCommands": [
+        "RUN apt-get update -y",
+        "RUN apt-get install unzip"
+      ],
+
+      // Dockerfile commands to run after the assembly, before ENTRYPOINT.
+      // icon:dot-circle[] icon:file-alt[]
+      "postCommands": [
+        "VOLUME /workspace"
       ],
 
       // A map of Docker labels.
@@ -198,14 +308,15 @@ Maven::
     <docker>
       <!--
         Enables or disables Docker.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Docker distribution
-        Defaults to `src/distribution/${distribution.name}/docker`.
+        Directory with file templates used to prepare the Docker distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -229,12 +340,29 @@ Maven::
       </imageNames>
 
       <!--
-        A list of build arguments
+        A list of build arguments.
         icon:dot-circle[] icon:file-alt[]
       -->
       <buildArgs>
         <buildArg>--pull</buildArg>
       </buildArgs>
+
+      <!--
+        Dockerfile commands to run before the assembly.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <preCommands>
+        <preCommand>RUN apt-get update -y</preCommand>
+        <preCommand>RUN apt-get install unzip</preCommand>
+      </preCommands>
+
+      <!--
+        Dockerfile commands to run after the assembly, before ENTRYPOINT.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <postCommands>
+        <postCommand>VOLUME /workspace</postCommand>
+      </postCommands>
 
       <!--
         A map of Docker labels.
@@ -314,12 +442,13 @@ jreleaser {
     // icon:dot-circle[]
     docker {
       // Enables or disables Docker.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Docker distribution
-      // Defaults to `src/distribution/${distribution.name}/docker`.
+      // Directory with file templates used to prepare the Docker distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/docker/templates'
@@ -335,9 +464,18 @@ jreleaser {
       addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
       addImageName('duke/app:latest')
 
-      // A list of build arguments
+      // A list of build arguments.
       // icon:dot-circle[] icon:file-alt[]
       addBuildArg('--pull')
+
+      // Dockerfile commands to run before the assembly.
+      // icon:dot-circle[] icon:file-alt[]
+      addPreCommand('RUN apt-get update -y')
+      addPreCommand('RUN apt-get install unzip')
+
+      // Dockerfile commands to run after the assembly, before ENTRYPOINT.
+      // icon:dot-circle[] icon:file-alt[]
+      addPostCommand('VOLUME /workspace')
 
       // A map of Docker labels.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -387,6 +525,8 @@ jreleaser {
 ----
 ====
 
+Template files may be initialized using the `template` command.
+
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a Dockerfile like the following one:
 
@@ -405,12 +545,11 @@ COPY assembly/app-1.2.3.zip /app-1.2.3.zip
 
 RUN unzip app-1.2.3.zip && \
     rm app-1.2.3.zip && \
-    mv app-* app && \
-    chmod +x app/bin/app
+    chmod +x app-1.2.3/bin/app
 
-ENV PATH="${PATH}:/app/bin"
+ENV PATH="${PATH}:/app-1.2.3/bin"
 
-ENTRYPOINT ["/app/bin/app"]
+ENTRYPOINT ["/app-1.2.3/bin/app"]
 ----
 
 == Default Labels
@@ -443,9 +582,21 @@ project:
 
 packagers:
   docker:
-    enabled: true
+    active: ALWAYS
     imageNames:
       - "myuser/{{projectName}}"
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  name = "app"
+
+[packagers.docker]
+  active = "ALWAYS"
+  imageNames = ["myuser/{{projectName}}"]
 ----
 JSON::
 +
@@ -459,7 +610,7 @@ JSON::
 
   "packagers": {
     "docker": {
-      "enabled": true,
+      "active": "ALWAYS",
       "imageNames": [
         "myuser/{{projectName}}"
       ]
@@ -476,7 +627,7 @@ Maven::
 <jreleaser>
   <packagers>
     <docker>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
       <imageNames>
         <imageName>myuser/{{projectName}}</imageName>
       </imageNames>
@@ -493,7 +644,7 @@ Gradle::
 jreleaser {
   packagers {
     docker {
-      enabled = true
+      active = 'ALWAYS'
       addImageName('myuser/{{projectName}}')
     }
   }
@@ -504,6 +655,15 @@ jreleaser {
 This will build the following images:
 
 * `myuser/app`
+
+== Prerelease Image Names
+
+A different set of images names will be automatically configured when the project is snapshot, to avoid possible clashes
+with production images.
+
+JReleaer will look for the first image name that ends with `:{{tagName}}` and discard the rest.
+
+It will use `{{repoOwner}}/{{distributionName}}:{{tagName}}` if no matching image name is found.
 
 == Keeping docker images updated for current major
 
@@ -522,12 +682,28 @@ project:
 
 packagers:
   docker:
-    enabled: true
+    active: ALWAYS
     imageNames:
     - "myuser/myimage:{{tagName}}"
     - "myuser/myimage:v{{projectVersionMajor}}"
     - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
     - "myuser/myimage:latest"
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  name = "app"
+
+[packagers.docker]
+  active = "ALWAYS"
+  imageNames = [
+    "myuser/myimage:{{tagName}}",
+    "myuser/myimage:v{{projectVersionMajor}}",
+    "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+    "myuser/myimage:latest"]
 ----
 JSON::
 +
@@ -541,7 +717,7 @@ JSON::
 
   "packagers": {
     "docker": {
-      "enabled": true,
+      "active": "ALWAYS",
       "imageNames": [
         "myuser/myimage:{{tagName}}",
         "myuser/myimage:v{{projectVersionMajor}}",
@@ -561,7 +737,7 @@ Maven::
 <jreleaser>
   <packagers>
     <docker>
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
       <imageNames>
         <imageName>myuser/myimage:{{tagName}}</imageName>
         <imageName>myuser/myimage:v{{projectVersionMajor}}</imageName>
@@ -581,7 +757,7 @@ Gradle::
 jreleaser {
   packagers {
     docker {
-      enabled = true
+      active = 'ALWAYS'
       addImageName('myuser/myimage:{{tagName}}')
       addImageName('myuser/myimage:v{{projectVersionMajor}}')
       addImageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')

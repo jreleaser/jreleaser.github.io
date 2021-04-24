@@ -17,9 +17,20 @@ announce:
   twitter:
 
     # Enable or disable this announcer.
-    # Defaults to `true`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
+
+    # Defines the connection timeout in seconds.
+    # Defaults to `20`.
+    # icon:dot-circle[]
+    connectTimeout: 20
+
+    # Defines the read timeout in seconds.
+    # Defaults to `60`.
+    # icon:dot-circle[]
+    readTimeout: 60
 
     # The consumer key.
     # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
@@ -50,6 +61,59 @@ announce:
     # icon:dot-circle[] icon:file-alt[]
     status: icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[announce.twitter]
+
+  # Enable or disable this announcer.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # icon:dot-circle[]
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  readTimeout = 60
+
+  # The consumer key.
+  # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  consumerKey = "__DO_NOT_SET_HERE__"
+
+  # The consumer token.
+  # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  consumerToken = "__DO_NOT_SET_HERE__"
+
+  # The access token.
+  # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  accessToken = "__DO_NOT_SET_HERE__"
+
+  # The access token secret.
+  # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`_SECRET`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  accessTokenSecret = "__DO_NOT_SET_HERE__"
+
+  # The announcement message.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  status = "icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+----
 JSON::
 +
 [source,json]
@@ -61,9 +125,20 @@ JSON::
     "twitter": {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
+
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      "connectTimeout": 20,
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      "readTimeout": 60,
 
       // The consumer key.
       // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
@@ -111,11 +186,26 @@ Maven::
       
       <!--
         Enable or disable this announcer.
-        Defaults to `true`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
-  
+      <active>ALWAYS</active>
+
+       <!--
+        Defines the connection timeout in seconds.
+        Defaults to `20`.
+        icon:dot-circle[]
+      -->
+      <connectTimeout>20</connectTimeout>
+
+      <!--
+        Defines the read timeout in seconds.
+        Defaults to `60`.
+        icon:dot-circle[]
+      -->
+      <readTimeout>60</readTimeout>
+
       <!--
         The consumer key.
         If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
@@ -164,14 +254,25 @@ Gradle::
 [subs="+macros"]
 ----
 jreleaser {
-  announce =
+  announce {
     // icon:dot-circle[]
-    twitter =
+    twitter {
 
       // Enable or disable this announcer.
-      // Defaults to `true`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled =  true
+      active =  true
+
+      // Defines the connection timeout in seconds.
+      // Defaults to `20`.
+      // icon:dot-circle[]
+      connectTimeout = 20
+
+      // Defines the read timeout in seconds.
+      // Defaults to `60`.
+      // icon:dot-circle[]
+      readTimeout = 60
 
       // The consumer key.
       // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
@@ -199,9 +300,13 @@ jreleaser {
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:file-alt[]
       status = 'icon:rocket[] {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+    }
+  }
 }
 ----
 ====
+
+The template file may be initialized using the `template` command.
 

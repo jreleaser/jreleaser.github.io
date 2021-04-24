@@ -6,9 +6,9 @@ with automatic and transactional updates.
 
 You can read more about it in the link:https://snapcraft.io/docs/[snapcraft docs].
 
-NOTE: At the moment, only artifacts with `.tar.gz` or `.tar` extension may be packaged with Snapcraft.
+NOTE: Only artifacts with `.tar.gz`, `.tar`, or `.jar` extension may be packaged with Snapcraft.
 
-WARNING: Snapshots are not supported.
+WARNING: Snapshots are *not* supported.
 
 IMPORTANT: Building local snaps requires `snapcraft` to be pre installed. JReleaser will not install it nor its
 dependencies.
@@ -27,12 +27,13 @@ packagers:
   # icon:dot-circle[]
   snap:
     # Enables or disables Snap.
-    # Defaults to `false`.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[]
-    enabled: true
+    active: ALWAYS
 
-    # Directory with file templates used to prepare the Snap distribution
-    # Defaults to `src/distribution/${distribution.name}/snap`.
+    # Directory with file templates used to prepare the Snap distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
     # If specified, path must exist.
     # icon:dot-circle[]
     templateDirectory: path/to/snap/templates
@@ -49,12 +50,12 @@ packagers:
       # Name used when authoring commits.
       # If left undefined, will use the releaser's commit name.
       # icon:dot-circle[]
-      name: jreleaser-bot
+      name: jreleaserbot
 
       # E-mail used when authoring commits.
       # If left undefined, will use the releaser's commit email.
       # icon:dot-circle[]
-      email: pass:[jreleaser-bot@jreleaser.org]
+      email: pass:[jreleaser@kordamp.org]
 
     # Git repository to push the formula to.
     # Defaults are shown.
@@ -85,7 +86,7 @@ packagers:
     # Exported snapcraft login credentials.
     # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
     # Required if `remoteBuild` is set to `false`.
-    exportedLogin:
+    exportedLogin: path/to/login/file
 
     # Whether to build the package on a remote server or locally.
     # If set to `true` then the package must be configured to be built
@@ -99,10 +100,10 @@ packagers:
     # Valid values are:
     # * bare - Empty base snap;
     # * core - Ubuntu Core 16;
-    # * core18 - Ubuntu Core 18.
-    # Defaults to `core18`.
+    # * core20 - Ubuntu Core 20.
+    # Defaults to `core20`.
     # icon:dot-circle[]
-    base: core18
+    base: core20
 
     # A guardrail to prevent you from releasing a snap to all your users before
     # it is ready.
@@ -161,6 +162,138 @@ packagers:
         - $HOME/.foo
         - $HOME/.foobar
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[packagers.snap]
+  # Enables or disables Snap.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates used to prepare the Snap distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/snap/templates"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
+
+  # Git author used to commit to the snap repository.
+
+  # Name used when authoring commits.
+  # If left undefined, will use the releaser's commit name.
+  # icon:dot-circle[]
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # If left undefined, will use the releaser's commit email.
+  # icon:dot-circle[]
+  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
+
+  # Git repository to push the formula to.
+  # Defaults are shown.
+
+  # The owner of the snap repository.
+  # Defaults to the same owner as the release repository.
+  # icon:dot-circle[]
+  snap.owner = "duke"
+
+  # The name of the snap repository.
+  # Defaults to `${distribution.name}-snap`.
+  # icon:dot-circle[]
+  snap.name = "app-snap"
+
+  # Username used for authoring commits. Must have write access to the snap repository.
+  # Defaults to the same username as the release repository.
+  # icon:dot-circle[]
+  snap.username = "duke"
+
+  # Password or OAuth token with write access to the snap repository.
+  # If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  snap.token = "__DO_NOT_SET_HERE__"
+
+  # Exported snapcraft login credentials.
+  # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
+  # Required if `remoteBuild` is set to `false`.
+  exportedLogin = "path/to/login/file"
+
+  # Whether to build the package on a remote server or locally.
+  # If set to `true` then the package must be configured to be built
+  # via link:https://snapcraft.io[].
+  # Review the docs at link:https://snapcraft.io/build[].
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  remoteBuild = false
+
+  # A snap of type base to be used as the execution environment for this snap.
+  # Valid values are:
+  # * bare - Empty base snap;
+  # * core - Ubuntu Core 16;
+  # * core20 - Ubuntu Core 20.
+  # Defaults to `core20`.
+  # icon:dot-circle[]
+  base = "core20"
+
+  # A guardrail to prevent you from releasing a snap to all your users before
+  # it is ready.
+  # `devel` will let you release only to the `edge` and `beta` channels in the
+  # store. `stable` will let you release also to the `candidate` and `stable`
+  # channels. More info about channels here:
+  # link:https://snapcraft.io/docs/reference/channels[].
+  # Defaults to `stable`.
+  # icon:dot-circle[]
+  grade = "stable"
+
+  # Snaps can be setup to follow three different confinement policies:
+  # `strict`, `devmode` and `classic`. A strict confinement where the snap
+  # can only read and write in its own namespace is recommended. Extra
+  # permissions for strict snaps can be declared as `plugs` for the app, which
+  # are explained later. More info about confinement here:
+  # link:https://snapcraft.io/docs/reference/confinement[].
+  # Defaults to `strict`.
+  # icon:dot-circle[]
+  confinement = "strict"
+
+  # List of plug names the application is associated with.
+  # When a plug is connected to one of these slots, the application
+  # will be granted the permissions specified for that interface.
+  # If attributes are required, or the plug name does not match the
+  # interface name, more details must be declared in the `plugs` field.
+  # link:https://snapcraft.io/docs/reference/interfaces[].
+  # icon:dot-circle[]
+  localPlugs = ["some_plug_name"]
+
+  # List of slot names the application is associated with.
+  # When a plug is connected to one of these slots, the application
+  # will be granted the permissions specified for that interface.
+  # If attributes are required, or the slot name does not match the
+  # interface name, more details must be declared in the `slots` field.
+  # link:https://snapcraft.io/docs/reference/interfaces[].
+  # icon:dot-circle[]
+  localSlots = ["some_slot_name"]
+
+  # Allows plugs to be configured.
+  # icon:dot-circle[]
+  [packagers.snap.plugs]
+    some_plug_name.key = "value"
+
+  # Allows slots to be configured.
+  # icon:dot-circle[]
+  [packagers.snap.slots]
+    some_slot_name.key = "value"
+    some_slot_name.read = ["$HOME/.foo"]
+    some_slot_name.write = ["$HOME/.foo", "$HOME/.foobar"]
+----
 JSON::
 +
 [source,json]
@@ -172,12 +305,13 @@ JSON::
     // icon:dot-circle[]
     "snap": {
       // Enables or disables Snap.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      "enabled": true,
+      "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Snap distribution
-      // Defaults to `src/distribution/${distribution.name}/snap`.
+      // Directory with file templates used to prepare the Snap distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
       // If specified, path must exist.
       // icon:dot-circle[]
       "templateDirectory": "path/to/snap/templates",
@@ -193,14 +327,14 @@ JSON::
       // icon:dot-circle[]
       "commitAuthor": {
         // Name used when authoring commits.
-        // Defaults to `jreleaser-bot`.
+        // Defaults to `jreleaserbot`.
         // icon:dot-circle[]
-        "name": "jreleaser-bot",
+        "name": "jreleaserbot",
 
         // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+        // Defaults to `pass:[jreleaser@kordamp.org]`.
         // icon:dot-circle[]
-        "email": "pass:[jreleaser-bot@jreleaser.org]"
+        "email": "pass:[jreleaser@kordamp.org]"
       },
 
       // Git repository to push the formula to.
@@ -233,7 +367,7 @@ JSON::
       // Exported snapcraft login credentials.
       // Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
       // Required if `remoteBuild` is set to `false`.
-      "exportedLogin": "path/to/login.file",
+      "exportedLogin": "path/to/login/file",
 
       // Whether to build the package on a remote server or locally.
       // If set to `true` then the package must be configured to be built
@@ -247,10 +381,10 @@ JSON::
       // Valid values are:
       // * bare - Empty base snap;
       // * core - Ubuntu Core 16;
-      // * core18 - Ubuntu Core 18.
-      // Defaults to `core18`.
+      // * core20 - Ubuntu Core 20.
+      // Defaults to `core20`.
       // icon:dot-circle[]
-      "base": "core18",
+      "base": "core20",
 
       // A guardrail to prevent you from releasing a snap to all your users before
       // it is ready.
@@ -340,14 +474,15 @@ Maven::
     <snap>
       <!--
         Enables or disables Snap.
-        Defaults to `false`.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[]
       -->
-      <enabled>true</enabled>
+      <active>ALWAYS</active>
 
       <!--
-        Directory with file templates used to prepare the Snap distribution
-        Defaults to `src/distribution/${distribution.name}/snap`.
+        Directory with file templates used to prepare the Snap distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
         If specified, path must exist.
         icon:dot-circle[]
       -->
@@ -372,17 +507,17 @@ Maven::
 
         <!--
            Name used when authoring commits.
-          Defaults to `jreleaser-bot`.
+          Defaults to `jreleaserbot`.
           icon:dot-circle[]
         -->
-        <name>jreleaser-bot</name>
+        <name>jreleaserbot</name>
 
         <!--
           E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser-bot@jreleaser.org]`.
+          Defaults to `pass:[jreleaser@kordamp.org]`.
           icon:dot-circle[]
         -->
-        <email>pass:[jreleaser-bot@jreleaser.org]</email>
+        <email>pass:[jreleaser@kordamp.org]</email>
       </commitAuthor>
 
       <!--
@@ -427,7 +562,7 @@ Maven::
         Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
         Required if `remoteBuild` is set to `false`.
       -->
-      <exportedLogin>path/to/login.file</exportedLogin>
+      <exportedLogin>path/to/login/file</exportedLogin>
 
       <!--
         Whether to build the package on a remote server or locally.
@@ -444,11 +579,11 @@ Maven::
         Valid values are:
         * bare - Empty base snap;
         * core - Ubuntu Core 16;
-        * core18 - Ubuntu Core 18.
-        Defaults to `core18`.
+        * core20 - Ubuntu Core 20.
+        Defaults to `core20`.
         icon:dot-circle[]
       -->
-      <base>core18</base>
+      <base>core20</base>
 
       <!--
         A guardrail to prevent you from releasing a snap to all your users before
@@ -547,12 +682,13 @@ jreleaser {
     // icon:dot-circle[]
     snap {
       // Enables or disables Snap.
-      // Defaults to `false`.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[]
-      enabled = true
+      active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Snap distribution
-      // Defaults to `src/distribution/${distribution.name}/snap`.
+      // Directory with file templates used to prepare the Snap distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
       // If specified, path must exist.
       // icon:dot-circle[]
       templateDirectory = 'path/to/snap/templates'
@@ -568,12 +704,12 @@ jreleaser {
         // Name used when authoring commits.
         // If left undefined, will use the releaser's commit name.
         // icon:dot-circle[]
-        name = 'jreleaser-bot'
+        name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
         // If left undefined, will use the releaser's commit email.
         // icon:dot-circle[]
-        email = 'pass:[jreleaser-bot@jreleaser.org]'
+        email = 'pass:[jreleaser@kordamp.org]'
       }
 
       // Git repository to push the formula to.
@@ -606,7 +742,7 @@ jreleaser {
       // Exported snapcraft login credentials.
       // Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
       // Required if `remoteBuild` is set to `false`.
-      exportedLogin = 'path/to/login.file'
+      exportedLogin = 'path/to/login/file'
 
       // Whether to build the package on a remote server or locally.
       // If set to `true` then the package must be configured to be built
@@ -620,10 +756,10 @@ jreleaser {
       // Valid values are:
       // * bare - Empty base snap;
       // * core - Ubuntu Core 16;
-      // * core18 - Ubuntu Core 18.
-      // Defaults to `core18`.
+      // * core20 - Ubuntu Core 20.
+      // Defaults to `core20`.
       // icon:dot-circle[]
-      base = 'core18'
+      base = 'core20'
 
       // A guardrail to prevent you from releasing a snap to all your users before
       // it is ready.
@@ -687,6 +823,8 @@ jreleaser {
 ----
 ====
 
+Template files may be initialized using the `template` command.
+
 NOTE: The snap token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
 be one of [`JRELEASER_SNAP_GITHUB_TOKEN`, `JRELEASER_SNAP_GITLAB_TOKEN`, `JRELEASER_SNAP_GITEA_TOKEN`].
 
@@ -697,20 +835,21 @@ a `snapcraft.yaml` file `out/jreleaser/snap/prepare`, which may be published to 
 .snapcraft.yaml
 ----
 name: app
-base: core18
 version: 1.2.3
-license: Apache-2.0
-grade: stable
-type: app
-confinement: strict
 summary: Sample app
 description: Sample app
 
+grade: stable
+confinement: strict
+base: core20
+type: app
+
 apps:
   app:
-    command: bin/app
+    command: $SNAP/bin/app
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java
+      JAVA_HOME: "$SNAP/usr/lib/jvm/java/jre/"
+      PATH: "$SNAP/bin:$PATH:$SNAP/usr/lib/jvm/java/jre/bin"
 
 parts:
   app:
@@ -718,7 +857,12 @@ parts:
     source: https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.tar.gz
     source-checksum: sha256/8e74020ca5e7d01d25c34cf1bd53adcf78c77adf7b53530ae5e0baeb841cb43e
     stage-packages:
-      - openjdk-8-jdk
+      - openjdk-8-jre
+      - ca-certificates
+      - ca-certificates-java
     organize:
-      usr/lib/jvm/java-8-openjdk*: usr/lib/jvm/java
+      'usr/lib/jvm/java-8-openjdk*': usr/lib/jvm/java
+    prime:
+      - -usr/lib/jvm/java/lib/security/cacerts
+      - -usr/lib/jvm/java/jre/lib/security/cacerts
 ----

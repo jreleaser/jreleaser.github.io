@@ -11,6 +11,68 @@ The following is a list of pre-defined template names:
 All environment variables are accessible with the `Env.` prefix, for example an environment variable named `JAVA_OPTS`
 becomes `{{Env.JAVA_OPTS}}`.
 
+Additionally, every key/value from `environment.properties` becomes available
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+environment:
+  properties:
+    foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[environment]
+  properties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "environment": {
+    "properties": {
+      "foo": "bar"
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <environment>
+    <properties>
+      <foo>bar</foo>
+    </properties>
+  </environment>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  environment {
+    properties.put('foo', 'bar')
+  }
+}
+----
+====
+
+The key `foo` becomes `{{foo}}` and will be evaluated to the String `bar`.
+
 == Build
 
 The following names are related to the current build
@@ -29,28 +91,39 @@ The following names are related to xref:configuration:project.adoc[]
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                    | Description
-| projectName            | the project name
-| projectNameCapitalized | the project name, capitalized, hyphens replaced by spaces.
-| projectVersion         | the project version
-| projectVersionMajor    | the major number of the project's version
-| projectVersionMinor    | the minor number (if any) of the project's version
-| projectVersionPatch    | the patch number (if any) of the project's version
-| projectVersionTag      | the tag (if any) of the project's version
-| projectVersionBuild    | the build info (if any) of the project's version
-| projectDescription     | the project description
-| projectLongDescription | the project long description
-| projectWebsite         | link to the project website
-| projectLicense         | the project license, typically an SPDX identifier
-| projectAuthorsBySpace  | space separated list of author names
-| projectAuthorsByComma  | commma separated list of author names
-| projectTagsBySpace     | space separate list of project tags
-| projectTagsByComma     | comma separate list of project tags
-| projectJavaGroupId     | the project groupId (Maven coordinates)
-| projectJavaArtifactId  | the project artifactId (Maven coordinates)
-| projectJavaVersion     | the project Java version
-| projectMainClass       | the main class launched by the executable script launcher
+| Key                     | Description
+| projectName             | the project name
+| projectNameCapitalized  | the project name, capitalized, hyphens replaced by spaces.
+| projectVersion          | the project version
+| projectEffectiveVersion | the project effective version
+| projectVersionMajor     | the major number of the project's version
+| projectVersionMinor     | the minor number (if any) of the project's version
+| projectVersionPatch     | the patch number (if any) of the project's version
+| projectVersionTag       | the tag (if any) of the project's version
+| projectVersionBuild     | the build info (if any) of the project's version
+| projectDescription      | the project description
+| projectLongDescription  | the project long description
+| projectWebsite          | link to the project website
+| projectLicense          | the project license, typically an SPDX identifier
+| projectAuthorsBySpace   | space separated list of author names
+| projectAuthorsByComma   | commma separated list of author names
+| projectTagsBySpace      | space separate list of project tags
+| projectTagsByComma      | comma separate list of project tags
+| projectJavaGroupId      | the project groupId (Maven coordinates)
+| projectJavaArtifactId   | the project artifactId (Maven coordinates)
+| projectJavaVersion      | the project Java version (full)
+| projectJavaVersionMajor | the project Java version (major)
+| projectJavaVersionMinor | the project Java version (minor)
+| projectJavaVersionPatch | the project Java version (patch)
+| projectJavaVersionTag   | the project Java version (tag)
+| projectJavaVersionBuild | the project Java version (build)
+| projectMainClass        | the main class launched by the executable script launcher
 |===
+
+The value of `projectEffectiveVersion` is calculated as follows:
+
+* if the project is snapshot the value becomes "`early-access`". `projectVersion` remains unchanged.
+* if the project is release the value is the same as `projectVersion`.
 
 Additionally, every key/value from `project.extraProperties` is mapped with `project` as key prefix and the capitalized
 key, such that
@@ -67,6 +140,16 @@ project:
     # Key will be capitalized and prefixed
     # with `project`, i.e, `projectFoo`.
     foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  # Key will be capitalized and prefixed
+  # with `project`, i.e, `projectFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
@@ -115,6 +198,86 @@ jreleaser {
 ----
 ====
 
+Additionally, every key/value from `project.java.extraProperties` is mapped with `java` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  java:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `java`, i.e, `javaFoo`.
+      foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "java": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <project>
+    <java>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `java`, i.e, `javaFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </java>
+  </project>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    java {
+      // Key will be capitalized and prefixed
+      // with `java`, i.e, `javaFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+====
+
 == Release
 
 The following names are related to xref:configuration:release/index.adoc[]
@@ -139,21 +302,31 @@ The following names are related to xref:configuration:release/index.adoc[]
 | reverseRepoHost   | reversed Git host, i.e. "com.github"
 |===
 
+The value of `tagName` is calculated as follows:
+
+* if the project is snapshot the value becomes "`early-access`".
+* if the project is release the value remains unchanged.
+
 == Distribution
 
 The following names are related to xref:configuration:distributions.adoc[]
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                        | Description
-| distributionName           | the name of the distribution
-| distributionExecutable     | the name of the executable script launcher
-| distributionTagsBySpace    | space separate list of distribution tags
-| distributionTagsByComma    | comma separate list of distribution tags
-| distributionJavaGroupId    | the distribution groupId (Maven coordinates)
-| distributionJavaArtifactId | the distribution artifactId (Maven coordinates)
-| distributionJavaVersion    | the distribution Java version
-| distributionMainClass      | the main class launched by the executable script launcher
+| Key                          | Description
+| distributionName             | the name of the distribution
+| distributionExecutable       | the name of the executable script launcher
+| distributionTagsBySpace      | space separate list of distribution tags
+| distributionTagsByComma      | comma separate list of distribution tags
+| distributionJavaGroupId      | the distribution groupId (Maven coordinates)
+| distributionJavaArtifactId   | the distribution artifactId (Maven coordinates)
+| distributionJavaVersion      | the distribution Java version (full)
+| distributionJavaVersionMajor | the distribution Java version (major)
+| distributionJavaVersionMinor | the distribution Java version (minor)
+| distributionJavaVersionPatch | the distribution Java version (patch)
+| distributionJavaVersionTag   | the distribution Java version (tag)
+| distributionJavaVersionBuild | the distribution Java version (build)
+| distributionMainClass        | the main class launched by the executable script launcher
 |===
 
 Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix 
@@ -172,6 +345,16 @@ distributions:
       # Key will be capitalized and prefixed
       # with `distribution`, i.e, `distributionFoo`.
       foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  # Key will be capitalized and prefixed
+  # with `distribution`, i.e, `distributionFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
@@ -226,6 +409,93 @@ jreleaser {
 ----
 ====
 
+Additionally, every key/value from `distribution.<name>.java.extraProperties` is mapped with `java` as key prefix
+and the capitalized key, such that
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+distributions:
+  app:
+    java:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `java`, i.e, `javaFoo`.
+        foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+JSON::
++
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "java": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+Maven::
++
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <java>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </java>
+    </app>
+  </distributions>
+</jreleaser>
+----
+Gradle::
++
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      java {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+====
+
 == Artifact
 
 The following names identify an artifact without explicit `platform`
@@ -236,16 +506,18 @@ The following names identify an artifact without explicit `platform`
 | artifactUrl      | the URL required to download the artifact
 | artifactSha256   | the SHA256 checksum of the artifact's file
 | artifactFileName | the name of the artifact file
+| artifactName     | the name of the artifact file without extension
 |===
 
 The following names match the first artifact in a distribution
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                  | Description
-| distributionUrl      | the URL required to download the artifact
-| distributionSha256   | the SHA256 checksum of the artifact's file
-| distributionFileName | the name of the artifact file
+| Key                          | Description
+| distributionUrl              | the URL required to download the artifact
+| distributionSha256           | the SHA256 checksum of the artifact's file
+| distributionArtifactFileName | the name of the artifact file
+| distributionArtifactName     | the name of the artifact file without extension
 |===
 
 Additional names become available when the artifact defines a `platform`
@@ -256,6 +528,7 @@ Additional names become available when the artifact defines a `platform`
 | artifact{{CapitalizedPlatform}}Url      | the URL required to download the artifact
 | artifact{{CapitalizedPlatform}}Sha256   | the SHA256 checksum of the artifact's file
 | artifact{{CapitalizedPlatform}}FileName | the name of the artifact file
+| artifact{{CapitalizedPlatform}}Name     | the name of the artifact file without extension
 |===
 
 Thus, for artifacts defined as
@@ -273,6 +546,17 @@ distributions:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  artifact = [
+    { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip", platform = "osx" }
+  ]
 ----
 JSON::
 +
@@ -345,16 +629,19 @@ The following names will be calculated:
 
 * artifactUrl
 * artifactSha256
-* artifactFileName
+* artifactFileName: `${project.name}-${project.version}.zip`
+* artifactName: `${project.name}-${project.version}`
 * distributionUrl
 * distributionSha256
-* distributionFileName
+* distributionArtifactFileName: `${project.name}-${project.version}.zip`
+* distributionArtifactName: `${project.name}-${project.version}`
 
 *Platform specific artifact*
 
 * artifactOsxUrl
 * artifactOsxSha256
-* artifactOsxFileName
+* artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
+* artifactOsxName: `${project.name}-${project.version}-mac`
 
 == Brew
 
@@ -365,6 +652,7 @@ The following names are related to xref:configuration:packagers/homebrew.adoc[]
 | Key                 | Description
 | brewTapRepoUrl      | the tap repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | brewTapRepoCloneUrl | the tap repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| brewFormulaName     | the formula name. Defaults to `{{projectNameCapitalized}}`
 | brewDependencies    | a map of key/value pairs
 |===
 
@@ -384,6 +672,16 @@ packagers:
       # Key will be capitalized and prefixed
       # with `brew`, i.e, `brewFoo`.
       foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.brew]
+  # Key will be capitalized and prefixed
+  # with `brew`, i.e, `brewFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
@@ -467,6 +765,16 @@ packagers:
       # with `chocolatey`, i.e, `chocolateyFoo`.
       foo: bar
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.chocolatey]
+  # Key will be capitalized and prefixed
+  # with `chocolatey`, i.e, `chocolateyFoo`.
+  extraProperties.foo = "bar"
+----
 JSON::
 +
 [source,json]
@@ -548,6 +856,16 @@ packagers:
       # with `docker`, i.e, `dockerFoo`.
       foo: bar
 ----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.docker]
+  # Key will be capitalized and prefixed
+  # with `docker`, i.e, `dockerFoo`.
+  extraProperties.foo = "bar"
+----
 JSON::
 +
 [source,json]
@@ -610,8 +928,8 @@ The following names are related to xref:configuration:packagers/jbang.adoc[]
 | Key                      | Description
 | jbangCatalogRepoUrl      | the catalog repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | jbangCatalogRepoCloneUrl | the catalog repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
-| jbangAliasName           | the name of the jbang alias, `{{distributionName}}` or `{{distributionName}}-snapshot`
-| jbangAliasClassName      | the name of the Jbang executable, `{{distributionName}}` or `{{distributionName}}_snapshot`
+| jbangAliasName           | the name of the jbang alias, `{{distributionExecutable}}` or `{{distributionExecutable}}-snapshot`
+| jbangScriptName          | the name of the Jbang executable, `{{distributionExecutable}}` or `{{distributionExecutable}}_snapshot`
 | jbangDistributionGA     a| calculated Maven coordinates for link:https://jitpack.io[]
 
 single:: `{{reverseRepoHost}}.{{repoOwner}}:{{distributionArtifactId}` +
@@ -634,6 +952,16 @@ packagers:
       # Key will be capitalized and prefixed
       # with `jbang`, i.e, `jbangFoo`.
       foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.jbang]
+  # Key will be capitalized and prefixed
+  # with `jbang`, i.e, `jbangFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
@@ -717,6 +1045,16 @@ packagers:
       # Key will be capitalized and prefixed
       # with `scoop`, i.e, `scoopFoo`.
       foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.scoop]
+  # Key will be capitalized and prefixed
+  # with `scoop`, i.e, `scoopFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
@@ -831,6 +1169,16 @@ packagers:
       # Key will be capitalized and prefixed
       # with `snap`, i.e, `snapFoo`.
       foo: bar
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+----
+[packagers.snap]
+  # Key will be capitalized and prefixed
+  # with `snap`, i.e, `snapFoo`.
+  extraProperties.foo = "bar"
 ----
 JSON::
 +
