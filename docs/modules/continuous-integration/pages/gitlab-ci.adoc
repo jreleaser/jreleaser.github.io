@@ -25,44 +25,15 @@ build:
     paths:
       - target/distributions/app/*.zip
 
-# Get the JReleaser bootstrapper
-get-jreleaser:
-  # Bind to `build` stage to make it run in parallel
-  stage: build
-  script:
-    - curl -sL https://git.io/get-jreleaser > get_jreleaser.java
-  # Save the downloaded file
-  artifacts:
-    paths:
-      - '*.java'
-
-# Download JReleaser
-download-jreleaser:
-  # The JReleaser bootstrapper requires JDK 11+
-  image: azul/zulu-openjdk:11
-  # Bind to `test` stage
-  stage: test
-  # Invoke the bootstrapper and check it works
-  script:
-    # Download JReleaser with version = <version>
-    # Change <version> to a tagged JReleaser release
-    # or leave it out to pull `latest`.
-    - java get_jreleaser.java <version>
-    # Let's check we've got the right version
-    - java -jar jreleaser-cli.jar --version
-  # Save the downloaded JAR
-  artifacts:
-    paths:
-      - jreleaser-cli.jar
-
 # Create a release
 release:
-  # JReleaser requires JDK 11+
-  image: azul/zulu-openjdk:11
+  # Use the predefined JReleaser Docker image
+  image: jreleaser/jreleaser-slim:<version>
   # Bind to `deploy` stage
   stage: deploy
   # Set environment variables accordingly
   variables:
+    JRELEASER_PROJECT_VERSION: 1.0.0
     JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
     JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
     JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
@@ -72,5 +43,5 @@ release:
     GIT_DEPTH: 0
   # icon:rocket[] Execute JReleaser
   script:
-    - java -jar jreleaser-cli.jar full-release
+    - jreleaser full-release
 ----
