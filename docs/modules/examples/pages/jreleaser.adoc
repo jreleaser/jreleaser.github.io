@@ -13,7 +13,16 @@ is used to create both release and snapshot releases:
 project:
   name: jreleaser
   description: Release Java projects quickly and easily with JReleaser
-  longDescription: Release Java projects quickly and easily with JReleaser
+  longDescription: |
+    JReleaser is a release automation tool for Java projects. Its goal is to simplify creating releases
+    and publishing artifacts to multiple package managers while providing customizable options.
+
+    JReleaser takes inputs from popular builds tools (Ant, Maven, Gradle) such as JAR files, binary
+    distributions (.zip, .tar), JLink images, or any other file that you’d like to publish as a Git
+    release on popular Git services such as Github or Gitlab. Distribution files can additionally be
+    published to be consumed by popular package managers as Homebrew, Snapcraft, or get ready to be
+    launched via Jbang. Releases may be announced in a variety of channels such as Twitter, Zulip, or SDKMAN!
+
   website: https://jreleaser.org
   authors:
     - Andres Almiray
@@ -24,12 +33,40 @@ project:
 
 # The repository is hosted at https://github.com/jreleaser/jreleaser
 # which means the default username would be `jreleaser` however a
-# different username is required
+# different username is required in this case
 release:
   github:
     username: aalmiray
     overwrite: true
     sign: true
+    changelog:
+      formatted: ALWAYS
+      change: '- {{commitShortHash}} {{commitTitle}}'
+      # Label commits by matching their first line
+      labelers:
+        - label: 'feature'
+          title: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+      # Categorize commits byt labels
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+      # Remove `[chore] ` from the commit message
+      replacers:
+        - search: '\[chore\] '
+          replace: ''
 
 # File signing is always active
 signing:
@@ -43,6 +80,39 @@ announce:
   sdkman:
     active: release
 
+# Configure a cross-platform Jlink assembly & distribution
+assemble:
+  jlinks:
+    jreleaser-standalone:
+      active: always
+      extraProperties:
+        sdkmanSkip: true
+      java:
+        version: 11
+        mainClass: org.jreleaser.cli.Main
+      imageName: 'jreleaser-standalone-{{projectEffectiveVersion}}'
+      executable: 'jreleaser'
+      moduleNames:
+        - java.base
+        - java.desktop
+        - java.management
+        - java.naming
+        - java.rmi
+        - java.security.jgss
+        - java.sql
+      targetJdks:
+        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-macosx_x64/zulu-11.jdk/Contents/Home'
+          platform: osx
+        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-linux_x64'
+          platform: linux
+        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-win_x64'
+          platform: windows
+      mainJar:
+        path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+      jars:
+        - directory: 'apps/jreleaser/build/dependencies/flat'
+          include: '*.jar'
+
 # Configure 3 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
@@ -55,6 +125,14 @@ distributions:
     scoop:
       # Active only on release
       active: release
+    snap:
+      # Active only on release
+      active: release
+      remoteBuild: true
+      base: core18
+      localPlugs:
+        - network
+        - home
     jbang:
       # Always active
       active: always
@@ -66,7 +144,7 @@ distributions:
   # Distribution 2 is of type JAVA_BINARY
   jreleaser-ant-tasks:
     extraProperties:
-      # Do not considerits artifacts for publication via SdkMan
+      # Do not consider its artifacts for publication via SdkMan
       sdkmanSkip: true
     artifacts:
       # Transform the artifact name
@@ -102,7 +180,6 @@ files:
     - path: VERSION
 ----
 
-Which will create and tag a prerelease on GitHub when the project is snapshot
-
-image::ROOT:jreleaser-early-access.png[]
+Which will create and tag a prerelease on GitHub when the project is snapshot, and a regular release when
+the project is not snapshot.
 

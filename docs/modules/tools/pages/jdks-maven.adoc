@@ -1,0 +1,165 @@
+= JDKs Maven Plugin
+
+Downloads JDK distributions.
+
+== Install
+
+[source,xml]
+[subs="verbatim,attributes"]
+.pom.xml
+----
+<plugin>
+  <groupId>org.jreleaser</groupId>
+  <artifactId>jdks-maven-plugin</artifactId>
+  <version>{jreleaser-version}</version>
+</plugin>
+----
+
+== Configuration DSL
+
+JDKS must define the following properties:
+
+ * `name`: a user defined name, must be unique.
+ * `url`: the URL from where the JDK can be downloaded.
+ * `checksum`: the checksum value used to verify the archive's integrity.
+ * `platform`: the platform this JDK is related to.
+
+The `checksum` property accepts thew following formats:
+
+ * `<algorithm>/<checksum>`
+ * `<checksum>`
+
+The value of `<algorithm>` must match those specified at
+link:https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms[MessageDigest section]
+in the Java Security Standard Algorithm Names Specification. If no value for `<algorithm>` is given then `SHA-256` is assumed.
+
+include::configuration:partial$platform.adoc[]
+
+Here's an example configuration
+
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<plugin>
+  <groupId>org.jreleaser</groupId>
+  <artifactId>jdks-maven-plugin</artifactId>
+  <version>{jreleaser-version}</version>
+  <configuration>
+      <jdks>
+          <jdk>
+              <name>zulu11Linux</name>
+              <platform>linux</platform>
+              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
+              <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
+          </jdk>
+          <jdk>
+              <name>zulu11Windows</name>
+              <platform>windows</platform>
+              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
+              <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
+          </jdk>
+          <jdk>
+              <name>zulu11Osx</name>
+              <platform>osx</platform>
+              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
+              <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
+          </jdk>
+          <jdk>
+              <name>graal21.1.0-linux</name>
+              <platform>linux</platform>
+              <url>https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz</url>
+              <checksum>39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7</checksum>
+          </jdk>
+      </jdks>
+  </configuration>
+</plugin>
+----
+
+== Goals
+None of the exposed MOJOs are bound to a specific life-cycle phase, letting you decide when and how that
+should happen in your build.
+
+The following MOJOs are provided:
+
+=== jreleaser:list-jdks
+
+Lists all configured JDKS.
+
+=== jreleaser:setup-jdks
+
+Downloads, verifies, and unpacks JDKs.
+
+*jdkName*
+[horizontal]
+Type:: String
+Default value:: <none>
+Property:: jdk.name
+Required:: false
+Description:: The name of the JDK to be downloaded.
+
+---
+
+*outputDirectory*
+[horizontal]
+Type:: String
+Default value:: ${project.build.directory}/jdks
+Property:: jdks.output.directory
+Required:: false
+Description:: Directory where JDKs should be unpacked.
+
+---
+
+*skip*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jdks.setup.skip
+Required:: false
+Description:: Skips execution of this MOJO.
+
+== Examples
+
+[source]
+[subs="attributes"]
+----
+[INFO] --- jdks-maven-plugin:{jreleaser-version}:list-jdks (default-cli) @ app ---
+[INFO] == JDK zulu11Linux ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] checksum: 9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60
+[INFO] platform: linux
+[INFO]
+[INFO] == JDK zulu11Windows ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] checksum: 7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a
+[INFO] platform: windows
+[INFO]
+[INFO] == JDK zulu11Osx ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] checksum: abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a
+[INFO] platform: osx
+[INFO]
+[INFO] == JDK graal21.1.0-linux ==
+[INFO] url: https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] checksum: 39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7
+[INFO] platform: linux
+----
+
+[source]
+[subs="attributes"]
+----
+[INFO] --- jdks-maven-plugin:{jreleaser-version}:setup-jdks (default-cli) @ app ---
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Downloading https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Verifying graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Extracting graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Expanding: /Users/aalmiray/tmp/app/target/jdks/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz into /Users/duke/app/target/jdks
+----
+
