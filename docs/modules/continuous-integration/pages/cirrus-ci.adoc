@@ -1,0 +1,22 @@
+= Cirrus CI
+
+You can setup JReleaser to run in link:https://cirrus-ci.org/[Cirrus CI].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,yaml]
+[subs="+macros"]
+..cirrus.yml
+----
+task:
+  name: Release
+  env:
+    JRELEASER_GITHUB_TOKEN: ENCRYPTED[ABC123]
+  container:
+    image: jreleaser/jreleaser-slim:latest
+  release_script: jreleaser full-release
+----
+
+NOTE: You'll need to create link:https://cirrus-ci.org/guide/writing-tasks/#encrypted-variables[encrypted variables] to
+store `JRELEASER_GITHUB_TOKEN` and any other secrets for JReleaser to access the GitHub API and other sensitive data.
