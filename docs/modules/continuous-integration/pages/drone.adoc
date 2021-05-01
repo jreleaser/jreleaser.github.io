@@ -1,0 +1,37 @@
+= Drone
+
+You can setup JReleaser to run with link:https://www.drone.io/[Drone].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,yaml]
+[subs="+macros"]
+..drone.yml
+----
+kind: pipeline
+name: default
+
+steps:
+  - name: fetch
+    image: docker:git
+    commands:
+      - git fetch --tags
+
+  - name: test
+    image: maven:3-jdk-10
+    commands:
+      - mvn -B verify
+
+  - name: release
+    image: jreleaser/jreleaser-slim:latest
+    environment:
+      JRELEASER_GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - jreleaser full-release
+----
+
+NOTE: You'll need to create link:https://docs.drone.io/secret/[secrets] to store `JRELEASER_GITHUB_TOKEN` and any other
+secrets for JReleaser to access the GitHub API and other sensitive data.
+
