@@ -36,8 +36,6 @@ All files must exist by the time Checksum is invoked, otherwise an error will oc
 
 Checksums will be placed at `${basedir}/out/jreleaser/checksums`.
 
-Depends on <<_changelog>>.
-
 == Sign
 
 Creates PGP signatures for all input files. This includes all artifacts per distribution and every matching
@@ -49,13 +47,20 @@ Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
 
 Depends on <<_checksum>>.
 
+== Upload
+
+Uploads artifacts and files to the configured destinations. This step uploads signatures (if enabled), all distribution
+artifacts, and every matching file configured in the xref:configuration:files.adoc[] section. This step is optional.
+
+Depends on <<_sign>>.
+
 == Release
 
 Creates a release at the configured remote Git repository (see xref:configuration:release/index.adoc[]). This step uploads
 all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
 xref:configuration:files.adoc[] section. Automatically calculates a changelog & tags the release.
 
-Depends on <<_sign>>.
+Depends on <<_upload>>.
 
 == Prepare
 
@@ -105,6 +110,7 @@ Executes all steps in single session in the following order:
 * <<_changelog>>
 * <<_checksum>>
 * <<_sign>>
+* <<_upload>>
 * <<_release>>
 * <<_prepare>>
 * <<_package>>

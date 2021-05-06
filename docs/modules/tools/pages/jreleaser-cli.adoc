@@ -17,6 +17,7 @@ Commands:
   changelog     Calculate the changelog.
   checksum      Calculate checksums.
   sign          Sign release artifacts.
+  upload        Uploads all artifacts.
   release       Create or update a release..
   prepare       Prepare all distributions.
   package       Package all distributions.
@@ -282,6 +283,67 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+=== upload
+
+[source,bash]
+----
+Usage: jreleaser upload [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
+                        [-un=<uploaderName>] [-ut=<uploaderType>]
+Uploads all artifacts.
+  -b, --basedir=<basedir>   Base directory.
+  -c, --config-file=<configFile>
+                            The config file
+  -d, --debug               Set log level to debug.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+  -q, --quiet               Log errors only.
+      -un, --uploader-name=<uploaderName>
+                            The name of the uploader.
+      -ut, --uploader-type=<uploaderType>
+                            The type of the uploader.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+  -y, --dryrun              Skip remote operations.
+----
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
+found at the current directory.
+
+If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--uploader-type` must match the type of a configured xref:configuration:upload/index.adoc[uploader].
+
+The value of `--uploader-name` must match any of the available xref:configuration:upload/index.adoc[uploaders].
+
+NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+mutations should occur when this mode is activated.
+
+You may invoke this command in the following ways:
+
+Upload all artifacts:
+[source,bash]
+----
+$ jreleaser upload
+----
+
+Upload all artifacts to all configured Artifactory uploaders:
+[source,bash]
+----
+$ jreleaser upload --uploader-type artifactory
+----
+
+Upload all artifacts with all uploaders with matching name:
+[source,bash]
+----
+$ jreleaser upload --uploader-name mine
+----
+
+Upload all artifacts to a matching Artifactory uploader:
+[source,bash]
+----
+$ jreleaser upload --uploader-type artifactory --uploader-name mine
+----
+
 === release
 
 [source,bash]
@@ -302,6 +364,7 @@ Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
 Create or update a release..
       --auto-config          Model auto configuration..
   -b, --basedir=<basedir>    Base directory.
+      --branch=<branch>      The release branch.
   -c, --config-file=<configFile>
                              The config file
       --changelog=<changelog>
