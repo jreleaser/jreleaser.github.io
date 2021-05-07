@@ -167,9 +167,112 @@ JSON::
 ----
 ====
 
-The following key/values may be defined in the properties file or as environment variables:
+== Maven
 
-== Project
+JReleaser will honor Maven project properties. These properties can be defined in several ways:
+
+- on the command line by using the `-D` flag.
+- on a `pom.xml` by using the `<properties>` block.
+- on a settings file using the `<properties>` block inside an active profile.
+
+JReleaser should be able to handle properties define in any of these ways.
+Precedence is:
+
+- values defined in the model.
+- values defined as Maven properties.
+- values defined in `<releaser><environment><variables>`.
+- environment variables.
+
+Keys must either be fully uppercase words separated by underscores (`_`) or fully lowercase words separated by dots (`.`).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+`~/.m2/settings.xml` as:
+
+[source,xml]
+[subs="verbatim"]
+.settings.xml
+----
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <profiles>
+      <profile>
+        <id>jreleaser</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <JRELEASER_GITHUB_TOKEN>2ee1ce8ff570e0bOVEdrZvie8792058</JRELEASER_GITHUB_TOKEN>
+        </properties>
+      </profile>
+    </profiles>
+</settings>
+----
+
+Or as
+
+[source,xml]
+[subs="verbatim"]
+.settings.xml
+----
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <profiles>
+      <profile>
+        <id>jreleaser</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <jreleaser.github.token>2ee1ce8ff570e0bOVEdrZvie8792058</jreleaser.github.token>
+        </properties>
+      </profile>
+    </profiles>
+</settings>
+----
+
+== Gradle
+
+JReleaser will honor Gradle project properties. These properties can be defined in several ways:
+
+- on the command line by using the `-P` flag.
+- on a `gradle.properties` file adjacent to the project.
+- on a `gradle.properties` file located at `~/.gradle`.
+
+JReleaser should be able to handle properties define in any of these ways.
+Precedence is:
+- values defined in the model.
+- values defined as Gradle project properties.
+- values defined in `jreleaser.environment.variables`.
+- environment variables.
+
+Keys must either be fully uppercase words separated by underscores (`_`) or fully lowercase words separated by dots (`.`).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+`/.gradle/gradle.properties` as:
+
+[source]
+.gradle.properties
+----
+JRELEASER_GITHUB_TOKEN = 2ee1ce8ff570e0bOVEdrZvie8792058
+----
+
+Or as:
+
+[source]
+.gradle.properties
+----
+jreleaser.github.token = 2ee1ce8ff570e0bOVEdrZvie8792058
+----
+
+== Keys & Values
+
+The following key/values may be defined as properties or as environment variables:
+
+=== Project
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -179,7 +282,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_SNAPSHOT_PATTERN | a regex to determine if the project version is snapshot
 |===
 
-== Release
+=== Release
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -198,7 +301,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_GITEA_TOKEN    | a Gitea personal token
 |===
 
-== Signing
+=== Signing
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -208,7 +311,17 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_GPG_SECRET_KEY | the secret key used for signing
 |===
 
-== Docker
+=== Artifactory
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                    | Description
+| JRELEASER_ARTIFACTORY_${NAME}_USERNAME | a username matching the named Artifactory instance
+| JRELEASER_ARTIFACTORY_${NAME}_PASSWORD | a password matching the named Artifactory instance
+| JRELEASER_ARTIFACTORY_${NAME}_TOKEN    | a token matching the named Artifactory instance
+|===
+
+=== Docker
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -216,7 +329,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_DOCKER_${NAME}_PASSWORD | a docker password matching the named server
 |===
 
-== Homebrew
+=== Homebrew
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -226,7 +339,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_HOMEBREW_GITEA_TOKEN  | a Gitea personal token
 |===
 
-== Chocolatey
+=== Chocolatey
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -236,7 +349,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_CHOCOLATEY_GITEA_TOKEN  | a Gitea personal token
 |===
 
-== Jbang
+=== Jbang
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -246,7 +359,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_JBANG_GITEA_TOKEN  | a Gitea personal token
 |===
 
-== Scoop
+=== Scoop
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -256,7 +369,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_SCOOP_GITEA_TOKEN  | a Gitea personal token
 |===
 
-== Snap
+=== Snap
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -266,7 +379,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_SNAP_GITEA_TOKEN  | a Gitea personal token
 |===
 
-== Discord
+=== Discord
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -274,7 +387,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_DISCORD_WEBHOOK | the webhook URL
 |===
 
-== Gitter
+=== Gitter
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -282,7 +395,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_GITTER_WEBHOOK | the webhook URL
 |===
 
-== Mail
+=== Mail
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -290,7 +403,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_MAIL_PASSWORD | the password required for sending e-mails
 |===
 
-== Sdkman
+=== Sdkman
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -299,7 +412,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_SDKMAN_CONSUMER_TOKEN | the consumer token required by SDKMAN!
 |===
 
-== Slack
+=== Slack
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -308,7 +421,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_SLACK_WEBHOOK | the webhook URL
 |===
 
-== Teams
+=== Teams
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -316,7 +429,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_TEAMS_WEBHOOK | the webhook URL
 |===
 
-== Twitter
+=== Twitter
 
 [%header, cols="<1,<1", width="100%"]
 |===
@@ -327,7 +440,7 @@ The following key/values may be defined in the properties file or as environment
 | JRELEASER_TWITTER_ACCESS_TOKEN_SECRET | the access token secret required by Twitter
 |===
 
-== Zulip
+=== Zulip
 
 [%header, cols="<1,<1", width="100%"]
 |===
