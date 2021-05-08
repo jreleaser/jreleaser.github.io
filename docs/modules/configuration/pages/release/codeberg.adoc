@@ -1,4 +1,4 @@
-= GitHub
+= Codeberg
 
 include::partial$legend.adoc[]
 
@@ -13,8 +13,8 @@ YAML::
 release:
   # Repo in which the release will be created.
   # icon:exclamation-triangle[]
-  github:
-    # Disables or enables publication to GitHub.
+  codeberg:
+    # Disables or enables publication to Codeberg.
     # defaults to `true`.
     # icon:dot-circle[]
     enabled: true
@@ -30,26 +30,24 @@ release:
     readTimeout: 60
 
     # The user or organization that owns the repository.
-    # If unspecified, will read it from the 'origin' git remote.
-    # icon:dot-circle[]
+    # icon:exclamation-triangle[]
     owner: duke
 
     # The name of the repository.
-    # If unspecified, will read it from the 'origin' git remote.
+    # If unspecified, will use ${project.name}.
     # icon:dot-circle[]
     name: app
 
-    # The GitHub host url.
-    # Defaults to `github.com`.
+    # The Codeberg host url.
     # icon:exclamation-triangle[]
-    host: github.com
+    host: codeberg.org
 
     # Username used for authoring commits. Must have write access to the repository.
     # icon:exclamation-triangle[]
     username: duke
 
     # Password or OAuth token with write access to the repository.
-    # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+    # If left unspecified, the `JRELEASER_CODEBERG_TOKEN`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
     token: __DO_NOT_SET_HERE__
@@ -61,8 +59,8 @@ release:
     tagName: v1.0.0
 
     # The name of the release.
-    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # If left unspecified, will use `Release {{tagName}}`.
+    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
     releaseName: Release v1.0.0
 
@@ -86,11 +84,10 @@ release:
     # icon:dot-circle[] icon:eye-slash[]
     skipTag: false
 
-    # The GitHub API endpoint to use.
-    # Update it if using GitHub Enterprise.
-    # Defaults to `pass:[https://api.github.com]`.
-    # icon:dot-circle[]
-    apiEndpoint: pass:[https://api.github.com]
+    # The Codeberg API endpoint to use.
+    # You can skip `/api/v1` as it will be added by default.
+    # icon:exclamation-triangle[]
+    apiEndpoint: pass:[https://codeberg.org]
 
     # Git author used to commit to the repository.
     # icon:dot-circle[]
@@ -284,8 +281,8 @@ TOML::
 ----
 # Repo in which the release will be created.
 # icon:exclamation-triangle[]
-[release.github]
-  # Disables or enables publication to GitHub.
+[release.codeberg]
+  # Disables or enables publication to Codeberg.
   # defaults to `true`.
   # icon:dot-circle[]
   enabled = true
@@ -309,17 +306,16 @@ TOML::
   # icon:dot-circle[]
   name = "app"
 
-  # The GitHub host url.
-  # Defaults to `github.com`.
+  # The Codeberg host url.
   # icon:exclamation-triangle[]
-  host = "github.com"
+  host = "codeberg.org"
 
   # Username used for authoring commits. Must have write access to the repository.
   # icon:exclamation-triangle[]
   username = "duke"
 
   # Password or OAuth token with write access to the repository.
-  # If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+  # If left unspecified, the `JRELEASER_CODEBERG_TOKEN`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   token = "__DO_NOT_SET_HERE__"
@@ -356,10 +352,10 @@ TOML::
   # icon:dot-circle[] icon:eye-slash[]
   skipTag = false
 
-  # The GitHub API endpoint to use.
-  # You can skip `/api/v4` as it will be added by default.
+  # The Codeberg API endpoint to use.
+  # You can skip `/api/v1` as it will be added by default.
   # icon:exclamation-triangle[]
-  apiEndpoint = "pass:[https://my.giteam.com]"
+  apiEndpoint = "pass:[https://codeberg.org]"
 
   # Git author used to commit to the repository.
 
@@ -450,7 +446,7 @@ TOML::
   # Matchers are evaluated independently; the label will
   # be set if at least one of the matchers meets the criteria.
   # icon:dot-circle[]
-  pass:[[[release.github.changelog.labelers]]]
+  pass:[[[release.codeberg.changelog.labelers]]]
     # The label to be applied.
     # icon:exclamation-triangle[]
     label = "issue"
@@ -466,22 +462,22 @@ TOML::
   # Groups changes by category.
   # Defaults are shown.
   # icon:dot-circle[]
-  pass:[[[release.github.changelog.categories]]]
+  pass:[[[release.codeberg.changelog.categories]]]
     title = "🚀 Features"
     labels = ["feature", "enhancement"]
 
-  pass:[[[release.github.changelog.categories]]]
+  pass:[[[release.codeberg.changelog.categories]]]
     title = "🐛 Bug Fixes"
     labels = ["bug", "fix"]
 
   # Defines rules for replacing the generated content.
   # Each replacer is applied in order.
   # icon:dot-circle[]
-  pass:[[[release.github.changelog.replacers]]]
+  pass:[[[release.codeberg.changelog.replacers]]]
     search = "\[chore\]\s"
     replace = ""
 
-  pass:[[[release.github.changelog.replacers]]]
+  pass:[[[release.codeberg.changelog.replacers]]]
     search = "/CVE-(\d{4})-(\d+)/g"
     replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
 
@@ -551,8 +547,8 @@ JSON::
   "release": {
     // Repo in which the release will be created.
     // icon:exclamation-triangle[]
-    "github": {
-      // Disables or enables publication to GitHub.
+    "codeberg": {
+      // Disables or enables publication to Codeberg.
       // defaults to `true`.
       // icon:dot-circle[]
       "enabled": true,
@@ -568,26 +564,24 @@ JSON::
       "readTimeout": 60,
 
       // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
+      // icon:exclamation-triangle[]
       "owner": "duke",
 
       // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
+      // If unspecified, will use ${project.name}.
       // icon:dot-circle[]
       "name": "app",
 
-      // The GitHub host url.
-      // Defaults to `github.com`.
+      // The Codeberg host url.
       // icon:exclamation-triangle[]
-      "host": "github.com",
+      "host": "codeberg.org",
 
       // Username used for authoring commits. Must have write access to the repository.
       // icon:exclamation-triangle[]
       "username": "duke",
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // If left unspecified, the `JRELEASER_CODEBERG_TOKEN`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "token": "__DO_NOT_SET_HERE__",
@@ -624,11 +618,10 @@ JSON::
       // icon:dot-circle[] icon:eye-slash[]
       "skipTag": false,
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `pass:[https://api.github.com]`.
-      // icon:dot-circle[]
-      "apiEndpoint": "pass:[https://api.github.com]",
+      // The Codeberg API endpoint to use.
+      // You can skip `/api/v1` as it will be added by default.
+      // icon:exclamation-triangle[]
+      "apiEndpoint": "pass:[https://codeberg.org]",
 
       // Git author used to commit to the repository.
       // icon:dot-circle[]
@@ -848,10 +841,10 @@ Maven::
       Repo in which the release will be created.
       icon:exclamation-triangle[]
     -->
-    <github>
+    <codeberg>
 
       <!--
-        Disables or enables publication to GitHub.
+        Disables or enables publication to Codeberg.
         defaults to `true`.
         icon:dot-circle[]
       -->
@@ -873,24 +866,22 @@ Maven::
 
       <!--
         The user or organization that owns the repository.
-        If unspecified, will read it from the 'origin' git remote.
-        icon:dot-circle[]
+        icon:exclamation-triangle[]
       -->
       <owner>duke</owner>
 
       <!--
         The name of the repository.
-        If unspecified, will read it from the 'origin' git remote.
+        If unspecified, will use ${project.name}.
         icon:dot-circle[]
       -->
       <name>app</name>
 
       <!--
-        The GitHub host url.
-        Defaults to `github.com`.
+        The Codeberg host url.
         icon:exclamation-triangle[]
       -->
-      <host>github.com</host>
+      <host>codeberg.org</host>
 
       <!--
         Username used for authoring commits. Must have write access to the repository.
@@ -900,7 +891,7 @@ Maven::
 
       <!--
         Password or OAuth token with write access to the repository.
-        If left unspecified, the `JRELEASER_GITHUB_TOKEN` 
+        If left unspecified, the `JRELEASER_CODEBERG_TOKEN` 
         environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
@@ -949,12 +940,11 @@ Maven::
       <skipTag>false</skipTag>
 
       <!--
-        The GitHub API endpoint to use.
-        Update it if using GitHub Enterprise.
-        Defaults to `pass:[https://api.github.com]`.
-        icon:dot-circle[]
+        The Codeberg API endpoint to use.
+        You can skip `/api/v1` as it will be added by default.
+        icon:exclamation-triangle[]
       -->
-      <apiEndpoint>pass:[https://api.github.com]</apiEndpoint>
+      <apiEndpoint>pass:[https://codeberg.org]</apiEndpoint>
 
       <!--
         Git author used to commit to the repository.
@@ -1229,7 +1219,7 @@ Maven::
         icon:dot-circle[] icon:file-alt[]
       -->
       <issueTrackerUrlFormat>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues]</issueTrackerUrlFormat>
-    </github>
+    </codeberg>
   </release>
 </jreleaser>
 ----
@@ -1243,8 +1233,8 @@ jreleaser {
   release {
     // Repo in which the release will be created.
     // icon:exclamation-triangle[]
-    github {
-      // Disables or enables publication to GitHub.
+    codeberg {
+      // Disables or enables publication to Codeberg.
       // defaults to `true`.
       // icon:dot-circle[]
       enabled = true
@@ -1260,26 +1250,24 @@ jreleaser {
       readTimeout = 60
 
       // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
+      // icon:exclamation-triangle[]
       owner = 'duke'
 
       // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
+      // If unspecified, will use ${project.name}.
       // icon:dot-circle[]
       name = 'app'
 
-      // The GitHub host url.
-      // Defaults to `github.com`.
+      // The Codeberg host url.
       // icon:exclamation-triangle[]
-      host = 'github.com'
+      host = 'codeberg.org'
 
       // Username used for authoring commits. Must have write access to the repository.
       // icon:exclamation-triangle[]
       username = 'duke'
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITHUB_TOKEN`
+      // If left unspecified, the `JRELEASER_CODEBERG_TOKEN`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       token = '__DO_NOT_SET_HERE__'
@@ -1316,11 +1304,10 @@ jreleaser {
       // icon:dot-circle[] icon:eye-slash[]
       skipTag = false
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `pass:[https://api.github.com]`.
+      // The Codeberg API endpoint to use.
+      // You can skip `/api/v1` as it will be added by default.
       // icon:dot-circle[]
-      apiEndpoint = 'pass:[https://api.github.com]'
+      apiEndpoint = 'pass:[https://codeberg.org]'
 
       // Git author used to commit to the repository.
       // icon:dot-circle[]
@@ -1547,7 +1534,7 @@ The following configuration
 [source,yaml]
 ----
 release:
-  github:
+  codeberg:
     username: aalmiray
     overwrite: true
     draft: false

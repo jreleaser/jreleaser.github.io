@@ -273,7 +273,7 @@ TOML::
 # Repo in which the release will be created.
 # icon:exclamation-triangle[]
 [release.gitlab]
-  # Disables or enables publication to Gitea.
+  # Disables or enables publication to GitLab.
   # defaults to `true`.
   # icon:dot-circle[]
   enabled = true
@@ -1480,7 +1480,43 @@ The `content` and `contentTemplate` accept all xref:configuration:name-templates
 
 The following configuration
 
-image::ROOT:jreleaser-changelog-config.jpg[]
+[source,yaml]
+----
+release:
+  gitlab:
+    username: aalmiray
+    overwrite: true
+    draft: false
+    sign: true
+    changelog:
+      formatted: ALWAYS
+      change: '- {{commitShortHash}} {{commitTitle}}'
+      labelers:
+        - label: 'feature'
+          title: 'Resolves #'
+          body: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+          body: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+          body: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: '\[chore\] '
+          replace: ''
+----
 
 Generates a changelog similar to
 
