@@ -94,7 +94,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../artifacts.html">Artifacts</a>
+    <a class="nav-link" href="../artifacts.html">Artifacts &amp; Globs</a>
   </li>
 </ul>
   </li>
@@ -161,6 +161,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/upload/index.html">Upload</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/artifactory.html">Artifactory</a>
   </li>
 </ul>
   </li>
@@ -243,6 +252,12 @@
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="gitlab-ci.html">GitLab CI</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cirrus-ci.html">Cirrus CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="drone.html">Drone</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -254,42 +269,52 @@
     <a class="nav-link" href="../tools/index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="../tools/jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="../tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="../tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="../tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="../tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="../tools/jreleaser-docker.html">JReleaser Docker Image</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tools/jdks-maven.html">JDKs Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tools/jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/index.html">Examples</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/simple-release.html">Simple Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/auto-config-release.html">AutoConfig Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -352,7 +377,7 @@
 </td>
 <td class="content">
 If you&#8217;re already building with either Maven or Gradle then you might use the
-<a href="../tools/maven.html" class="page">JReleaser Maven Plugin</a> or the <a href="../tools/gradle.html" class="page">JReleaser Gradle Plugin</a> plugin instead.
+<a href="../tools/jreleaser-maven.html" class="page">JReleaser Maven Plugin</a> or the <a href="../tools/jreleaser-gradle.html" class="page">JReleaser Gradle Plugin</a> instead.
 </td>
 </tr>
 </table>
@@ -376,44 +401,15 @@ build:
     paths:
       - target/distributions/app/*.zip
 
-# Get the JReleaser bootstrapper
-get-jreleaser:
-  # Bind to `build` stage to make it run in parallel
-  stage: build
-  script:
-    - curl -sL <a href="https://git.io/get-jreleaser" class="bare">https://git.io/get-jreleaser</a> &gt; get_jreleaser.java
-  # Save the downloaded file
-  artifacts:
-    paths:
-      - '*.java'
-
-# Download JReleaser
-download-jreleaser:
-  # The JReleaser bootstrapper requires JDK 11+
-  image: azul/zulu-openjdk:11
-  # Bind to `test` stage
-  stage: test
-  # Invoke the bootstrapper and check it works
-  script:
-    # Download JReleaser with version = &lt;version&gt;
-    # Change &lt;version&gt; to a tagged JReleaser release
-    # or leave it out to pull `latest`.
-    - java get_jreleaser.java &lt;version&gt;
-    # Let's check we've got the right version
-    - java -jar jreleaser-cli.jar --version
-  # Save the downloaded JAR
-  artifacts:
-    paths:
-      - jreleaser-cli.jar
-
 # Create a release
 release:
-  # JReleaser requires JDK 11+
-  image: azul/zulu-openjdk:11
+  # Use the predefined JReleaser Docker image
+  image: jreleaser/jreleaser-slim:&lt;version&gt;
   # Bind to `deploy` stage
   stage: deploy
   # Set environment variables accordingly
   variables:
+    JRELEASER_PROJECT_VERSION: 1.0.0
     JRELEASER_GPG_PASSPHRASE: $GPG_PASSPHRASE
     JRELEASER_GPG_PUBLIC_KEY: $GPG_PUBLIC_KEY
     JRELEASER_GPG_SECRET_KEY: $GPG_SECRET_KEY
@@ -423,8 +419,20 @@ release:
     GIT_DEPTH: 0
   # <span class="icon"><i class="fa fa-rocket"></i></span> Execute JReleaser
   script:
-    - java -jar jreleaser-cli.jar full-release</code></pre>
+    - jreleaser full-release</code></pre>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You may use <code>latest</code> to pull the latest stable release or <code>early-access</code> to pull the latest snapshot.
+</td>
+</tr>
+</table>
 </div>
 </article>
   </div>

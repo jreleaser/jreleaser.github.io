@@ -94,7 +94,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../artifacts.html">Artifacts</a>
+    <a class="nav-link" href="../artifacts.html">Artifacts &amp; Globs</a>
   </li>
 </ul>
   </li>
@@ -161,6 +161,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upload/index.html">Upload</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upload/artifactory.html">Artifactory</a>
   </li>
 </ul>
   </li>
@@ -243,6 +252,12 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../continuous-integration/gitlab-ci.html">GitLab CI</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/cirrus-ci.html">Cirrus CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/drone.html">Drone</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -254,42 +269,52 @@
     <a class="nav-link" href="../tools/index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="../tools/jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="../tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="../tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="../tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="../tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="../tools/jreleaser-docker.html">JReleaser Docker Image</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tools/jdks-maven.html">JDKs Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tools/jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/index.html">Examples</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/simple-release.html">Simple Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/auto-config-release.html">AutoConfig Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -576,14 +601,158 @@ environment:
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_maven"><a class="anchor" href="#_maven"></a>Maven</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The following key/values may be defined in the properties file or as environment variables:</p>
+<p>JReleaser will honor Maven project properties. These properties can be defined in several ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>on the command line by using the <code>-D</code> flag.</p>
+</li>
+<li>
+<p>on a <code>pom.xml</code> by using the <code>&lt;properties&gt;</code> block.</p>
+</li>
+<li>
+<p>on a settings file using the <code>&lt;properties&gt;</code> block inside an active profile.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>JReleaser should be able to handle properties define in any of these ways.
+Precedence is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>values defined in the model.</p>
+</li>
+<li>
+<p>values defined as Maven properties.</p>
+</li>
+<li>
+<p>values defined in <code>&lt;releaser&gt;&lt;environment&gt;&lt;variables&gt;</code>.</p>
+</li>
+<li>
+<p>environment variables.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Keys must either be fully uppercase words separated by underscores (<code>_</code>) or fully lowercase words separated by dots (<code>.</code>).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+<code>~/.m2/settings.xml</code> as:</p>
+</div>
+<div class="listingblock">
+<div class="title">settings.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
+
+    &lt;profiles&gt;
+      &lt;profile&gt;
+        &lt;id&gt;jreleaser&lt;/id&gt;
+        &lt;activation&gt;
+          &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+        &lt;/activation&gt;
+        &lt;properties&gt;
+          &lt;JRELEASER_GITHUB_TOKEN&gt;2ee1ce8ff570e0bOVEdrZvie8792058&lt;/JRELEASER_GITHUB_TOKEN&gt;
+        &lt;/properties&gt;
+      &lt;/profile&gt;
+    &lt;/profiles&gt;
+&lt;/settings&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or as</p>
+</div>
+<div class="listingblock">
+<div class="title">settings.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
+
+    &lt;profiles&gt;
+      &lt;profile&gt;
+        &lt;id&gt;jreleaser&lt;/id&gt;
+        &lt;activation&gt;
+          &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+        &lt;/activation&gt;
+        &lt;properties&gt;
+          &lt;jreleaser.github.token&gt;2ee1ce8ff570e0bOVEdrZvie8792058&lt;/jreleaser.github.token&gt;
+        &lt;/properties&gt;
+      &lt;/profile&gt;
+    &lt;/profiles&gt;
+&lt;/settings&gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_project"><a class="anchor" href="#_project"></a>Project</h2>
+<h2 id="_gradle"><a class="anchor" href="#_gradle"></a>Gradle</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser will honor Gradle project properties. These properties can be defined in several ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>on the command line by using the <code>-P</code> flag.</p>
+</li>
+<li>
+<p>on a <code>gradle.properties</code> file adjacent to the project.</p>
+</li>
+<li>
+<p>on a <code>gradle.properties</code> file located at <code>~/.gradle</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>JReleaser should be able to handle properties define in any of these ways.
+Precedence is:
+- values defined in the model.
+- values defined as Gradle project properties.
+- values defined in <code>jreleaser.environment.variables</code>.
+- environment variables.</p>
+</div>
+<div class="paragraph">
+<p>Keys must either be fully uppercase words separated by underscores (<code>_</code>) or fully lowercase words separated by dots (<code>.</code>).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+<code>/.gradle/gradle.properties</code> as:</p>
+</div>
+<div class="listingblock">
+<div class="title">gradle.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code>JRELEASER_GITHUB_TOKEN = 2ee1ce8ff570e0bOVEdrZvie8792058</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or as:</p>
+</div>
+<div class="listingblock">
+<div class="title">gradle.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code>jreleaser.github.token = 2ee1ce8ff570e0bOVEdrZvie8792058</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_keys_values"><a class="anchor" href="#_keys_values"></a>Keys &amp; Values</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following key/values may be defined as properties or as environment variables:</p>
+</div>
+<div class="sect2">
+<h3 id="_project"><a class="anchor" href="#_project"></a>Project</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -611,10 +780,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_release"><a class="anchor" href="#_release"></a>Release</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_release"><a class="anchor" href="#_release"></a>Release</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -641,7 +808,7 @@ environment:
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_BRANCH</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the release branch (targetCommitish/ref)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the release branch</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_OVERWRITE</p></td>
@@ -660,6 +827,10 @@ environment:
 <td class="tableblock halign-left valign-top"><p class="tableblock">release is a prerelease (github/gitea)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DRAFT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release is a draft (github/gitea)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GITHUB_TOKEN</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">a GitHub token with <code>repo</code> scope</p></td>
 </tr>
@@ -674,10 +845,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_signing"><a class="anchor" href="#_signing"></a>Signing</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_signing"><a class="anchor" href="#_signing"></a>Signing</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -705,10 +874,37 @@ environment:
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_artifactory"><a class="anchor" href="#_artifactory"></a>Artifactory</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ARTIFACTORY_${NAME}_USERNAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a username matching the named Artifactory instance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ARTIFACTORY_${NAME}_PASSWORD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a password matching the named Artifactory instance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ARTIFACTORY_${NAME}_TOKEN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a token matching the named Artifactory instance</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sect1">
-<h2 id="_docker"><a class="anchor" href="#_docker"></a>Docker</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_docker"><a class="anchor" href="#_docker"></a>Docker</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -728,10 +924,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_homebrew"><a class="anchor" href="#_homebrew"></a>Homebrew</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_homebrew"><a class="anchor" href="#_homebrew"></a>Homebrew</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -759,10 +953,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_chocolatey"><a class="anchor" href="#_chocolatey"></a>Chocolatey</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_chocolatey"><a class="anchor" href="#_chocolatey"></a>Chocolatey</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -790,10 +982,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_jbang"><a class="anchor" href="#_jbang"></a>Jbang</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_jbang"><a class="anchor" href="#_jbang"></a>Jbang</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -821,10 +1011,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_scoop"><a class="anchor" href="#_scoop"></a>Scoop</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_scoop"><a class="anchor" href="#_scoop"></a>Scoop</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -852,10 +1040,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_snap"><a class="anchor" href="#_snap"></a>Snap</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_snap"><a class="anchor" href="#_snap"></a>Snap</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -883,10 +1069,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_discord"><a class="anchor" href="#_discord"></a>Discord</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_discord"><a class="anchor" href="#_discord"></a>Discord</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -906,10 +1090,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_gitter"><a class="anchor" href="#_gitter"></a>Gitter</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_gitter"><a class="anchor" href="#_gitter"></a>Gitter</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -929,10 +1111,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_mail"><a class="anchor" href="#_mail"></a>Mail</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mail"><a class="anchor" href="#_mail"></a>Mail</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -952,10 +1132,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_sdkman"><a class="anchor" href="#_sdkman"></a>Sdkman</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_sdkman"><a class="anchor" href="#_sdkman"></a>Sdkman</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -979,10 +1157,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_slack"><a class="anchor" href="#_slack"></a>Slack</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_slack"><a class="anchor" href="#_slack"></a>Slack</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1006,10 +1182,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_teams"><a class="anchor" href="#_teams"></a>Teams</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_teams"><a class="anchor" href="#_teams"></a>Teams</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1029,10 +1203,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_twitter"><a class="anchor" href="#_twitter"></a>Twitter</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_twitter"><a class="anchor" href="#_twitter"></a>Twitter</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1064,10 +1236,8 @@ environment:
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_zulip"><a class="anchor" href="#_zulip"></a>Zulip</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_zulip"><a class="anchor" href="#_zulip"></a>Zulip</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1086,6 +1256,7 @@ environment:
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </article>

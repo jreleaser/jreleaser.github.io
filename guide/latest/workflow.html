@@ -94,7 +94,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="artifacts.html">Artifacts</a>
+    <a class="nav-link" href="artifacts.html">Artifacts &amp; Globs</a>
   </li>
 </ul>
   </li>
@@ -161,6 +161,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="configuration/packagers/snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="configuration/upload/index.html">Upload</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="configuration/upload/artifactory.html">Artifactory</a>
   </li>
 </ul>
   </li>
@@ -243,6 +252,12 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="continuous-integration/gitlab-ci.html">GitLab CI</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="continuous-integration/cirrus-ci.html">Cirrus CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="continuous-integration/drone.html">Drone</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -254,42 +269,52 @@
     <a class="nav-link" href="tools/index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="tools/jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tools/docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="tools/jreleaser-docker.html">JReleaser Docker Image</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tools/jdks-maven.html">JDKs Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tools/jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="examples/index.html">Examples</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="examples/jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="examples/simple-release.html">Simple Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="examples/auto-config-release.html">AutoConfig Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -381,7 +406,7 @@ The preferred option is to invoke <a href="#_full_release">Full Release</a> as i
 <div class="sectionbody">
 <div class="paragraph">
 <p>Assembles distributions such as Jlink and Native Image. Outputs will automatically configure/update matching named
-distributions for <a href="#_prepare">Prepare</a>, <a href="#_package">Package</a>, and <a href="#_upload">Upload</a>.</p>
+distributions for <a href="#_prepare">Prepare</a>, <a href="#_package">Package</a>, and <a href="#_publish">Publish</a>.</p>
 </div>
 <div class="paragraph">
 <p>Given the nature of platform specific distributions this step must be invoked separatedly from the others.</p>
@@ -410,9 +435,6 @@ file configured in the <a href="configuration/files.html" class="page">Files</a>
 <div class="paragraph">
 <p>Checksums will be placed at <code>${basedir}/out/jreleaser/checksums</code>.</p>
 </div>
-<div class="paragraph">
-<p>Depends on <a href="#_changelog">Changelog</a>.</p>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -433,6 +455,18 @@ section found in the configuration.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_upload"><a class="anchor" href="#_upload"></a>Upload</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Uploads artifacts and files to the configured destinations. This step uploads signatures (if enabled), all distribution
+artifacts, and every matching file configured in the <a href="configuration/files.html" class="page">Files</a> section. This step is optional.</p>
+</div>
+<div class="paragraph">
+<p>Depends on <a href="#_sign">Sign</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_release"><a class="anchor" href="#_release"></a>Release</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -441,7 +475,7 @@ all checksums, signatures (if enabled), all distribution artifacts, and every ma
 <a href="configuration/files.html" class="page">Files</a> section. Automatically calculates a changelog &amp; tags the release.</p>
 </div>
 <div class="paragraph">
-<p>Depends on <a href="#_sign">Sign</a>.</p>
+<p>Depends on <a href="#_upload">Upload</a>.</p>
 </div>
 </div>
 </div>
@@ -480,7 +514,7 @@ matching prepared directory to their respective package directory.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_upload"><a class="anchor" href="#_upload"></a>Upload</h2>
+<h2 id="_publish"><a class="anchor" href="#_publish"></a>Publish</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Publishes packaged files to their respective destinations. For example, for <a href="configuration/packagers/homebrew.html" class="page">Homebrew</a>
@@ -527,6 +561,9 @@ files had been released.</p>
 <p><a href="#_sign">Sign</a></p>
 </li>
 <li>
+<p><a href="#_upload">Upload</a></p>
+</li>
+<li>
 <p><a href="#_release">Release</a></p>
 </li>
 <li>
@@ -536,7 +573,7 @@ files had been released.</p>
 <p><a href="#_package">Package</a></p>
 </li>
 <li>
-<p><a href="#_upload">Upload</a></p>
+<p><a href="#_publish">Publish</a></p>
 </li>
 <li>
 <p><a href="#_announce">Announce</a></p>

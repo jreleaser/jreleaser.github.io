@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gradle :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/quick-start/gradle.html">
+    <title>JDKs Maven Plugin :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/tools/jdks-maven.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -44,19 +44,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Quick Start</a>
+    <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="maven.html">Apache Maven</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -266,31 +266,31 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../tools/index.html">Tools</a>
+    <a class="nav-link" href="index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="jreleaser-maven.html">JReleaser Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="jreleaser-docker.html">JReleaser Docker Image</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jdks-maven.html">JDKs Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jdks-maven.html">JDKs Maven Plugin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jdks-gradle.html">JDKs Gradle Plugin</a>
+    <a class="nav-link" href="jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
@@ -354,242 +354,256 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li><a href="index.html">Quick Start</a></li>
-    <li><a href="gradle.html">Gradle</a></li>
+    <li><a href="index.html">Tools</a></li>
+    <li><a href="jdks-maven.html">JDKs Maven Plugin</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/gradle.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/tools/pages/jdks-maven.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gradle</h1>
+<h1 class="page">JDKs Maven Plugin</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Your project should be able to produce binary distributions, a feat typically achieved by configuring
-the <code><a href="https://docs.gradle.org/current/userguide/application_plugin.html">application</a></code> plugin.</p>
+<p>Downloads JDK distributions.</p>
 </div>
-<div class="paragraph">
-<p>You also have to configure the <a href="../tools/jreleaser-gradle.html" class="page">jreleaser-gradle-plugin</a>. We recommend using the
-<a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp plugins</a> as they provide additional benefits,
-however their use is optional. A sample project using Kordamp may look like this:</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_install"><a class="anchor" href="#_install"></a>Install</h2>
+<div class="sectionbody">
 <div class="listingblock">
-<div class="title">build.gradle</div>
+<div class="title">pom.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.kordamp.gradle.java-project' version '0.45.0'
-    id 'org.jreleaser' version '0.3.0'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-config {
-    info {
-        name          = 'app'
-        description   = 'App'
-        inceptionYear = '2021'
-        vendor        = 'Acme'
-
-        links {
-            website      = 'https://acme.com/app'
-            issueTracker = 'https://github.com/duke/app/issues'
-            scm          = 'https://github.com/duke/app.git'
-        }
-
-        scm {
-            url                 = 'https://github.com/duke/app'
-            connection          = 'scm:git:https://github.com/duke/app.git'
-            developerConnection = 'scm:git:git@github.com:duke/app.git'
-        }
-
-        people {
-            person {
-                id    = 'duke'
-                name  = 'Java Duke'
-                roles = ['developer', 'author']
-            }
-        }
-    }
-
-    licensing {
-        licenses {
-            license {
-                id = 'Apache-2.0'
-            }
-        }
-    }
-}
-
-jreleaser {
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+  &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;0.3.0&lt;/version&gt;
+&lt;/plugin&gt;</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_dsl"><a class="anchor" href="#_configuration_dsl"></a>Configuration DSL</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This setup configures the project with the following</p>
+<p>JDKS must define the following properties:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Generate additional JAR manifest entries.</p>
+<p><code>name</code>: a user defined name, must be unique.</p>
 </li>
 <li>
-<p>Generate a <code>-sources</code> JAR file with all sources per project.</p>
+<p><code>url</code>: the URL from where the JDK can be downloaded.</p>
 </li>
 <li>
-<p>Configure the javadoc task for each project using information found in the config block, such as author,
-copyright year, default settings.</p>
+<p><code>checksum</code>: the checksum value used to verify the archive&#8217;s integrity.</p>
 </li>
 <li>
-<p>Generate a <code>-javadoc</code> JAR file with the output of the javadoc task, per project.</p>
-</li>
-<li>
-<p>Configure the license plugin with the license details</p>
-</li>
-<li>
-<p>Configure the maven-publish plugin. The <code>-sources</code> and <code>-javadoc</code> JARs are automatically added to the default publication.</p>
-</li>
-<li>
-<p>Configure the generated POM.</p>
-</li>
-<li>
-<p>Configure the jacoco plugin.</p>
-</li>
-<li>
-<p>Generate a source stats task.</p>
-</li>
-<li>
-<p>Generate a task to collect pretty-printed sources.</p>
+<p><code>platform</code>: the platform this JDK is related to.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Whereas a plain project would look like this:</p>
-</div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.jreleaser' version '0.3.0'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-jreleaser {
-    project {
-        website = 'https://acme.com/app'
-        authors = ['Duke']
-        license = 'Apache-2.0'
-    }
-
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The JReleaser Gradle plugin detects the use of the <code>application</code> plugin and automatically configures the output files
-from the <code>assembleDist</code> task.</p>
-</div>
-<div class="paragraph">
-<p>Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>$ gradle jreleaserConfig</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>At any time you may invoke any of the other commands, but when it&#8217;s time to make a release you have to invoke</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>$ gradle jreleaseFullRelease
-&gt; Task :compileJava
-&gt; Task :processResources NO-SOURCE
-&gt; Task :classes
-&gt; Task :minpom
-&gt; Task :jar
-&gt; Task :startScripts
-&gt; Task :distTar
-&gt; Task :distZip
-&gt; Task :assembleDist
-
-&gt; Task :jreleaserFullRelease
-[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
-[INFO]  Validating configuration
-[INFO]  Project version set to 1.0.0
-[INFO]  Release is not snapshot
-[INFO]  Timestamp is 2021-03-28T12:25:16.219+02:00
-[INFO]  HEAD is at c3e39f1
-[INFO]  dryrun set to false
-[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
-[INFO]  Calculating checksums
-[INFO]    [checksum] target/distributions/app/app-1.0.0.zip
-[INFO]  Signing files
-[INFO]  Signing is not enabled. Skipping
-[INFO]  Uploading is not enabled. Skipping.
-[INFO]  Releasing to https://github.com/duke/app
-[INFO]   - Uploading app-1.0.0.zip
-[INFO]   - Uploading checksums.txt
-[INFO]  Preparing distributions
-[INFO]    - Preparing app distribution
-[INFO]  Packaging distributions
-[INFO]    - Packaging app distribution
-[INFO]  Publishing distributions
-[INFO]    - Publishing app distribution
-[INFO]  Announcing release
-[INFO]  Announcing is not enabled. Skipping.
-[INFO]  JReleaser succeeded after 0.894s
-[INFO]  Writing output properties to out/jreleaser/output.properties
-
---------------------------------------------------------------------
-1 projects                                       CONF        EXEC
---------------------------------------------------------------------
-: .................................. SUCCESS [  0.287 s] [  2.182 s]
---------------------------------------------------------------------</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This command performs the following actions:</p>
+<p>The <code>checksum</code> property accepts thew following formats:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>checksums all artifacts.</p>
+<p><code>&lt;algorithm&gt;/&lt;checksum&gt;</code></p>
 </li>
 <li>
-<p>signs all files (if signing is enabled).</p>
-</li>
-<li>
-<p>creates a release at the chosen Git repository.</p>
-</li>
-<li>
-<p>prepares, packages, and uploads configured packagers (brew, jbang, etc).</p>
-</li>
-<li>
-<p>announces the release (if configured).</p>
+<p><code>&lt;checksum&gt;</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The value of <code>&lt;algorithm&gt;</code> must match those specified at
+<a href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms">MessageDigest section</a>
+in the Java Security Standard Algorithm Names Specification. If no value for <code>&lt;algorithm&gt;</code> is given then <code>SHA-256</code> is assumed.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>platform</code> is dictated by the normalized values detected by
+<a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
+<code>arch</code> classifier. The following values are currently recognized:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
+<p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>osx</code></p>
+</li>
+<li>
+<p><code>osx-arm</code></p>
+</li>
+<li>
+<p><code>windows</code></p>
+</li>
+<li>
+<p><code>linux</code></p>
+</li>
+<li>
+<p><code>linux-x86_64</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example configuration</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+  &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;0.3.0&lt;/version&gt;
+  &lt;configuration&gt;
+      &lt;jdks&gt;
+          &lt;jdk&gt;
+              &lt;name&gt;zulu11Linux&lt;/name&gt;
+              &lt;platform&gt;linux&lt;/platform&gt;
+              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip&lt;/url&gt;
+              &lt;checksum&gt;9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60&lt;/checksum&gt;
+          &lt;/jdk&gt;
+          &lt;jdk&gt;
+              &lt;name&gt;zulu11Windows&lt;/name&gt;
+              &lt;platform&gt;windows&lt;/platform&gt;
+              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip&lt;/url&gt;
+              &lt;checksum&gt;7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a&lt;/checksum&gt;
+          &lt;/jdk&gt;
+          &lt;jdk&gt;
+              &lt;name&gt;zulu11Osx&lt;/name&gt;
+              &lt;platform&gt;osx&lt;/platform&gt;
+              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip&lt;/url&gt;
+              &lt;checksum&gt;abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a&lt;/checksum&gt;
+          &lt;/jdk&gt;
+          &lt;jdk&gt;
+              &lt;name&gt;graal21.1.0-linux&lt;/name&gt;
+              &lt;platform&gt;linux&lt;/platform&gt;
+              &lt;url&gt;https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz&lt;/url&gt;
+              &lt;checksum&gt;39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7&lt;/checksum&gt;
+          &lt;/jdk&gt;
+      &lt;/jdks&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>None of the exposed MOJOs are bound to a specific life-cycle phase, letting you decide when and how that
+should happen in your build.</p>
+</div>
+<div class="paragraph">
+<p>The following MOJOs are provided:</p>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserlist_jdks"><a class="anchor" href="#_jreleaserlist_jdks"></a>jreleaser:list-jdks</h3>
+<div class="paragraph">
+<p>Lists all configured JDKS.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleasersetup_jdks"><a class="anchor" href="#_jreleasersetup_jdks"></a>jreleaser:setup-jdks</h3>
+<div class="paragraph">
+<p>Downloads, verifies, and unpacks JDKs.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>jdkName<br>
+The name of the JDK to be downloaded.<br>
+Type: String<br>
+User property: <code>jdk.name</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jdks)<br>
+Type: File<br>
+User property: <code>jdks.output.directory</code></p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jdks.setup.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.3.0:list-jdks (default-cli) @ app ---
+[INFO] == JDK zulu11Linux ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] checksum: 9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60
+[INFO] platform: linux
+[INFO]
+[INFO] == JDK zulu11Windows ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] checksum: 7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a
+[INFO] platform: windows
+[INFO]
+[INFO] == JDK zulu11Osx ==
+[INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] checksum: abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a
+[INFO] platform: osx
+[INFO]
+[INFO] == JDK graal21.1.0-linux ==
+[INFO] url: https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] checksum: 39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7
+[INFO] platform: linux</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.3.0:setup-jdks (default-cli) @ app ---
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Verifying zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Downloading https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Verifying graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Extracting graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+[INFO] Expanding: /Users/aalmiray/tmp/app/target/jdks/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz into /Users/duke/app/target/jdks</code></pre>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>

@@ -94,7 +94,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../artifacts.html">Artifacts</a>
+    <a class="nav-link" href="../../artifacts.html">Artifacts &amp; Globs</a>
   </li>
 </ul>
   </li>
@@ -161,6 +161,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../upload/index.html">Upload</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../upload/artifactory.html">Artifactory</a>
   </li>
 </ul>
   </li>
@@ -243,6 +252,12 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../continuous-integration/gitlab-ci.html">GitLab CI</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../continuous-integration/cirrus-ci.html">Cirrus CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../continuous-integration/drone.html">Drone</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -254,42 +269,52 @@
     <a class="nav-link" href="../../tools/index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="../../tools/jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="../../tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="../../tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="../../tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="../../tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../tools/docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="../../tools/jreleaser-docker.html">JReleaser Docker Image</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../tools/jdks-maven.html">JDKs Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../tools/jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Examples</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../examples/index.html">Examples</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../examples/jreleaser.html">JReleaser&#8217;s Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../examples/simple-release.html">Simple Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../examples/auto-config-release.html">AutoConfig Release</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -342,6 +367,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Gitea</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -509,6 +536,90 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       links: false
 
+      # Enables or disables formatting options.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      formatted: ALWAYS
+
+      # The template to use for each change.
+      # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      change: '- {{commitShortHash}} {{commitTitle}}'
+
+      # The template to use for the whole changelog.
+      # Defaults is shown.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      content: |
+        # Changelog
+
+        {{changelogChanges}
+        {{changelogContributors}}
+
+      # Path to a template file that defines the contents.
+      # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      # Defaults to `src/jreleaser/templates/changelog.tpl`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      contentTemplate: path/to/template/changelog.tpl
+
+      # Hide uncategorized commits.
+      # Defaults to `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      hideUncategorized: true
+
+      # A list of labels to be included.
+      # Only changes matching this list will be included.
+      # Defaults to empty.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      includeLabels:
+        - 'issue'
+
+      # A list of labels to be excluded.
+      # Changes matching this list will be excluded.
+      # Defaults to empty.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      excludeLabels:
+        - 'issue'
+
+      # Defines rules that apply labels to changes.
+      # Matchers are evaluated independently; the label will
+      # be set if at least one of the matchers meets the criteria.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      labelers:
+          # The label to be applied.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        - label: 'issue'
+
+          # Matches the text of the first commit line.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          title: '^fix:'
+
+          # Matches the full text of the commit.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          body: 'Fixes #'
+
+      # Groups changes by category.
+      # Defaults are shown.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+            - 'enhancement'
+        - title: '🐛 Bug Fixes'
+          labels:
+            - 'bug'
+            - 'fix'
+
+      # Defines rules for replacing the generated content.
+      # Each replacer is applied in order.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      replacers:
+        - search: '\[chore\]\s'
+          replace: ''
+        - search: '/CVE-(\d{4})-(\d+)/g'
+          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+
     # A milestone associated with the release
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     milestone:
@@ -521,17 +632,18 @@ release:
       # May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
       # Defaults to `{{tagName}}`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      name: {{tagName}}
+      name: '{{tagName}}'
 
     # The target branch to use.
     # May define a `JRELEASER_BRANCH` environment variable instead.
     # Defaults to the branch pointed by HEAD.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    targetCommitish: main
+    branch: main
 
     # Marks the release as a draft.
+    # May define a `JRELEASER_DRAFT` environment variable instead.
     # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     draft: false
 
     # Marks the release as prerelease.
@@ -690,6 +802,88 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.links = false
 
+  # Enables or disables formatting options.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.formatted = "ALWAYS"
+
+  # The template to use for each change.
+  # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  changelog.change = "- {{commitShortHash}} {{commitTitle}}"
+
+  # The template to use for the whole changelog.
+  # Defaults is shown.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  changelog.content = """
+    # Changelog
+
+    {{changelogChanges}
+    {{changelogContributors}}"""
+
+  # Path to a template file that defines the contents.
+  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+  # Defaults to `src/jreleaser/templates/changelog.tpl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.contentTemplate = "path/to/template/changelog.tpl"
+
+  # Hide uncategorized commits.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.hideUncategorized = true
+
+  # A list of labels to be included.
+  # Only changes matching this list will be included.
+  # Defaults to empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.includeLabels = ["issue"]
+
+  # A list of labels to be excluded.
+  # Changes matching this list will be excluded.
+  # Defaults to empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.excludeLabels = ["issue"]
+
+  # Defines rules that apply labels to changes.
+  # Matchers are evaluated independently; the label will
+  # be set if at least one of the matchers meets the criteria.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[release.gitea.changelog.labelers]]
+    # The label to be applied.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    label = "issue"
+
+    # Matches the text of the first commit line.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    title = "^fix:"
+
+    # Matches the full text of the commit.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    body = "Fixes #"
+
+  # Groups changes by category.
+  # Defaults are shown.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[release.gitea.changelog.categories]]
+    title = "🚀 Features"
+    labels = ["feature", "enhancement"]
+
+  [[release.gitea.changelog.categories]]
+    title = "🐛 Bug Fixes"
+    labels = ["bug", "fix"]
+
+  # Defines rules for replacing the generated content.
+  # Each replacer is applied in order.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[release.gitea.changelog.replacers]]
+    search = "\[chore\]\s"
+    replace = ""
+
+  [[release.gitea.changelog.replacers]]
+    search = "/CVE-(\d{4})-(\d+)/g"
+    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
+
   # A milestone associated with the release
 
   # Close the milestone (if it exists and still open) upon release.
@@ -707,11 +901,12 @@ release:
   # May define a `JRELEASER_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  targetCommitish = "main"
+  branch = "main"
 
   # Marks the release as a draft.
+  # May define a `JRELEASER_DRAFT` environment variable instead.
   # Defaults to `false`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   draft = false
 
   # Marks the release as prerelease.
@@ -874,7 +1069,104 @@ release:
         // Create explicit markdown links for commit hashes.
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "links": false
+        "links": false,
+
+        // Enables or disables formatting options.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "formatted": "ALWAYS",
+
+        // The template to use for each change.
+        // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "change": "- {{commitShortHash}} {{commitTitle}}",
+
+        // The template to use for the whole changelog.
+        // Defaults is shown.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "content": "#Changelog\n\n{{changelogChanges}}\n{{changelogContributors}}",
+
+        // Path to a template file that defines the contents.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // Defaults to `src/jreleaser/templates/changelog.tpl`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "contentTemplate": "path/to/template/changelog.tpl",
+
+        // Hide uncategorized commits.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "hideUncategorized": true,
+
+        // A list of labels to be included.
+        // Only changes matching this list will be included.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "includeLabels": [
+           "issue"
+        ],
+
+        // A list of labels to be excluded.
+        // Changes matching this list will be excluded.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "excludeLabels": [
+           "issue"
+        ],
+
+        // Defines rules that apply labels to changes.
+        // Matchers are evaluated independently; the label will
+        // be set if at least one of the matchers meets the criteria.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "labelers": [
+          {
+            // The label to be applied.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+            "label": "issue",
+
+            // Matches the text of the first commit line.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "title": "^fix:",
+
+            // Matches the full text of the commit.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "body": "Fixes #"
+          }
+        ],
+
+        // Groups changes by category.
+        // Defaults are shown.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "categories": [
+          {
+            "title": "🚀 Features",
+            "labels": [
+              "feature",
+              "enhancement"
+            ]
+          },
+          {
+            "title": "🐛 Bug Fixes",
+            "labels": [
+              "bug",
+              "fix"
+            ]
+          }
+        ],
+
+        // Defines rules for replacing the generated content.
+        // Each replacer is applied in order.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "replacers": [
+          {
+            "search": "\[chore\]\s",
+            "replace": ""
+          },
+          {
+            "search": "/CVE-(\d{4})-(\d+)/g",
+            "replace": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
+          }
+        ]
       },
 
       // A milestone associated with the release
@@ -896,11 +1188,12 @@ release:
       // May define a `JRELEASER_BRANCH` environment variable instead.
       // Defaults to the branch pointed by HEAD.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "targetCommitish": "main",
+      "branch": "main",
 
       // Marks the release as a draft.
+      // May define a `JRELEASER_DRAFT` environment variable instead.
       // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "draft": false,
 
       // Marks the release as prerelease.
@@ -1120,6 +1413,127 @@ release:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;links&gt;false&lt;/links&gt;
+
+        &lt;!--
+          Enables or disables formatting options.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;formatted&gt;ALWAYS&lt;/formatted&gt;
+
+        &lt;!--
+          The template to use for each change.
+          Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;change&gt;- {{commitShortHash}} {{commitTitle}}&lt;/change&gt;
+
+        &lt;!--
+          The template to use for the whole changelog.
+          Defaults is shown.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;content&gt;
+          # Changelog
+
+          {{changelogChanges}
+          {{changelogContributors}}
+        &lt;/content&gt;
+
+        &lt;!--
+          Path to a template file that defines the contents.
+          Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+          Defaults to `src/jreleaser/templates/changelog.tpl`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;contentTemplate&gt;path/to/template/changelog.tpl&lt;/contentTemplate&gt;
+
+        &lt;!--
+          Hide uncategorized commits.
+          Defaults to `false`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;hideUncategorized&gt;true&lt;/hideUncategorized&gt;
+
+        &lt;!--
+          A list of labels to be included.
+          Only changes matching this list will be included.
+          Defaults to empty.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;includeLabels&gt;
+          &lt;includeLabel&gt;issue&lt;/includeLabel&gt;
+        &lt;/includeLabels&gt;
+
+        &lt;!--
+          A list of labels to be excluded.
+          Changes matching this list will be excluded.
+          Defaults to empty.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;excludeLabels&gt;
+          &lt;excludeLabel&gt;issue&lt;/excludeLabel&gt;
+        &lt;/excludeLabels&gt;
+
+        &lt;!--
+          Defines rules that apply labels to changes.
+          Matchers are evaluated independently; the label will
+          be set if at least one of the matchers meets the criteria.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;labelers&gt;
+          &lt;labeler&gt;
+            &lt;!--
+              The label to be applied.
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+            --&gt;
+            &lt;label&gt;issue&lt;/label&gt;
+
+            &lt;!--
+              Matches the text of the first commit line.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;title&gt;^fix:&lt;/title&gt;
+
+            &lt;!--
+              Matches the full text of the commit.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;body&gt;Fixes #&lt;/body&gt;
+          &lt;/labeler&gt;
+        &lt;/labelers&gt;
+
+        &lt;!--
+          Groups changes by category.
+          Defaults are shown.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;categories&gt;
+          &lt;category&gt;
+            &lt;title&gt;🚀 Features&lt;/title&gt;
+            &lt;labelsAsString&gt;feature,enhancement&lt;/labelsAsString&gt;
+          &lt;/category&gt;
+          &lt;category&gt;
+            &lt;title&gt;🐛 Bug Fixes&lt;/title&gt;
+            &lt;labelsAsString&gt;bug,fix&lt;/labelsAsString&gt;
+          &lt;/category&gt;
+        &lt;/categories&gt;
+
+        &lt;!--
+          Defines rules for replacing the generated content.
+          Each replacer is applied in order.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;replacers&gt;
+          &lt;replacer&gt;
+            &lt;search&gt;\[chore\]\s&lt;/search&gt;
+          &lt;/replacer&gt;
+          &lt;replacer&gt;
+            &lt;search&gt;/CVE-(\d{4})-(\d+)/g&lt;/search&gt;
+            &lt;replace&gt;https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2&lt;/replace&gt;
+          &lt;/replacer&gt;
+        &lt;/replacers&gt;
       &lt;/changelog&gt;
 
       &lt;!--
@@ -1150,12 +1564,13 @@ release:
         Defaults to the branch pointed by HEAD.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;targetCommitish&gt;main&lt;/targetCommitish&gt;
+      &lt;branch&gt;main&lt;/branch&gt;
 
       &lt;!--
         Marks the release as a draft.
+        May define a `JRELEASER_DRAFT` environment variable instead.
         Defaults to `false`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;draft&gt;false&lt;/draft&gt;
 
@@ -1341,6 +1756,97 @@ release:
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         links = false
+
+        // Enables or disables formatting options.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        formatted = 'ALWAYS'
+
+        // The template to use for each change.
+        // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        change = '- {{commitShortHash}} {{commitTitle}}'
+
+        // The template to use for the whole changelog.
+        // Defaults is shown.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        content = '#Changelog\n\n{{changelogChanges}}\n{{changelogContributors}}'
+
+        // Path to a template file that defines the contents.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // Defaults to `src/jreleaser/templates/changelog.tpl`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        contentTemplate = 'path/to/template/changelog.tpl'
+
+        // Hide uncategorized commits.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        hideUncategorized = true
+
+        // A list of labels to be included.
+        // Only changes matching this list will be included.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        includeLabels = [
+           'issue'
+        ]
+
+        // A list of labels to be excluded.
+        // Changes matching this list will be excluded.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        excludeLabels = [
+           'issue'
+        ]
+
+        // Defines rules that apply labels to changes.
+        // Matchers are evaluated independently; the label will
+        // be set if at least one of the matchers meets the criteria.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        labeler {
+          // The label to be applied.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          label = 'issue'
+
+          // Matches the text of the first commit line.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          title = '^fix:'
+
+          // Matches the full text of the commit.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          body = 'Fixes #'
+        }
+
+        // Groups changes by category.
+        // Defaults are shown.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        category  {
+          title = '🚀 Features'
+          labels = [
+            'feature',
+            'enhancement'
+          ]
+        }
+        category {
+          title = '🐛 Bug Fixes'
+          labels = [
+            'bug',
+            'fix'
+          ]
+        }
+
+        // Defines rules for replacing the generated content.
+        // Each replacer is applied in order.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacer {
+          search = '\[chore\]\s'
+          replace = ''
+        }
+        replacer {
+          search = '/CVE-(\d{4})-(\d+)/g'
+          replace = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+        }
       }
 
       // A milestone associated with the release
@@ -1362,11 +1868,12 @@ release:
       // May define a `JRELEASER_BRANCH` environment variable instead.
       // Defaults to the branch pointed by HEAD.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>v
-      targetCommitish = 'main'
+      branch = 'main'
 
       // Marks the release as a draft.
+      // May define a `JRELEASER_DRAFT` environment variable instead.
       // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       draft = false
 
       // Marks the release as prerelease.
@@ -1401,6 +1908,73 @@ release:
       issueTrackerUrlFormat = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues'
 }</code></pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_changelog"><a class="anchor" href="#_changelog"></a>Changelog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may define either <code>content</code> or <code>contentTemplate</code>, with the latter taking precedence over the former.</p>
+</div>
+<div class="paragraph">
+<p>Changelog format applies only to the automatically generated changelog, that is, formatting wo&#8217;t occur if the <code>external</code>
+property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.</p>
+</div>
+<div class="paragraph">
+<p>The <code>change</code> property only accepts the following name templates:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commitShortHash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">head commit hash abbreviated to 7 characters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commitFullHash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">head commit hash</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commitTitle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">first line of the commit message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commitAuthor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full name of the commit author</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>content</code> and <code>contentTemplate</code> accept all <a href="../name-templates.html" class="page">Name Templates</a>, take special consideration on
+<code>{{changelogChanges}}</code> and <code>{{changelogContributors}}</code> as they define the parsed commits.</p>
+</div>
+<div class="paragraph">
+<p>The following configuration</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/jreleaser-changelog-config.jpg" alt="jreleaser changelog config">
+</div>
+</div>
+<div class="paragraph">
+<p>Generates a changelog similar to</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/jreleaser-changelog-render.jpg" alt="jreleaser changelog render">
 </div>
 </div>
 </div>

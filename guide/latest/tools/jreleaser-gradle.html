@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gradle :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/quick-start/gradle.html">
+    <title>JReleaser Gradle Plugin :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/tools/jreleaser-gradle.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
@@ -44,19 +44,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Quick Start</a>
+    <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="maven.html">Apache Maven</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -266,31 +266,31 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../tools/index.html">Tools</a>
+    <a class="nav-link" href="index.html">Tools</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-cli.html">JReleaser CLI</a>
+    <a class="nav-link" href="jreleaser-cli.html">JReleaser CLI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-maven.html">JReleaser Maven Plugin</a>
+    <a class="nav-link" href="jreleaser-maven.html">JReleaser Maven Plugin</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jreleaser-gradle.html">JReleaser Gradle Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-gradle.html">JReleaser Gradle Plugin</a>
+    <a class="nav-link" href="jreleaser-ant.html">JReleaser Ant Tasks</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-ant.html">JReleaser Ant Tasks</a>
+    <a class="nav-link" href="jreleaser-tool-provider.html">JReleaser Tool Provider</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-tool-provider.html">JReleaser Tool Provider</a>
+    <a class="nav-link" href="jreleaser-docker.html">JReleaser Docker Image</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jreleaser-docker.html">JReleaser Docker Image</a>
+    <a class="nav-link" href="jdks-maven.html">JDKs Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jdks-maven.html">JDKs Maven Plugin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../tools/jdks-gradle.html">JDKs Gradle Plugin</a>
+    <a class="nav-link" href="jdks-gradle.html">JDKs Gradle Plugin</a>
   </li>
 </ul>
   </li>
@@ -354,242 +354,402 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
-    <li><a href="index.html">Quick Start</a></li>
-    <li><a href="gradle.html">Gradle</a></li>
+    <li><a href="index.html">Tools</a></li>
+    <li><a href="jreleaser-gradle.html">JReleaser Gradle Plugin</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/quick-start/pages/gradle.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/tools/pages/jreleaser-gradle.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gradle</h1>
+<h1 class="page">JReleaser Gradle Plugin</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Your project should be able to produce binary distributions, a feat typically achieved by configuring
-the <code><a href="https://docs.gradle.org/current/userguide/application_plugin.html">application</a></code> plugin.</p>
+<p>Executes a JReleaser workflow as a Gradle plugin.</p>
 </div>
-<div class="paragraph">
-<p>You also have to configure the <a href="../tools/jreleaser-gradle.html" class="page">jreleaser-gradle-plugin</a>. We recommend using the
-<a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp plugins</a> as they provide additional benefits,
-however their use is optional. A sample project using Kordamp may look like this:</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_install"><a class="anchor" href="#_install"></a>Install</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.kordamp.gradle.java-project' version '0.45.0'
     id 'org.jreleaser' version '0.3.0'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-config {
-    info {
-        name          = 'app'
-        description   = 'App'
-        inceptionYear = '2021'
-        vendor        = 'Acme'
-
-        links {
-            website      = 'https://acme.com/app'
-            issueTracker = 'https://github.com/duke/app/issues'
-            scm          = 'https://github.com/duke/app.git'
-        }
-
-        scm {
-            url                 = 'https://github.com/duke/app'
-            connection          = 'scm:git:https://github.com/duke/app.git'
-            developerConnection = 'scm:git:git@github.com:duke/app.git'
-        }
-
-        people {
-            person {
-                id    = 'duke'
-                name  = 'Java Duke'
-                roles = ['developer', 'author']
-            }
-        }
-    }
-
-    licensing {
-        licenses {
-            license {
-                id = 'Apache-2.0'
-            }
-        }
-    }
-}
-
-jreleaser {
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This setup configures the project with the following</p>
+<p>JReleaser must be configured using the Gradle DSL shown at <a href="../configuration/index.html" class="page">Configuration</a>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Generate additional JAR manifest entries.</p>
-</li>
-<li>
-<p>Generate a <code>-sources</code> JAR file with all sources per project.</p>
-</li>
-<li>
-<p>Configure the javadoc task for each project using information found in the config block, such as author,
-copyright year, default settings.</p>
-</li>
-<li>
-<p>Generate a <code>-javadoc</code> JAR file with the output of the javadoc task, per project.</p>
-</li>
-<li>
-<p>Configure the license plugin with the license details</p>
-</li>
-<li>
-<p>Configure the maven-publish plugin. The <code>-sources</code> and <code>-javadoc</code> JARs are automatically added to the default publication.</p>
-</li>
-<li>
-<p>Configure the generated POM.</p>
-</li>
-<li>
-<p>Configure the jacoco plugin.</p>
-</li>
-<li>
-<p>Generate a source stats task.</p>
-</li>
-<li>
-<p>Generate a task to collect pretty-printed sources.</p>
-</li>
-</ul>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_tasks"><a class="anchor" href="#_tasks"></a>Tasks</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Whereas a plain project would look like this:</p>
+<p>The following tasks are provided:</p>
 </div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.jreleaser' version '0.3.0'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-jreleaser {
-    project {
-        website = 'https://acme.com/app'
-        authors = ['Duke']
-        license = 'Apache-2.0'
-    }
-
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The JReleaser Gradle plugin detects the use of the <code>application</code> plugin and automatically configures the output files
-from the <code>assembleDist</code> task.</p>
-</div>
-<div class="paragraph">
-<p>Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking</p>
-</div>
+<div class="sect2">
+<h3 id="_jreleaserconfig"><a class="anchor" href="#_jreleaserconfig"></a>jreleaserConfig</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ gradle jreleaserConfig</code></pre>
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserConfig
+
+Type
+     JReleaserConfigTask (org.jreleaser.gradle.plugin.tasks.JReleaserConfigTask)
+
+Options
+     --assembly     Display assembly configuration (OPTIONAL).
+
+     --full         Display full configuration (OPTIONAL).
+
+Description
+     Outputs current JReleaser configuration
+
+Group
+     JReleaser</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>At any time you may invoke any of the other commands, but when it&#8217;s time to make a release you have to invoke</p>
 </div>
+<div class="sect2">
+<h3 id="_jreleasertemplate"><a class="anchor" href="#_jreleasertemplate"></a>jreleaserTemplate</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ gradle jreleaseFullRelease
-&gt; Task :compileJava
-&gt; Task :processResources NO-SOURCE
-&gt; Task :classes
-&gt; Task :minpom
-&gt; Task :jar
-&gt; Task :startScripts
-&gt; Task :distTar
-&gt; Task :distZip
-&gt; Task :assembleDist
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserTemplate
 
-&gt; Task :jreleaserFullRelease
-[INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
-[INFO]  Validating configuration
-[INFO]  Project version set to 1.0.0
-[INFO]  Release is not snapshot
-[INFO]  Timestamp is 2021-03-28T12:25:16.219+02:00
-[INFO]  HEAD is at c3e39f1
-[INFO]  dryrun set to false
-[INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
-[INFO]  Calculating checksums
-[INFO]    [checksum] target/distributions/app/app-1.0.0.zip
-[INFO]  Signing files
-[INFO]  Signing is not enabled. Skipping
-[INFO]  Uploading is not enabled. Skipping.
-[INFO]  Releasing to https://github.com/duke/app
-[INFO]   - Uploading app-1.0.0.zip
-[INFO]   - Uploading checksums.txt
-[INFO]  Preparing distributions
-[INFO]    - Preparing app distribution
-[INFO]  Packaging distributions
-[INFO]    - Packaging app distribution
-[INFO]  Publishing distributions
-[INFO]    - Publishing app distribution
-[INFO]  Announcing release
-[INFO]  Announcing is not enabled. Skipping.
-[INFO]  JReleaser succeeded after 0.894s
-[INFO]  Writing output properties to out/jreleaser/output.properties
+Type
+     JReleaserTemplateTask (org.jreleaser.gradle.plugin.tasks.JReleaserTemplateTask)
 
---------------------------------------------------------------------
-1 projects                                       CONF        EXEC
---------------------------------------------------------------------
-: .................................. SUCCESS [  0.287 s] [  2.182 s]
---------------------------------------------------------------------</code></pre>
+Options
+     --announcer-name        The name of the announcer (OPTIONAL).
+
+     --distribution-name     The name of the distribution (OPTIONAL).
+
+     --distribution-type     The type of the distribution (OPTIONAL).
+                             Available values are:
+                                  JAVA_BINARY
+                                  JLINK
+                                  NATIVE_IMAGE
+                                  SINGLE_JAR
+
+     --overwrite             Overwrite existing files (OPTIONAL).
+
+     --snapshot              Use snapshot template (OPTIONAL).
+
+     --tool-name             The name of the tool (OPTIONAL).
+
+Description
+     Generates templates for a specific tool/announcer
+
+Group
+     JReleaser</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This command performs the following actions:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>checksums all artifacts.</p>
-</li>
-<li>
-<p>signs all files (if signing is enabled).</p>
-</li>
-<li>
-<p>creates a release at the chosen Git repository.</p>
-</li>
-<li>
-<p>prepares, packages, and uploads configured packagers (brew, jbang, etc).</p>
-</li>
-<li>
-<p>announces the release (if configured).</p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_jreleaserassemble"><a class="anchor" href="#_jreleaserassemble"></a>jreleaserAssemble</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserAssemble
+
+Type
+     JReleaserAssembleTask (org.jreleaser.gradle.plugin.tasks.JReleaserAssembleTask)
+
+Options
+     --assembler-name        The name of the assembler (OPTIONAL).
+
+     --distribution-name     The name of the distribution (OPTIONAL).
+
+Description
+     Assemble all distributions
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserchangelog"><a class="anchor" href="#_jreleaserchangelog"></a>jreleaserChangelog</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserChangelog
+
+Type
+     JReleaserChangelogTask (org.jreleaser.gradle.plugin.tasks.JReleaserChangelogTask)
+
+Description
+     Calculate changelogs
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserchecksum"><a class="anchor" href="#_jreleaserchecksum"></a>jreleaserChecksum</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserChecksum
+
+Type
+     JReleaserChecksumTask (org.jreleaser.gradle.plugin.tasks.JReleaserChecksumTask)
+
+Description
+     Calculate checksums
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleasersign"><a class="anchor" href="#_jreleasersign"></a>jreleaserSign</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserSign
+
+Type
+     JReleaserSignTask (org.jreleaser.gradle.plugin.tasks.JReleaserSignTask)
+
+Description
+     Signs a release
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserupload"><a class="anchor" href="#_jreleaserupload"></a>jreleaserUpload</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserUpload
+
+Type
+     JReleaserUploadTask (org.jreleaser.gradle.plugin.tasks.JReleaserUploadTask)
+
+Options
+     --uploader-name     The name of the uploader (OPTIONAL).
+
+     --uploader-type     The type of the uploader (OPTIONAL).
+
+Description
+     Uploads all artifacts
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserrelease"><a class="anchor" href="#_jreleaserrelease"></a>jreleaserRelease</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserUpload
+
+Type
+     JReleaserUploadTask (org.jreleaser.gradle.plugin.tasks.JReleaserUploadTask)
+
+Options
+     --uploader-name     The name of the uploader (OPTIONAL).
+
+     --uploader-type     The type of the uploader (OPTIONAL).
+
+Description
+     Uploads all artifacts
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserprepare"><a class="anchor" href="#_jreleaserprepare"></a>jreleaserPrepare</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserPrepare
+
+Type
+     JReleaserPrepareTask (org.jreleaser.gradle.plugin.tasks.JReleaserPrepareTask)
+
+Options
+     --distribution-name     The name of the distribution (OPTIONAL).
+
+     --tool-name             The name of the tool (OPTIONAL).
+
+Description
+     Prepares all distributions
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserpackage"><a class="anchor" href="#_jreleaserpackage"></a>jreleaserPackage</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserPackage
+
+Type
+     JReleaserPackageTask (org.jreleaser.gradle.plugin.tasks.JReleaserPackageTask)
+
+Options
+     --distribution-name     The name of the distribution (OPTIONAL).
+
+     --tool-name             The name of the tool (OPTIONAL).
+
+Description
+     Packages all distributions
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserpublish"><a class="anchor" href="#_jreleaserpublish"></a>jreleaserPublish</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserPublish
+
+Type
+     JReleaserPublishTask (org.jreleaser.gradle.plugin.tasks.JReleaserPublishTask)
+
+Options
+     --distribution-name     The name of the distribution (OPTIONAL).
+
+     --tool-name             The name of the tool (OPTIONAL).
+
+Description
+     Publishes all distributions
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserannounce"><a class="anchor" href="#_jreleaserannounce"></a>jreleaserAnnounce</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserAnnounce
+
+Type
+     JReleaserAnnounceTask (org.jreleaser.gradle.plugin.tasks.JReleaserAnnounceTask)
+
+Options
+     --announcer-name     The name of the announcer (OPTIONAL).
+
+Description
+     Announces a release
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserfullrelease"><a class="anchor" href="#_jreleaserfullrelease"></a>jreleaserFullRelease</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserFullRelease
+
+Type
+     JReleaserFullReleaseTask (org.jreleaser.gradle.plugin.tasks.JReleaserFullReleaseTask)
+
+Description
+     Invokes JReleaser on all distributions
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserautoconfigrelease"><a class="anchor" href="#_jreleaserautoconfigrelease"></a>jreleaserAutoConfigRelease</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>Path
+     :jreleaserAutoConfigRelease
+
+Type
+     JReleaseAutoConfigReleaseTask (org.jreleaser.gradle.plugin.tasks.JReleaseAutoConfigReleaseTask)
+
+Options
+     --armored                 Generate ascii armored signatures (OPTIONAL).
+
+     --branch                  The release branch (OPTIONAL).
+
+     --changeLog               Path to changelog file (OPTIONAL).
+
+     --changelog-formatted     Format generated changelog (OPTIONAL).
+
+     --commit-author-email     Commit author email (OPTIONAL).
+
+     --commit-author-name      Commit author name (OPTIONAL).
+
+     --draft                   If the release is a draft (OPTIONAL).
+
+     --dryrun                  Skip remote operations.
+
+     --file                    Input file(s) to be uploaded (OPTIONAL).
+
+     --milestone-name          The milestone name (OPTIONAL).
+
+     --overwrite               Overwrite an existing release (OPTIONAL).
+
+     --prerelease              If the release is a prerelease (OPTIONAL).
+
+     --project-name            The project name (OPTIONAL).
+
+     --project-version         The project version (OPTIONAL).
+
+     --release-name            The release name (OPTIONAL).
+
+     --signing                 Sign files (OPTIONAL).
+
+     --skip-tag                Skip tagging the release (OPTIONAL).
+
+     --tag-name                The release tga (OPTIONAL).
+
+     --update                  Update an existing release (OPTIONAL).
+
+     --username                Git username (OPTIONAL).
+
+Description
+     Creates or updates a release with auto-config enabled
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>
