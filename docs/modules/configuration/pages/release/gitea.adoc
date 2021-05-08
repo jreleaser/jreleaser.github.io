@@ -85,7 +85,7 @@ release:
     skipTag: false
 
     # The Gitea API endpoint to use.
-    # You can skip `/api/v4` as it will be added by default.
+    # You can skip `/api/v1` as it will be added by default.
     # icon:exclamation-triangle[]
     apiEndpoint: pass:[https://my.giteam.com]
 
@@ -353,7 +353,7 @@ TOML::
   skipTag = false
 
   # The Gitea API endpoint to use.
-  # You can skip `/api/v4` as it will be added by default.
+  # You can skip `/api/v1` as it will be added by default.
   # icon:exclamation-triangle[]
   apiEndpoint = "pass:[https://my.giteam.com]"
 
@@ -619,7 +619,7 @@ JSON::
       "skipTag": false,
 
       // The Gitea API endpoint to use.
-      // You can skip `/api/v4` as it will be added by default.
+      // You can skip `/api/v1` as it will be added by default.
       // icon:exclamation-triangle[]
       "apiEndpoint": "pass:[https://my.giteam.com]",
 
@@ -941,7 +941,7 @@ Maven::
 
       <!--
         The Gitea API endpoint to use.
-        You can skip `/api/v4` as it will be added by default.
+        You can skip `/api/v1` as it will be added by default.
         icon:exclamation-triangle[]
       -->
       <apiEndpoint>pass:[https://my.giteam.com]</apiEndpoint>
@@ -1305,7 +1305,7 @@ jreleaser {
       skipTag = false
 
       // The Gitea API endpoint to use.
-      // You can skip `/api/v4` as it will be added by default.
+      // You can skip `/api/v1` as it will be added by default.
       // icon:dot-circle[]
       apiEndpoint = 'pass:[https://my.giteam.com]'
 
@@ -1531,7 +1531,43 @@ The `content` and `contentTemplate` accept all xref:configuration:name-templates
 
 The following configuration
 
-image::ROOT:jreleaser-changelog-config.jpg[]
+[source,yaml]
+----
+release:
+  gitea:
+    username: aalmiray
+    overwrite: true
+    draft: false
+    sign: true
+    changelog:
+      formatted: ALWAYS
+      change: '- {{commitShortHash}} {{commitTitle}}'
+      labelers:
+        - label: 'feature'
+          title: 'Resolves #'
+          body: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+          body: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+          body: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: '\[chore\] '
+          replace: ''
+----
 
 Generates a changelog similar to
 
