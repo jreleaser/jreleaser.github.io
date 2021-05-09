@@ -554,6 +554,9 @@ Additional names become available when the artifact defines a `platform`
 | artifact{{CapitalizedPlatform}}Name     | the name of the artifact file without extension
 |===
 
+Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
+artifact, and `artifact{{CapitalizedPlatform}}` for all artifacts, and the capitalized key.
+
 Thus, for artifacts defined as
 
 [tabs]
@@ -567,6 +570,8 @@ distributions:
   app:
     artifacts:
       - path: path/to/{{distributionName}}-{{projectVersion}}.zip
+        extraProperties:
+          main: true
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
 ----
@@ -575,11 +580,13 @@ TOML::
 [source,toml]
 [subs="+macros"]
 ----
-[distributions.app]
-  artifact = [
-    { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
-    { path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip", platform = "osx" }
-  ]
+pass:[[[distributions.app.artifact]]]
+  path: "path/to/{{distributionName}}-{{projectVersion}}.zip"
+  extraProperties.main = true
+
+pass:[[[distributions.app.artifact]]]
+  path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
+  platform = "osx"
 ----
 JSON::
 +
@@ -591,7 +598,11 @@ JSON::
     "app": {
       "artifacts": [
         {
-          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip"
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip",
+          "extraProperties":
+          {
+            "main": true
+          }
         },
         {
           "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
@@ -613,6 +624,9 @@ Maven::
       <artifacts>
         <artifact>
           <path>path/to/${project.artifactId}-${project.version}.zip</path>
+          <extraProperties>
+            <main>true</main>
+          </extraProperties>
         </artifact>
         <artifact>
           <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
@@ -634,6 +648,7 @@ jreleaser {
       artifacts {
         artifact {
           path = "path/to/${project.name}-${project.version}.zip"
+          extraProperties.put("main", true)
         }
         artifact {
           path = "path/to/${project.name}-${project.version}-mac.zip"
@@ -654,6 +669,7 @@ The following names will be calculated:
 * artifactSha256
 * artifactFileName: `${project.name}-${project.version}.zip`
 * artifactName: `${project.name}-${project.version}`
+* artifactMain: true
 * distributionUrl
 * distributionSha256
 * distributionArtifactFileName: `${project.name}-${project.version}.zip`
