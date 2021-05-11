@@ -36,7 +36,7 @@ packagers:
 
     # The base Docker image to use.
     # icon:dot-circle[] icon:file-alt[]
-    baseImage: "alpine:3.13.5"
+    baseImage: "alpine:latest"
 
     # A list of image names.
     # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
@@ -125,7 +125,7 @@ TOML::
 
   # The base Docker image to use.
   # icon:dot-circle[] icon:file-alt[]
-  baseImage = "alpine:3.13.5"
+  baseImage = "alpine:latest"
 
   # A list of image names.
   # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
@@ -212,7 +212,7 @@ JSON::
 
       // The base Docker image to use.
       // icon:dot-circle[] icon:file-alt[]
-      "baseImage": "alpine:3.13.5",
+      "baseImage": "alpine:latest",
 
       // A list of image names.
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
@@ -326,7 +326,7 @@ Maven::
         The base Docker image to use.
         icon:dot-circle[] icon:file-alt[]
       -->
-      <baseImage>alpine:3.13.5</baseImage>
+      <baseImage>alpine:latest</baseImage>
 
       <!--
         A list of image names.
@@ -455,7 +455,7 @@ jreleaser {
 
       // The base Docker image to use.
       // icon:dot-circle[] icon:file-alt[]
-      baseImage = 'alpine:3.13.5'
+      baseImage = 'alpine:latest'
 
       // A list of image names.
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
@@ -557,7 +557,7 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]
 Different values for the default base image will be used depending on the distribution type:
 
  * `azul/zulu-openjdk-alpine:${distribution.java.version}-jre` for JAVA_BINARY and SINGLE_JAR distributions.
- * `alpine:3.13.5` for JLINK distributions.
+ * `alpine:latest` for JLINK distributions.
  * `scratch` for NATIVE_IMAGE distributions.
 
 == Default Labels
@@ -786,4 +786,109 @@ This will build the following images:
 == Additional Files
 
 Any files placed inside `${docker.templateDirectory}/assembly` will be copied into the container at the root.
+
+== Multiple Dockerfile per Distribution
+
+The previous sections explain how a single or multiple Docker images may be created for a single distribution using the
+same Dockerfile. However should you need to use several Dockerfiles with the same distribution then just add a `specs`
+section and configure each `spec` to your liking. Each `spec` takes the same arguments as the `docker` section plus an
+extra element named `matchers` that determines which distribution artifact should be used with that particular `spec`.
+
+Matchers are key/value pairs that can match the artifact's `platform` property and any of its `extraProperties`.
+
+This feature is useful when paired with an assembled Jlink distribution that defines more than one artifact that may be
+packaged with Docker. Here's for example how JReleaser handles the case of generating cross-platform Java Runtimes with
+Jlink; there are 2 artifacts (the linux variants) that may be distributed with Docker, each one requiring different
+settings:
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+----
+environment:
+  properties:
+    jdkPathPrefix: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11'
+
+assemble:
+  jlinks:
+    jreleaser-standalone:
+      active: always
+      extraProperties:
+        sdkmanSkip: true
+      java:
+        version: 11
+        mainClass: 'org.jreleaser.cli.Main'
+      imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
+      executable: 'jreleaser'
+      moduleNames:
+        - java.base
+        - java.desktop
+        - java.management
+        - java.naming
+        - java.rmi
+        - java.security.jgss
+        - java.sql
+      targetJdks:
+        - path: '{{jdkPathPrefix}}-macosx_x64/zulu-11.jdk/Contents/Home'
+          platform: 'osx'
+        - path: '{{jdkPathPrefix}}-linux_x64'
+          platform: 'linux'
+        - path: '{{jdkPathPrefix}}-linux_musl_x64'
+          platform: 'linux_musl'
+        - path: '{{jdkPathPrefix}}-win_x64'
+          platform: 'windows'
+      mainJar:
+        path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+      jars:
+        - directory: 'apps/jreleaser/build/dependencies/flat'
+          include: '*.jar'
+
+distributions:
+  # name must match!
+  jreleaser-standalone:
+    docker:
+      # inherited by specs
+      active: always
+      # inherited by specs
+      registries:
+        - serverName: DEFAULT
+      # inherited by specs
+      labels:
+        'org.opencontainers.image.title': '{{repoOwner}}'
+      # inherited by specs
+      postCommands:
+        - 'VOLUME /workspace'
+      # configure 2 specs
+      specs:
+        slim:
+          imageNames:
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:{{tagName}}'
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:latest'
+          # match by platform
+          matchers:
+            platform: 'linux'
+          preCommands:
+            - 'RUN apt-get update -y'
+            - 'RUN apt-get install unzip'
+        alpine:
+          imageNames:
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:{{tagName}}'
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:latest'
+          # match by platform
+          matchers:
+            platform: 'linux_musl'
+          preCommands:
+            - 'RUN apk add unzip'
+----
+====
+
+This generates two different images:
+
+ * `jreleaser/jreleaser-slim:<tag>` with `ubuntu:latest` as base image. Packages
+   `jreleaser-standalone-<version>-linux.zip` because of the matching platform.
+ * `jreleaser/jreleaser-alpine:<tag>` with `alpine:latest` as base image. Packages
+   `jreleaser-standalone-<version>-linux_musl.zip` because of the matching platform.
 

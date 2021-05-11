@@ -9,6 +9,11 @@ is used to create both release and snapshot releases:
 [subs="verbatim"]
 .jreleaser.yml
 ----
+# Define properties we'll use later in this file
+environment:
+  properties:
+    jdkPathPrefix: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11'
+
 # General information about this project
 project:
   name: jreleaser
@@ -83,7 +88,7 @@ announce:
   sdkman:
     active: release
 
-# Configure a cross-platform Jlink assembly & distribution
+# Configure a cross-platform Jlink assembly
 assemble:
   jlinks:
     jreleaser-standalone:
@@ -92,8 +97,8 @@ assemble:
         sdkmanSkip: true
       java:
         version: 11
-        mainClass: org.jreleaser.cli.Main
-      imageName: 'jreleaser-standalone-{{projectEffectiveVersion}}'
+        mainClass: 'org.jreleaser.cli.Main'
+      imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: 'jreleaser'
       moduleNames:
         - java.base
@@ -104,19 +109,21 @@ assemble:
         - java.security.jgss
         - java.sql
       targetJdks:
-        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-macosx_x64/zulu-11.jdk/Contents/Home'
-          platform: osx
-        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-linux_x64'
-          platform: linux
-        - path: 'apps/jreleaser/build/jdks/zulu11.48.21-ca-jdk11.0.11-win_x64'
-          platform: windows
+        - path: '{{jdkPathPrefix}}-macosx_x64/zulu-11.jdk/Contents/Home'
+          platform: 'osx'
+        - path: '{{jdkPathPrefix}}-linux_x64'
+          platform: 'linux'
+        - path: '{{jdkPathPrefix}}-linux_musl_x64'
+          platform: 'linux_musl'
+        - path: '{{jdkPathPrefix}}-win_x64'
+          platform: 'windows'
       mainJar:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
         - directory: 'apps/jreleaser/build/dependencies/flat'
           include: '*.jar'
 
-# Configure 3 distributions
+# Configure 4 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
   jreleaser:
@@ -156,29 +163,50 @@ distributions:
       - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
 
-  # Distribution 2 is of type SINGLE_JAR
+  # Distribution 3 is of type SINGLE_JAR
   jreleaser-tool-provider:
     type: SINGLE_JAR
-    executable: jreleaser
-    java:
-      # A different Java version is required to run this distribution
-      version: 11
-    docker:
-      # Always active
-      active: always
-      imageNames:
-        - '{{repoOwner}}/{{projectName}}-slim:{{tagName}}'
-        - '{{repoOwner}}/{{projectName}}-slim:latest'
-      postCommands:
-        - 'VOLUME /workspace'
-      registries:
-        # Will publish to hub.docker.com
-        - serverName: DEFAULT
-          username: jreleaser
     artifacts:
       # Transform the artifact name
-      - path: apps/jreleaser-tool-provider/build/libs/jreleaser-tool-provider-{{projectVersion}}.jar
-        transform: 'jreleaser-tool-provider/jreleaser-tool-provider-{{projectEffectiveVersion}}.jar'
+      - path: apps/{{distributionName}}/build/libs/{{distributionName}}-{{projectVersion}}.jar
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.jar'
+
+  # Distribution 4 is of type JLINK
+  # Name matches the assembled Jlink distribution
+  jreleaser-standalone:
+    docker:
+      # inherited by specs
+      active: always
+      # inherited by specs
+      registries:
+        - serverName: DEFAULT
+      # inherited by specs
+      labels:
+        'org.opencontainers.image.title': '{{repoOwner}}'
+      # inherited by specs
+      postCommands:
+        - 'VOLUME /workspace'
+      # configure 2 specs
+      specs:
+        slim:
+          imageNames:
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:{{tagName}}'
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:latest'
+          # match by platform
+          matchers:
+            platform: 'linux'
+          preCommands:
+            - 'RUN apt-get update -y'
+            - 'RUN apt-get install unzip'
+        alpine:
+          imageNames:
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:{{tagName}}'
+            - '{{repoOwner}}/{{repoOwner}}-{{dockerSpecName}}:latest'
+          # match by platform
+          matchers:
+            platform: 'linux_musl'
+          preCommands:
+            - 'RUN apk add unzip'
 
 files:
   artifacts:
