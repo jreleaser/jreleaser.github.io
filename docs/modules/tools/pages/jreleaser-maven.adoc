@@ -19,6 +19,37 @@ Executes a JReleaser workflow as a Maven plugin.
 
 JReleaser must be configured using the Maven DSL shown at xref:configuration:index.adoc[].
 
+=== Defaults
+
+The following values will be taken directly from the `pom.xml` file and added to JReleaser's configuration when
+the matching JReleaser element has not been explicitly configured:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| POM                 | JReleaser
+| project.artifactId  | project.name
+| project.version     | project.version
+| project.description | project.description
+| project.url         | project.website
+| project.groupId     | project.java.groupId
+| project.artifactId  | project.java.artifactId
+|===
+
+The value of `project.java.multiProject` will be set to true if the current Maven session has more than 1 project.
+
+The value of `project.authors` will be resolved by matching all `<developer>` entries that have an `author` role. If no
+developer entries are found then all developers will be added as authors. The value of `<developer><name>` will be queried
+first, if not found then `<developer><id>` will be used as fallback.
+
+The value of `project.license` will be resolved from `<licenses>` with the first `<license>` that defines `<name>`.
+
+The value of `project.java.version` will be determined following these expressions in order:
+
+ * `${maven.compiler.release}`
+ * `${maven.compiler.target}`
+ * `${maven.compiler.source}`
+ * `System.getProperty("java.version")`
+
 == Goals
 
 None of the exposed MOJOs are bound to a specific life-cycle phase, letting you decide when and how that

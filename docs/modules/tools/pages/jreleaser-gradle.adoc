@@ -17,6 +17,42 @@ plugins {
 
 JReleaser must be configured using the Gradle DSL shown at xref:configuration:index.adoc[].
 
+=== Defaults
+
+The following values will be taken directly from the Gradle project and added to JReleaser's configuration when
+the matching JReleaser element has not been explicitly configured:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| POM                 | JReleaser
+| project.name        | project.name
+| project.version     | project.version
+| project.description | project.description
+| project.group       | project.java.groupId
+| project.name        | project.java.artifactId
+|===
+
+The value of `project.java.multiProject` will be set to true if the root project has children.
+
+The value of `project.java.version` will be determined following these expressions in order:
+
+ * `${project.targetCompatibility}`
+ * `${project.compilerRelease}`
+ * `org.gradle.api.JavaVersion.current()`
+
+The following properties will be automatically mapped when the `link:https://kordamp.org/kordamp-gradle-plugins/[org.kordamp.gradle.project]`
+plugin is applied:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Kordamp                   | JReleaser
+| config.info.description   | project.description
+| config.info.links.website | project.website
+| config.info.authors       | project.authors
+| config.info.tags          | project.tags
+| config.info.licenses      | project.license
+|===
+
 == Tasks
 
 The following tasks are provided:
