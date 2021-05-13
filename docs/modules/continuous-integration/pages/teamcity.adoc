@@ -1,0 +1,35 @@
+= TeamCity
+
+JReleaser can be run as a step inside link:https://www.jetbrains.com/teamcity/[TeamCity].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+For a Linux agent add the following step:
+
+[source,kotlin]
+----
+steps {
+    script {
+        scriptContent = """
+            // Get the jreleaser downloader
+            curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+            // Download JReleaser with version = <version>
+            // Change <version> to a tagged JReleaser release
+            // or leave it out to pull `latest`.
+            java get_jreleaser.java <version>
+            // Let's check we've got the right version
+            java -jar jreleaser-cli.jar --version
+            // Execute a JReleaser command such as 'full-release'
+            java -jar jreleaser-cli.jar full-release
+        """.trimIndent()
+    }
+}
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+IMPORTANT: The agent must have Java 11 or greater configured otherwise the download will fail.
+
+NOTE: You must use link:https://www.jetbrains.com/help/teamcity/configuring-build-parameters.html[Build parameters] to
+configure environment variables such as `JRELEASER_GITHUB_TOKEN` and any other secrets required by the build.
