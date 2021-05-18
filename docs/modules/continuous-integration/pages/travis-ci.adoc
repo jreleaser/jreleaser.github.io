@@ -1,0 +1,63 @@
+= Travis CI
+
+JReleaser can be run as a deploy script in link:https://travis-ci.com/[Travis-CI].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source]
+..travis.yml
+----
+language: java
+
+jdk: openjdk11
+
+script: ./mvnw -B verify
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script:
+      # Get the jreleaser downloader
+      - curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+      # Download JReleaser with version = <version>
+      # Change <version> to a tagged JReleaser release
+      # or leave it out to pull `latest`.
+      - java get_jreleaser.java <version>
+      # Let's check we've got the right version
+      - java -jar jreleaser-cli.jar --version
+      # Execute a JReleaser command such as 'full-release'
+      - java -jar jreleaser-cli.jar full-release
+    on:
+      branch: main
+----
+
+If you rather see what JReleaser is doing then set it up as an `after_script:` hook instead:
+
+[source]
+----
+language: java
+
+jdk: openjdk11
+
+script: ./mvnw -B verify
+
+after_script:
+  # Get the jreleaser downloader
+  - curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+  # Download JReleaser with version = <version>
+  # Change <version> to a tagged JReleaser release
+  # or leave it out to pull `latest`.
+  - java get_jreleaser.java <version>
+  # Let's check we've got the right version
+  - java -jar jreleaser-cli.jar --version
+  # Execute a JReleaser command such as 'full-release'
+  - java -jar jreleaser-cli.jar full-release
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+IMPORTANT: The deploy script must run with Java 11.
+
+NOTE: You must use link:https://docs.travis-ci.com/user/environment-variables/[encrypted environment variables] to
+configure environment variables such as `JRELEASER_GITHUB_TOKEN` and any other secrets required by the build.
