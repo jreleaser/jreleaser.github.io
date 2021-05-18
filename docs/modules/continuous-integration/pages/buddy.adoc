@@ -1,0 +1,99 @@
+= Buddy
+
+JReleaser can be configured with link:https://buddy.works[Buddy].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+Buddy offers two choices for configuring a pipeline:
+
+ - a rich UI
+ - YAML
+
+You may run JReleaser as a script or as a Docker image.
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+NOTE: You must configure environment variables matching the expected secrets in your pipeline.
+
+== Script
+
+[source,yaml]
+.buddy.yml
+----
+- pipeline: "Build with Script"
+  # manual trigger
+  on: "CLICK"
+  refs:
+  - "refs/heads/main"
+  priority: "NORMAL"
+  fail_on_prepare_env_warning: true
+  actions:
+  - action: "Build"
+    type: "BUILD"
+    working_directory: "/buddy/<project-name>"
+    docker_image_name: "library/maven"
+    docker_image_tag: "latest"
+    execute_commands:
+    - "./mvnw -B verify"
+    cached_dirs:
+    - "/root/.m2/repository"
+    volume_mappings:
+    - "/:/buddy/<project-name>"
+    shell: "BASH"
+
+  - action: "JReleaser"
+    type: "BUILD"
+    disabled: true
+    working_directory: "/buddy/<project-name>"
+    docker_image_name: "library/ubuntu"
+    docker_image_tag: "18.04"
+    execute_commands:
+    - "curl -sL https://git.io/get-jreleaser > get_jreleaser.java"
+    - "java get_jreleaser.java"
+    - "java -jar jreleaser-cli.jar --version"
+    - "java -jar jreleaser-cli.jar full-release"
+    setup_commands:
+    # Install curl & Java 11
+    - "apt-get update && apt-get -y install curl openjdk-11-jdk"
+    volume_mappings:
+    - "/:/buddy/<project-name>"
+    shell: "BASH"
+----
+
+== Docker
+
+[source,yaml]
+.buddy.yml
+----
+- pipeline: "Build with Docker"
+  # manual trigger
+  on: "CLICK"
+  refs:
+  - "refs/heads/main"
+  priority: "NORMAL"
+  fail_on_prepare_env_warning: true
+  actions:
+  - action: "Build"
+    type: "BUILD"
+    working_directory: "/buddy/<project-name>"
+    docker_image_name: "library/maven"
+    docker_image_tag: "latest"
+    execute_commands:
+    - "./mvnw -B verify"
+    cached_dirs:
+    - "/root/.m2/repository"
+    volume_mappings:
+    - "/:/buddy/<project-name>"
+    shell: "BASH"
+
+  - action: "JReleaser"
+    type: "RUN_DOCKER_CONTAINER"
+    docker_image_name: "jreleaser/jreleaser-alpine"
+    docker_image_tag: "latest"
+    inline_commands: "release"
+    volume_mappings:
+    # Map sources into '/workspace'
+    - "/:/workspace"
+    shell: "SH"
+----
