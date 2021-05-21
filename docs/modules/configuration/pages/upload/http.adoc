@@ -1,14 +1,11 @@
-= Artifactory
+= Http
 
-Uploads artifacts, files, and signatures to an Artifactory instance.
+Uploads artifacts, files, and signatures to an HTTP/HTTPS server
 
 .Prerequisites:
 
- * A running Artifactory instance.
- * A generic repository.
- * A user + password / token with grants to upload an artifact.
-
-IMPORTANT: This feature *does not* support deploying JARs and POMs to a Maven repository.
+ * A HTTP/HTTPS server that accepts POST/PUT requests.
+ * Username + Password/Token if authorization is required.
 
 include::partial$legend.adoc[]
 
@@ -22,7 +19,7 @@ YAML::
 # icon:dot-circle[]
 upload:
   # icon:dot-circle[]
-  artifactories:
+  http:
     # Uploaders require a name.
     # icon:exclamation-triangle[]
     app:
@@ -43,28 +40,41 @@ upload:
       # icon:dot-circle[]
       readTimeout: 60
 
-      # URL of the Artifactory instance + path.
-      # The artifact file name will be appended automatically.
+      # URL of the HTTP/HTTPS server + path.
       # icon:exclamation-triangle[] icon:file-alt[]
-      target: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]
+      target: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]
 
-      # The username that can write to the repository.
-      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+      # The username required for authorization.
+      # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
       # environment variable must be defined.
-      # icon:exclamation-triangle[] icon:eye-slash[]
+      # icon:dot-circle[] icon:eye-slash[]
       username: __DO_NOT_SET_HERE__
 
       # Password for login into the repository.
-      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+      # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
       # environment variable must be defined.
-      # icon:exclamation-triangle[] icon:eye-slash[]
+      # icon:dot-circle[] icon:eye-slash[]
       password: __DO_NOT_SET_HERE__
 
-      # Token for login into the repository.
-      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-      # environment variable must be defined.
-      # icon:exclamation-triangle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
+      # The authorization method to use.
+      # Valid values are [`NONE`, `BASIC`, `BEARER`].
+      # `Basic` requires both username & password.
+      # `BEARER` requires a token (set as password).
+      # Defaults to `NONE`.
+      # icon:dot-circle[]
+      authorization: BASIC
+
+      # The method to use for uploading artifacts.
+      # Valid values are [`POST`, `PUT`].
+      # Defaults to `PUT`.
+      # icon:dot-circle[]
+      method: POST
+
+      # Additional headers to be sent to the server.
+      # Values accept xref:configuration:name-templates.adoc[].
+      # icon:dot-circle[] icon:file-alt[]
+      headers:
+        'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'
 
       # Upload files.
       # Defaults to `true`.
@@ -84,7 +94,7 @@ upload:
       # Additional properties used when evaluating templates.
       # icon:dot-circle[]
       extraProperties:
-        # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+        # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
         foo: bar
 ----
 TOML::
@@ -94,7 +104,7 @@ TOML::
 ----
 # Uploaders require a name.
 # icon:exclamation-triangle[]
-[upload.artifactories.app]
+[upload.http.app]
 
   # Enables or disables the uploader.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -112,28 +122,41 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # URL of the Artifactory instance + path.
+  # URL of the HTTP/HTTPS server + path.
   # The artifact file name will be appended automatically.
   # icon:exclamation-triangle[] icon:file-alt[]
-  target = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]"
+  target = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]"
 
-  # The username that can write to the repository.
-  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+  # The username required for authorization.
+  # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
   # environment variable must be defined.
-  # icon:exclamation-triangle[] icon:eye-slash[]
+  # icon:dot-circle[] icon:eye-slash[]
   username = "__DO_NOT_SET_HERE__"
 
   # Password for login into the repository..
-  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+  # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
   # environment variable must be defined.
-  # icon:exclamation-triangle[] icon:eye-slash[]
+  # icon:dot-circle[] icon:eye-slash[]
   password = "__DO_NOT_SET_HERE__"
 
-  # Token for login into the repository.
-  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-  # environment variable must be defined.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
+  # The authorization method to use.
+  # Valid values are [`NONE`, `BASIC`, `BEARER`].
+  # `Basic` requires both username & password.
+  # `BEARER` requires a token (set as password).
+  # Defaults to `NONE`.
+  # icon:dot-circle[]
+  authorization = "BASIC"
+
+  # The method to use for uploading artifacts.
+  # Valid values are [`POST`, `PUT`].
+  # Defaults to `PUT`.
+  # icon:dot-circle[]
+  method = "POST"
+
+  # Additional headers to be sent to the server.
+  # Values accept xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"
 
   # Upload files.
   # Defaults to `true`.
@@ -153,7 +176,7 @@ TOML::
   # Additional properties used when evaluating templates.
   # icon:dot-circle[]
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+  # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
 ----
 JSON::
 +
@@ -164,7 +187,7 @@ JSON::
   // icon:dot-circle[]
   "upload": {
     // icon:dot-circle[]
-    "artifactories": {
+    "http": {
       // Uploaders require a name.
       // icon:exclamation-triangle[]
       "app": {
@@ -185,28 +208,43 @@ JSON::
         // icon:dot-circle[]
         "readTimeout": 60,
 
-        // URL of the Artifactory instance + path.
+        // URL of the HTTP/HTTPS server + path.
         // The artifact file name will be appended automatically.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "target": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]",
+        "target": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]",
 
-        // The username that can write to the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+        // The username required for authorization.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
         // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
+        // icon:dot-circle[] icon:eye-slash[]
         "username": "__DO_NOT_SET_HERE__",
 
         // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
         // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
+        // icon:dot-circle[] icon:eye-slash[]
         "password": "__DO_NOT_SET_HERE__",
 
-        // Token for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-        // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__",
+        // The authorization method to use.
+        // Valid values are [`NONE`, `BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `NONE`.
+        // icon:dot-circle[]
+        "authorization": "BASIC",
+
+        // The method to use for uploading artifacts.
+        // Valid values are [`POST`, `PUT`].
+        // Defaults to `PUT`.
+        // icon:dot-circle[]
+        "method": "POST",
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        "headers": {
+          "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
+        },
 
         // Upload files.
         // Defaults to `true`.
@@ -226,7 +264,7 @@ JSON::
         // Additional properties used when evaluating templates.
         // icon:dot-circle[]
         "extraProperties": {
-          // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+          // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
           "foo": "bar"
         }
       }
@@ -247,7 +285,7 @@ Maven::
     <!--
       icon:dot-circle[]
     -->
-    <artifactories>
+    <http>
       <!--
         Uploaders require a name.
         icon:exclamation-triangle[]
@@ -276,35 +314,54 @@ Maven::
         <readTimeout>60</readTimeout>
 
         <!--
-          URL of the Artifactory instance + path.
+          URL of the HTTP/HTTPS server + path.
           The artifact file name will be appended automatically.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <target>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]</target>
+        <target>pass:[https:my.zulipchat.com/api/v1]</target>
 
         <!--
-          The username that can write to the repository.
-          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+          The username required for authorization.
+          If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
           environment variable must be defined.
-          icon:exclamation-triangle[] icon:eye-slash[]
+          icon:dot-circle[] icon:eye-slash[]
         -->
         <username>__DO_NOT_SET_HERE__</username>
 
         <!--
           Password for login into the repository.
-          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+          If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
           environment variable must be defined.
-          icon:exclamation-triangle[] icon:eye-slash[]
+          icon:dot-circle[] icon:eye-slash[]
         -->
         <password>__DO_NOT_SET_HERE__</password>
 
         <!--
-          Token for login into the repository.
-          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-          environment variable must be defined.
-          icon:exclamation-triangle[] icon:eye-slash[]
+          The authorization method to use.
+          Valid values are [`NONE`, `BASIC`, `BEARER`].
+          `Basic` requires both username & password.
+          `BEARER` requires a token (set as password).
+          Defaults to `NONE`.
+          icon:dot-circle[]
         -->
-        <token>__DO_NOT_SET_HERE__</token>
+        <authorization>BASIC</authorization>
+
+        <!--
+          The method to use for uploading artifacts.
+          Valid values are [`POST`, `PUT`].
+          Defaults to `PUT`.
+          icon:dot-circle[]
+        -->
+        <method>POST</method>
+
+        <!--
+          Additional headers to be sent to the server.
+          Values accept xref:configuration:name-templates.adoc[].
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <headers>
+          <X-ARTIFACT-PLATFORM>{{artifactPlatform}}</X-ARTIFACT-PLATFORM>
+        </headers>
 
         <!--
           Upload files.
@@ -333,12 +390,12 @@ Maven::
         -->
         <extraProperties>
           <!--
-            Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+            Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
           -->
           <foo>bar</foo>
         </extraProperties>
       </app>
-    </artifactories>
+    </http>
   </upload>
 </jreleaser>
 ----
@@ -351,7 +408,7 @@ jreleaser {
   // icon:dot-circle[]
   upload {
     // icon:dot-circle[]
-    artifactories {
+    http {
       // Uploaders require a name.
       // icon:exclamation-triangle[]
       app {
@@ -372,28 +429,41 @@ jreleaser {
         // icon:dot-circle[]
         readTimeout = 60
 
-        // URL of the Artifactory instance + path.
+        // URL of the HTTP/HTTPS server + path.
         // The artifact file name will be appended automatically.
         // icon:exclamation-triangle[] icon:file-alt[]
-        target = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]'
+        target = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
 
-        // The username that can write to the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+        // The username required for authorization.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
         // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
+        // icon:dot-circle[] icon:eye-slash[]
         username = '__DO_NOT_SET_HERE__'
 
         // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
         // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
+        // icon:dot-circle[] icon:eye-slash[]
         password = '__DO_NOT_SET_HERE__'
 
-        // Token for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-        // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
+        // The authorization method to use.
+        // Valid values are [`NONE`, `BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `NONE`.
+        // icon:dot-circle[]
+        authorization = 'BASIC'
+
+        // The method to use for uploading artifacts.
+        // Valid values are [`POST`, `PUT`].
+        // Defaults to `PUT`.
+        // icon:dot-circle[]
+        method = 'POST'
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
 
         // Upload files.
         // Defaults to `true`.
@@ -411,7 +481,7 @@ jreleaser {
         signatures = true
 
         // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+        // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
         // icon:dot-circle[]
         extraProperties.put('foo', 'bar')
       }
@@ -421,47 +491,34 @@ jreleaser {
 ----
 ====
 
-TIP: Either set `username`/`password` or `token`.
-
 == Target
 
-The target is the URL to upload the artifacts to (without the name of the artifact).
+The target is the URL to upload the artifacts to.
 
 An example configuration can look like
-`target: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}'`.
+`target: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFileName}}'`.
 
 And will result in a final deployment like
-`pass:[https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip]`.
+`pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
 
 == Username
 
-The configured username needs to be authenticated against the Artifactory instance.
-
 You can have the username set in the configuration as shown above or you can have it read from an environment variable.
-The configured name of the Artifactory instance will be used to build the environment variable name.
+The configured name of the HTTP server will be used to build the environment variable name.
 This means that the name per configured instance needs to be unique.
 
-The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_USERNAME`. If your instance is named `production`,
-you can store the username in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_USERNAME`. The name will be
+The name of the environment variable will be `JRELEASER_HTTP_NAME_USERNAME`. If your instance is named `production`,
+you can store the username in the environment variable `JRELEASER_HTTP_PRODUCTION_USERNAME`. The name will be
 transformed to uppercase.
 
 If a configured username is found in the configuration file, then the environment variable is not used at all.
 
 == Password
 
-The password will be stored in a environment variable. The configured name of the Artifactory instance will
+The password will be stored in a environment variable. The configured name of the HTTP server will
 be used. This means that the name per configured instance needs to be unique.
 
-The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_PASSWORD`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_PASSWORD`. The name will be
-transformed to uppercase.
-
-== Token
-
-The token will be stored in a environment variable. The configured name of the Artifactory instance will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_TOKEN`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_TOKEN`. The name will be
+The name of the environment variable will be `JRELEASER_HTTP_NAME_PASSWORD`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_HTTP_PRODUCTION_PASSWORD`. The name will be
 transformed to uppercase.
 
