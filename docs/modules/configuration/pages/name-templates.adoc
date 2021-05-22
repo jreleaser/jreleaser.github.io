@@ -525,11 +525,11 @@ The following names identify an artifact without explicit `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key              | Description
-| artifactUrl      | the URL required to download the artifact
-| artifactSha256   | the SHA256 checksum of the artifact's file
-| artifactFileName | the name of the artifact file
-| artifactName     | the name of the artifact file without extension
+| Key                    | Description
+| artifactUrl            | the URL required to download the artifact
+| artifactChecksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
+| artifactFileName       | the name of the artifact file
+| artifactName           | the name of the artifact file without extension
 |===
 
 The following names match the first artifact in a distribution
@@ -538,7 +538,7 @@ The following names match the first artifact in a distribution
 |===
 | Key                          | Description
 | distributionUrl              | the URL required to download the artifact
-| distributionSha256           | the SHA256 checksum of the artifact's file
+| distributionChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
 | distributionArtifactFileName | the name of the artifact file
 | distributionArtifactName     | the name of the artifact file without extension
 |===
@@ -547,11 +547,11 @@ Additional names become available when the artifact defines a `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                                     | Description
-| artifact{{CapitalizedPlatform}}Url      | the URL required to download the artifact
-| artifact{{CapitalizedPlatform}}Sha256   | the SHA256 checksum of the artifact's file
-| artifact{{CapitalizedPlatform}}FileName | the name of the artifact file
-| artifact{{CapitalizedPlatform}}Name     | the name of the artifact file without extension
+| Key                                           | Description
+| artifact{{CapitalizedPlatform}}Url            | the URL required to download the artifact
+| artifact{{CapitalizedPlatform}}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
+| artifact{{CapitalizedPlatform}}FileName       | the name of the artifact file
+| artifact{{CapitalizedPlatform}}Name           | the name of the artifact file without extension
 |===
 
 Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
@@ -566,6 +566,11 @@ YAML::
 [source,yaml]
 [subs="+macros"]
 ----
+checksum:
+  algorithms:
+    - MD5
+    - SHA256
+
 distributions:
   app:
     artifacts:
@@ -580,6 +585,9 @@ TOML::
 [source,toml]
 [subs="+macros"]
 ----
+[checksum]
+  algorithms = ["MD5", "SHA256"]
+
 pass:[[[distributions.app.artifact]]]
   path: "path/to/{{distributionName}}-{{projectVersion}}.zip"
   extraProperties.main = true
@@ -594,6 +602,13 @@ JSON::
 [subs="+macros"]
 ----
 {
+  "checksums": {
+    "algorithms": [
+      "MD5",
+      "SHA256"
+    ]
+  },
+
   "distributions": {
     "app": {
       "artifacts": [
@@ -619,6 +634,12 @@ Maven::
 [subs="+macros,verbatim"]
 ----
 <jreleaser>
+  <checksum>
+    <algorithms>
+      <algorithm>MD5</algorithm>
+      <algorithm>SHA256</algorithm>
+    </algorithms>
+  </checksum>
   <distributions>
     <app>
       <artifacts>
@@ -643,6 +664,10 @@ Gradle::
 [subs="+macros"]
 ----
 jreleaser {
+  checksum {
+    algorithm('MD5')
+    algorithm('SHA256')
+  }
   distributions {
     app {
       artifacts {
@@ -666,19 +691,22 @@ The following names will be calculated:
 *1st artifact*
 
 * artifactUrl
-* artifactSha256
+* artifactChecksumMd5
+* artifactChecksumSha256
 * artifactFileName: `${project.name}-${project.version}.zip`
 * artifactName: `${project.name}-${project.version}`
 * artifactMain: true
 * distributionUrl
-* distributionSha256
+* distributionChecksummd5
+* distributionChecksumSha256
 * distributionArtifactFileName: `${project.name}-${project.version}.zip`
 * distributionArtifactName: `${project.name}-${project.version}`
 
 *Platform specific artifact*
 
 * artifactOsxUrl
-* artifactOsxSha256
+* artifactOsxChekcsumMd5
+* artifactOsxChekcsumSha256
 * artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
 * artifactOsxName: `${project.name}-${project.version}-mac`
 
