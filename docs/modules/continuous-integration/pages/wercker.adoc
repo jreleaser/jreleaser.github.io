@@ -1,0 +1,49 @@
+= Wercker
+
+JReleaser can be configured with link:https://app.wercker.com[Wercker].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,yaml]
+.wercker.yml
+----
+box: azul/zulu-openjdk:11
+
+build:
+  steps:
+    - install-packages:
+        packages: curl
+
+    - wercker/maven:
+      goals: verify
+      cache_repo: true
+      version: 3.6.1
+
+deploy:
+  steps:
+    - install-packages:
+        packages: curl
+
+    - script:
+        name: JReleaser
+        code: |
+          # Get the jreleaser downloader
+          curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+          # Download JReleaser with version = <version>
+          # Change <version> to a tagged JReleaser release
+          # or leave it out to pull `latest`.
+          java get_jreleaser.java <version>
+          # Let's check we've got the right version
+          java -jar jreleaser-cli.jar --version
+          # Execute a JReleaser command such as 'full-release'
+          java -jar jreleaser-cli.jar full-release
+
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+IMPORTANT: The deploy step must run with Java 11.
+
+NOTE: You must configure environment variables such as `JRELEASER_GITHUB_TOKEN` and any other secrets required by the
+build at either the _Workflows_ or _Environment_ tab.
