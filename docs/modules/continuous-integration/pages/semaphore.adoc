@@ -1,0 +1,57 @@
+= Semaphore
+
+JReleaser can be run in link:https://semaphoreci.com[Semaphore].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,yaml]
+..semaphore/semaphore.yml
+----
+version: v1.0
+name: Java
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: Maven
+          commands:
+            - checkout
+            - sem-version java 1.8
+            - ./mvnw -B verify --file pom.xml
+            - artifact push workflow target
+
+  - name: Release
+    task:
+      jobs:
+        - name: JReleaser
+          commands:
+            - checkout
+            - artifact pull workflow target
+            - sem-version java 11
+            # Get the jreleaser downloader
+            - 'curl -sL https://git.io/get-jreleaser > get_jreleaser.java'
+            # Download JReleaser with version = <version>
+            # Change <version> to a tagged JReleaser release
+            # or leave it out to pull `latest`.
+            - java get_jreleaser.java <version>
+            # Let's check we've got the right version
+            - java -jar jreleaser-cli.jar --version
+            # Execute a JReleaser command such as 'full-release'
+            - java -jar jreleaser-cli.jar full-release
+      secrets:
+        - name: JRELEASER_GITHUB_TOKEN
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+IMPORTANT: The release job must run with Java 11 or greater.
+
+NOTE: You must configure environment variables such as `JRELEASER_GITHUB_TOKEN` and any other secrets required by the
+build. Please refer to the link:https://docs.semaphoreci.com/essentials/using-secrets/[Secrets] documentation.
+
