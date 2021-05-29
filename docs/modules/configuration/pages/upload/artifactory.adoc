@@ -60,11 +60,13 @@ upload:
       # icon:exclamation-triangle[] icon:eye-slash[]
       password: __DO_NOT_SET_HERE__
 
-      # Token for login into the repository.
-      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-      # environment variable must be defined.
-      # icon:exclamation-triangle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
+      # The authorization method to use.
+      # Valid values are [`BASIC`, `BEARER`].
+      # `Basic` requires both username & password.
+      # `BEARER` requires a token (set as password).
+      # Defaults to `BEARER`.
+      # icon:dot-circle[]
+      authorization: BASIC
 
       # Upload files.
       # Defaults to `true`.
@@ -129,11 +131,13 @@ TOML::
   # icon:exclamation-triangle[] icon:eye-slash[]
   password = "__DO_NOT_SET_HERE__"
 
-  # Token for login into the repository.
-  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-  # environment variable must be defined.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
+  # The authorization method to use.
+  # Valid values are [`BASIC`, `BEARER`].
+  # `Basic` requires both username & password.
+  # `BEARER` requires a token (set as password).
+  # Defaults to `BEARER`.
+  # icon:dot-circle[]
+  authorization = "BASIC"
 
   # Upload files.
   # Defaults to `true`.
@@ -202,11 +206,13 @@ JSON::
         // icon:exclamation-triangle[] icon:eye-slash[]
         "password": "__DO_NOT_SET_HERE__",
 
-        // Token for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-        // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__",
+        // The authorization method to use.
+        // Valid values are [`BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `BEARER`.
+        // icon:dot-circle[]
+        "authorization": "BEARER",
 
         // Upload files.
         // Defaults to `true`.
@@ -299,12 +305,14 @@ Maven::
         <password>__DO_NOT_SET_HERE__</password>
 
         <!--
-          Token for login into the repository.
-          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-          environment variable must be defined.
-          icon:exclamation-triangle[] icon:eye-slash[]
+          The authorization method to use.
+          Valid values are [`BASIC`, `BEARER`].
+          `Basic` requires both username & password.
+          `BEARER` requires a token (set as password).
+          Defaults to `BEARER`.
+          icon:dot-circle[]
         -->
-        <token>__DO_NOT_SET_HERE__</token>
+        <authorization>BEARER</authorization>
 
         <!--
           Upload files.
@@ -389,11 +397,13 @@ jreleaser {
         // icon:exclamation-triangle[] icon:eye-slash[]
         password = '__DO_NOT_SET_HERE__'
 
-        // Token for login into the repository.
-        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_TOKEN`
-        // environment variable must be defined.
-        // icon:exclamation-triangle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
+        // The authorization method to use.
+        // Valid values are [`BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `BEARER`.
+        // icon:dot-circle[]
+        authorization = 'BEARER'
 
         // Upload files.
         // Defaults to `true`.
@@ -421,8 +431,6 @@ jreleaser {
 ----
 ====
 
-TIP: Either set `username`/`password` or `token`.
-
 == Target
 
 The target is the URL to upload the artifacts to (without the name of the artifact).
@@ -449,19 +457,11 @@ If a configured username is found in the configuration file, then the environmen
 
 == Password
 
-The password will be stored in a environment variable. The configured name of the Artifactory instance will
+The password will be stored in an environment variable. The configured name of the Artifactory instance will
 be used. This means that the name per configured instance needs to be unique.
 
 The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_PASSWORD`. If your instance is named `production`,
 you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_PASSWORD`. The name will be
 transformed to uppercase.
 
-== Token
-
-The token will be stored in a environment variable. The configured name of the Artifactory instance will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_TOKEN`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_TOKEN`. The name will be
-transformed to uppercase.
 
