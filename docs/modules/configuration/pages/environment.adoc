@@ -176,6 +176,58 @@ NOTE: The config file must use the appropriate file extension that matches the f
 IMPORTANT: The config file should have key/value pairs with no nesting. Each key maps to the corresponding environment
 variable that requires a value.
 
+TIP: Use the `yml` or `toml` formats for key/values that require multiple lines, such as JRELEASER_GPG_PUBLIC_KEY.
+
+When using a format that supports multi-line strings be sure to follow these rules:
+
+*Yaml*
+
+ * Use a `|` as the sole character of the first line.
+ * Indent every other line, typically with 2 spaces.
+
+*Toml*
+
+ * Do not indent lines unless the indentation must be part of the content.
+
+As an example, the `JRELEASER_GPG_PUBLIC_KEY` key/value may be written as follows:
+
+[tabs]
+====
+YAML::
++
+[source,yaml]
+[subs="+macros"]
+.config.yml
+----
+JRELEASER_GPG_PUBLIC_KEY: |
+  -----BEGIN PGP PUBLIC KEY BLOCK----
+
+  mQGiBEYVIwERBACndCqn1kKjVD8r2YjYAsqzNQet/U7wn6pIrvKd+23W+LH04tRY
+  ...
+  -----END PGP PUBLIC KEY BLOCK-----
+----
+TOML::
++
+[source,toml]
+[subs="+macros"]
+.config.toml
+----
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK----
+
+mQGiBEYVIwERBACndCqn1kKjVD8r2YjYAsqzNQet/U7wn6pIrvKd+23W+LH04tRY
+...
+-----END PGP PUBLIC KEY BLOCK-----"""
+----
+====
+
+Take special note that the empty line at the 2nd row is required, otherwise you may get an error similar
+to the following one:
+
+[source]
+----
+Caused by: http://java.io.IOException: public key ring doesn't start with public key tag: tag 0xffffffff
+----
+
 == Maven
 
 JReleaser will honor Maven project properties. These properties can be defined in several ways:
