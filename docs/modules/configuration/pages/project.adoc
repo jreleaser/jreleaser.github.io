@@ -23,8 +23,15 @@ project:
   # icon:exclamation-triangle[] icon:eye-slash[]
   version: 1.0.0
 
+  # The strategy used to parse the project version
+  # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
+  # Valid values are [`SEMVER`, `JAVA_MODULE`, `CUSTOM`].
+  # Defaults to `SEMVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  versionPattern: SEMVER
+
   # A regex to determine if the project version is snapshot
-  # May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+  # May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
   # icon:dot-circle[] icon:eye-slash[]
   snapshotPattern: .*-SNAPSHOT
 
@@ -126,8 +133,15 @@ TOML::
   # icon:exclamation-triangle[] icon:eye-slash[]
   version = "1.0.0"
 
+  # The strategy used to parse the project version
+  # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
+  # Valid values are [`SEMVER`, `JAVA_MODULE`, `CUSTOM`].
+  # Defaults to `SEMVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  versionPattern = "SEMVER"
+
   # A regex to determine if the project version is snapshot
-  # May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+  # May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
   # icon:dot-circle[] icon:eye-slash[]
   snapshotPattern = ".*-SNAPSHOT"
 
@@ -224,8 +238,15 @@ JSON::
     // icon:exclamation-triangle[] icon:eye-slash[]
     "version": "1.0.0",
 
+    // The strategy used to parse the project version
+    // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
+    // Valid values are [`SEMVER`, `JAVA_MODULE`, `CUSTOM`].
+    // Defaults to `SEMVER`.
+    // icon:dot-circle[] icon:eye-slash[]
+    "versionPattern": "SEMVER",
+
     // A regex to determine if the project version is snapshot
-    // May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+    // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
     // icon:dot-circle[] icon:eye-slash[]
     "snapshotPattern": ".*-SNAPSHOT",
 
@@ -341,8 +362,17 @@ Maven::
     <version>1.0.0</version>
 
     <!--
+      The strategy used to parse the project version
+      May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
+      Valid values are [`SEMVER`, `JAVA_MODULE`, `CUSTOM`].
+      Defaults to `SEMVER`.
+      icon:dot-circle[] icon:eye-slash[]
+    -->
+    <versionPattern>SEMVER</versionPattern>
+
+    <!--
       A regex to determine if the project version is snapshot
-      May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+      May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
       icon:dot-circle[] icon:eye-slash[]
     -->
     <snapshotPattern>.*-SNAPSHOT</snapshotPattern>
@@ -501,8 +531,15 @@ jreleaser {
     // icon:exclamation-triangle[] icon:eye-slash[]
     version = '1.0.0'
 
+    // The strategy used to parse the project version
+    // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
+    // Valid values are [`SEMVER`, `JAVA_MODULE`, `CUSTOM`].
+    // Defaults to `SEMVER`.
+    // icon:dot-circle[] icon:eye-slash[]
+    versionPattern = 'SEMVER'
+
     // A regex to determine if the project version is snapshot
-    // May define a `JRELEASER_SNAPSHOT_PATTERN` environment variable instead.
+    // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
     // icon:dot-circle[] icon:eye-slash[]
     snapshotPattern = '.*-SNAPSHOT'
 
@@ -592,17 +629,43 @@ jreleaser {
 ----
 ====
 
-When the `link:https://kordamp.org/kordamp-gradle-plugins/[org.kordamp.gradle.project]` plugin is
-used in combination with Gradle then the following properties will be automatically mapped if
-there were not defined in the `jreleaser` DSL block:
+== Version
 
-[%header, cols="<1,<1", width="100%"]
-|===
-| Kordamp                   | JReleaser
-| config.info.description   | project.description
-| config.info.links.website | project.website
-| config.info.authors       | project.authors
-| config.info.tags          | project.tags
-| config.info.licenses      | project.license
-| config.info.inceptionYear | project.extraProperties.inceptionYear
-|===
+It is assumed that the project's version follows the link:https://semver.org/[Semantic Versioning] specification, however
+not everyone is happy with this specification nor is able to follow it to the letter. Fortunately JReleaser does not
+impose a version format and lets you decide among the following options:
+
+=== SEMVER
+
+The version number complies with the Semantic Versioning specification. Examples:
+
+ * 1.2.3
+ * 1.2.3.TAG
+ * 1.2.3+BUILD
+ * 1.2.3.TAG+BUILD
+
+The following relaxed patterns are also supported:
+
+ * 1.2.TAG
+ * 1.2+BUILD
+ * 1.2.TAG+BUILD
+ * 1.TAG
+ * 1+BUILD
+ * 1.TAG+BUILD
+
+=== JAVA_MODULE
+
+The version number complies with the link:https://docs.oracle.com/javase/9/docs/api/java/lang/module/ModuleDescriptor.Version.html[Java Module Version]
+syntax, resulting in the following supported formats:
+
+ * 1.2.3
+ * 1.2.3-PRE
+ * 1.2.3+BUILD
+ * 1.2.3-PRE+BUILD
+
+=== CUSTOM
+
+Use your own format, no pattern is enforced nor validated. Be aware that changelog generation may not be accurate
+as tags will be compared using their natural literal comparator, thus comparing "1" vs. "11" vs. "1.0" may
+not yield the expected result as these strings will not be parsed into numeric tokens.
+
