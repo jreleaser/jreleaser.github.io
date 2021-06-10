@@ -1,10 +1,13 @@
 = Homebrew
 
 The `brew` section specifies how the formula should be created. You can check the
-link:https://github.com/Homebrew/brew/blob/master/docs/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
-link:https://github.com/Homebrew/brew/blob/master/docs/Formula-Cookbook.md[formula cookbook] for more details.
+link:https://docs.brew.sh/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
+link:https://docs.brew.sh/Formula-Cookbook.md[formula cookbook] and
+link:https://docs.brew.sh/Cask-Cookbook[cask-cookbook] for more details.
 
-NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Homebrew.
+NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Homebrew to create a formula.
+
+NOTE: Only artifacts with `.dmg`, `.pkg` extension may be packaged with Homebrew to create a cask.
 
 WARNING: Snapshots are *not* supported.
 
@@ -37,6 +40,13 @@ packagers:
     # If left unspecified, will use `{{projectNameCapitalized}}`.
     # icon:dot-circle[] icon:file-alt[]
     formulaName: App
+
+    # Customize the livecheck block.
+    # Default is empty.
+    # icon:dot-circle[] icon:file-alt[]
+    livecheck:
+      - 'url "pass:[https://host/sparkle/appcast-release.xml]"'
+      - 'strategy :sparkle'
 
     # A map of Homebrew dependencies.
     # The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -102,6 +112,44 @@ packagers:
       # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
       token: __DO_NOT_SET_HERE__
+
+    # Cask configuration.
+    # Requires artifact with extension `.dmg` or `.pkg`.
+    # Defaults are shown.
+    # icon:dot-circle[]
+    cask:
+
+      # The class name of the generated cask.
+      # If left unspecified, will use `{{projectName}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      name: app
+
+      # The name of the generated cask.
+      # If left unspecified, will use `{{brewFormulaName}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      displayName: App
+
+      # Relative path to the .pkg file.
+      # If left unspecified, will use the filename of the .pkg file.
+      # icon:dot-circle[] icon:file-alt[]
+      pkgName: app-1.0.0.pkg
+
+      # Name of the application folder.
+      # If left unspecified, will use `{{brewFormulaName}}.app`.
+      # icon:dot-circle[] icon:file-alt[]
+      appName: App.app
+
+      # Procedures to uninstall the Cask.
+      # icon:dot-circle[]
+      uninstall:
+        pkgutil:
+          - com.acme.app
+
+      # Additional procedures for a more complete uninstall.
+      # icon:dot-circle[]
+      zap:
+        trash:
+          - '~/Library/Caches/App'
 ----
 TOML::
 +
@@ -126,6 +174,13 @@ TOML::
   # If left unspecified, will use `{{projectNameCapitalized}}`.
   # icon:dot-circle[] icon:file-alt[]
   formulaName = "App"
+
+  # Customize the livecheck block.
+  # Default is empty.
+  # icon:dot-circle[] icon:file-alt[]
+  livecheck = [
+     "url 'pass:[https://host/sparkle/appcast-release.xml'",
+     "strategy :sparkle'"]
 
   # A map of Homebrew dependencies.
   # The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -183,6 +238,41 @@ TOML::
   # environment variable must be defined.
   # icon:dot-circle[] icon:eye-slash[]
   tap.token = "__DO_NOT_SET_HERE__"
+
+  # Cask configuration.
+  # Requires artifact with extension `.dmg` or `.pkg`.
+  # Defaults are shown.
+  # icon:dot-circle[]
+
+  # The class name of the generated cask.
+  # If left unspecified, will use `{{projectName}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  cask.name = "app"
+
+  # The name of the generated cask.
+  # If left unspecified, will use `{{brewFormulaName}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  cask.displayName = "App"
+
+  # Relative path to the .pkg file.
+  # If left unspecified, will use the filename of the .pkg file.
+  # icon:dot-circle[] icon:file-alt[]
+  cask.pkgNam = "app-1.0.0.pkg"
+
+  # Name of the application folder.
+  # If left unspecified, will use `{{brewFormulaName}}.app`.
+  # icon:dot-circle[] icon:file-alt[]
+  cask.appName = "App.app"
+
+  # Procedures to uninstall the Cask.
+  # icon:dot-circle[]
+  pass:[[[packagers.brew.cask.uninstall]]]
+    pkgutil = ["com.acme.app"]
+
+  # Additional procedures for a more complete uninstall.
+  # icon:dot-circle[]
+  pass:[[[packagers.brew.cask.zap]]]
+    trash = ["~/Library/Caches/App"]
 ----
 JSON::
 +
@@ -210,6 +300,14 @@ JSON::
       // If left unspecified, will use `{{projectNameCapitalized}}`.
       // icon:dot-circle[] icon:file-alt[]
       "formulaName": "App",
+
+      / Customize the livecheck block.
+      / Default is empty.
+      / icon:dot-circle[] icon:file-alt[]
+      "livecheck": [
+        "url 'pass:[https://host/sparkle/appcast-release.xml]'",
+        "strategy :sparkle"
+      ],
 
       // A map of Homebrew dependencies.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -278,6 +376,49 @@ JSON::
         // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
         "token": "__DO_NOT_SET_HERE__"
+      },
+
+      // Cask configuration.
+      // Requires artifact with extension `.dmg` or `.pkg`.
+      // Defaults are shown.
+      // icon:dot-circle[]
+      "cask": {
+
+        // The class name of the generated cask.
+        // If left unspecified, will use `{{projectName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "name": "app",
+
+        // The name of the generated cask.
+        // If left unspecified, will use `{{brewFormulaName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "displayName": "App",
+
+        // Relative path to the .pkg file.
+        // If left unspecified, will use the filename of the .pkg file.
+        // icon:dot-circle[] icon:file-alt[]
+        "pkgName": "app-1.0.0.pkg",
+
+        // Name of the application folder.
+        // If left unspecified, will use `{{brewFormulaName}}.app`.
+        // icon:dot-circle[] icon:file-alt[]
+        "appName": "App.app",
+
+        // Procedures to uninstall the Cask.
+        // icon:dot-circle[]
+        "uninstall": {
+          "pkgutil": {
+            "com.acme.app"
+          }
+        },
+
+        // Additional procedures for a more complete uninstall.
+        // icon:dot-circle[]
+        "zap": {
+          "trash": {
+            "~/Library/Caches/App"
+          }
+        }
       }
     }
   }
@@ -319,6 +460,16 @@ Maven::
         icon:dot-circle[] icon:file-alt[]
       -->
       <formulaName>App</formulaName>
+
+      <!--
+        Customize the livecheck block.
+        Default is empty.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <livecheck>
+        <livecheck>url "pass:[https://host/sparkle/appcast-release.xml]"</livecheck>
+        <livecheck>strategy :sparkle</livecheck>
+      </livecheck>
 
       <!--
         A map of Homebrew dependencies.
@@ -429,6 +580,63 @@ Maven::
         -->
         <token>__DO_NOT_SET_HERE__</token>
       </tap>
+
+      <!--
+        Cask configuration.
+        Requires artifact with extension `.dmg` or `.pkg`.
+        Defaults are shown.
+        icon:dot-circle[]
+      -->
+      <cask>
+
+        <!--
+          The class name of the generated cask.
+          If left unspecified, will use `{{projectName}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <name>app</name>
+
+        <!--
+          The name of the generated cask.
+          If left unspecified, will use `{{brewFormulaName}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <displayName>App</displayName>
+
+        <!--
+          Relative path to the .pkg file.
+          If left unspecified, will use the filename of the .pkg file.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <pkgName>app-1.0.0.pkg</pkgName>
+
+        <!--
+          Name of the application folder.
+          If left unspecified, will use `{{brewFormulaName}}.app`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <appName>App.app</appName>
+
+        <!--
+          Procedures to uninstall the Cask.
+          icon:dot-circle[]
+        -->
+        <uninstall>
+          <pkgutil>
+            <pkgutil>com.acme.app</pkgutil>
+          </pkgutil>
+        </uninstall>
+
+        <!--
+          Additional procedures for a more complete uninstall.
+          icon:dot-circle[]
+        -->
+        <zap>
+          <trash>
+            <trash>~/Library/Caches/App</trash>
+          </trash>
+        </zap>
+       </cask>
     </brew>
   </packagers>
 </jreleaser>
@@ -459,6 +667,13 @@ jreleaser {
       // If left unspecified, will use `{{projectNameCapitalized}}`.
       // icon:dot-circle[] icon:file-alt[]
       formulaName = 'App'
+
+      // Customize the livecheck block.
+      // Default is empty.
+      // icon:dot-circle[] icon:file-alt[]
+      livecheck = [
+        'url "pass:[https://host/sparkle/appcast-release.xml]"',
+        'strategy :sparkle']
 
       // A map of Homebrew dependencies.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
@@ -525,6 +740,49 @@ jreleaser {
         // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
         token = '__DO_NOT_SET_HERE__'
+      }
+
+      // Cask configuration.
+      // Requires artifact with extension `.dmg` or `.pkg`.
+      // Defaults are shown.
+      // icon:dot-circle[]
+      cask {
+
+        // The class name of the generated cask.
+        // If left unspecified, will use `{{projectName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        name = 'app'
+
+        // The name of the generated cask.
+        // If left unspecified, will use `{{brewFormulaName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        displayName = 'App'
+
+        // Relative path to the .pkg file.
+        // If left unspecified, will use the filename of the .pkg file.
+        // icon:dot-circle[] icon:file-alt[]
+        pkgName = 'app-1.0.0.pkg'
+
+        // Name of the application folder.
+        // If left unspecified, will use `{{brewFormulaName}}.app`.
+        // icon:dot-circle[] icon:file-alt[]
+        appName = 'App.app'
+
+        // Procedures to uninstall the Cask.
+        // icon:dot-circle[]
+        uninstall = [
+          pkgutil: [
+            'com.acme.app'
+          ]
+        ]
+
+        // Additional procedures for a more complete uninstall.
+        // icon:dot-circle[]
+        zap = [
+          trash: [
+            '~/Library/Caches/App'
+          ]
+        ]
       }
     }
   }      
