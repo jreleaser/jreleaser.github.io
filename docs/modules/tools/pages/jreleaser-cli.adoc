@@ -17,8 +17,8 @@ Commands:
   changelog     Calculate the changelog.
   checksum      Calculate checksums.
   sign          Sign release artifacts.
-  upload        Uploads all artifacts.
-  release       Create or update a release..
+  upload        Upload all artifacts.
+  release       Create or update a release.
   prepare       Prepare all distributions.
   package       Package all distributions.
   publish       Publish all distributions.
@@ -93,7 +93,7 @@ The following commands are supported:
 [source]
 ----
 $ jreleaser init -h
-Usage: jreleaser init [-dhioqVw] [-b=<basedir>] [-f=<format>]
+Usage: jreleaser init [-dhioqVw] [-b=<basedir>] [-f=<format>] [-od=<outputdir>]
 Create a jreleaser config file.
   -b, --basedir=<basedir>   Base directory.
   -d, --debug               Set log level to debug.
@@ -101,6 +101,8 @@ Create a jreleaser config file.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
+      -od, --output-directory=<outputdir>
+                            Output directory.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
@@ -115,7 +117,8 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 [source]
 ----
 $ jreleaser config -h
-Usage: jreleaser config [-adfhiqVw] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser config [-adfhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+                        [-od=<outputdir>]
 Display current configuration.
   -a, --assembly            Display assembly configuration.
   -b, --basedir=<basedir>   Base directory.
@@ -123,6 +126,8 @@ Display current configuration.
                             The config file
   -d, --debug               Set log level to debug.
   -f, --full                Display full configuration.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -189,8 +194,9 @@ The value of `--tool-name` must match any of the available xref:configuration:pa
 [source]
 ----
 $ jreleaser assemble -h
-Usage: jreleaser assemble [-dhiqVw] [-an=<assemblerName>] [-b=<basedir>]
+Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=<assemblerName>] [-b=<basedir>]
                           [-c=<configFile>] [-dn=<distributionName>]
+                          [-od=<outputdir>]
 Assemble distributions.
       -an, --assembler-name=<assemblerName>
                             The name of the assembler.
@@ -200,6 +206,8 @@ Assemble distributions.
   -d, --debug               Set log level to debug.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -226,12 +234,15 @@ This command must be invoked separatedly from the others as some of the assmeble
 [source]
 ----
 $ jreleaser changelog -h
-Usage: jreleaser changelog [-dhiqVw] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+                           [-od=<outputdir>]
 Calculate the changelog.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -251,12 +262,15 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser checksum -h
-Usage: jreleaser checksum [-dhiqVw] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser checksum [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+                          [-od=<outputdir>]
 Calculate checksums.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -276,12 +290,15 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser sign -h
-Usage: jreleaser sign [-dhiqVw] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser sign [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+                      [-od=<outputdir>]
 Sign release artifacts.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -300,13 +317,16 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 
 [source]
 ----
-Usage: jreleaser upload [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
-                        [-un=<uploaderName>] [-ut=<uploaderType>]
+Usage: jreleaser upload [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
+                        [-od=<outputdir>] [-un=<uploaderName>]
+                        [-ut=<uploaderType>]
 Uploads all artifacts.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -365,7 +385,7 @@ $ jreleaser upload --uploader-type artifactory --uploader-name mine
 ----
 $ jreleaser release -h
 Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
-                         [--draft] [--overwrite] [--prerelease]
+                         [--draft] [-grs] [--overwrite] [--prerelease]
                          [--signing-armored] [--signing-enabled] [--skip-tag]
                          [--update] [-b=<basedir>] [--branch=<branch>]
                          [-c=<configFile>] [--changelog=<changelog>]
@@ -397,6 +417,8 @@ Create or update a release..
       --draft                If the release is a draft.
       --file=<files>         Input file(s) to be uploaded.
       --glob=<globs>         Input file(s) to be uploaded (as globs).
+      -grs, --git-root-search
+                             Searches for the Git root.
   -h, --help                 Show this help message and exit.
   -i, --info                 Set log level to info.
       --milestone-name=<milestoneName>
@@ -459,8 +481,9 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser prepare -h
-Usage: jreleaser prepare [-dhiqVw] [-b=<basedir>] [-c=<configFile>]
-                         [-dn=<distributionName>] [-tn=<toolName>]
+Usage: jreleaser prepare [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+                         [-dn=<distributionName>] [-od=<outputdir>]
+                         [-tn=<toolName>]
 Prepare all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -468,6 +491,8 @@ Prepare all distributions.
   -d, --debug               Set log level to debug.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -519,8 +544,9 @@ $ jreleaser prepare --distribution-name app --tool-name brew
 [source]
 ----
 $ jreleaser package -h
-Usage: jreleaser package [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
-                         [-dn=<distributionName>] [-tn=<toolName>]
+Usage: jreleaser package [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
+                         [-dn=<distributionName>] [-od=<outputdir>]
+                         [-tn=<toolName>]
 Package all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -528,6 +554,8 @@ Package all distributions.
   -d, --debug               Set log level to debug.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -583,15 +611,18 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser publish -h
-Usage: jreleaser publish [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
-                        [-dn=<distributionName>] [-tn=<toolName>]
-Publish all distributions.
+Usage: jreleaser publish [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
+                         [-dn=<distributionName>] [-od=<outputdir>]
+                         [-tn=<toolName>]
+Publishes all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -647,8 +678,8 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser announce -h
-Usage: jreleaser announce [-dhiqVwy] [-an=<announcerName>] [-b=<basedir>]
-                          [-c=<configFile>]
+Usage: jreleaser announce [-dhiqVwy] [-grs] [-an=<announcerName>]
+                          [-b=<basedir>] [-c=<configFile>] [-od=<outputdir>]
 Announce a release.
       -an, --announcer-name=<announcerName>
                             The name of the announcer.
@@ -656,6 +687,8 @@ Announce a release.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
@@ -695,12 +728,15 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser full-release -h
-Usage: jreleaser full-release [-dhiqVwy] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser full-release [-dhiqVwy] [-grs] [-b=<basedir>]
+                              [-c=<configFile>] [-od=<outputdir>]
 Perform a full release.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
   -d, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
