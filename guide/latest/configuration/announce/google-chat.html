@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mastodon :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/mastodon.html">
+    <title>GoogleChat :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/google-chat.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -162,13 +162,13 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="gitter.html">Gitter</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="mail.html">Mail</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="mastodon.html">Mastodon</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -446,19 +446,34 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="mastodon.html">Mastodon</a></li>
+    <li><a href="google-chat.html">GoogleChat</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/mastodon.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/google-chat.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mastodon</h1>
+<h1 class="page">GoogleChat</h1>
 <div class="paragraph">
-<p>Posts a status to a <a href="https://joinmastodon.org/">Mastodon</a> server.</p>
+<p>Posts a message to a <a href="https://chat.google.com/">GoogleChat</a> room. You must create a custom webhook for this announcer to work.
+Follow the instructions at <a href="https://developers.google.com/chat/how-tos/webhooks" class="bare">https://developers.google.com/chat/how-tos/webhooks</a> to register an
+incoming webhook.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over explicitly setting a value in the configuration DSL.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -505,7 +520,7 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  mastodon:
+  googleChat:
 
     # Enable or disable this announcer.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -521,27 +536,29 @@
     # Defines the read timeout in seconds.
     # Defaults to `60`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    readTimeout: 60
+    readTimeout: 6
 
-    # The Mastodon server.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    host: https://my.mastodonserver.org
-
-    # The access token to use.
-    # If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
+    # The webhook associated with a specific GoogleChat room.
+    # If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    accessToken: __DO_NOT_SET_HERE__
+    webhook: __DO_NOT_SET_HERE__
 
-    # The announcement status.
+    # The announcement message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    status: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+    message: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    # Path to a template file that contains the message.
+    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+    # Defaults to `src/jreleaser/templates/googleChat.tpl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    messageTemplate: path/to/template/googleChat.tpl
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
-      # Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
+      # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
       foo: bar</code></pre>
 </div>
 </div>
@@ -550,7 +567,7 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[announce.mastodon]
+[announce.googleChat]
 
   # Enable or disable this announcer.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -568,25 +585,27 @@
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
 
-  # The Mastodon server.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  host = "https://my.mastodonserver.org"
-
-  # The access token to use.
-  # If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
+  # The webhook associated with a specific GoogleChat room.
+  # If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  accessToken = "__DO_NOT_SET_HERE__"
+  webhook = "__DO_NOT_SET_HERE__"
 
-  # The announcement status.
+  # The announcement message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  status = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+  message = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # Path to a template file that contains the message.
+  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+  # Defaults to `src/jreleaser/templates/googleChat.tpl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  messageTemplate = "path/to/template/googleChat.tpl"
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -596,7 +615,7 @@
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "mastodon": {
+    "googleChat": {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -614,25 +633,27 @@
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "readTimeout": 60,
 
-      // The Mastodon server.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "host": "https://my.mastodonserver.org",
-
-      // The access token to use.
-      // If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
+      // The webhook associated with a specific GoogleChat room.
+      // If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "accessToken": "__DO_NOT_SET_HERE__",
+      "webhook": "__DO_NOT_SET_HERE__",
 
-      // The announcement status.
+      // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "status": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+      "message": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/googleChat.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "messageTemplate": "path/to/template/googleChat.tpl",
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
-        // Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
+        // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
         "foo": "bar"
       }
     }
@@ -652,7 +673,7 @@
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;mastodon&gt;
+    &lt;googleChat&gt;
 
       &lt;!--
         Enable or disable this announcer.
@@ -677,25 +698,26 @@
       &lt;readTimeout&gt;60&lt;/readTimeout&gt;
 
       &lt;!--
-        The Mastodon server.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;host&gt;https://my.mastodonserver.org&lt;/host&gt;
-
-      &lt;!--
-        The access token to use.
-        If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
-        environment variable must be defined.
+        The webhook associated with a specific GoogleChat room.
+        If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK` environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;accessToken&gt;__DO_NOT_SET_HERE__&lt;/accessToken&gt;
+      &lt;webhook&gt;__DO_NOT_SET_HERE__&lt;/webhook&gt;
 
       &lt;!--
-        The announcement status.
+        The announcement message.
         Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
-      &lt;status&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
+      &lt;message&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/message&gt;
+
+      &lt;!--
+        Path to a template file that contains the message.
+        Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        Defaults to `src/jreleaser/templates/googleChat.tpl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;messageTemplate&gt;path/to/template/googleChat.tpl&lt;/messageTemplate&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -703,11 +725,11 @@
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
+          Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
-    &lt;/mastodon&gt;
+    &lt;/googleChat&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -719,7 +741,7 @@
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    mastodon {
+    googleChat {
 
       // Enable or disable this announcer.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -737,23 +759,25 @@
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout = 60
 
-      // The Mastodon server.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      host = 'https://my.mastodonserver.org'
-
-      // The access token to use.
-      // If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
+      // The webhook associated with a specific GoogleChat room.
+      // If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      accessToken = '__DO_NOT_SET_HERE__'
+      webhook = '__DO_NOT_SET_HERE__'
 
-      // The announcement status.
+      // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      status = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      message = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/googleChat.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      messageTemplate = 'path/to/template/googleChat.tpl'
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
+      // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
     }
@@ -763,6 +787,12 @@
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>You may define either <code>message</code> or <code>messageTemplate</code>, with the former taking precedence over the latter.</p>
+</div>
+<div class="paragraph">
+<p>The template file may be initialized using the <code>template</code> command.</p>
 </div>
 </article>
   </div>

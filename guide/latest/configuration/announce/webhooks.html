@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mastodon :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/mastodon.html">
+    <title>Webhooks :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/webhooks.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -168,7 +168,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="mail.html">Mail</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="mastodon.html">Mastodon</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -186,7 +186,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="twitter.html">Twitter</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="webhooks.html">Webhooks</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -446,19 +446,32 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="mastodon.html">Mastodon</a></li>
+    <li><a href="webhooks.html">Webhooks</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/mastodon.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/webhooks.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Mastodon</h1>
+<h1 class="page">Webhooks</h1>
 <div class="paragraph">
-<p>Posts a status to a <a href="https://joinmastodon.org/">Mastodon</a> server.</p>
+<p>Posts a message to a service that supports incoming webhooks.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the corresponding environment variable over explicitly setting a value in the configuration DSL.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -505,52 +518,65 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  mastodon:
+  webhooks:
 
-    # Enable or disable this announcer.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    active: ALWAYS
-
-    # Defines the connection timeout in seconds.
-    # Defaults to `20`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    connectTimeout: 20
-
-    # Defines the read timeout in seconds.
-    # Defaults to `60`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    readTimeout: 60
-
-    # The Mastodon server.
+    # Webhooks require a name.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    host: https://my.mastodonserver.org
+    myWebhook:
 
-    # The access token to use.
-    # If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
-    # environment variable must be defined.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    accessToken: __DO_NOT_SET_HERE__
+      # Enable or disable this announcer.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      active: ALWAYS
 
-    # The announcement status.
-    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    status: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      # Defines the connection timeout in seconds.
+      # Defaults to `20`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      connectTimeout: 20
 
-    # Additional properties used when evaluating templates.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    extraProperties:
-      # Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
-      foo: bar</code></pre>
+      # Defines the read timeout in seconds.
+      # Defaults to `60`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      readTimeout: 6
+
+      # The webhook associated with a specific Gitter room.
+      # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      webhook: __DO_NOT_SET_HERE__
+
+      # The announcement message.
+      # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      message: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      # The name of the JSON property that contains the message.
+      # Defaults to `text`.
+      # Ignored if `messageTemplate` is used.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      messageProperty: text
+
+      # Path to a template file that contains the message.
+      # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      messageTemplate: path/to/template/myWebhook.tpl
+
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        foo: bar</code></pre>
 </div>
 </div>
 </div>
 <div class="tab-pane" aria-labelledby="tabset1_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[announce.mastodon]
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Webhooks require a name.
+# <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+[announce.webhooks.myWebhook]
 
   # Enable or disable this announcer.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -568,25 +594,33 @@
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
 
-  # The Mastodon server.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  host = "https://my.mastodonserver.org"
-
-  # The access token to use.
-  # If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
+  # The webhook associated with a specific Gitter room.
+  # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  accessToken = "__DO_NOT_SET_HERE__"
+  webhook = "__DO_NOT_SET_HERE__"
 
-  # The announcement status.
+  # The announcement message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  status = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+  message = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # The name of the JSON property that contains the message.
+  # Defaults to `text`.
+  # Ignored if `messageTemplate` is used.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  messageProperty = "text"
+
+  # Path to a template file that contains the message.
+  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+  # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  messageTemplate = "path/to/template/myWebhook.tpl"
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -596,44 +630,57 @@
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "mastodon": {
+    "webhooks": {
 
-      // Enable or disable this announcer.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "active": "ALWAYS",
-
-      // Defines the connection timeout in seconds.
-      // Defaults to `20`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "connectTimeout": 20,
-
-      // Defines the read timeout in seconds.
-      // Defaults to `60`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "readTimeout": 60,
-
-      // The Mastodon server.
+      // Webhooks require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "host": "https://my.mastodonserver.org",
+      "myWebhook": {
 
-      // The access token to use.
-      // If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "accessToken": "__DO_NOT_SET_HERE__",
+        // Enable or disable this announcer.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "active": "ALWAYS",
 
-      // The announcement status.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "status": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "connectTimeout": 20,
 
-      // Additional properties used when evaluating templates.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
-        "foo": "bar"
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "readTimeout": 60,
+
+        // The webhook associated with a specific Gitter room.
+        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "webhook": "__DO_NOT_SET_HERE__",
+
+        // The announcement message.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "message": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+        // The name of the JSON property that contains the message.
+        // Defaults to `text`.
+        // Ignored if `messageTemplate` is used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "messageProperty": "text",
+
+        // Path to a template file that contains the message.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "messageTemplate": "path/to/template/myWebhook.tpl",
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          "foo": "bar"
+        }
       }
     }
   }
@@ -652,62 +699,78 @@
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;mastodon&gt;
+    &lt;webhooks&gt;
 
       &lt;!--
-        Enable or disable this announcer.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;active&gt;ALWAYS&lt;/active&gt;
-
-      &lt;!--
-        Defines the connection timeout in seconds.
-        Defaults to `20`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;connectTimeout&gt;20&lt;/connectTimeout&gt;
-
-      &lt;!--
-        Defines the read timeout in seconds.
-        Defaults to `60`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;readTimeout&gt;60&lt;/readTimeout&gt;
-
-      &lt;!--
-        The Mastodon server.
+        Webhooks require a name.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;host&gt;https://my.mastodonserver.org&lt;/host&gt;
+       --&gt;
+      &lt;myWebhook&gt;
 
-      &lt;!--
-        The access token to use.
-        If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
-        environment variable must be defined.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;accessToken&gt;__DO_NOT_SET_HERE__&lt;/accessToken&gt;
-
-      &lt;!--
-        The announcement status.
-        Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;status&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
-
-      &lt;!--
-        Additional properties used when evaluating templates.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
+          Enable or disable this announcer.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;foo&gt;bar&lt;/foo&gt;
-      &lt;/extraProperties&gt;
-    &lt;/mastodon&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+
+        &lt;!--
+          Defines the connection timeout in seconds.
+          Defaults to `20`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;connectTimeout&gt;20&lt;/connectTimeout&gt;
+
+        &lt;!--
+          Defines the read timeout in seconds.
+          Defaults to `60`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;readTimeout&gt;60&lt;/readTimeout&gt;
+
+        &lt;!--
+          The webhook associated with a specific Gitter room.
+          If left unspecified, the `JRELEASER_${name}_WEBHOOK` environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;webhook&gt;__DO_NOT_SET_HERE__&lt;/webhook&gt;
+
+        &lt;!--
+          The announcement message.
+          Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;message&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/message&gt;
+
+        &lt;!--
+          The name of the JSON property that contains the message.
+          Defaults to `text`.
+          Ignored if `messageTemplate` is used.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;messageProperty&gt;text&lt;/messageProperty&gt;
+
+        &lt;!--
+          Path to a template file that contains the message.
+          Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+          Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;messageTemplate&gt;path/to/template/myWebhook.tpl&lt;/messageTemplate&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
+      &lt;/myWebhook&gt;
+    &lt;/webhooks&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -719,43 +782,56 @@
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    mastodon {
+    webhooks {
 
-      // Enable or disable this announcer.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      active = 'ALWAYS'
-
-      // Defines the connection timeout in seconds.
-      // Defaults to `20`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      connectTimeout = 20
-
-      // Defines the read timeout in seconds.
-      // Defaults to `60`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      readTimeout = 60
-
-      // The Mastodon server.
+      // Webhooks require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      host = 'https://my.mastodonserver.org'
+      myWebhook {
 
-      // The access token to use.
-      // If left unspecified, the `JRELEASER_MASTODON_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      accessToken = '__DO_NOT_SET_HERE__'
+        // Enable or disable this announcer.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active = 'ALWAYS'
 
-      // The announcement status.
-      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      status = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        connectTimeout = 20
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `mastodon`, i.e, `mastodonFoo`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      extraProperties.put('foo', 'bar')
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        readTimeout = 60
+
+        // The webhook associated with a specific Gitter room.
+        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        webhook = '__DO_NOT_SET_HERE__'
+
+        // The announcement message.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        message = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+        // The name of the JSON property that contains the message.
+        // Defaults to `text`.
+        // Ignored if `messageTemplate` is used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        messageProperty = 'text'
+
+        // Path to a template file that contains the message.
+        // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        messageTemplate = 'path/to/template/myWebhook.tpl'
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
+      }
     }
   }
 }</code></pre>
@@ -763,6 +839,12 @@
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>You may define either <code>message</code> or <code>messageTemplate</code>, with the former taking precedence over the latter.</p>
+</div>
+<div class="paragraph">
+<p>The template file may be initialized using the <code>template</code> command.</p>
 </div>
 </article>
   </div>
