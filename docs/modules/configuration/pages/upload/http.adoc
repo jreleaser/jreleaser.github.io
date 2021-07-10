@@ -40,9 +40,14 @@ upload:
       # icon:dot-circle[]
       readTimeout: 60
 
-      # URL of the HTTP/HTTPS server + path.
+      # URL of the HTTP/HTTPS server + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
-      target: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]
+      uploadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]
+
+      # URL of the HTTP/HTTPS server + path + artifact.
+      # If undefined, will use the same value as `uploadUrl`.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      downloadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]
 
       # The username required for authorization.
       # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -122,10 +127,14 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # URL of the HTTP/HTTPS server + path.
-  # The artifact file name will be appended automatically.
+  # URL of the HTTP/HTTPS server + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
-  target = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]"
+  uploadUrl = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]"
+
+  # URL of the HTTP/HTTPS server + path + artifact.
+  # If undefined, will use the same value as `uploadUrl`.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  downloadUrl = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]"
 
   # The username required for authorization.
   # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -208,10 +217,14 @@ JSON::
         // icon:dot-circle[]
         "readTimeout": 60,
 
-        // URL of the HTTP/HTTPS server + path.
-        // The artifact file name will be appended automatically.
+        // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "target": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]",
+        "uploadUrl": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]",
+
+        // URL of the HTTP/HTTPS server + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "downloadUrl": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]",
 
         // The username required for authorization.
         // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -314,11 +327,17 @@ Maven::
         <readTimeout>60</readTimeout>
 
         <!--
-          URL of the HTTP/HTTPS server + path.
-          The artifact file name will be appended automatically.
+          URL of the HTTP/HTTPS server + path + artifact.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <target>pass:[https:my.zulipchat.com/api/v1]</target>
+        <uploadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]</uploadUrl>
+
+        <!--
+          URL of the HTTP/HTTPS server + path + artifact.
+          If undefined, will use the same value as `uploadUrl`.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <downloadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]</downloadUrl>
 
         <!--
           The username required for authorization.
@@ -429,10 +448,14 @@ jreleaser {
         // icon:dot-circle[]
         readTimeout = 60
 
-        // URL of the HTTP/HTTPS server + path.
-        // The artifact file name will be appended automatically.
+        // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        target = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+        uploadUrl = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]'
+
+        // URL of the HTTP/HTTPS server + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        downloadUrl = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]'
 
         // The username required for authorization.
         // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -491,12 +514,22 @@ jreleaser {
 ----
 ====
 
-== Target
+== UploadUrl
 
-The target is the URL to upload the artifacts to.
+The uploadUrl is the URL to upload the artifacts to.
 
-An example configuration can look like
-`target: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFileName}}'`.
+An example configuration may look like
+`uploadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactfileName}}'`.
+
+And will result in a final deployment like
+`pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactfileName}}'`.
 
 And will result in a final deployment like
 `pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.

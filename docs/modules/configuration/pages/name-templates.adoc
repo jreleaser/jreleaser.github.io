@@ -537,6 +537,17 @@ The following names identify an artifact without explicit `platform`
 | artifactName           | the name of the artifact file without extension
 |===
 
+The following names match an artifact without explicit `platform` when xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                               | Description
+| artifactDownloadUrl               | the URL required to download the artifact
+| artifactDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifactDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
 The following names match the first artifact in a distribution
 
 [%header, cols="<2,<5", width="100%"]
@@ -548,19 +559,41 @@ The following names match the first artifact in a distribution
 | distributionArtifactName     | the name of the artifact file without extension
 |===
 
+The following names match the first artifact in a distribution when xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                   | Description
+| distributionDownloadUrl               | the URL required to download the artifact
+| distributionDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| distributionDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
 Additional names become available when the artifact defines a `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                                           | Description
-| artifact{{CapitalizedPlatform}}Url            | the URL required to download the artifact
-| artifact{{CapitalizedPlatform}}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
-| artifact{{CapitalizedPlatform}}FileName       | the name of the artifact file
-| artifact{{CapitalizedPlatform}}Name           | the name of the artifact file without extension
+| Key                               | Description
+| artifact${Platform}Url            | the URL required to download the artifact
+| artifact${Platform}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
+| artifact${Platform}FileName       | the name of the artifact file
+| artifact${Platform}Name           | the name of the artifact file without extension
+|===
+
+Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                          | Description
+| artifact${Platform}DownloadUrl               | the URL required to download the artifact
+| artifact${Platform}Download${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifact${Platform}Download${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
 |===
 
 Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
-artifact, and `artifact{{CapitalizedPlatform}}` for all artifacts, and the capitalized key.
+artifact, and `artifact{{Platform}}` for all artifacts, and the capitalized key.
 
 Thus, for artifacts defined as
 
