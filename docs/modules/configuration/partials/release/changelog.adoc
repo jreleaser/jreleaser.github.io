@@ -1,0 +1,65 @@
+== Changelog
+
+You may define either `content` or `contentTemplate`, with the latter taking precedence over the former.
+
+Changelog format applies only to the automatically generated changelog, that is, formatting wo't occur if the `external`
+property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.
+
+The `change` property only accepts the following name templates:
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key             | Description
+| commitShortHash | head commit hash abbreviated to 7 characters
+| commitFullHash  | head commit hash
+| commitTitle     | first line of the commit message
+| commitAuthor    | full name of the commit author
+| commitsUrl      | commits URl as provided by the Git host
+|===
+
+The `content` and `contentTemplate` accept all xref:configuration:name-templates.adoc[], take special consideration on
+`{{changelogChanges}}` and `{{changelogContributors}}` as they define the parsed commits.
+
+The following configuration
+
+[source,yaml]
+[subs="attributes,+macros"]
+----
+release:
+  {gitservice_id}:
+    username: aalmiray
+    overwrite: true
+    draft: false
+    sign: true
+    changelog:
+      formatted: ALWAYS
+      change: '- {{commitShortHash}} {{commitTitle}}'
+      labelers:
+        - label: 'feature'
+          title: 'Resolves #'
+          body: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+          body: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+          body: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: '\[chore\] '
+----
+
+Generates a changelog similar to
+
+image::ROOT:jreleaser-changelog-render.jpg[]

@@ -1,0 +1,165 @@
+      <!--
+        Changelog customization.
+        icon:dot-circle[]
+      -->
+      <changelog>
+
+        <!--
+           Disables or enables the changelog.
+          defaults to `true`.
+          icon:dot-circle[]
+        -->
+        <enabled>true</enabled>
+
+        <!--
+          Sorts commits in ascending (oldest first) or descending (newer first).
+          Valid values are>`ASC`, `DESC`.
+          Defaults to `DESC`.
+          icon:dot-circle[]
+        -->
+        <sort>DESC</sort>
+
+        <!--
+          Path to an external file that contains the changelog, read as is.
+          May be a relative path to the configuration file or an absolute path.
+          If unspecified, JReleaser will automatically calculate the changelog.
+          icon:dot-circle[]
+        -->
+        <external>path/to/changelog.md</external>
+
+        <!--
+          Create explicit markdown links for commit hashes.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <links>false</links>
+
+        <!--
+          Enables or disables formatting options.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          icon:dot-circle[]
+        -->
+        <formatted>ALWAYS</formatted>
+
+        <!--
+          The template to use for each change.
+          Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <change>- {{commitShortHash}} {{commitTitle}}</change>
+
+        <!--
+          The template to use for the whole changelog.
+          Defaults is shown.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <content>
+          # Changelog
+
+          {{changelogChanges}
+          {{changelogContributors}}
+        </content>
+
+        <!--
+          Path to a template file that defines the contents.
+          Review the available xref:configuration:name-templates.adoc[].
+          Defaults to `src/jreleaser/templates/changelog.tpl`.
+          icon:dot-circle[]
+        -->
+        <contentTemplate>path/to/template/changelog.tpl</contentTemplate>
+
+        <!--
+          Hide uncategorized commits.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <hideUncategorized>true</hideUncategorized>
+
+        <!--
+          A List of categories to be hidden. May use a comma separated String.
+          Entries must exactly match category titles defined below.
+          Defaults to empty.
+          icon:dot-circle[]
+        -->
+        <hiddenCategories>Merge</hiddenCategories>
+
+        <!--
+          A list of labels to be included.
+          Only changes matching this list will be included.
+          Defaults to empty.
+          icon:dot-circle[]
+        -->
+        <includeLabels>
+          <includeLabel>issue</includeLabel>
+        </includeLabels>
+
+        <!--
+          A list of labels to be excluded.
+          Changes matching this list will be excluded.
+          Defaults to empty.
+          icon:dot-circle[]
+        -->
+        <excludeLabels>
+          <excludeLabel>issue</excludeLabel>
+        </excludeLabels>
+
+        <!--
+          Defines rules that apply labels to changes.
+          Matchers are evaluated independently; the label will
+          be set if at least one of the matchers meets the criteria.
+          icon:dot-circle[]
+        -->
+        <labelers>
+          <labeler>
+            <!--
+              The label to be applied.
+              icon:exclamation-triangle[]
+            -->
+            <label>issue</label>
+
+            <!--
+              Matches the text of the first commit line.
+              icon:dot-circle[]
+            -->
+            <title>^fix:</title>
+
+            <!--
+              Matches the full text of the commit.
+              icon:dot-circle[]
+            -->
+            <body>Fixes #</body>
+          </labeler>
+        </labelers>
+
+        <!--
+          Groups changes by category.
+          Defaults are shown.
+          icon:dot-circle[]
+        -->
+        <categories>
+          <category>
+            <title>🚀 Features</title>
+            <labels>feature,enhancement</labels>
+          </category>
+          <category>
+            <title>🐛 Bug Fixes</title>
+            <labels>bug,fix</labels>
+          </category>
+        </categories>
+
+        <!--
+          Defines rules for replacing the generated content.
+          Each replacer is applied in order.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <replacers>
+          <replacer>
+            <search>\[chore\]\s</search>
+          </replacer>
+          <replacer>
+            <search>/CVE-(\d{4})-(\d+)/g</search>
+            <replace>https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2</replace>
+          </replacer>
+        </replacers>
+      </changelog>
