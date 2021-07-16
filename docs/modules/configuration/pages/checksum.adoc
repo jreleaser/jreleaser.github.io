@@ -168,3 +168,21 @@ jreleaser {
 ----
 --
 ====
+
+== Extra Properties
+
+Both xref:configuration:distributions.adoc[] and xref:ROOT:artifacts.adoc[Artifacts] may define an extra property named
+"individualChecksum". If the value is set to `true` then the checksums for the given element will also be added to the
+release files.
+
+The precedence rules are:
+
+ * If the Artifact has a property "individualChecksum":
+   ** if the property resolves to `true` then the individual checksum is released.
+   ** if the property resolves to `false` then the individual checksum is skipped and no more rules are checked.
+ * If the Distribution has a property "individualChecksum":
+   ** if the property resolves to `true` then individual checksums for all its artifacts are released.
+   ** if the property resolves to `false` then all of its individual checksums are skipped and no more rules are checked.
+ * If the `checksum.individual` property is set:
+   ** if the property resolves to `true` then individual checksums are released.
+   ** if the property resolves to `false` then no individual checksums are released.
