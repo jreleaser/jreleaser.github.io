@@ -70,19 +70,36 @@
         <contentTemplate>path/to/template/changelog.tpl</contentTemplate>
 
         <!--
-          Hide uncategorized commits.
-          Defaults to `false`.
           icon:dot-circle[]
         -->
-        <hideUncategorized>true</hideUncategorized>
+        <hide>
+          <!--
+            Hide uncategorized commits.
+            Defaults to `false`.
+            icon:dot-circle[]
+          -->
+          <uncategorized>true</uncategorized>
 
-        <!--
-          A List of categories to be hidden. May use a comma separated String.
-          Entries must exactly match category titles defined below.
-          Defaults to empty.
-          icon:dot-circle[]
-        -->
-        <hiddenCategories>Merge</hiddenCategories>
+          <!--
+            Hide matching categories.
+            Entries must exactly match category titles defined below.
+            Defaults to empty.
+            icon:dot-circle[]
+          -->
+          <categories>
+            <category>Merge</category>
+          </categories>
+
+          <!--
+            Hide matching contributor names.
+            Value may be plain text or regex.
+            Defaults to empty.
+            icon:dot-circle[]
+          -->
+          <contributors>
+            <contributor>[bot]</contributor>
+          </contributors>
+        </hide>
 
         <!--
           A list of labels to be included.
@@ -120,12 +137,14 @@
 
             <!--
               Matches the text of the first commit line.
+              Value may be plain text or regex.
               icon:dot-circle[]
             -->
             <title>^fix:</title>
 
             <!--
               Matches the full text of the commit.
+              Value may be plain text or regex.
               icon:dot-circle[]
             -->
             <body>Fixes #</body>
@@ -158,7 +177,7 @@
             <search>\[chore\]\s</search>
           </replacer>
           <replacer>
-            <search>/CVE-(\d{4})-(\d+)/g</search>
+            <search>/CVE-(\d\{4\})-(\d+)/g</search>
             <replace>https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2</replace>
           </replacer>
         </replacers>
