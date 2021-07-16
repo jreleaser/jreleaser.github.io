@@ -1,4 +1,10 @@
 = Scoop
+:tool_id:       scoop
+:tool_name:     Scoop
+:tool_env_var:  SCOOP
+:tool_tap:      bucket
+:tool_tap_name: scoop-duke
+:tool_manifest: manifest
 
 JReleaser can generate and publish a _Scoop App Manifest_ into a repository that you have access to.
 
@@ -14,30 +20,15 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-packagers:
-  # icon:dot-circle[]
-  scoop:
-    # Enables or disables Scoop.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # icon:dot-circle[]
-    active: ALWAYS
+include::partial$packagers/yaml/common-head.adoc[]
 
-    # Directory with file templates used to prepare the Scoop distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-    # If specified, path must exist.
-    # icon:dot-circle[]
-    templateDirectory: path/to/scoop/templates
+include::partial$packagers/yaml/commitauthor.adoc[]
 
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-      foo: bar
+include::partial$packagers/yaml/tap.adoc[]
 
     # URL used to check the latest version.
     # Defaults to the releaser's `latestReleaseUrl`.
@@ -48,71 +39,19 @@ packagers:
     # Defaults to the releaser's `downloadUrl`.
     # icon:dot-circle[] icon:file-alt[]
     autoupdateUrl: pass:[https://host/path]
-
-    # Git author used to commit to the bucket repository.
-    # icon:dot-circle[]
-    commitAuthor:
-      # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
-      # icon:dot-circle[]
-      name: jreleaserbot
-
-      # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
-      # icon:dot-circle[]
-      email: pass:[jreleaser@kordamp.org]
-
-    # Git repository to push the formula to.
-    # Defaults are shown.
-    # icon:dot-circle[]
-    bucket:
-
-      # The owner of the bucket repository.
-      # Defaults to the same owner as the release repository.
-      # icon:dot-circle[]
-      owner: duke
-
-      # The name of the bucket repository.
-      # Defaults to `scoop-${repoOwner}`.
-      # icon:dot-circle[]
-      name: scoop-duke
-
-      # Username used for authoring commits. Must have write access to the bucket repository.
-      # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
-      # environment variable must be defined.
-      # Defaults to the same username as the release repository.
-      # icon:dot-circle[] icon:eye-slash[]
-      username: duke
-
-      # Password or OAuth token with write access to the bucket repository.
-      # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-[packagers.scoop]
-  # Enables or disables Scoop.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
+include::partial$packagers/toml/common-head.adoc[]
 
-  # Directory with file templates used to prepare the Scoop distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/scoop/templates"
+include::partial$packagers/toml/commitauthor.adoc[]
 
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+include::partial$packagers/toml/tap.adoc[]
 
   # URL used to check the latest version.
   # Defaults to the releaser's `latestReleaseUrl`.
@@ -123,72 +62,19 @@ TOML::
   # Defaults to the releaser's `downloadUrl`.
   # icon:dot-circle[] icon:file-alt[]
   autoupdateUrl = "pass:[https://host/path]"
-
-  # Git author used to commit to the bucket repository.
-
-  # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
-  # icon:dot-circle[]
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
-  # icon:dot-circle[]
-  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
-
-  # Git repository to push the formula to.
-
-  # The owner of the bucket repository.
-  # Defaults to the same owner as the release repository.
-  # icon:dot-circle[]
-  bucket.owner = "duke"
-
-  # The name of the bucket repository.
-  # Defaults to `scoop-${repoOwner}`.
-  # icon:dot-circle[]
-  bucket.nam = "scoop-duke"
-
-  # Username used for authoring commits. Must have write access to the bucket repository.
-  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
-  # environment variable must be defined.
-  # Defaults to the same username as the release repository.
-  # icon:dot-circle[] icon:eye-slash[]
-  bucket.username = "duke"
-
-  # Password or OAuth token with write access to the bucket repository.
-  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  bucket.token = "__DO_NOT_SET_HERE__"
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "packagers": {
-    // icon:dot-circle[]
-    "scoop": {
-      // Enables or disables Scoop.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      "active": "ALWAYS",
+include::partial$packagers/json/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      "templateDirectory": "path/to/scoop/templates",
+include::partial$packagers/json/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-        "foo": "bar"
-      },
+include::partial$packagers/json/tap.adoc[]
 
       // URL used to check the latest version.
       // Defaults to the releaser's `latestReleaseUrl`.
@@ -198,94 +84,21 @@ JSON::
       // URL used to download a new version.
       // Defaults to the releaser's `downloadUrl`.
       // icon:dot-circle[] icon:file-alt[]
-      "autoupdateUrl": "pass:[https://host/path]",
-
-      // Git author used to commit to the bucket repository.
-      // icon:dot-circle[]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        "name": "jreleaserbot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        "email": "pass:[jreleaser@kordamp.org]"
-      },
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      "bucket": {
-
-        // The owner of the bucket repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        "owner": "duke",
-
-        // The name of the bucket repository.
-        // Defaults to `scoop-${repoOwner}`.
-        // icon:dot-circle[]
-        "name": "scoop-duke",
-
-        // Username used for authoring commits. Must have write access to the bucket repository.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        "username": "duke",
-
-        // Password or OAuth token with write access to the bucket repository.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__"
-      }
-    }
-  }
-}
+      "autoupdateUrl": "pass:[https://host/path]"
+include::partial$packagers/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <packagers>
-    <!--
-      icon:dot-circle[]
-    -->
-    <scoop>
-      <!--
-        Enables or disables Scoop.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        icon:dot-circle[]
-      -->
-      <active>ALWAYS</active>
+include::partial$packagers/maven/common-head.adoc[]
 
-      <!--
-        Directory with file templates used to prepare the Scoop distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-        If specified, path must exist.
-        icon:dot-circle[]
-      -->
-      <templateDirectory>>path/to/scoop/templates</templateDirectory>
+include::partial$packagers/maven/commitauthor.adoc[]
 
-      <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
+include::partial$packagers/maven/tap.adoc[]
 
       <!--
         URL used to check the latest version.
@@ -300,96 +113,20 @@ Maven::
         icon:dot-circle[] icon:file-alt[]
       -->
       <autoupdateUrl>pass:[https://host/path]</autoupdateUrl>
-
-      <!--
-        Git author used to commit to the repository.
-        icon:dot-circle[]
-      -->
-      <commitAuthor>
-
-        <!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          icon:dot-circle[]
-        -->
-        <name>jreleaserbot</name>
-
-        <!--
-          E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser@kordamp.org]`.
-          icon:dot-circle[]
-        -->
-        <email>pass:[jreleaser@kordamp.org]</email>
-      </commitAuthor>
-
-      <!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        icon:dot-circle[]
-      -->
-      <bucket>
-
-        <!--
-          The owner of the bucket repository.
-          Defaults to the same owner as the release repository.
-          icon:dot-circle[]
-        -->
-        <owner>duke</owner>
-
-        <!--
-          The name of the bucket repository.
-          Defaults to `scoop-${repoOwner}`.
-          icon:dot-circle[]
-        -->
-        <name>scoop-duke</name>
-
-        <!--
-          Username used for authoring commits. Must have write access to the bucket repository.
-          If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
-          environment variable must be defined.
-          Defaults to the same username as the release repository.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <username>duke</username>
-
-        <!--
-          Password or OAuth token with write access to the bucket repository.
-          If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <token>__DO_NOT_SET_HERE__</token>
-      </bucket>
-    </scoop>
-  </packagers>
-</jreleaser>
+include::partial$packagers/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  packagers {
-    // icon:dot-circle[]
-    scoop {
-      // Enables or disables Scoop.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      active = 'ALWAYS'
+include::partial$packagers/gradle/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      templateDirectory = 'path/to/scoop/templates'
+include::partial$packagers/gradle/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
+include::partial$packagers/gradle/tap.adoc[]
 
       // URL used to check the latest version.
       // Defaults to the releaser's `latestReleaseUrl`.
@@ -400,53 +137,9 @@ jreleaser {
       // Defaults to the releaser's `downloadUrl`.
       // icon:dot-circle[] icon:file-alt[]
       autoupdateUrl = 'pass:[https://host/path]'
-
-      // Git author used to commit to the bucket repository.
-      // icon:dot-circle[]
-      commitAuthor {
-        // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
-        // icon:dot-circle[]
-        name = 'jreleaserbot'
-
-        // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
-        // icon:dot-circle[]
-        email = 'pass:[jreleaser@kordamp.org]'
-      }
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      bucket {
-
-        // The owner of the bucket repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        owner = 'duke'
-
-        // The name of the bucket repository.
-        // Defaults to `scoop-${repoOwner}`.
-        // icon:dot-circle[]
-        name = 'scoop-duke'
-
-        // Username used for authoring commits. Must have write access to the bucket repository.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        username = 'duke'
-
-        // Password or OAuth token with write access to the bucket repository.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
-      }
-    }
-  }
-}
+include::partial$packagers/gradle/common-footer.adoc[]
 ----
+--
 ====
 
 Template files may be initialized using the `template` command.

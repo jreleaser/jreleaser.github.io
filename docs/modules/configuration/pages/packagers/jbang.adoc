@@ -1,4 +1,10 @@
 = JBang
+:tool_id:       jbang
+:tool_name:     JBang
+:tool_env_var:  JBANG
+:tool_tap:      catalog
+:tool_tap_name: jbang-catalog
+:tool_manifest: catalog
 
 Unleash the power of Java with link:https://github.com/jbangdev/jbang[jbang]. You can publish distributions as JBang
 catalogs.
@@ -14,264 +20,70 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-packagers:
-  # icon:dot-circle[]
-  jbang:
-    # Enables or disables JBang.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # icon:dot-circle[]
-    active: ALWAYS
+include::partial$packagers/yaml/common-head.adoc[]
 
-    # Directory with file templates used to prepare the JBang distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-    # If specified, path must exist.
-    # icon:dot-circle[]
-    templateDirectory: path/to/jbang/templates
+include::partial$packagers/yaml/commitauthor.adoc[]
 
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
-      foo: bar
+include::partial$packagers/yaml/tap.adoc[]
 
     # The jbang executable alias.
     # If left undefined, will use `${distribution.executable}`
     # icon:dot-circle[]
     alias: cli
-
-    # Git author used to commit to the catalog repository.
-    # icon:dot-circle[]
-    commitAuthor:
-      # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
-      # icon:dot-circle[]
-      name: jreleaserbot
-
-      # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
-      # icon:dot-circle[]
-      email: pass:[jreleaser@kordamp.org]
-
-    # Git repository to push the formula to.
-    # Defaults are shown.
-    # icon:dot-circle[]
-    catalog:
-
-      # The owner of the catalog repository.
-      # Defaults to the same owner as the release repository.
-      # icon:dot-circle[]
-      owner: duke
-
-      # The name of the catalog repository.
-      # Defaults to `jbang-catalog`.
-      # icon:dot-circle[]
-      name: jbang-catalog
-
-      # Username used for authoring commits. Must have write access to the catalog repository.
-      # If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
-      # environment variable must be defined.
-      # Defaults to the same username as the release repository.
-      # icon:dot-circle[] icon:eye-slash[]
-      username: duke
-
-      # Password or OAuth token with write access to the catalog repository.
-      # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-[packagers.jbang]
+include::partial$packagers/toml/common-head.adoc[]
 
-  # Enables or disables JBang.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
+include::partial$packagers/toml/commitauthor.adoc[]
 
-  # Directory with file templates used to prepare the JBang catalog.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/jbang/templates"
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
+include::partial$packagers/toml/tap.adoc[]
 
   # The jbang executable alias.
   # If left undefined, will use `${distribution.executable}`
   # icon:dot-circle[]
   alias = "cli"
-
-  # Git author used to commit to the catalog repository.
-  # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
-  # icon:dot-circle[]
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
-  # icon:dot-circle[]
-  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
-
-  # Git repository to push the formula to.
-  # Defaults are shown
-
-  # The owner of the catalog repository.
-  # Defaults to the same owner as the release repository.
-  # icon:dot-circle[]
-  catalog.owner = "duke"
-
-  # The name of the catalog repository.
-  # Defaults to `jbang-catalog`.
-  # icon:dot-circle[]
-  catalog.name = "jbang-catalog"
-
-  # Username used for authoring commits. Must have write access to the catalog repository.
-  # If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
-  # environment variable must be defined.
-  # Defaults to the same username as the release repository.
-  # icon:dot-circle[] icon:eye-slash[]
-  catalog.username = "duke"
-
-  # Password or OAuth token with write access to the catalog repository.
-  # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  catalog.token = "__DO_NOT_SET_HERE__"
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "packagers": {
-    // icon:dot-circle[]
-    "jbang": {
-      // Enables or disables JBang.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      "active": "ALWAYS",
+include::partial$packagers/json/common-head.adoc[]
 
-      // Directory with file templates used to prepare the JBang catalog.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      "templateDirectory": "path/to/jbang/templates",
+include::partial$packagers/json/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
-        "foo": "bar"
-      },
+include::partial$packagers/json/tap.adoc[]
 
       // The jbang executable alias.
       // If left undefined, will use `${distribution.executable}`
       // icon:dot-circle[]
-      "alias": "cli",
-
-      // Git author used to commit to the catalog repository.
-      // icon:dot-circle[]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        "name": "jreleaserbot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        "email": "pass:[jreleaser@kordamp.org]"
-      },
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      "catalog": {
-
-        // The owner of the catalog repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        "owner": "duke",
-
-        // The name of the catalog repository.
-        // Defaults to `jbang-catalog`.
-        // icon:dot-circle[]
-        "name": "jbang-catalog",
-
-        // Username used for authoring commits. Must have write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        "username": "duke",
-
-        // Password or OAuth token with write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__"
-      }
-    }
-  }
-}
+      "alias": "cli"
+include::partial$packagers/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <packagers>
-    <!--
-      icon:dot-circle[]
-    -->
-    <jbang>
-      <!--
-        Enables or disables JBang.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        icon:dot-circle[]
-      -->
-      <active>ALWAYS</active>
+include::partial$packagers/maven/common-head.adoc[]
 
-      <!--
-        Directory with file templates used to prepare the JBang catalog.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-        If specified, path must exist.
-        icon:dot-circle[]
-      -->
-      <templateDirectory>>path/to/jbang/templates</templateDirectory>
+include::partial$packagers/maven/commitauthor.adoc[]
 
-      <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
+include::partial$packagers/maven/tap.adoc[]
 
       <!--
         The jbang executable alias.
@@ -279,148 +91,28 @@ Maven::
         icon:dot-circle[]
       -->
       <alias>cli</alias>
-
-      <!--
-        Git author used to commit to the repository.
-        icon:dot-circle[]
-      -->
-      <commitAuthor>
-
-        <!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          icon:dot-circle[]
-        -->
-        <name>jreleaserbot</name>
-
-        <!--
-          E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser@kordamp.org]`.
-          icon:dot-circle[]
-        -->
-        <email>pass:[jreleaser@kordamp.org]</email>
-      </commitAuthor>
-
-      <!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        icon:dot-circle[]
-      -->
-      <catalog>
-
-        <!--
-          The owner of the catalog repository.
-          Defaults to the same owner as the release repository.
-          icon:dot-circle[]
-        -->
-        <owner>duke</owner>
-
-        <!--
-          The name of the catalog repository.
-          Defaults to `jbang-catalog`.
-          icon:dot-circle[]
-        -->
-        <name>jbang-catalog</name>
-
-        <!--
-          Username used for authoring commits. Must have write access to the catalog repository.
-          If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
-          environment variable must be defined.
-          Defaults to the same username as the release repository.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <username>duke</username>
-
-        <!--
-          Password or OAuth token with write access to the catalog repository.
-          If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <token>__DO_NOT_SET_HERE__</token>
-      </catalog>
-    </jbang>
-  </packagers>
-</jreleaser>
+include::partial$packagers/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  packagers {
-    // icon:dot-circle[]
-    jbang {
-      // Enables or disables JBang.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      active = 'ALWAYS'
+include::partial$packagers/gradle/common-head.adoc[]
 
-      // Directory with file templates used to prepare the JBang catalog.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      templateDirectory = 'path/to/jbang/templates'
+include::partial$packagers/gradle/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
+include::partial$packagers/gradle/tap.adoc[]
 
       // The jbang executable alias.
       // If left undefined, will use `${distribution.executable}`
       // icon:dot-circle[]
       alias = 'cli'
-
-      // Git author used to commit to the catalog repository.
-      // icon:dot-circle[]
-      commitAuthor {
-        // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
-        // icon:dot-circle[]
-        name = 'jreleaserbot'
-
-        // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
-        // icon:dot-circle[]
-        email = 'pass:[jreleaser@kordamp.org]'
-      }
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      catalog {
-
-        // The owner of the catalog repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        owner = 'duke'
-
-        // The name of the catalog repository.
-        // Defaults to `jbang-catalog`.
-        // icon:dot-circle[]
-        name = 'jbang-catalog'
-
-        // Username used for authoring commits. Must have write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        username = 'duke'
-
-        // Password or OAuth token with write access to the catalog repository.
-        // If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
-      }
-    }
-  }
-}
+include::partial$packagers/gradle/common-footer.adoc[]
 ----
+--
 ====
 
 Template files may be initialized using the `template` command.

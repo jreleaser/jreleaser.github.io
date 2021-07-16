@@ -1,4 +1,10 @@
 = Snap
+:tool_id:       snap
+:tool_name:     Snap
+:tool_env_var:  SNAP
+:tool_tap:      snap
+:tool_tap_name: app-snap
+:tool_manifest: manifest
 
 link:http://snapcraft.io[Snaps] are a new packaging format, that will let you publish your project directly to the
 Ubuntu store. From there it will be installable in all the link:https://snapcraft.io/docs/core/install[supported Linux distros],
@@ -19,71 +25,15 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-packagers:
-  # icon:dot-circle[]
-  snap:
-    # Enables or disables Snap.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # icon:dot-circle[]
-    active: ALWAYS
+include::partial$packagers/yaml/common-head.adoc[]
 
-    # Directory with file templates used to prepare the Snap distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-    # If specified, path must exist.
-    # icon:dot-circle[]
-    templateDirectory: path/to/snap/templates
+include::partial$packagers/yaml/commitauthor.adoc[]
 
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
-      foo: bar
-
-    # Git author used to commit to the snap repository.
-    # icon:dot-circle[]
-    commitAuthor:
-      # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
-      # icon:dot-circle[]
-      name: jreleaserbot
-
-      # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
-      # icon:dot-circle[]
-      email: pass:[jreleaser@kordamp.org]
-
-    # Git repository to push the formula to.
-    # Defaults are shown.
-    # icon:dot-circle[]
-    snap:
-
-      # The owner of the snap repository.
-      # Defaults to the same owner as the release repository.
-      # icon:dot-circle[]
-      owner: duke
-
-      # The name of the snap repository.
-      # Defaults to `${distribution.name}-snap`.
-      # icon:dot-circle[]
-      name: app-snap
-
-      # Username used for authoring commits. Must have write access to the snap repository.
-      # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-      # environment variable must be defined.
-      # Defaults to the same username as the release repository.
-      # icon:dot-circle[] icon:eye-slash[]
-      username: duke
-
-      # Password or OAuth token with write access to the snap repository.
-      # If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
+include::partial$packagers/yaml/tap.adoc[]
 
     # Exported snapcraft login credentials.
     # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -164,67 +114,18 @@ packagers:
         - $HOME/.foo
         - $HOME/.foobar
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-[packagers.snap]
-  # Enables or disables Snap.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
+include::partial$packagers/toml/common-head.adoc[]
 
-  # Directory with file templates used to prepare the Snap distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/snap/templates"
+include::partial$packagers/toml/commitauthor.adoc[]
 
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
-
-  # Git author used to commit to the snap repository.
-
-  # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
-  # icon:dot-circle[]
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
-  # icon:dot-circle[]
-  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
-
-  # Git repository to push the formula to.
-  # Defaults are shown.
-
-  # The owner of the snap repository.
-  # Defaults to the same owner as the release repository.
-  # icon:dot-circle[]
-  snap.owner = "duke"
-
-  # The name of the snap repository.
-  # Defaults to `${distribution.name}-snap`.
-  # icon:dot-circle[]
-  snap.name = "app-snap"
-
-  # Username used for authoring commits. Must have write access to the snap repository.
-  # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-  # environment variable must be defined.
-  # Defaults to the same username as the release repository.
-  # icon:dot-circle[] icon:eye-slash[]
-  snap.username = "duke"
-
-  # Password or OAuth token with write access to the snap repository.
-  # If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  snap.token = "__DO_NOT_SET_HERE__"
+include::partial$packagers/toml/tap.adoc[]
 
   # Exported snapcraft login credentials.
   # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -298,77 +199,18 @@ TOML::
     some_slot_name.read = ["$HOME/.foo"]
     some_slot_name.write = ["$HOME/.foo", "$HOME/.foobar"]
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "packagers": {
-    // icon:dot-circle[]
-    "snap": {
-      // Enables or disables Snap.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      "active": "ALWAYS",
+include::partial$packagers/json/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Snap distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      "templateDirectory": "path/to/snap/templates",
+include::partial$packagers/json/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
-        "foo": "bar"
-      },
-
-      // Git author used to commit to the snap repository.
-      // icon:dot-circle[]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        "name": "jreleaserbot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        "email": "pass:[jreleaser@kordamp.org]"
-      },
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      "snap": {
-
-        // The owner of the snap repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        "owner": "duke",
-
-        // The name of the snap repository.
-        // Defaults to `${distribution.name}-snap`.
-        // icon:dot-circle[]
-        "name": "app-snap",
-
-        // Username used for authoring commits. Must have write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        "username": "duke",
-
-        // Password or OAuth token with write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__"
-      },
+include::partial$packagers/json/tap.adoc[]
 
       // Exported snapcraft login credentials.
       // Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -459,111 +301,21 @@ JSON::
             ]
           }
         }
-      ]
-    }
-  }
-}
+=       ]
+include::partial$packagers/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <packagers>
-    <!--
-      icon:dot-circle[]
-    -->
-    <snap>
-      <!--
-        Enables or disables Snap.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        icon:dot-circle[]
-      -->
-      <active>ALWAYS</active>
+include::partial$packagers/maven/common-head.adoc[]
 
-      <!--
-        Directory with file templates used to prepare the Snap distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-        If specified, path must exist.
-        icon:dot-circle[]
-      -->
-      <templateDirectory>>path/to/snap/templates</templateDirectory>
+include::partial$packagers/maven/commitauthor.adoc[]
 
-      <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
-
-      <!--
-        Git author used to commit to the repository.
-        icon:dot-circle[]
-      -->
-      <commitAuthor>
-
-        <!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          icon:dot-circle[]
-        -->
-        <name>jreleaserbot</name>
-
-        <!--
-          E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser@kordamp.org]`.
-          icon:dot-circle[]
-        -->
-        <email>pass:[jreleaser@kordamp.org]</email>
-      </commitAuthor>
-
-      <!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        icon:dot-circle[]
-      -->
-      <snap>
-
-        <!--
-          The owner of the snap repository.
-          Defaults to the same owner as the release repository.
-          icon:dot-circle[]
-        -->
-        <owner>duke</owner>
-
-        <!--
-          The name of the snap repository.
-          Defaults to `${distribution.name}-snap`.
-          icon:dot-circle[]
-        -->
-        <name>app-snap</name>
-
-        <!--
-          Username used for authoring commits. Must have write access to the snap repository.
-          If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-          environment variable must be defined.
-          Defaults to the same username as the release repository.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <username>duke</username>
-
-        <!--
-          Password or OAuth token with write access to the snap repository.
-          If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <token>__DO_NOT_SET_HERE__</token>
-      </snap>
+include::partial$packagers/maven/tap.adoc[]
 
       <!--
         Exported snapcraft login credentials.
@@ -675,79 +427,20 @@ Maven::
           </writes>
         </slot>
       </slots>
-    </snap>
-  </packagers>
-</jreleaser>
+include::partial$packagers/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  packagers {
-    // icon:dot-circle[]
-    snap {
-      // Enables or disables Snap.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      active = 'ALWAYS'
+include::partial$packagers/gradle/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Snap distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      templateDirectory = 'path/to/snap/templates'
+include::partial$packagers/gradle/commitauthor.adoc[]
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
-
-      // Git author used to commit to the snap repository.
-      // icon:dot-circle[]
-      commitAuthor {
-        // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
-        // icon:dot-circle[]
-        name = 'jreleaserbot'
-
-        // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
-        // icon:dot-circle[]
-        email = 'pass:[jreleaser@kordamp.org]'
-      }
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      snap {
-
-        // The owner of the snap repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        owner = 'duke'
-
-        // The name of the snap repository.
-        // Defaults to `${distribution.name}-snap`.
-        // icon:dot-circle[]
-        name = 'app-snap'
-
-        // Username used for authoring commits. Must have write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-        // environment variable must be defined.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[] icon:eye-slash[]
-        username = 'duke'
-
-        // Password or OAuth token with write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
-      }
+include::partial$packagers/gradle/tap.adoc[]
 
       // Exported snapcraft login credentials.
       // Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -827,10 +520,9 @@ jreleaser {
           addWrite('$HOME/.foobar')
         }
       }
-    }
-  }
-}
+include::partial$packagers/gradle/common-footer.adoc[]
 ----
+--
 ====
 
 Template files may be initialized using the `template` command.
