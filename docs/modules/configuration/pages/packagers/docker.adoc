@@ -27,6 +27,8 @@ YAML::
 ----
 include::partial$packagers/yaml/common-head.adoc[]
 
+include::partial$packagers/yaml/template-directory.adoc[]
+
 include::partial$packagers/yaml/commitauthor.adoc[]
 
 include::partial$packagers/yaml/tap.adoc[]
@@ -106,6 +108,8 @@ TOML::
 ----
 include::partial$packagers/toml/common-head.adoc[]
 
+include::partial$packagers/toml/template-directory.adoc[]
+
 include::partial$packagers/toml/commitauthor.adoc[]
 
 include::partial$packagers/toml/tap.adoc[]
@@ -180,6 +184,8 @@ JSON::
 [subs="attributes,+macros"]
 ----
 include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
 
 include::partial$packagers/json/commitauthor.adoc[]
 
@@ -268,6 +274,8 @@ Maven::
 [subs="attributes,verbatim,+macros"]
 ----
 include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
 
 include::partial$packagers/maven/commitauthor.adoc[]
 
@@ -380,6 +388,8 @@ Gradle::
 ----
 include::partial$packagers/gradle/common-head.adoc[]
 
+include::partial$packagers/gradle/template-directory.adoc[]
+
 include::partial$packagers/gradle/commitauthor.adoc[]
 
 include::partial$packagers/gradle/tap.adoc[]
@@ -454,6 +464,9 @@ include::partial$packagers/gradle/common-footer.adoc[]
 
 Template files may be initialized using the `template` command.
 
+NOTE: The respository token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
+be one of [`JRELEASER_DOCKER_GITHUB_TOKEN`, `JRELEASER_DOCKER_GITLAB_TOKEN`, `JRELEASER_DOCKER_GITEA_TOKEN`].
+
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a Dockerfile like the following one:
 
@@ -468,7 +481,7 @@ LABEL "org.opencontainers.image.licenses"="Apache-2.0"
 LABEL "org.opencontainers.image.version"="1.2.3"
 LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
 
-COPY assembly/app-1.2.3.zip /app-1.2.3.zip
+COPY assembly/* /
 
 RUN unzip app-1.2.3.zip && \
     rm app-1.2.3.zip && \
@@ -484,7 +497,8 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]
 Different values for the default base image will be used depending on the distribution type:
 
  * `azul/zulu-openjdk-alpine:${distribution.java.version}-jre` for JAVA_BINARY and SINGLE_JAR distributions.
- * `alpine:latest` for JLINK distributions.
+ * `ubuntu:latest` for JLINK distributions when the artifact has a `linux` platform.
+ * `alpine:latest` for JLINK distributions when the artifact has a `linux_musl` platform.
  * `scratch` for NATIVE_IMAGE distributions.
 
 == Default Labels
