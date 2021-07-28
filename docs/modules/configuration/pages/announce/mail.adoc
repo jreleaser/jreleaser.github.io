@@ -10,7 +10,7 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 announce:
   # icon:dot-circle[]
@@ -21,6 +21,12 @@ announce:
     # Defaults to `NEVER`.
     # icon:dot-circle[]
     active: ALWAYS
+
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties:
+      # Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
+      foo: bar
 
     # The e-mail transport.
     # Supported values are: [SMTP, SMTPS].
@@ -100,19 +106,13 @@ announce:
     # icon:dot-circle[]
     properties:
       'mail.smtp.starttls.enable': true
-
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
-      foo: bar
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 # icon:dot-circle[]
 [announce.mail]
@@ -122,6 +122,11 @@ TOML::
   # Defaults to `NEVER`.
   # icon:dot-circle[]
   active = "ALWAYS"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
 
   # The e-mail transport.
   # Supported values are: [SMTP, SMTPS].
@@ -200,18 +205,13 @@ TOML::
   # Use this field to set properties such as `mail.smtp.starttls.enable`.
   # icon:dot-circle[]
   properties."mail.smtp.starttls.enable" = "true"
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 {
   announce: {
@@ -223,6 +223,13 @@ JSON::
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // icon:dot-circle[]
       "active": "ALWAYS",
+
+      // Additional properties used when evaluating templates.
+      // icon:dot-circle[] icon:file-alt[]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
+        "foo": "bar"
+      },
 
       // The e-mail transport.
       // Supported values are: [SMTP, SMTPS].
@@ -300,13 +307,6 @@ JSON::
       // icon:dot-circle[]
       "properties": {
         "mail.smtp.starttls.enable": true
-      },
-
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
-        "foo": "bar"
       }
     }
   }
@@ -317,7 +317,7 @@ Maven::
 +
 --
 [source,xml]
-[subs="verbatim,+macros"]
+[subs="attributes,verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -335,6 +335,17 @@ Maven::
         icon:dot-circle[]
       -->
       <active>ALWAYS</active>
+
+      <!--
+        Additional properties used when evaluating templates.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
 
       <!--
         The e-mail transport.
@@ -446,17 +457,6 @@ Maven::
       <properties>
         <mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
       </properties>
-
-      <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
     </mail>
   </announce>
 </jreleaser>
@@ -466,7 +466,7 @@ Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 jreleaser {
   announce {
@@ -478,6 +478,11 @@ jreleaser {
       // Defaults to `NEVER`.
       // icon:dot-circle[]
       active = 'ALWAYS'
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
+      // icon:dot-circle[] icon:file-alt[]
+      extraProperties.put('foo', 'bar')
 
       // The e-mail transport.
       // Supported values are = [SMTP, SMTPS].
@@ -556,11 +561,6 @@ jreleaser {
       // Use this field to set properties such as `mail.smtp.starttls.enable`.
       // icon:dot-circle[]
       properties.put('mail.smtp.starttls.enable', 'true')
-
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `mail`, i.e, `mailFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
     }
   }
 }
