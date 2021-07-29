@@ -5,11 +5,8 @@
 Publishes a release to link:https://sdkman.io[Sdkman]. Please follow the instructions at
 link:https://sdkman.io/vendors[] to register your project as a candidate and obtain publishing credentials.
 
-IMPORTANT: This announcer is configured for the whole project, accepts a single candidate, and aggregates all matching
-artifacts into a single release. If you need multiple candidates then consider using the
-xref:configuration:packagers/sdkman.adoc[] packager instead.
-
-WARNING: The Sdkman announcer and packager are mutually exclusive.
+NOTE: If this announcer is enabled but no xref:configuration:packagers/sdkman.adoc[] packager is active in a distribution
+then the whole project will be released and announced.
 
 include::partial$legend.adoc[]
 
@@ -28,10 +25,11 @@ include::partial$announce/yaml/common-head.adoc[]
     # icon:dot-circle[]
     candidate: app
 
-    # Announce a major release if `true`, minor release if `false`.
-    # Defaults to `true`.
+    # Sdkman command to use.
+    # Valid values are [`MAJOR`, `MINOR`]
+    # Defaults to `MAJOR`.
     # icon:dot-circle[]
-    major: true
+    command: MAJOR
 
     # The release notes URL to use.
     # Defaults to `${release.<git>.releaseNotesUrl}.
@@ -69,10 +67,11 @@ include::partial$announce/toml/common-head.adoc[]
   # icon:dot-circle[] icon:file-alt[]
   releaseNotesUrl = "pass:[https://host.com/{{projectName}}/{{tagName}}]"
 
-  # Announce a major release if `true`, minor release if `false`.
-  # Defaults to `true`.
+  # Sdkman command to use.
+  # Valid values are [`MAJOR`, `MINOR`]
+  # Defaults to `MAJOR`.
   # icon:dot-circle[]
-  major = true
+  command = "MAJOR"
 
   # The consumer key for publishing to Sdkman.
   # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -105,10 +104,11 @@ include::partial$announce/json/common-head.adoc[]
       // icon:dot-circle[] icon:file-alt[]
       "releaseNotesUrl": "pass:[https://host.com/{{projectName}}/{{tagName}}]",
 
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
       // icon:dot-circle[]
-      "major": true,
+      "command": "MAJOR",
 
       // The consumer key for publishing to Sdkman.
       // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -147,11 +147,12 @@ include::partial$announce/maven/common-head.adoc[]
       <releaseNotesUrl>pass:[https://host.com/{{projectName}}/{{tagName}}]</releaseNotesUrl>
 
       <!--
-        Announce a major release if `true`, minor release if `false`.
-        Defaults to `true`.
+        Sdkman command to use.
+        Valid values are [`MAJOR`, `MINOR`]
+        Defaults to `MAJOR`.
         icon:dot-circle[]
       -->
-      <major>true</major>
+      <command>MAJOR</command>
 
       <!--
         The consumer key for publishing to Sdkman.
@@ -189,10 +190,11 @@ include::partial$announce/gradle/common-head.adoc[]
       // icon:dot-circle[] icon:file-alt[]
       releaseNotesUrl = 'pass:[https://host.com/{{projectName}}/{{tagName}}]'
 
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
       // icon:dot-circle[]
-      major = true
+      command = 'MAJOR'
 
       // The consumer key for publishing to Sdkman.
       // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -210,15 +212,16 @@ include::partial$announce/gradle/common-footer.adoc[]
 --
 ====
 
+== Requirements
 
-This announcer has the following considerations:
+This announcer has the following requirements:
 
 * No snapshot releases are supported.
 * Only `zip` artifacts are supported.
 * The default platform is set to `UNIVERSAL` if the artifact did not define a value for its `platform` field.
 * If there's more than one artifact then each artifact requires distinct `platform` values, otherwise the latest
  artifact will override any previous matches by platform.
-* You may explicitly skip a distribution or artifact by defining an extra property named `skipSdkman` with any value.
+* You may explicitly skip a distribution or artifact by defining an extra property named `skipSdkman` with a `true` value.
 * Announcing will be skipped if no suitable artifacts are found.
 
 Supported platform values are:

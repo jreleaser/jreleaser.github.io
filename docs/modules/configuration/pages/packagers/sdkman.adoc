@@ -3,15 +3,12 @@
 :tool_name:     Sdkman
 :tool_env_var:  SDKMAN
 
-Publishes a release to link:https://sdkman.io[Sdkman]. Please follow the instructions at
+Publishes a distribution to link:https://sdkman.io[Sdkman]. Please follow the instructions at
 link:https://sdkman.io/vendors[] to register your project as a candidate and obtain publishing credentials.
 
-IMPORTANT: This announcer is configured per distribution. If you need a single candidate for the whole project spanning
-multiple distributions then consider using the xref:configuration:announce/sdkman.adoc[] announcer instead.
+NOTE: Configuring this packager automatically enables the xref:configuration:announce/sdkman.adoc[] announcer.
 
 WARNING: Snapshots are *not* supported.
-
-WARNING: The Sdkman announcer and packager are mutually exclusive.
 
 include::partial$legend.adoc[]
 
@@ -275,3 +272,21 @@ NOTE: The catalog token environment variable must match with the chosen xref:rel
 be one of [`JRELEASER_JBANG_GITHUB_TOKEN`, `JRELEASER_JBANG_GITLAB_TOKEN`, `JRELEASER_JBANG_GITEA_TOKEN`].
 
 IMPORTANT: Candidate names must be unique!
+
+== Requirements
+
+This packager has the following requirements:
+
+* Only `zip` artifacts are supported.
+* The default platform is set to `UNIVERSAL` if the artifact did not define a value for its `platform` field.
+* If there's more than one artifact then each artifact requires distinct `platform` values, otherwise the latest
+ artifact will override any previous matches by platform.
+* You may explicitly skip an artifact by defining an extra property named `skipSdkman` with a `true` value.
+* Publishing will be skipped if no suitable artifacts are found.
+
+Supported platform values are:
+
+* `mac`, `osx`.
+* `win`, `windows`.
+* `linux`.
+
