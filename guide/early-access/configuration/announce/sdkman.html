@@ -480,32 +480,21 @@
 </aside>
 <article class="doc">
 <h1 class="page">Sdkman</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Publishes a release to <a href="https://sdkman.io">Sdkman</a>. Please follow the instructions at
 <a href="https://sdkman.io/vendors" class="bare">https://sdkman.io/vendors</a> to register your project as a candidate and obtain publishing credentials.</p>
 </div>
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This announcer is configured for the whole project, accepts a single candidate, and aggregates all matching
-artifacts into a single release. If you need multiple candidates then consider using the
-<a href="../packagers/sdkman.html" class="page">Sdkman</a> packager instead.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The Sdkman announcer and packager are mutually exclusive.
+If this announcer is enabled but no <a href="../packagers/sdkman.html" class="page">Sdkman</a> packager is active in a distribution
+then the whole project will be released and announced.
 </td>
 </tr>
 </table>
@@ -584,10 +573,11 @@ announce:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     candidate: app
 
-    # Announce a major release if `true`, minor release if `false`.
-    # Defaults to `true`.
+    # Sdkman command to use.
+    # Valid values are [`MAJOR`, `MINOR`]
+    # Defaults to `MAJOR`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    major: true
+    command: MAJOR
 
     # The release notes URL to use.
     # Defaults to `${release.<git>.releaseNotesUrl}.
@@ -644,10 +634,11 @@ announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   releaseNotesUrl = "https://host.com/{{projectName}}/{{tagName}}"
 
-  # Announce a major release if `true`, minor release if `false`.
-  # Defaults to `true`.
+  # Sdkman command to use.
+  # Valid values are [`MAJOR`, `MINOR`]
+  # Defaults to `MAJOR`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  major = true
+  command = "MAJOR"
 
   # The consumer key for publishing to Sdkman.
   # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -704,10 +695,11 @@ announce:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "releaseNotesUrl": "https://host.com/{{projectName}}/{{tagName}}",
 
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "major": true,
+      "command": "MAJOR",
 
       // The consumer key for publishing to Sdkman.
       // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -786,11 +778,12 @@ announce:
       &lt;releaseNotesUrl&gt;https://host.com/{{projectName}}/{{tagName}}&lt;/releaseNotesUrl&gt;
 
       &lt;!--
-        Announce a major release if `true`, minor release if `false`.
-        Defaults to `true`.
+        Sdkman command to use.
+        Valid values are [`MAJOR`, `MINOR`]
+        Defaults to `MAJOR`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;major&gt;true&lt;/major&gt;
+      &lt;command&gt;MAJOR&lt;/command&gt;
 
       &lt;!--
         The consumer key for publishing to Sdkman.
@@ -852,10 +845,11 @@ announce:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       releaseNotesUrl = 'https://host.com/{{projectName}}/{{tagName}}'
 
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      major = true
+      command = 'MAJOR'
 
       // The consumer key for publishing to Sdkman.
       // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
@@ -876,8 +870,13 @@ announce:
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This announcer has the following considerations:</p>
+<p>This announcer has the following requirements:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -895,7 +894,7 @@ announce:
 artifact will override any previous matches by platform.</p>
 </li>
 <li>
-<p>You may explicitly skip a distribution or artifact by defining an extra property named <code>skipSdkman</code> with any value.</p>
+<p>You may explicitly skip a distribution or artifact by defining an extra property named <code>skipSdkman</code> with a <code>true</code> value.</p>
 </li>
 <li>
 <p>Announcing will be skipped if no suitable artifacts are found.</p>
@@ -917,6 +916,8 @@ artifact will override any previous matches by platform.</p>
 <p><code>linux</code>.</p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </article>
   </div>
