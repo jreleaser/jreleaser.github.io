@@ -582,6 +582,12 @@ release:
 signing:
   active: always
   armored: true
+  # Do not sign additional files, only distribution artifacts and checksums
+  files: false
+
+checksum:
+  # Do not checksum additional files, only distribution artifacts
+  files: false
 
 # Announcing a release only occurs whn it's not snapshot
 announce:
@@ -624,8 +630,7 @@ assemble:
       mainJar:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
-        - directory: 'apps/jreleaser/build/dependencies/flat'
-          include: '*.jar'
+        - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
 
 # Configure 4 distributions
 distributions:
