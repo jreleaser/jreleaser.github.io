@@ -1,7 +1,7 @@
 = Checksum
 
 JReleaser calculates checksums for all input files and artifacts. These checksums are grouped into a single file named
-`checksums.txt` which in turn may be signed and uploaded to a release.
+`checksums_<algorithm>.txt` which in turn may be signed and uploaded to a release.
 
 Use the following options to customize how checksums are handled:
 
@@ -35,6 +35,11 @@ checksum:
   # Defaults to `false`.
   # icon:dot-circle[]
   individual: true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files: true
 ----
 --
 TOML::
@@ -61,6 +66,11 @@ TOML::
   # Defaults to `false`.
   # icon:dot-circle[]
   individual = true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files = true
 ----
 --
 JSON::
@@ -91,7 +101,12 @@ JSON::
     // Uploads individual checksum files.
     // Defaults to `false`.
     // icon:dot-circle[]
-    "individual": true
+    "individual": true,
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "files": true
   }
 }
 ----
@@ -133,6 +148,13 @@ Maven::
       icon:dot-circle[]
     -->
     <individual>true</individual>
+
+    <!--
+      Whether to checksum files in the `files` section or not.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <files>true</files>
   </checksum>
 </jreleaser>
 ----
@@ -163,6 +185,11 @@ jreleaser {
     // Defaults to `false`.
     // icon:dot-circle[]
     individual = true
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    files = true
   }
 }
 ----
@@ -186,3 +213,8 @@ The precedence rules are:
  * If the `checksum.individual` property is set:
    ** if the property resolves to `true` then individual checksums are released.
    ** if the property resolves to `false` then no individual checksums are released.
+
+== Skip Checksum
+
+Artifacts and globs in the xref:configuration:files.adoc[] section may define an extra property will prevent checksum
+calculation. The name of this property must match `skipChecksum` and be set to `true`.
