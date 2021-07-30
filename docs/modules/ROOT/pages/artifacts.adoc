@@ -24,20 +24,17 @@ This property is *optional*.
 * `platform`. Defines the OS specific platform for this file. Some xref:configuration:assemble/index.adoc[assemblers]
 and xref:configuration:packagers/index.adoc[packagers] require that artifacts define a platform.
 
-* `extraPproperties`. Defines key/value pairs of metadata that's related to the artifact.
+* `extraProperties`. Defines key/value pairs of metadata that's related to the artifact.
 
 include::configuration:partial$platform.adoc[]
 
 Globs have the following properties:
 
-* `directory`. Defines the starting point when searching for files.
-* `include`. Defines a file name pattern. Matches will be included in the final collection.
-* `exclude`. Defines a file name pattern. Matches will be excluded from the final collection.
-* `recursive`. Whether to search recursively or not.
+* `pattern`. Defines pattern used to match artifacts.
 
-IMPORTANT: The values of `directory`, `include`, and `exclude` are optional but at least one of them has to be specified.
+* `extraProperties`. Defines key/value pairs of metadata that's related to the resolved artifacts.
 
-Both `include` and `exclude` accept glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
+The `pattern` field accepts glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
 If no prefix is specified then `glob:` will be used.
 
 == Examples
@@ -56,7 +53,7 @@ YAML::
 [subs="+macros"]
 ----
 assemble:
-  jlinks:
+  jlink:
     app:
       active: always
       jdk:
@@ -79,17 +76,17 @@ TOML::
 [source,toml]
 [subs="+macros"]
 ----
-[assemble.jlinks.app]
+[assemble.jlink.app]
   active = "ALWAYS"
   mainJar = { path = "target/{{distributionName}}-{{projectVersion}}.jar" }
   jdk = { path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home", platform = "osx" }
-  pass:[[[assemble.jlinks.app.targetJdks]]]
+  pass:[[[assemble.jlink.app.targetJdks]]]
     path = "{{oracleJdks}}/jdk-16_osx-x64/Contents/Home"
     platform = "osx"
-  pass:[[[assemble.jlinks.app.targetJdks]]]
+  pass:[[[assemble.jlink.app.targetJdks]]]
     path = "{{oracleJdks}}/jdk-16_linux-x64"
     platform = "linux"
-  pass:[[[assemble.jlinks.app.targetJdks]]]
+  pass:[[[assemble.jlink.app.targetJdks]]]
     path = "{{oracleJdks}}/jdk-16_windows-x64"
     platform = "windows"
 ----
@@ -102,7 +99,7 @@ JSON::
 ----
 {
   "assemble": {
-    "jlinks": {
+    "jlink": {
       "app": {
         "active": "ALWAYS",
         "mainJar": {
@@ -128,7 +125,7 @@ JSON::
         ]
       }
     }
-  },
+  }
 }
 ----
 --
@@ -140,33 +137,31 @@ Maven::
 ----
 <jreleaser>
   <assemble>
-    <jlinks>
-      <jlink>
-        <name>app</name>
-        <active>ALWAYS</active>
-        <mainJar>
-          <path>target/{{distributionName}}-{{projectVersion}}.jar</path>
-        </mainJar>
-        <jdk>
+    <jlink>
+      <name>app</name>
+      <active>ALWAYS</active>
+      <mainJar>
+        <path>target/{{distributionName}}-{{projectVersion}}.jar</path>
+      </mainJar>
+      <jdk>
+        <path>{{oracleJdks}}/jdk-16_osx-x64/Contents/Home</path>
+        <platform>osx</platform>
+      </jdk>
+      <targetJdks>
+        <targetJdk>
           <path>{{oracleJdks}}/jdk-16_osx-x64/Contents/Home</path>
           <platform>osx</platform>
-        </jdk>
-        <targetJdks>
-          <targetJdk>
-            <path>{{oracleJdks}}/jdk-16_osx-x64/Contents/Home</path>
-            <platform>osx</platform>
-          </targetJdk>
-          <targetJdk>
-            <path>{{oracleJdks}}/jdk-16_linux-x64</path>
-            <platform>linux</platform>
-          </targetJdk>
-          <targetJdk>
-            <path>{{oracleJdks}}/jdk-16_windows-x64</path>
-            <platform>windows</platform>
-          </targetJdk>
-        </targetJdks>
-      </jlink>
-    </jlinks>
+        </targetJdk>
+        <targetJdk>
+          <path>{{oracleJdks}}/jdk-16_linux-x64</path>
+          <platform>linux</platform>
+        </targetJdk>
+        <targetJdk>
+          <path>{{oracleJdks}}/jdk-16_windows-x64</path>
+          <platform>windows</platform>
+        </targetJdk>
+      </targetJdks>
+    </jlink>
   </assemble>
 </jreleaser>
 ----
@@ -179,7 +174,7 @@ Gradle::
 ----
 jreleaser {
   assemble {
-    jlinks {
+    jlink {
       app {
         active = 'ALWAYS'
         mainJar {

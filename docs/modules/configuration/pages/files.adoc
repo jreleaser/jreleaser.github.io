@@ -27,24 +27,16 @@ files:
   # Defines a list of globs.
   # icon:dot-circle[]
   globs:
-      # The directory to search.
-      # If undefined, will use the project's basedir.
-      # icon:dot-circle[] icon:file-alt[]
-    - directory: some/directory\
+      # The pattern to use.
+      # May use glob or regex pattern syntax.
+      # icon:exclamation-triangle[] icon:file-alt[]
+    - pattern: path/to/**/*.md
 
-      # The pattern to apply for inclusion.
-      # If undefined, will use `*`.
+      # Additional properties used when evaluating templates.
       # icon:dot-circle[]
-      include: '*.txt'
-
-      # The pattern to apply for exclusion.
-      # icon:dot-circle[]
-      exclude: 'secret'
-
-      # Recursive search.
-      # Defaults to `false`.
-      # icon:dot-circle[]
-      recursive: true
+      extraProperties:
+        # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+        foo: bar
 ----
 --
 TOML::
@@ -68,24 +60,15 @@ TOML::
   # Defines a list of globs.
   # icon:dot-circle[]
   pass:[[[files.globs]]]
-    # The directory to search.
-    # If undefined, will use the project's basedir.
-    # icon:dot-circle[] icon:file-alt[]
-    directory = "some/directory"
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    pattern = "path/to/**/*.md"
 
-    # The pattern to apply for inclusion.
-    # If undefined, will use `*`.
+    # Additional properties used when evaluating templates.
     # icon:dot-circle[]
-    include = "*.txt"
-
-    # The pattern to apply for exclusion.
-    # icon:dot-circle[]
-    exclude = "secret"
-
-    # Recursive search.
-    # Defaults to `false`.
-    # icon:dot-circle[]
-    recursive = true
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
 ----
 --
 JSON::
@@ -115,24 +98,18 @@ JSON::
     // icon:dot-circle[]
     "globs": [
       {
-        // The directory to search.
-        // If undefined, will use the project's basedir.
-        // icon:dot-circle[] icon:file-alt[]
-        "directory": "some/directory",
+        // The pattern to use.
+        // May use glob or regex pattern syntax.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "pattern": "path/to/**/*.md",
 
-        // The pattern to apply for inclusion.
-        // If undefined, will use `*`.
+        // Additional properties used when evaluating templates.
         // icon:dot-circle[]
-        "include": "*.txt",
-
-        // The pattern to apply for exclusion.
-        // icon:dot-circle[]
-        "exclude": "secret",
-
-        // Recursive search.
-        // Defaults to `false`.
-        // icon:dot-circle[]
-        "recursive": true
+        "extraProperties":
+        {
+          // Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+          "foo": "bar"
+        }
       }
     ]
   }
@@ -173,31 +150,22 @@ Maven::
     <globs>
       <glob>
         <!--
-          The directory to search.
-          If undefined, will use the project's basedir.
+          The pattern to use.
+          May use glob or regex pattern syntax.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <pattern>path/to/**/*.md</pattern>
+
+        <!--
+          Additional properties used when evaluating templates.
           icon:dot-circle[] icon:file-alt[]
         -->
-        <directory>some/directory</directory>
-
-        <!--
-          The pattern to apply for inclusion.
-          If undefined, will use `*`.
-          icon:dot-circle[]
-        -->
-        <include>*.txt</include>
-
-        <!--
-         The pattern to apply for exclusion.
-         icon:dot-circle[]
-        -->
-        <exclude>secret</exclude>
-
-        <!--
-          Recursive search.
-          Defaults to `false`.
-          icon:dot-circle[]
-        -->
-        <recursive>true</recursive>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
       </glob>
     </globs>
   </files>
@@ -226,129 +194,15 @@ jreleaser {
     // Defines a glob entry
     // icon:dot-circle[]
     glob {
-      // The directory to search.
-      // If undefined, will use the project's basedir.
-      // icon:dot-circle[] icon:file-alt[]
-      directory = 'some/directory'
+      // The pattern to use.
+      // May use glob or regex pattern syntax.
+      // icon:exclamation-triangle[] icon:file-alt[]
+      template = 'path/to/**/*.md'
 
-      // The pattern to apply for inclusion.
-      // If undefined, will use `*`.
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
       // icon:dot-circle[]
-      include = '*.txt'
-
-      // The pattern to apply for exclusion.
-      // icon:dot-circle[]
-      exclude = 'secret'
-
-      // Recursive search.
-      // Defaults to `false`.
-      // icon:dot-circle[]
-      recursive = true
-    }
-  }
-}
-----
---
-====
-
-WARNING: One of `glob.directory`, `glob.include`, `glob.exclude` must be defined at the very least, otherwise the search
-would encompass the whole project.
-
-Use the `include` and `exclude` patterns to narrow the search, for example given the following structure:
-
-[source]
-----
-src/files
-├── secret
-│   └── waldos-location.txt
-└── todo.txt
-----
-
-We'd like to include all `*.txt` files without giving away Waldo's location; we can do this by using `include` and `exclude`
-like so:
-
-[tabs]
-====
-YAML::
-+
---
-[source,yaml]
-[subs="+macros"]
-----
-files:
-  globs:
-    - directory: src/files
-      include: '*.txt'
-      exclude: 'secret'
-      recursive: true
-----
---
-TOML::
-+
---
-[source,toml]
-[subs="+macros"]
-----
-pass:[[[files.globs]]]
-  directory = "src/files"
-  include = "*.txt"
-  exclude = "secret"
-  recursive = true
-----
---
-JSON::
-+
---
-[source,json]
-[subs="+macros"]
-----
-{
-  "files": {
-    "globs": [
-      {
-        "directory": "src/files",
-        "include": "*.txt",
-        "exclude": "secret",
-        "recursive": true
-      }
-    ]
-  }
-}
-----
---
-Maven::
-+
---
-[source,xml]
-[subs="verbatim,+macros"]
-----
-<jreleaser>
-  <files>
-    <globs>
-      <glob>
-        <directory>src/files</directory>
-        <include>*.txt</include>
-        <exclude>secret</exclude>
-        <recursive>true</recursive>
-      </glob>
-    </globs>
-  </files>
-</jreleaser>
-----
---
-Gradle::
-+
---
-[source,groovy]
-[subs="+macros"]
-----
-jreleaser {
-  files {
-    glob {
-      directory = 'src/files'
-      include = '*.txt'
-      exclude = 'secret'
-      recursive = true
+      extraProperties.put('foo', 'bar')
     }
   }
 }
