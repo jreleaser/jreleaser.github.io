@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="snap.html">Snap</a>
@@ -571,11 +578,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
 
-    # Directory with file templates used to prepare the Snap distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-    # If specified, path must exist.
+    # Let the release continue if the packager fails.
+    # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/snap/templates
+    continueOnError: true
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -583,20 +589,26 @@ packagers:
       # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
       foo: bar
 
-    # Git author used to commit to the snap repository.
+    # Directory with file templates used to prepare the Snap distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+    # If specified, path must exist.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    templateDirectory: path/to/snap/templates
+
+    # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     commitAuthor:
       # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
+      # Defaults to `jreleaserbot`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: jreleaserbot
 
       # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
+      # Defaults to `jreleaser@kordamp.org`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
-    # Git repository to push the formula to.
+    # Git repository to push the manifest to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     snap:
@@ -607,17 +619,25 @@ packagers:
       owner: duke
 
       # The name of the snap repository.
-      # Defaults to `${distribution.name}-snap`.
+      # Defaults to `app-snap`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: app-snap
 
+      # The target branch to use.
+      # May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
+      # Defaults to the branch pointed by HEAD.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      branch: HEAD
+
       # Username used for authoring commits. Must have write access to the snap repository.
+      # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
+      # environment variable must be defined.
       # Defaults to the same username as the release repository.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the snap repository.
-      # If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+      # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
@@ -714,30 +734,35 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
-  # Directory with file templates used to prepare the Snap distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-  # If specified, path must exist.
+  # Let the release continue if the packager fails.
+  # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/snap/templates"
+  continueOnError = true
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
 
-  # Git author used to commit to the snap repository.
+  # Directory with file templates used to prepare the Snap distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+  # If specified, path must exist.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  templateDirectory = "path/to/snap/templates"
+
+  # Git author used to commit to the repository.
 
   # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
+  # Defaults to `jreleaserbot`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.name = "jreleaserbot"
 
   # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
+  # Defaults to `jreleaser@kordamp.org`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
-  # Git repository to push the formula to.
+  # Git repository to push the manifest to.
   # Defaults are shown.
 
   # The owner of the snap repository.
@@ -746,17 +771,25 @@ packagers:
   snap.owner = "duke"
 
   # The name of the snap repository.
-  # Defaults to `${distribution.name}-snap`.
+  # Defaults to `app-snap`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   snap.name = "app-snap"
 
+  # The target branch to use.
+  # May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  snap.branch = "HEAD"
+
   # Username used for authoring commits. Must have write access to the snap repository.
+  # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
+  # environment variable must be defined.
   # Defaults to the same username as the release repository.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.username = "duke"
 
   # Password or OAuth token with write access to the snap repository.
-  # If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+  # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.token = "__DO_NOT_SET_HERE__"
@@ -849,11 +882,10 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Snap distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/snap/templates",
+      "continueOnError": true,
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -862,7 +894,13 @@ packagers:
         "foo": "bar"
       },
 
-      // Git author used to commit to the snap repository.
+      // Directory with file templates used to prepare the Snap distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "templateDirectory": "path/to/snap/templates",
+
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "commitAuthor": {
         // Name used when authoring commits.
@@ -876,7 +914,7 @@ packagers:
         "email": "jreleaser@kordamp.org"
       },
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "snap": {
@@ -887,17 +925,25 @@ packagers:
         "owner": "duke",
 
         // The name of the snap repository.
-        // Defaults to `${distribution.name}-snap`.
+        // Defaults to `app-snap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "app-snap",
 
+        // The target branch to use.
+        // May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "branch": "HEAD",
+
         // Username used for authoring commits. Must have write access to the snap repository.
+        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+        // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "token": "__DO_NOT_SET_HERE__"
@@ -992,7 +1038,7 @@ packagers:
             ]
           }
         }
-      ]
+=       ]
     }
   }
 }</code></pre>
@@ -1020,12 +1066,11 @@ packagers:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the Snap distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-        If specified, path must exist.
+        Let the release continue if the packager fails.
+        Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;templateDirectory&gt;&gt;path/to/snap/templates&lt;/templateDirectory&gt;
+      &lt;continueOnError&gt;true&lt;/continueOnError&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -1037,6 +1082,14 @@ packagers:
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
+
+      &lt;!--
+        Directory with file templates used to prepare the Snap distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+        If specified, path must exist.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;templateDirectory&gt;&gt;path/to/snap/templates&lt;/templateDirectory&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -1060,7 +1113,7 @@ packagers:
       &lt;/commitAuthor&gt;
 
       &lt;!--
-        Git repository to push the formula to.
+        Git repository to push the manifest to.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -1075,21 +1128,31 @@ packagers:
 
         &lt;!--
           The name of the snap repository.
-          Defaults to `${distribution.name}-snap`.
+          Defaults to `app-snap`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;name&gt;app-snap&lt;/name&gt;
 
         &lt;!--
+          The target branch to use.
+          May define a `JRELEASER_SNAP_${GIT}_BRANCH`` environment variable instead.
+          Defaults to the branch pointed by HEAD.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
           Username used for authoring commits. Must have write access to the snap repository.
+          If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
+          environment variable must be defined.
           Defaults to the same username as the release repository.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
           Password or OAuth token with write access to the snap repository.
-          If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+          If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1226,32 +1289,37 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Snap distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/snap/templates'
+      continueOnError = true
 
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `snap`, i.e, `snapFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // Git author used to commit to the snap repository.
+      // Directory with file templates used to prepare the Snap distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/snap`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      templateDirectory = 'path/to/snap/templates'
+
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       commitAuthor {
         // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
+        // Defaults to `jreleaserbot`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
+        // Defaults to `jreleaser@kordamp.org`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         email = 'jreleaser@kordamp.org'
       }
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       snap {
@@ -1262,17 +1330,25 @@ packagers:
         owner = 'duke'
 
         // The name of the snap repository.
-        // Defaults to `${distribution.name}-snap`.
+        // Defaults to `app-snap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'app-snap'
 
+        // The target branch to use.
+        // May define a `JRELEASER_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        branch = 'HEAD'
+
         // Username used for authoring commits. Must have write access to the snap repository.
+        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the snap repository.
-        // If left unspecified, the `JRELEASER_SCNAP_${GIT}_TOKEN`
+        // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'

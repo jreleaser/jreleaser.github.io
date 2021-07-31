@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../configuration/announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
@@ -504,6 +511,38 @@ Commands:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_environment_variables"><a class="anchor" href="#_environment_variables"></a>Environment Variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following settings may also be specified via environment variables</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment Variable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">output-directory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_OUTPUT_DIRECTORY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEFAULT_GIT_REMOTE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">origin</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_install"><a class="anchor" href="#_install"></a>Install</h2>
 <div class="sectionbody">
 <div class="tabset is-loading">
@@ -630,8 +669,9 @@ Create a jreleaser config file.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser config -h
-Usage: jreleaser config [-adfhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                        [-od=&lt;outputdir&gt;]
+Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
+                        [-sp=&lt;platform&gt;]...
 Display current configuration.
   -a, --assembly            Display assembly configuration.
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -645,7 +685,14 @@ Display current configuration.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.</code></pre>
 </div>
@@ -719,7 +766,7 @@ Tool templates
 <pre class="highlightjs highlight"><code>$ jreleaser assemble -h
 Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=&lt;assemblerName&gt;] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                          [-od=&lt;outputdir&gt;]
+                          [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
 Assemble distributions.
       -an, --assembler-name=&lt;assemblerName&gt;
                             The name of the assembler.
@@ -735,6 +782,8 @@ Assemble distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.</code></pre>
@@ -764,7 +813,7 @@ found at the current directory.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser changelog -h
 Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                           [-od=&lt;outputdir&gt;]
+                           [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
 Calculate the changelog.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -776,6 +825,8 @@ Calculate the changelog.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.</code></pre>
@@ -794,8 +845,9 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser checksum -h
-Usage: jreleaser checksum [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                          [-od=&lt;outputdir&gt;]
+Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                          [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 Calculate checksums.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -807,7 +859,14 @@ Calculate checksums.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.</code></pre>
 </div>
@@ -825,8 +884,8 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser sign -h
-Usage: jreleaser sign [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                      [-od=&lt;outputdir&gt;]
+Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                      [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 Sign release artifacts.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -838,7 +897,14 @@ Sign release artifacts.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.</code></pre>
 </div>
@@ -855,10 +921,12 @@ found at the current directory.</p>
 <h3 id="_upload"><a class="anchor" href="#_upload"></a>upload</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>Usage: jreleaser upload [-dhiqVwy] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                        [-od=&lt;outputdir&gt;] [-un=&lt;uploaderName&gt;]
-                        [-ut=&lt;uploaderType&gt;]
-Uploads all artifacts.
+<pre class="highlightjs highlight"><code>$ jreleaser upload -h
+Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                        [-un=&lt;uploaderName&gt;] [-ut=&lt;uploaderType&gt;]
+                        [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+Upload all artifacts.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file
@@ -869,7 +937,14 @@ Uploads all artifacts.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
       -un, --uploader-name=&lt;uploaderName&gt;
                             The name of the uploader.
       -ut, --uploader-type=&lt;uploaderType&gt;
@@ -947,7 +1022,7 @@ mutations should occur when this mode is activated.
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser release -h
 Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
-                         [--draft] [-grs] [--overwrite] [--prerelease]
+                         [--draft] [-grs] [--overwrite] [--prerelease] [-scp]
                          [--signing-armored] [--signing-enabled] [--skip-tag]
                          [--update] [-b=&lt;basedir&gt;] [--branch=&lt;branch&gt;]
                          [-c=&lt;configFile&gt;] [--changelog=&lt;changelog&gt;]
@@ -955,15 +1030,16 @@ Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
                          [--commit-author-name=&lt;commitAuthorName&gt;]
                          [--milestone-name=&lt;milestoneName&gt;] [-od=&lt;outputdir&gt;]
                          [--project-name=&lt;projectName&gt;]
+                         [--project-snapshot-label=&lt;projectSnapshotLabel&gt;]
                          [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
                          [--release-name=&lt;releaseName&gt;] [--tag-name=&lt;tagName&gt;]
-                         [--username=&lt;username&gt;] [--file=&lt;files&gt;]...
-                         [--glob=&lt;globs&gt;]...
-                         [--update-section=&lt;updateSections&gt;]...
-Create or update a release..
-      --auto-config          Model auto configuration..
+                         [--username=&lt;username&gt;] [--file=&lt;file&gt;]...
+                         [--glob=&lt;file&gt;]... [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [--update-section=&lt;section&gt;]...
+Create or update a release.
+      --auto-config          Model auto configuration.
   -b, --basedir=&lt;basedir&gt;    Base directory.
       --branch=&lt;branch&gt;      The release branch.
   -c, --config-file=&lt;configFile&gt;
@@ -977,8 +1053,8 @@ Create or update a release..
                              Commit author name.
   -d, --debug                Set log level to debug.
       --draft                If the release is a draft.
-      --file=&lt;files&gt;         Input file(s) to be uploaded.
-      --glob=&lt;globs&gt;         Input file(s) to be uploaded (as globs).
+      --file=&lt;file&gt;          Input file to be uploaded. Repeatable.
+      --glob=&lt;file&gt;          Input file to be uploaded (as glob). Repeatable.
       -grs, --git-root-search
                              Searches for the Git root.
   -h, --help                 Show this help message and exit.
@@ -988,9 +1064,13 @@ Create or update a release..
       -od, --output-directory=&lt;outputdir&gt;
                              Output directory.
       --overwrite            Overwrite an existing release.
+  -p, --set-property=&lt;key=value&gt;
+                             Sets the value of a property. Repeatable.
       --prerelease           If the release is a prerelease.
       --project-name=&lt;projectName&gt;
                              The project name.
+      --project-snapshot-label=&lt;projectSnapshotLabel&gt;
+                             The project snapshot label.
       --project-snapshot-pattern=&lt;projectSnapshotPattern&gt;
                              The project snapshot pattern.
       --project-version=&lt;projectVersion&gt;
@@ -1000,13 +1080,18 @@ Create or update a release..
   -q, --quiet                Log errors only.
       --release-name=&lt;releaseName&gt;
                              The release name.
+      -scp, --select-current-platform
+                             Activates paths matching the current platform.
       --signing-armored      Generate ascii armored signatures.
       --signing-enabled      Sign files.
       --skip-tag             Skip tagging the release.
+      -sp, --select-platform=&lt;platform&gt;
+                             Activates paths matching the given platform.
+                               Repeatable.
       --tag-name=&lt;tagName&gt;   The release tag.
       --update               Update an existing release.
-      --update-section=&lt;updateSections&gt;
-                             Release section to be updated.
+      --update-section=&lt;section&gt;
+                             Release section to be updated. Repeatable.
       --username=&lt;username&gt;  Git username.
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
@@ -1079,9 +1164,10 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser prepare -h
-Usage: jreleaser prepare [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                         [-dn=&lt;distributionName&gt;] [-od=&lt;outputdir&gt;]
-                         [-tn=&lt;toolName&gt;]
+Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]...
 Prepare all distributions.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -1095,7 +1181,14 @@ Prepare all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=&lt;toolName&gt;
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -1156,9 +1249,10 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser package -h
-Usage: jreleaser package [-dhiqVwy] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                         [-dn=&lt;distributionName&gt;] [-od=&lt;outputdir&gt;]
-                         [-tn=&lt;toolName&gt;]
+Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]...
 Package all distributions.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -1172,7 +1266,14 @@ Package all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=&lt;toolName&gt;
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -1247,10 +1348,11 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser publish -h
-Usage: jreleaser publish [-dhiqVwy] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                         [-dn=&lt;distributionName&gt;] [-od=&lt;outputdir&gt;]
-                         [-tn=&lt;toolName&gt;]
-Publishes all distributions.
+Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]...
+Publish all distributions.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file
@@ -1263,7 +1365,14 @@ Publishes all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=&lt;toolName&gt;
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -1338,8 +1447,9 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser announce -h
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-an=&lt;announcerName&gt;]
+Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=&lt;announcerName&gt;]
                           [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                          [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 Announce a release.
       -an, --announcer-name=&lt;announcerName&gt;
                             The name of the announcer.
@@ -1353,7 +1463,14 @@ Announce a release.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.</code></pre>
@@ -1407,8 +1524,9 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser full-release -h
-Usage: jreleaser full-release [-dhiqVwy] [-grs] [-b=&lt;basedir&gt;]
+Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                               [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                              [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 Perform a full release.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
@@ -1420,7 +1538,14 @@ Perform a full release.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.</code></pre>

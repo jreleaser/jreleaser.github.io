@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="snap.html">Snap</a>
@@ -568,11 +575,69 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
 
+    # Let the release continue if the packager fails.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    continueOnError: true
+
+    # Additional properties used when evaluating templates.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    extraProperties:
+      # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+      foo: bar
+
     # Directory with file templates used to prepare the Docker distribution.
     # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     templateDirectory: path/to/docker/templates
+
+    # Git author used to commit to the repository.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    commitAuthor:
+      # Name used when authoring commits.
+      # Defaults to `jreleaserbot`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      name: jreleaserbot
+
+      # E-mail used when authoring commits.
+      # Defaults to `jreleaser@kordamp.org`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      email: jreleaser@kordamp.org
+
+    # Git repository to push the Dockerfile to.
+    # Defaults are shown.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    docker:
+
+      # The owner of the docker repository.
+      # Defaults to the same owner as the release repository.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      owner: duke
+
+      # The name of the docker repository.
+      # Defaults to `app-docker`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      name: app-docker
+
+      # The target branch to use.
+      # May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
+      # Defaults to the branch pointed by HEAD.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      branch: HEAD
+
+      # Username used for authoring commits. Must have write access to the docker repository.
+      # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
+      # environment variable must be defined.
+      # Defaults to the same username as the release repository.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      username: duke
+
+      # Password or OAuth token with write access to the docker repository.
+      # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      token: __DO_NOT_SET_HERE__
 
     # The base Docker image to use.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -607,12 +672,6 @@ packagers:
     labels:
       foo: bar
 
-    # Additional properties used when evaluating templates.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    extraProperties:
-      # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-      foo: bar
-
     # A list of docker registries where images will be published.
     # Image publication will be disabled if no registries are configured.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -629,8 +688,10 @@ packagers:
         server: https://myregistry.com
 
         # The user that can publish images.
+        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+        # environment variable must be defined.
         # Defaults to the same username as the release repository.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username: duke
 
         # Password for login into the registry
@@ -657,11 +718,65 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
+  # Let the release continue if the packager fails.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  continueOnError = true
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+
   # Directory with file templates used to prepare the Docker distribution.
   # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
   # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/docker/templates"
+
+  # Git author used to commit to the repository.
+
+  # Name used when authoring commits.
+  # Defaults to `jreleaserbot`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # Defaults to `jreleaser@kordamp.org`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  commitAuthor.email = "jreleaser@kordamp.org"
+
+  # Git repository to push the Dockerfile to.
+  # Defaults are shown.
+
+  # The owner of the docker repository.
+  # Defaults to the same owner as the release repository.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  docker.owner = "duke"
+
+  # The name of the docker repository.
+  # Defaults to `app-docker`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  docker.name = "app-docker"
+
+  # The target branch to use.
+  # May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  docker.branch = "HEAD"
+
+  # Username used for authoring commits. Must have write access to the docker repository.
+  # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
+  # environment variable must be defined.
+  # Defaults to the same username as the release repository.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  docker.username = "duke"
+
+  # Password or OAuth token with write access to the docker repository.
+  # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  docker.token = "__DO_NOT_SET_HERE__"
 
   # The base Docker image to use.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -693,11 +808,6 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   labels.foo = "bar"
 
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-
   # A list of docker registries where images will be published.
   # Image publication will be disabled if no registries are configured.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -713,8 +823,10 @@ packagers:
     server = "https://myregistry.com"
 
     # The user that can publish images.
+    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+    # environment variable must be defined.
     # Defaults to the same username as the release repository.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     username = "duke"
 
     # Password for login into the registry
@@ -744,11 +856,72 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
 
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "continueOnError": true,
+
+      // Additional properties used when evaluating templates.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+        "foo": "bar"
+      },
+
       // Directory with file templates used to prepare the Docker distribution.
       // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "templateDirectory": "path/to/docker/templates",
+
+      // Git author used to commit to the repository.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "commitAuthor": {
+        // Name used when authoring commits.
+        // Defaults to `jreleaserbot`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "name": "jreleaserbot",
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser@kordamp.org`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "email": "jreleaser@kordamp.org"
+      },
+
+      // Git repository to push the Dockerfile to.
+      // Defaults are shown.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "docker": {
+
+        // The owner of the docker repository.
+        // Defaults to the same owner as the release repository.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "owner": "duke",
+
+        // The name of the docker repository.
+        // Defaults to `app-docker`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "name": "app-docker",
+
+        // The target branch to use.
+        // May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "branch": "HEAD",
+
+        // Username used for authoring commits. Must have write access to the docker repository.
+        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
+        // environment variable must be defined.
+        // Defaults to the same username as the release repository.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "username": "duke",
+
+        // Password or OAuth token with write access to the docker repository.
+        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "token": "__DO_NOT_SET_HERE__"
+      },
 
       // The base Docker image to use.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -788,13 +961,6 @@ packagers:
         "foo": "bar"
       },
 
-      // Additional properties used when evaluating templates.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-        "foo": "bar"
-      },
-
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -812,8 +978,10 @@ packagers:
           "server": "https://myregistry.com",
 
           // The user that can publish images.
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+          // environment variable must be defined.
           // Defaults to the same username as the release repository.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "username": "duke",
 
           // Password for login into the registry
@@ -855,12 +1023,98 @@ packagers:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
+        Let the release continue if the packager fails.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;continueOnError&gt;true&lt;/continueOnError&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
         Directory with file templates used to prepare the Docker distribution.
         Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
         If specified, path must exist.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;templateDirectory&gt;&gt;path/to/docker/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        Git author used to commit to the repository.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaserbot`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;name&gt;jreleaserbot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser@kordamp.org`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;email&gt;jreleaser@kordamp.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Git repository to push the Dockerfile to.
+        Defaults are shown.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;docker&gt;
+
+        &lt;!--
+          The owner of the docker repository.
+          Defaults to the same owner as the release repository.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
+
+        &lt;!--
+          The name of the docker repository.
+          Defaults to `app-docker`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;name&gt;app-docker&lt;/name&gt;
+
+        &lt;!--
+          The target branch to use.
+          May define a `JRELEASER_DOCKER_${GIT}_BRANCH`` environment variable instead.
+          Defaults to the branch pointed by HEAD.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
+          Username used for authoring commits. Must have write access to the docker repository.
+          If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
+          environment variable must be defined.
+          Defaults to the same username as the release repository.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;username&gt;duke&lt;/username&gt;
+
+        &lt;!--
+          Password or OAuth token with write access to the docker repository.
+          If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+      &lt;/docker&gt;
 
       &lt;!--
         The base Docker image to use.
@@ -913,17 +1167,6 @@ packagers:
       &lt;/labels&gt;
 
       &lt;!--
-        Additional properties used when evaluating templates.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;extraProperties&gt;
-        &lt;!--
-          Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-        --&gt;
-        &lt;foo&gt;bar&lt;/foo&gt;
-      &lt;/extraProperties&gt;
-
-      &lt;!--
         A list of docker registries where images will be published.
         Image publication will be disabled if no registries are configured.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -946,8 +1189,10 @@ packagers:
 
           &lt;!--
             The user that can publish images.
+            If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+            environment variable must be defined.
             Defaults to the same username as the release repository.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;username&gt;duke&lt;/username&gt;
 
@@ -987,11 +1232,70 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
 
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      continueOnError = true
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties.put('foo', 'bar')
+
       // Directory with file templates used to prepare the Docker distribution.
       // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       templateDirectory = 'path/to/docker/templates'
+
+      // Git author used to commit to the repository.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      commitAuthor {
+        // Name used when authoring commits.
+        // Defaults to `jreleaserbot`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        name = 'jreleaserbot'
+
+        // E-mail used when authoring commits.
+        // Defaults to `jreleaser@kordamp.org`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        email = 'jreleaser@kordamp.org'
+      }
+
+      // Git repository to push the Dockerfile to.
+      // Defaults are shown.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      docker {
+
+        // The owner of the docker repository.
+        // Defaults to the same owner as the release repository.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        owner = 'duke'
+
+        // The name of the docker repository.
+        // Defaults to `app-docker`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        name = 'app-docker'
+
+        // The target branch to use.
+        // May define a `JRELEASER_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        branch = 'HEAD'
+
+        // Username used for authoring commits. Must have write access to the docker repository.
+        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
+        // environment variable must be defined.
+        // Defaults to the same username as the release repository.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        username = 'duke'
+
+        // Password or OAuth token with write access to the docker repository.
+        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        token = '__DO_NOT_SET_HERE__'
+      }
 
       // The base Docker image to use.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1022,11 +1326,6 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       addLabel('foo', 'bar')
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      extraProperties.put('foo', 'bar')
-
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1043,8 +1342,10 @@ packagers:
           server = 'https://myregistry.com'
 
           // The user that can publish images.
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+          // environment variable must be defined.
           // Defaults to the same username as the release repository.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           username = 'duke'
 
           // Password for login into the registry
@@ -1070,6 +1371,19 @@ packagers:
 <div class="paragraph">
 <p>Template files may be initialized using the <code>template</code> command.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The respository token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
+be one of [<code>JRELEASER_DOCKER_GITHUB_TOKEN</code>, <code>JRELEASER_DOCKER_GITLAB_TOKEN</code>, <code>JRELEASER_DOCKER_GITEA_TOKEN</code>].
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
 a Dockerfile like the following one:</p>
@@ -1085,7 +1399,7 @@ LABEL "org.opencontainers.image.licenses"="Apache-2.0"
 LABEL "org.opencontainers.image.version"="1.2.3"
 LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
 
-COPY assembly/app-1.2.3.zip /app-1.2.3.zip
+COPY assembly/* /
 
 RUN unzip app-1.2.3.zip &amp;&amp; \
     rm app-1.2.3.zip &amp;&amp; \
@@ -1110,7 +1424,10 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]</code></pre>
 <p><code>azul/zulu-openjdk-alpine:${distribution.java.version}-jre</code> for JAVA_BINARY and SINGLE_JAR distributions.</p>
 </li>
 <li>
-<p><code>alpine:latest</code> for JLINK distributions.</p>
+<p><code>ubuntu:latest</code> for JLINK distributions when the artifact has a <code>linux</code> platform.</p>
+</li>
+<li>
+<p><code>alpine:latest</code> for JLINK distributions when the artifact has a <code>linux_musl</code> platform.</p>
 </li>
 <li>
 <p><code>scratch</code> for NATIVE_IMAGE distributions.</p>

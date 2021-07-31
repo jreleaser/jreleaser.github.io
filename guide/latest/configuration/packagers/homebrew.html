@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="snap.html">Snap</a>
@@ -500,7 +507,7 @@ Only artifacts with <code>.zip</code>, <code>.jar</code> extension may be packag
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Only artifacts with <code>.dmg</code>, <code>.pkg</code> extension may be packaged with Homebrew to create a cask.
+Only artifacts with <code>.zip</code>, <code>.dmg</code>, <code>.pkg</code> extension may be packaged with Homebrew to create a cask.
 </td>
 </tr>
 </table>
@@ -570,44 +577,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
 
-    # Directory with file templates used to prepare the Homebrew distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-    # If specified, path must exist.
+    # Let the release continue if the packager fails.
+    # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/brew/templates
-
-    # The class name of the generated formula.
-    # If left unspecified, will use `{{projectNameCapitalized}}`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    formulaName: App
-
-    # Customize the livecheck block.
-    # Default is empty.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    livecheck:
-      - 'url "https://host/sparkle/appcast-release.xml"'
-      - 'strategy :sparkle'
-
-    # A map of Homebrew dependencies.
-    # The key `openjdk@${java.version}` will be added automatically if not defined.
-    # This can be skipped by adding `skipJava` as an extra property on the distribution.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    dependencies:
-      # key in symbol format
-      # mapped as `depends_on :key1 =&gt; "value1"`
-      ':key1': value1
-
-      # plain key
-      # mapped as `depends_on "key2" =&gt; "value2"`
-      key2: value2
-
-      # key in symbol format without value
-      # mapped as `depends_on :key3`
-      ':key3': 'null'
-
-      # plain key without value
-      # mapped as `depends_on "key4"`
-      key4: 'null'
+    continueOnError: true
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -615,16 +588,22 @@ packagers:
       # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
       foo: bar
 
-    # Git author used to commit to the tap repository.
+    # Directory with file templates used to prepare the Homebrew distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
+    # If specified, path must exist.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    templateDirectory: path/to/brew/templates
+
+    # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     commitAuthor:
       # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
+      # Defaults to `jreleaserbot`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: jreleaserbot
 
       # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
+      # Defaults to `jreleaser@kordamp.org`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
@@ -643,9 +622,17 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: homebrew-tap
 
+      # The target branch to use.
+      # May define a `JRELEASER_HOMEBREW_${GIT}_BRANCH` environment variable instead.
+      # Defaults to the branch pointed by HEAD.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      branch: HEAD
+
       # Username used for authoring commits. Must have write access to the tap repository.
+      # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
+      # environment variable must be defined.
       # Defaults to the same username as the release repository.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the tap repository.
@@ -654,11 +641,55 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
 
+    # The class name of the generated formula.
+    # If left unspecified, will use `{{projectNameCapitalized}}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    formulaName: App
+
+    # Create a formula that supports OSX & Linux.
+    # Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+    # Default is `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    multiPlatform: false
+
+    # Customize the livecheck block.
+    # Default is empty.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    livecheck:
+      - 'url "https://host/sparkle/appcast-release.xml"'
+      - 'strategy :sparkle'
+
+    # A map of Homebrew dependencies.
+    # The key `openjdk@${java.version}` will be added automatically if not defined.
+    # This can be skipped by adding `skipJava` as an extra property on the distribution.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    dependencies:
+      # key in symbol format
+      # mapped as `depends_on :key1 => "value1"`
+      ':key1': value1
+
+      # plain key
+      # mapped as `depends_on "key2" => "value2"`
+      key2: value2
+
+      # key in symbol format without value
+      # mapped as `depends_on :key3`
+      ':key3': 'null'
+
+      # plain key without value
+      # mapped as `depends_on "key4"`
+      key4: 'null'
+
     # Cask configuration.
     # Requires artifact with extension `.dmg` or `.pkg`.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     cask:
+
+      # Favors producing a cask instead of a formula.
+      # Default is `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      enabled: true
 
       # The class name of the generated cask.
       # If left unspecified, will use `{{projectName}}`.
@@ -679,6 +710,11 @@ packagers:
       # If left unspecified, will use `{{brewFormulaName}}.app`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       appName: App.app
+
+      # URL providing an appcast feed to find updates for this Cask.
+      # Default is empty.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      appcast: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom
 
       # Procedures to uninstall the Cask.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -705,55 +741,31 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
-  # Directory with file templates used to prepare the Homebrew distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-  # If specified, path must exist.
+  # Let the release continue if the packager fails.
+  # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/brew/templates"
-
-  # The class name of the generated formula.
-  # If left unspecified, will use `{{projectNameCapitalized}}`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  formulaName = "App"
-
-  # Customize the livecheck block.
-  # Default is empty.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  livecheck = [
-     "url 'https://host/sparkle/appcast-release.xml'",
-     "strategy :sparkle'"
-
-  # A map of Homebrew dependencies.
-  # The key `openjdk@${java.version}` will be added automatically if not defined.
-  # This can be skipped by adding `skipJava` as an extra property on the distribution.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  # key in symbol format
-  # mapped as `depends_on :key1 =&gt; "value1"`
-  dependencies.":key1" = "value1"
-  # plain key
-  # mapped as `depends_on "key2" =&gt; "value2"`
-  dependencies.key2 = "value2"
-  # key in symbol format without value
-  # mapped as `depends_on :key3`
-  dependencies.":key3" = "null"
-  # plain key without value
-  # mapped as `depends_on "key4"`
-  dependencies.key4 = "null"
+  continueOnError = true
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
 
-  # Git author used to commit to the tap repository.
+  # Directory with file templates used to prepare the Homebrew distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
+  # If specified, path must exist.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  templateDirectory = "path/to/brew/templates"
+
+  # Git author used to commit to the repository.
 
   # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
+  # Defaults to `jreleaserbot`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.name = "jreleaserbot"
 
   # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
+  # Defaults to `jreleaser@kordamp.org`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
@@ -770,9 +782,17 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   tap.name = "homebrew-tap"
 
+  # The target branch to use.
+  # May define a `JRELEASER_HOMEBREW_${GIT}_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  tap.branch = "HEAD"
+
   # Username used for authoring commits. Must have write access to the tap repository.
+  # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
+  # environment variable must be defined.
   # Defaults to the same username as the release repository.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.username = "duke"
 
   # Password or OAuth token with write access to the tap repository.
@@ -781,10 +801,50 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.token = "__DO_NOT_SET_HERE__"
 
+  # The class name of the generated formula.
+  # If left unspecified, will use `{{projectNameCapitalized}}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  formulaName = "App"
+
+  # Create a formula that supports OSX & Linux.
+  # Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+  # Default is `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  multiPlatform = false
+
+  # Customize the livecheck block.
+  # Default is empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  livecheck = [
+     "url 'https://host/sparkle/appcast-release.xml'",
+     "strategy :sparkle'"
+
+  # A map of Homebrew dependencies.
+  # The key `openjdk@${java.version}` will be added automatically if not defined.
+  # This can be skipped by adding `skipJava` as an extra property on the distribution.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # key in symbol format
+  # mapped as `depends_on :key1 => "value1"`
+  dependencies.":key1" = "value1"
+  # plain key
+  # mapped as `depends_on "key2" => "value2"`
+  dependencies.key2 = "value2"
+  # key in symbol format without value
+  # mapped as `depends_on :key3`
+  dependencies.":key3" = "null"
+  # plain key without value
+  # mapped as `depends_on "key4"`
+  dependencies.key4 = "null"
+
   # Cask configuration.
   # Requires artifact with extension `.dmg` or `.pkg`.
   # Defaults are shown.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+
+  # Favors producing a cask instead of a formula.
+  # Default is `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  cask.enabled = true
 
   # The class name of the generated cask.
   # If left unspecified, will use `{{projectName}}`.
@@ -799,12 +859,17 @@ packagers:
   # Relative path to the .pkg file.
   # If left unspecified, will use the filename of the .pkg file.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  cask.pkgNam = "app-1.0.0.pkg"
+  cask.pkgName = "app-1.0.0.pkg"
 
   # Name of the application folder.
   # If left unspecified, will use `{{brewFormulaName}}.app`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   cask.appName = "App.app"
+
+  # URL providing an appcast feed to find updates for this Cask.
+  # Default is empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  cask.appcast = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom"
 
   # Procedures to uninstall the Cask.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -832,46 +897,10 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Homebrew distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/brew/templates",
-
-      // The class name of the generated formula.
-      // If left unspecified, will use `{{projectNameCapitalized}}`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "formulaName": "App",
-
-      / Customize the livecheck block.
-      / Default is empty.
-      / <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "livecheck": [
-        "url 'https://host/sparkle/appcast-release.xml'",
-        "strategy :sparkle"
-      ],
-
-      // A map of Homebrew dependencies.
-      // The key `openjdk@${java.version}` will be added automatically if not defined.
-      // This can be skipped by adding `skipJava` as an extra property on the distribution.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "dependencies": {
-        // key in symbol format
-        // mapped as `depends_on :key1 =&gt; "value1"`
-        ":key1": "value1",
-
-        // plain key
-        // mapped as `depends_on "key2" =&gt; "value2"`
-        "key2": "value2",
-
-        // key in symbol format without value
-        // mapped as `depends_on :key3`
-        ":key3": "null",
-
-        // plain key without value
-        // mapped as `depends_on "key4"`
-        "key4": "null"
-      },
+      "continueOnError": true,
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -880,7 +909,13 @@ packagers:
         "foo": "bar"
       },
 
-      // Git author used to commit to the tap repository.
+      // Directory with file templates used to prepare the Homebrew distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "templateDirectory": "path/to/brew/templates",
+
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "commitAuthor": {
         // Name used when authoring commits.
@@ -909,9 +944,17 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "homebrew-tap",
 
+        // The target branch to use.
+        // May define a `JRELEASER_HOMEBREW_${GIT}_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "branch": "HEAD",
+
         // Username used for authoring commits. Must have write access to the tap repository.
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the tap repository.
@@ -921,11 +964,57 @@ packagers:
         "token": "__DO_NOT_SET_HERE__"
       },
 
+      // The class name of the generated formula.
+      // If left unspecified, will use `{{projectNameCapitalized}}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "formulaName": "App",
+
+      // Create a formula that supports OSX & Linux.
+      // Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+      // Default is `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "multiPlatform": false,
+
+      // Customize the livecheck block.
+      // Default is empty.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "livecheck": [
+        "url 'https://host/sparkle/appcast-release.xml'",
+        "strategy :sparkle"
+      ],
+
+      // A map of Homebrew dependencies.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
+      // This can be skipped by adding `skipJava` as an extra property on the distribution.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "dependencies": {
+        // key in symbol format
+        // mapped as `depends_on :key1 => "value1"`
+        ":key1": "value1",
+
+        // plain key
+        // mapped as `depends_on "key2" => "value2"`
+        "key2": "value2",
+
+        // key in symbol format without value
+        // mapped as `depends_on :key3`
+        ":key3": "null",
+
+        // plain key without value
+        // mapped as `depends_on "key4"`
+        "key4": "null"
+      },
+
       // Cask configuration.
       // Requires artifact with extension `.dmg` or `.pkg`.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "cask": {
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "enabled": true,
 
         // The class name of the generated cask.
         // If left unspecified, will use `{{projectName}}`.
@@ -946,6 +1035,11 @@ packagers:
         // If left unspecified, will use `{{brewFormulaName}}.app`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "appName": "App.app",
+
+        // URL providing an appcast feed to find updates for this Cask.
+        // Default is empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "appcast": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom",
 
         // Procedures to uninstall the Cask.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -990,6 +1084,24 @@ packagers:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
+        Let the release continue if the packager fails.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;continueOnError&gt;true&lt;/continueOnError&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+
+      &lt;!--
         Directory with file templates used to prepare the Homebrew distribution.
         Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
         If specified, path must exist.
@@ -998,11 +1110,87 @@ packagers:
       &lt;templateDirectory&gt;&gt;path/to/brew/templates&lt;/templateDirectory&gt;
 
       &lt;!--
+        Git author used to commit to the repository.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;commitAuthor&gt;
+
+        &lt;!--
+           Name used when authoring commits.
+          Defaults to `jreleaserbot`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;name&gt;jreleaserbot&lt;/name&gt;
+
+        &lt;!--
+          E-mail used when authoring commits.
+          Defaults to `jreleaser@kordamp.org`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;email&gt;jreleaser@kordamp.org&lt;/email&gt;
+      &lt;/commitAuthor&gt;
+
+      &lt;!--
+        Git repository to push the formula to.
+        Defaults are shown.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;tap&gt;
+
+        &lt;!--
+          The owner of the tap repository.
+          Defaults to the same owner as the release repository.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
+
+        &lt;!--
+          The name of the tap repository.
+          Defaults to `homebrew-tap`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;name&gt;homebrew-tap&lt;/name&gt;
+
+        &lt;!--
+          The target branch to use.
+          May define a `JRELEASER_HOMEBREW_${GIT}_BRANCH`` environment variable instead.
+          Defaults to the branch pointed by HEAD.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
+          Username used for authoring commits. Must have write access to the tap repository.
+          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
+          environment variable must be defined.
+          Defaults to the same username as the release repository.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;username&gt;duke&lt;/username&gt;
+
+        &lt;!--
+          Password or OAuth token with write access to the tap repository.
+          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+      &lt;/tap&gt;
+
+      &lt;!--
         The class name of the generated formula.
         If left unspecified, will use `{{projectNameCapitalized}}`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
       &lt;formulaName&gt;App&lt;/formulaName&gt;
+
+      &lt;!--
+        Create a formula that supports OSX &amp; Linux.
+        Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+        Default is `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;multiPlatform&gt;false&lt;/multiPlatform&gt;
 
       &lt;!--
         Customize the livecheck block.
@@ -1057,81 +1245,17 @@ packagers:
       &lt;/dependencies&gt;
 
       &lt;!--
-        Additional properties used when evaluating templates.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;extraProperties&gt;
-        &lt;!--
-          Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-        --&gt;
-        &lt;foo&gt;bar&lt;/foo&gt;
-      &lt;/extraProperties&gt;
-
-      &lt;!--
-        Git author used to commit to the repository.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;commitAuthor&gt;
-
-        &lt;!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;name&gt;jreleaserbot&lt;/name&gt;
-
-        &lt;!--
-          E-mail used when authoring commits.
-          Defaults to `jreleaser@kordamp.org`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;email&gt;jreleaser@kordamp.org&lt;/email&gt;
-      &lt;/commitAuthor&gt;
-
-      &lt;!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;tap&gt;
-
-        &lt;!--
-          The owner of the tap repository.
-          Defaults to the same owner as the release repository.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;owner&gt;duke&lt;/owner&gt;
-
-        &lt;!--
-          The name of the tap repository.
-          Defaults to `homebrew-tap`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;name&gt;homebrew-tap&lt;/name&gt;
-
-        &lt;!--
-          Username used for authoring commits. Must have write access to the tap repository.
-          Defaults to the same username as the release repository.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;username&gt;duke&lt;/username&gt;
-
-        &lt;!--
-          Password or OAuth token with write access to the tap repository.
-          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-          environment variable must be defined.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        --&gt;
-        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
-      &lt;/tap&gt;
-
-      &lt;!--
         Cask configuration.
         Requires artifact with extension `.dmg` or `.pkg`.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;cask&gt;
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        &lt;enabled&gt;true&lt;/enabled&gt;
 
         &lt;!--
           The class name of the generated cask.
@@ -1160,6 +1284,13 @@ packagers:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;appName&gt;App.app&lt;/appName&gt;
+
+        &lt;!--
+          URL providing an appcast feed to find updates for this Cask.
+          Default is empty.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;appcast&gt;https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom&lt;/appcast&gt;
 
         &lt;!--
           Procedures to uninstall the Cask.
@@ -1201,61 +1332,32 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Homebrew distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/brew/templates'
-
-      // The class name of the generated formula.
-      // If left unspecified, will use `{{projectNameCapitalized}}`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      formulaName = 'App'
-
-      // Customize the livecheck block.
-      // Default is empty.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      livecheck = [
-        'url "https://host/sparkle/appcast-release.xml"',
-        'strategy :sparkle']
-
-      // A map of Homebrew dependencies.
-      // The key `openjdk@${java.version}` will be added automatically if not defined.
-      // This can be skipped by adding `skipJava` as an extra property on the distribution.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      dependencies {
-        // key in symbol format
-        // mapped as `depends_on :key1 =&gt; "value1"`
-        addDepencency(':key1', 'value1')
-
-        // plain key
-        // mapped as `depends_on "key2" =&gt; "value2"`
-        addDepencency('key2', 'value2')
-
-        // key in symbol format without value
-        // mapped as `depends_on :key3`
-        addDependency(':key3')
-
-        // plain key without value
-        // mapped as `depends_on "key4"`
-        addDependency('key4')
-      }
+      continueOnError = true
 
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // Git author used to commit to the tap repository.
+      // Directory with file templates used to prepare the Homebrew distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      templateDirectory = 'path/to/brew/templates'
+
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       commitAuthor {
         // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
+        // Defaults to `jreleaserbot`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
+        // Defaults to `jreleaser@kordamp.org`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         email = 'jreleaser@kordamp.org'
       }
@@ -1275,9 +1377,17 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'homebrew-tap'
 
+        // The target branch to use.
+        // May define a `JRELEASER_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        branch = 'HEAD'
+
         // Username used for authoring commits. Must have write access to the tap repository.
+        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the tap repository.
@@ -1287,11 +1397,56 @@ packagers:
         token = '__DO_NOT_SET_HERE__'
       }
 
+      // The class name of the generated formula.
+      // If left unspecified, will use `{{projectNameCapitalized}}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      formulaName = 'App'
+
+      // Create a formula that supports OSX & Linux.
+      // Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+      // Default is `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      multiPlatform = false
+
+      // Customize the livecheck block.
+      // Default is empty.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      livecheck = [
+        'url "https://host/sparkle/appcast-release.xml"',
+        'strategy :sparkle']
+
+      // A map of Homebrew dependencies.
+      // The key `openjdk@${java.version}` will be added automatically if not defined.
+      // This can be skipped by adding `skipJava` as an extra property on the distribution.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      dependencies {
+        // key in symbol format
+        // mapped as `depends_on :key1 => "value1"`
+        addDepencency(':key1', 'value1')
+
+        // plain key
+        // mapped as `depends_on "key2" => "value2"`
+        addDepencency('key2', 'value2')
+
+        // key in symbol format without value
+        // mapped as `depends_on :key3`
+        addDependency(':key3')
+
+        // plain key without value
+        // mapped as `depends_on "key4"`
+        addDependency('key4')
+      }
+
       // Cask configuration.
       // Requires artifact with extension `.dmg` or `.pkg`.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       cask {
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        enabled = true
 
         // The class name of the generated cask.
         // If left unspecified, will use `{{projectName}}`.
@@ -1312,6 +1467,11 @@ packagers:
         // If left unspecified, will use `{{brewFormulaName}}.app`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         appName = 'App.app'
+
+        // URL providing an appcast feed to find updates for this Cask.
+        // Default is empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        appcast = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom'
 
         // Procedures to uninstall the Cask.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1415,7 +1575,7 @@ homebrew repositories.
 <h2 id="_casks"><a class="anchor" href="#_casks"></a>Casks</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Casks require either a <code>.dmg</code> or a <code>.pkg</code> artifact. Distributions that provide more than one of these files can mark which
+<p>Casks require a <code>.zip</code>, .dmg` or a <code>.pkg</code> artifact. Distributions that provide more than one of these files can mark which
 artifacts should be skipped from being resolved as a Cask candidate by adding a <code>skipBrew</code> extra property to the target
 artifacts.</p>
 </div>

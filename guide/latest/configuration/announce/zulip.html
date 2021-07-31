@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
@@ -520,11 +527,11 @@ this announcer.</p>
 <div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
+announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   zulip:
-
-    # Enable or disable this announcer.
+    # Enables or disables Zulip.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -539,6 +546,12 @@ this announcer.</p>
     # Defaults to `60`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     readTimeout: 60
+
+    # Additional properties used when evaluating templates.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    extraProperties:
+      # Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
+      foo: bar
 
     # The Zulip account (typically an email address) to use.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -573,13 +586,7 @@ this announcer.</p>
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
     # Defaults to `src/jreleaser/templates/zulip.tpl`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    messageTemplate: path/to/template/zulip.tpl
-
-    # Additional properties used when evaluating templates.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    extraProperties:
-      # Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
-      foo: bar</code></pre>
+    messageTemplate: path/to/template/zulip.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -588,8 +595,7 @@ this announcer.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 [announce.zulip]
-
-  # Enable or disable this announcer.
+  # Enables or disables Zulip.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -604,6 +610,11 @@ this announcer.</p>
   # Defaults to `60`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
 
   # The Zulip account (typically an email address) to use.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -638,12 +649,7 @@ this announcer.</p>
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
   # Defaults to `src/jreleaser/templates/zulip.tpl`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  messageTemplate = "path/to/template/zulip.tpl"
-
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.</code></pre>
+  messageTemplate = "path/to/template/zulip.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -651,11 +657,11 @@ this announcer.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "zulip": {
-
-      // Enable or disable this announcer.
+      // Enables or disables Zulip.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -670,6 +676,13 @@ this announcer.</p>
       // Defaults to `60`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "readTimeout": 60,
+
+      // Additional properties used when evaluating templates.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
+        "foo": "bar"
+      },
 
       // The Zulip account (typically an email address) to use.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -704,14 +717,7 @@ this announcer.</p>
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // Defaults to `src/jreleaser/templates/zulip.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "messageTemplate": "path/to/template/zulip.tpl",
-
-      // Additional properties used when evaluating templates.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
-        "foo": "bar"
-      }
+      "messageTemplate": "path/to/template/zulip.tpl"
     }
   }
 }</code></pre>
@@ -730,9 +736,8 @@ this announcer.</p>
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;zulip&gt;
-
       &lt;!--
-        Enable or disable this announcer.
+        Enables or disables Zulip.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -752,6 +757,17 @@ this announcer.</p>
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;readTimeout&gt;60&lt;/readTimeout&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
 
       &lt;!--
         The Zulip account (typically an email address) to use.
@@ -801,17 +817,6 @@ this announcer.</p>
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;messageTemplate&gt;path/to/template/zulip.tpl&lt;/messageTemplate&gt;
-
-      &lt;!--
-        Additional properties used when evaluating templates.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;extraProperties&gt;
-        &lt;!--
-          Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
-        --&gt;
-        &lt;foo&gt;bar&lt;/foo&gt;
-      &lt;/extraProperties&gt;
     &lt;/zulip&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -822,11 +827,11 @@ this announcer.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     zulip {
-
-      // Enable or disable this announcer.
+      // Enables or disables Zulip.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -841,6 +846,11 @@ this announcer.</p>
       // Defaults to `60`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout = 60
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties.put('foo', 'bar')
 
       // The Zulip account (typically an email address) to use.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -876,11 +886,6 @@ this announcer.</p>
       // Defaults to `src/jreleaser/templates/zulip.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       messageTemplate = 'path/to/template/zulip.tpl'
-
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `zulip`, i.e, `zulipFoo`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      extraProperties.put('foo', 'bar')
     }
   }
 }</code></pre>

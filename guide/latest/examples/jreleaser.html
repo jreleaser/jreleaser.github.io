@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../configuration/announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
@@ -499,7 +506,7 @@ project:
     distributions (.zip, .tar), JLink images, or any other file that you’d like to publish as a Git
     release on popular Git services such as Github or Gitlab. Distribution files can additionally be
     published to be consumed by popular package managers as Homebrew, Snapcraft, or get ready to be
-    launched via JBang. Releases may be announced in a variety of channels such as Twitter, Zulip, or SdkMan!
+    launched via JBang. Releases may be announced in a variety of channels such as Twitter, Zulip, or Sdkman
 
   website: https://jreleaser.org
   authors:
@@ -508,22 +515,25 @@ project:
   java:
     groupId: org.jreleaser
     version: 8
+    multiProject: true
   extraProperties:
     inceptionYear: 2020
 
-# The repository is hosted at https://github.com/jreleaser/jreleaser
-# which means the default username would be `jreleaser` however a
-# different username is required in this case
 release:
   github:
-    username: aalmiray
     overwrite: true
     sign: true
     changelog:
       formatted: ALWAYS
-      change: '- {{commitShortHash}} {{commitTitle}}'
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
       # Label commits by matching their first line
       labelers:
+        - label: 'merge_pull'
+          title: 'Merge pull'
+        - label: 'merge_branch'
+          title: 'Merge branch'
         - label: 'feature'
           title: 'Resolves #'
           body: 'Resolves #'
@@ -539,6 +549,10 @@ release:
           title: '[deps]'
       # Categorize commits by labels
       categories:
+        - title: 'Merge'
+          labels:
+            - 'merge_pull'
+            - 'merge_branch'
         - title: '🚀 Features'
           labels:
             - 'feature'
@@ -551,6 +565,13 @@ release:
         - title: '⚙️  Dependencies'
           labels:
             - 'dependencies'
+      hide:
+        # hide Merge commits
+        categories:
+          - 'Merge'
+        # hide contributions from GitHub bots
+        contributors:
+          - 'GitHub'
       replacers:
         # Remove `[chore] ` from the commit message
         - search: '\[chore\] '
@@ -561,21 +582,23 @@ release:
 signing:
   active: always
   armored: true
+  # Do not sign additional files, only distribution artifacts and checksums
+  files: false
+
+checksum:
+  # Do not checksum additional files, only distribution artifacts
+  files: false
 
 # Announcing a release only occurs whn it's not snapshot
 announce:
   twitter:
     active: release
-  sdkman:
-    active: release
 
 # Configure a cross-platform Jlink assembly
 assemble:
-  jlinks:
+  jlink:
     jreleaser-standalone:
       active: always
-      extraProperties:
-        skipSdkman: true
       java:
         version: 11
         mainClass: 'org.jreleaser.cli.Main'
@@ -597,18 +620,17 @@ assemble:
         - org.openjsse
       targetJdks:
         - path: '{{jdkPathPrefix}}-macosx_x64/zulu-11.jdk/Contents/Home'
-          platform: 'osx'
+          platform: 'osx-x86_64'
         - path: '{{jdkPathPrefix}}-linux_x64'
-          platform: 'linux'
+          platform: 'linux-x86_64'
         - path: '{{jdkPathPrefix}}-linux_musl_x64'
-          platform: 'linux_musl'
+          platform: 'linux_musl-x86_64'
         - path: '{{jdkPathPrefix}}-win_x64'
-          platform: 'windows'
+          platform: 'windows-x86_64'
       mainJar:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
-        - directory: 'apps/jreleaser/build/dependencies/flat'
-          include: '*.jar'
+        - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
 
 # Configure 4 distributions
 distributions:
@@ -633,6 +655,9 @@ distributions:
     jbang:
       # Always active
       active: always
+    sdkman:
+      # Active only on release
+      active: release
     artifacts:
       # Transform the artifact name
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
@@ -642,9 +667,6 @@ distributions:
 
   # Distribution 2 is of type JAVA_BINARY
   jreleaser-ant-tasks:
-    extraProperties:
-      # Do not consider its artifacts for publication via SdkMan
-      skipSdkman: true
     artifacts:
       # Transform the artifact name
       - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
@@ -682,7 +704,7 @@ distributions:
             - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
           # match by platform
           matchers:
-            platform: 'linux'
+            platform: 'linux-x86_64'
           preCommands:
             - 'RUN apt-get update -y'
             - 'RUN apt-get install unzip'
@@ -692,7 +714,7 @@ distributions:
             - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
           # match by platform
           matchers:
-            platform: 'linux_musl'
+            platform: 'linux_musl-x86_64'
           preCommands:
             - 'RUN apk add unzip'
 

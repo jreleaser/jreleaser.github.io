@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
@@ -563,6 +570,18 @@ assemble:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       templateDirectory: path/to/nativeImage/templates
 
+      # Name of the generated image.
+      # If left undefined, will use
+      # ${assembler.executable}-${project.version}.
+      # Generated artifacts always have the platform as suffix.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      imageName: 'app-{{projectVersion}}'
+
+      # Name transformation of the generated image.
+      # Transformed artifacts always have the platform as suffix.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      imageNameTransform: 'app-{{projectEffectiveVersion}}'
+
       # The GraalVM JDK to use.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       graal:
@@ -583,47 +602,19 @@ assemble:
       # Defines a list of additional JARs as globs.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       jars:
-          # The directory to search.
-          # If undefined, will use the project's basedir.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - directory: some/directory
-
-          # The pattern to apply for inclusion.
-          # If undefined, will use `*`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          include: '*.jar'
-
-          # The pattern to apply for exclusion.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          exclude: 'secret'
-
-          # Recursive search.
-          # Defaults to `false`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          recursive: true
+          # The pattern to use.
+          # May use glob or regex pattern syntax.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        - pattern: path/to/**/*.jar
 
       # Defines a list of additional files as globs.
       # These files will be added to the assembled Zip file.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       files:
-          # The directory to search.
-          # If undefined, will use the project's basedir.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - directory: some/directory
-
-          # The pattern to apply for inclusion.
-          # If undefined, will use `*`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          include: '*.md'
-
-          # The pattern to apply for exclusion.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          exclude: 'secret'
-
-          # Recursive search.
-          # Defaults to `false`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          recursive: true
+          # The pattern to use.
+          # May use glob or regex pattern syntax.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        - pattern: path/to/**/*.txt
 
       # Additional properties used when evaluating templates.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -695,6 +686,18 @@ assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/nativeImage/templates"
 
+  # Name of the generated image.
+  # If left undefined, will use
+  # ${assembler.executable}-${project.version}.
+  # Generated artifacts always have the platform as suffix.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  imageName = "app-{{projectVersion}}"
+
+  # Name transformation of the generated image.
+  # Transformed artifacts always have the platform as suffix.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  imageNameTransform = "app-{{projectEffectiveVersion}}"
+
   # The GraalVM JDK to use.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   graal = { path = "path/to/graalvm" }
@@ -712,47 +715,19 @@ assemble:
   # Defines a list of additional JARs as globs.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.nativeImage.app.jars]]
-    # The directory to search.
-    # If undefined, will use the project's basedir.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    directory = "some/directory"
-
-    # The pattern to apply for inclusion.
-    # If undefined, will use `*`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    include = "*.jar"
-
-    # The pattern to apply for exclusion.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    exclude = "secret"
-
-    # Recursive search.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    recursive = true
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    pattern = "path/to/**/*.jar"
 
   # Defines a list of additional files as globs.
   # These files will be added to the assembled Zip file.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.nativeImage.app.files]]
-    # The directory to search.
-    # If undefined, will use the project's basedir.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    directory = "some/directory"
-
-    # The pattern to apply for inclusion.
-    # If undefined, will use `*`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    include = "*.md"
-
-    # The pattern to apply for exclusion.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    exclude = "secret"
-
-    # Recursive search.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    recursive = true
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    pattern = "path/to/**/*.txt"
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -825,6 +800,18 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "templateDirectory": "path/to/nativeImage/templates",
 
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${assembler.executable}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "imageName": "app-{{projectVersion}}",
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "imageNameTransform": "app-{{projectEffectiveVersion}}",
+
         // The GraalVM JDK to use.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "graal": {
@@ -849,24 +836,10 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "jars": [
           {
-            // The directory to search.
-            // If undefined, will use the project's basedir.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "directory": "some/directory",
-
-            // The pattern to apply for inclusion.
-            // If undefined, will use `*`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "include": "*.jar",
-
-            // The pattern to apply for exclusion.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "exclude": "secret",
-
-            // Recursive search.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "recursive": true
+            // The pattern to use.
+            // May use glob or regex pattern syntax.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "pattern": "path/to/**/*.jar"
           }
         ],
 
@@ -875,24 +848,10 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "files": [
           {
-            // The directory to search.
-            // If undefined, will use the project's basedir.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "directory": "some/directory",
-
-            // The pattern to apply for inclusion.
-            // If undefined, will use `*`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "include": "*.md",
-
-            // The pattern to apply for exclusion.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "exclude": "secret",
-
-            // Recursive search.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "recursive": true
+            // The pattern to use.
+            // May use glob or regex pattern syntax.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "pattern": "path/to/**/*.txt"
           }
         ],
 
@@ -977,14 +936,6 @@ assemble:
         &lt;exported&gt;true&lt;/exported&gt;
 
         &lt;!--
-          The distribution type.
-          Used to determine packager templates.
-          Supported values are&gt;[JAVA_BINARY].
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        --&gt;
-        &lt;type&gt;JAVA_BINARY&lt;/type&gt;
-
-        &lt;!--
           Name of the executable launcher.
           If left undefined, will use ${distribution.name}.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -998,6 +949,22 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;templateDirectory&gt;&gt;path/to/brew/templates&lt;/templateDirectory&gt;
+
+        &lt;!--
+          Name of the generated image.
+          If left undefined, will use
+          ${assembler.executable}-${project.version}.
+          Generated artifacts always have the platform as suffix.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;imageName&gt;app-{{projectVersion}}&lt;/imageName&gt;
+
+        &lt;!--
+          Name transformation of the generated image.
+          Transformed artifacts always have the platform as suffix.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;imageNameTransform&gt;app&lt;/imageNameTransform&gt;
 
         &lt;!--
           The GraalVM JDK to use.
@@ -1032,31 +999,11 @@ assemble:
         &lt;jars&gt;
           &lt;jar&gt;
             &lt;!--
-              The directory to search.
-              If undefined, will use the project's basedir.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+              The pattern to use.
+              May use glob or regex pattern syntax.
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
-            &lt;directory&gt;some/directory&lt;/directory&gt;
-
-            &lt;!--
-              The pattern to apply for inclusion.
-              If undefined, will use `*`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;include&gt;*.jar&lt;/include&gt;
-
-            &lt;!--
-             The pattern to apply for exclusion.
-             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;exclude&gt;secret&lt;/exclude&gt;
-
-            &lt;!--
-              Recursive search.
-              Defaults to `false`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;recursive&gt;true&lt;/recursive&gt;
+            &lt;pattern&gt;path/to/**/*.jar&lt;/pattern&gt;
           &lt;/jar&gt;
         &lt;/jars&gt;
 
@@ -1068,31 +1015,12 @@ assemble:
         &lt;files&gt;
           &lt;file&gt;
             &lt;!--
-              The directory to search.
-              If undefined, will use the project's basedir.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+              The pattern to use.
+              May use glob or regex pattern syntax.
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
-            &lt;directory&gt;some/directory&lt;/directory&gt;
-
-            &lt;!--
-              The pattern to apply for inclusion.
-              If undefined, will use `*`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;include&gt;*.md&lt;/include&gt;
-
-            &lt;!--
-             The pattern to apply for exclusion.
-             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;exclude&gt;secret&lt;/exclude&gt;
-
-            &lt;!--
-              Recursive search.
-              Defaults to `false`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;recursive&gt;true&lt;/recursive&gt;
+            &lt;pattern&gt;path/to/**/*.txt&lt;/pattern&gt;
+          &lt;/jar&gt;
           &lt;/file&gt;
         &lt;/files&gt;
 
@@ -1198,6 +1126,18 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         templateDirectory = 'path/to/nativeImage/templates'
 
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${assembler.executable}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        imageName = 'app-{{projectVersion}}'
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        imageNameTransform = 'app-{{projectEffectiveVersion}}'
+
         // The GraalVM JDK to use.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         graal {
@@ -1219,48 +1159,20 @@ assemble:
         // Defines a list of additional JARs as globs.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         jars {
-          // The directory to search.
-          // If undefined, will use the project's basedir.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          directory = 'some/directory'
-
-          // The pattern to apply for inclusion.
-          // If undefined, will use `*`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          include = '*.jar'
-
-          // The pattern to apply for exclusion.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          exclude = 'secret'
-
-          // Recursive search.
-          // Defaults to `false`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          recursive = true
+          // The pattern to use.
+          // May use glob or regex pattern syntax.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          pattern = 'path/to/**/*.jar'
         }
 
         // Defines a list of additional JARs as globs.
         // These files will be added to the assembled Zip file.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         files {
-          // The directory to search.
-          // If undefined, will use the project's basedir.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          directory = 'some/directory'
-
-          // The pattern to apply for inclusion.
-          // If undefined, will use `*`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          include = '*.md'
-
-          // The pattern to apply for exclusion.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          exclude = 'secret'
-
-          // Recursive search.
-          // Defaults to `false`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          recursive = true
+          // The pattern to use.
+          // May use glob or regex pattern syntax.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          pattern = 'path/to/**/*.txt'
         }
 
         // Additional properties used when evaluating templates.

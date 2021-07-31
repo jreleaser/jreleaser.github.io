@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="snap.html">Snap</a>
@@ -537,11 +544,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
 
-    # Directory with file templates used to prepare the JBang distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-    # If specified, path must exist.
+    # Let the release continue if the packager fails.
+    # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/jbang/templates
+    continueOnError: true
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -549,25 +555,26 @@ packagers:
       # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
       foo: bar
 
-    # The jbang executable alias.
-    # If left undefined, will use `${distribution.executable}`
+    # Directory with file templates used to prepare the JBang distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+    # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    alias: cli
+    templateDirectory: path/to/jbang/templates
 
-    # Git author used to commit to the catalog repository.
+    # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     commitAuthor:
       # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
+      # Defaults to `jreleaserbot`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: jreleaserbot
 
       # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
+      # Defaults to `jreleaser@kordamp.org`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
-    # Git repository to push the formula to.
+    # Git repository to push the catalog to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     catalog:
@@ -582,16 +589,29 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: jbang-catalog
 
+      # The target branch to use.
+      # May define a `JRELEASER_JBANG_${GIT}_BRANCH` environment variable instead.
+      # Defaults to the branch pointed by HEAD.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      branch: HEAD
+
       # Username used for authoring commits. Must have write access to the catalog repository.
+      # If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
+      # environment variable must be defined.
       # Defaults to the same username as the release repository.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the catalog repository.
       # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      token: __DO_NOT_SET_HERE__</code></pre>
+      token: __DO_NOT_SET_HERE__
+
+    # The jbang executable alias.
+    # If left undefined, will use `${distribution.executable}`
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    alias: cli</code></pre>
 </div>
 </div>
 </div>
@@ -600,42 +620,42 @@ packagers:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 [packagers.jbang]
-
   # Enables or disables JBang.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
-  # Directory with file templates used to prepare the JBang catalog.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-  # If specified, path must exist.
+  # Let the release continue if the packager fails.
+  # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/jbang/templates"
+  continueOnError = true
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
 
-  # The jbang executable alias.
-  # If left undefined, will use `${distribution.executable}`
+  # Directory with file templates used to prepare the JBang distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+  # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  alias = "cli"
+  templateDirectory = "path/to/jbang/templates"
 
-  # Git author used to commit to the catalog repository.
+  # Git author used to commit to the repository.
+
   # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
+  # Defaults to `jreleaserbot`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.name = "jreleaserbot"
 
   # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
+  # Defaults to `jreleaser@kordamp.org`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
-  # Git repository to push the formula to.
-  # Defaults are shown
+  # Git repository to push the catalog to.
+  # Defaults are shown.
 
   # The owner of the catalog repository.
   # Defaults to the same owner as the release repository.
@@ -647,16 +667,29 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   catalog.name = "jbang-catalog"
 
+  # The target branch to use.
+  # May define a `JRELEASER_JBANG_${GIT}_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  catalog.branch = "HEAD"
+
   # Username used for authoring commits. Must have write access to the catalog repository.
+  # If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
+  # environment variable must be defined.
   # Defaults to the same username as the release repository.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   catalog.username = "duke"
 
   # Password or OAuth token with write access to the catalog repository.
   # If left unspecified, the `JRELEASER_JBANG_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  catalog.token = "__DO_NOT_SET_HERE__"</code></pre>
+  catalog.token = "__DO_NOT_SET_HERE__"
+
+  # The jbang executable alias.
+  # If left undefined, will use `${distribution.executable}`
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  alias = "cli"</code></pre>
 </div>
 </div>
 </div>
@@ -674,11 +707,10 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the JBang catalog.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/jbang/templates",
+      "continueOnError": true,
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -687,12 +719,13 @@ packagers:
         "foo": "bar"
       },
 
-      // The jbang executable alias.
-      // If left undefined, will use `${distribution.executable}`
+      // Directory with file templates used to prepare the JBang distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+      // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "alias": "cli",
+      "templateDirectory": "path/to/jbang/templates",
 
-      // Git author used to commit to the catalog repository.
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "commitAuthor": {
         // Name used when authoring commits.
@@ -706,7 +739,7 @@ packagers:
         "email": "jreleaser@kordamp.org"
       },
 
-      // Git repository to push the formula to.
+      // Git repository to push the catalog to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "catalog": {
@@ -721,9 +754,17 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "jbang-catalog",
 
+        // The target branch to use.
+        // May define a `JRELEASER_JBANG_${GIT}_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "branch": "HEAD",
+
         // Username used for authoring commits. Must have write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the catalog repository.
@@ -731,7 +772,12 @@ packagers:
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "token": "__DO_NOT_SET_HERE__"
-      }
+      },
+
+      // The jbang executable alias.
+      // If left undefined, will use `${distribution.executable}`
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "alias": "cli"
     }
   }
 }</code></pre>
@@ -759,12 +805,11 @@ packagers:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the JBang catalog.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-        If specified, path must exist.
+        Let the release continue if the packager fails.
+        Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;templateDirectory&gt;&gt;path/to/jbang/templates&lt;/templateDirectory&gt;
+      &lt;continueOnError&gt;true&lt;/continueOnError&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -778,11 +823,12 @@ packagers:
       &lt;/extraProperties&gt;
 
       &lt;!--
-        The jbang executable alias.
-        If left undefined, will use `${distribution.executable}`
+        Directory with file templates used to prepare the JBang distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+        If specified, path must exist.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;alias&gt;cli&lt;/alias&gt;
+      &lt;templateDirectory&gt;&gt;path/to/jbang/templates&lt;/templateDirectory&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -806,7 +852,7 @@ packagers:
       &lt;/commitAuthor&gt;
 
       &lt;!--
-        Git repository to push the formula to.
+        Git repository to push the catalog to.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -827,9 +873,19 @@ packagers:
         &lt;name&gt;jbang-catalog&lt;/name&gt;
 
         &lt;!--
+          The target branch to use.
+          May define a `JRELEASER_JBANG_${GIT}_BRANCH`` environment variable instead.
+          Defaults to the branch pointed by HEAD.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
           Username used for authoring commits. Must have write access to the catalog repository.
+          If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
+          environment variable must be defined.
           Defaults to the same username as the release repository.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;username&gt;duke&lt;/username&gt;
 
@@ -841,6 +897,13 @@ packagers:
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
       &lt;/catalog&gt;
+
+      &lt;!--
+        The jbang executable alias.
+        If left undefined, will use `${distribution.executable}`
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;alias&gt;cli&lt;/alias&gt;
     &lt;/jbang&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -861,37 +924,37 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the JBang catalog.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/jbang/templates'
+      continueOnError = true
 
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `jbang`, i.e, `jbangFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // The jbang executable alias.
-      // If left undefined, will use `${distribution.executable}`
+      // Directory with file templates used to prepare the JBang distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/jbang`.
+      // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      alias = 'cli'
+      templateDirectory = 'path/to/jbang/templates'
 
-      // Git author used to commit to the catalog repository.
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       commitAuthor {
         // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
+        // Defaults to `jreleaserbot`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
+        // Defaults to `jreleaser@kordamp.org`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         email = 'jreleaser@kordamp.org'
       }
 
-      // Git repository to push the formula to.
+      // Git repository to push the catalog to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       catalog {
@@ -906,9 +969,17 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'jbang-catalog'
 
+        // The target branch to use.
+        // May define a `JRELEASER_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        branch = 'HEAD'
+
         // Username used for authoring commits. Must have write access to the catalog repository.
+        // If left unspecified, the `JRELEASER_JBANG_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the catalog repository.
@@ -917,6 +988,11 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
       }
+
+      // The jbang executable alias.
+      // If left undefined, will use `${distribution.executable}`
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      alias = 'cli'
     }
   }
 }</code></pre>

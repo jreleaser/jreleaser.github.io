@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/snap.html">Snap</a>
@@ -524,6 +531,7 @@
 project:
   # The name of the project.
   # May define a `JRELEASER_PROJECT_NAME` environment variable instead.
+  # If undefined, defaults to the Git repository name.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   name: app
 
@@ -539,10 +547,18 @@ project:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   versionPattern: SEMVER
 
-  # A regex to determine if the project version is snapshot
-  # May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  snapshotPattern: .*-SNAPSHOT
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  snapshot:
+    # A regex to determine if the project version is snapshot
+    # May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    pattern: .*-SNAPSHOT
+
+    # The value of the snapshot tag
+    # May define a `JRELEASER_PROJECT_SNAPSHOT_LABEL` environment variable instead.
+    # If undefined, will use `early-access`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    label: early-access
 
   # A short description (60 chars max).
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
@@ -657,7 +673,13 @@ project:
   # A regex to determine if the project version is snapshot
   # May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  snapshotPattern = ".*-SNAPSHOT"
+  snapshot.pattern = ".*-SNAPSHOT"
+
+  # The value of the snapshot tag
+  # May define a `JRELEASER_PROJECT_SNAPSHOT_LABEL` environment variable instead.
+  # If undefined, will use `early-access`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  snapshot.label = "early-access"
 
   # A short description (60 chars max).
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
@@ -764,10 +786,19 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "versionPattern": "SEMVER",
 
-    // A regex to determine if the project version is snapshot
-    // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "snapshotPattern": ".*-SNAPSHOT",
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "snapshot": {
+      // A regex to determine if the project version is snapshot
+      // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "pattern": ".*-SNAPSHOT",
+
+      // The value of the snapshot tag
+      // May define a `JRELEASER_PROJECT_SNAPSHOT_LABEL` environment variable instead.
+      // If undefined, will use `early-access`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "label": "early-access"
+    },
 
     // A short description (60 chars max).
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
@@ -895,11 +926,24 @@ project:
     &lt;versionPattern&gt;SEMVER&lt;/versionPattern&gt;
 
     &lt;!--
-      A regex to determine if the project version is snapshot
-      May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;snapshotPattern&gt;.*-SNAPSHOT&lt;/snapshotPattern&gt;
+    &lt;snapshot&gt;
+      &lt;!--
+        A regex to determine if the project version is snapshot
+        May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;pattern&gt;.*-SNAPSHOT&lt;/pattern&gt;
+
+      &lt;!--
+        The value of the snapshot tag
+        May define a `JRELEASER_PROJECT_SNAPSHOT_LABEL` environment variable instead.
+        If undefined, will use `early-access`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;label&gt;early-access&lt;/label&gt;
+    &lt;/snapshot&gt;
 
     &lt;!--
       A short description (60 chars max).
@@ -1069,10 +1113,19 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     versionPattern = 'SEMVER'
 
-    // A regex to determine if the project version is snapshot
-    // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    snapshotPattern = '.*-SNAPSHOT'
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    snapshot {
+      // A regex to determine if the project version is snapshot
+      // May define a `JRELEASER_PROJECT_SNAPSHOT_PATTERN` environment variable instead.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      pattern = '.*-SNAPSHOT'
+
+      // The value of the snapshot tag
+      // May define a `JRELEASER_PROJECT_SNAPSHOT_LABEL` environment variable instead.
+      // If undefined, will use `early-access`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      label = 'early-access'
+    }
 
     // A short description (60 chars max).
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.

@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
@@ -476,6 +483,21 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>Configure releases to <a href="https://api.github.com" class="bare">https://api.github.com</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You must define a value for both <code>host</code> and <code>apiEndpoint</code> if using GitHub Enterprise.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>Legend:</p>
 </div>
 <div class="ulist">
@@ -523,6 +545,7 @@ release:
   # Repo in which the release will be created.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   github:
+
     # Disables or enables publication to GitHub.
     # defaults to `true`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -539,22 +562,23 @@ release:
     readTimeout: 60
 
     # The user or organization that owns the repository.
-    # If unspecified, will read it from the 'origin' git remote.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     owner: duke
 
     # The name of the repository.
-    # If unspecified, will read it from the 'origin' git remote.
+    # If unspecified, will use ${project.name}.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     name: app
 
     # The GitHub host url.
-    # Defaults to `github.com`.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     host: github.com
 
     # Username used for authoring commits. Must have write access to the repository.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    # If left unspecified, the `JRELEASER_GITHUB_USERNAME`
+    # environment variable must be defined.
+    # Defaults to the repository's owner.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     username: duke
 
     # Password or OAuth token with write access to the repository.
@@ -563,6 +587,11 @@ release:
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     token: __DO_NOT_SET_HERE__
 
+    # The GitHub API endpoint to use.
+    # You can skip `/api/v1` as it will be added by default.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    apiEndpoint: https://api.github.com
+
     # The tag associated with the release.
     # May define a `JRELEASER_TAG_NAME` environment variable instead.
     # If left unspecified, will use `v{{projectVersion}}`.
@@ -570,8 +599,8 @@ release:
     tagName: v1.0.0
 
     # The name of the release.
-    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # If left unspecified, will use `Release {{tagName}}`.
+    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     releaseName: Release v1.0.0
 
@@ -602,11 +631,55 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     skipTag: false
 
-    # The GitHub API endpoint to use.
-    # Update it if using GitHub Enterprise.
-    # Defaults to `https://api.github.com`.
+    # Signs commits with the configured credentials.
+    # The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+    # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    apiEndpoint: https://api.github.com
+    sign: false
+
+    # The target branch to use.
+    # May define a `JRELEASER_BRANCH` environment variable instead.
+    # Defaults to the branch pointed by HEAD.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    branch: main
+
+    # Release files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    files: true
+
+    # Release distribution artifacts.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    artifacts: true
+
+    # Release checksum files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    checksums: true
+
+    # Release signature files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    signatures: true
+
+    # Marks the release as a draft.
+    # May define a `JRELEASER_DRAFT` environment variable instead.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    draft: false
+
+    # Marks the release as prerelease.
+    # May define a `JRELEASER_PRERELEASE` environment variable instead.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    prerelease: false
+
+    # Links the release with a discussion.
+    # The named category must exist.
+    # Defaults to empty.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    discussionCategoryName: Announcements
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -620,12 +693,6 @@ release:
       # Defaults to `jreleaser@kordamp.org`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
-
-    # Signs commits with the configured credentials.
-    # The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    sign: false
 
     # Changelog customization.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -661,7 +728,7 @@ release:
       # The template to use for each change.
       # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      change: '- {{commitShortHash}} {{commitTitle}}'
+      format: '- {{commitShortHash}} {{commitTitle}}'
 
       # The template to use for the whole changelog.
       # Defaults is shown.
@@ -678,10 +745,38 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       contentTemplate: path/to/template/changelog.tpl
 
-      # Hide uncategorized commits.
-      # Defaults to `false`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      hideUncategorized: true
+      contributors:
+        # Enables the contributors block.
+        # Defaults to `true`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        enabled: true
+
+        # The template to use for each contributor.
+        # Defaults to `{{contributorName}}`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        format: '- {{contributorName}} ({{contributorUsernameAsLink}})'
+
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      hide:
+        # Hide uncategorized commits.
+        # Defaults to `false`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        uncategorized: true
+
+        # Hide matching categories.
+        # Entries must exactly match category titles defined below.
+        # Defaults to empty.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        categories:
+          - 'Merge'
+
+        # Hide matching contributor names.
+        # Value may be plain text or regex.
+        # Defaults to empty.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        contributors:
+          - '[bot]'
 
       # A list of labels to be included.
       # Only changes matching this list will be included.
@@ -707,10 +802,12 @@ release:
         - label: 'issue'
 
           # Matches the text of the first commit line.
+          # Value may be plain text or regex.
           # <span class="icon"><i class="fa fa-dot-circle"></i></span>
           title: '^fix:'
 
           # Matches the full text of the commit.
+          # Value may be plain text or regex.
           # <span class="icon"><i class="fa fa-dot-circle"></i></span>
           body: 'Fixes #'
 
@@ -750,24 +847,6 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       name: '{{tagName}}'
 
-    # The target branch to use.
-    # May define a `JRELEASER_BRANCH` environment variable instead.
-    # Defaults to the branch pointed by HEAD.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    branch: main
-
-    # Marks the release as a draft.
-    # May define a `JRELEASER_DRAFT` environment variable instead.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    draft: false
-
-    # Marks the release as prerelease.
-    # May define a `JRELEASER_PRERELEASE` environment variable instead.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    prerelease: false
-
     # The following properties define <span class="icon"><i class="fa fa-dot-circle"></i></span> URL formats.
     # Defaults are shown.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -801,6 +880,7 @@ release:
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Repo in which the release will be created.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
 [release.github]
+
   # Disables or enables publication to GitHub.
   # defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -826,12 +906,14 @@ release:
   name = "app"
 
   # The GitHub host url.
-  # Defaults to `github.com`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   host = "github.com"
 
   # Username used for authoring commits. Must have write access to the repository.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  # If left unspecified, the `JRELEASER_GITHUB_USERNAME`
+  # environment variable must be defined.
+  # Defaults to the repository's owner.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "duke"
 
   # Password or OAuth token with write access to the repository.
@@ -839,6 +921,11 @@ release:
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   token = "__DO_NOT_SET_HERE__"
+
+  # The GitHub API endpoint to use.
+  # You can skip `/api/v1` as it will be added by default.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  apiEndpoint = "https://api.github.com"
 
   # The tag associated with the release.
   # May define a `JRELEASER_TAG_NAME` environment variable instead.
@@ -878,10 +965,55 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   skipTag = false
 
-  # The GitHub API endpoint to use.
-  # You can skip `/api/v4` as it will be added by default.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  apiEndpoint = "https://my.giteam.com"
+  # Signs commits with the configured credentials.
+  # The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  sign = false
+
+  # The target branch to use.
+  # May define a `JRELEASER_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  branch = "main"
+
+  # Release files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  files = true
+
+  # Release distribution artifacts.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  artifacts = true
+
+  # Release checksum files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  checksums = true
+
+  # Release signature files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  signatures = true
+
+  # Marks the release as a draft.
+  # May define a `JRELEASER_DRAFT` environment variable instead.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  draft = false
+
+  # Marks the release as prerelease.
+  # May define a `JRELEASER_PRERELEASE` environment variable instead.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  prerelease = false
+
+  # Links the release with a discussion.
+  # The named category must exist.
+  # Defaults to empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  discussionCategoryName = "Announcements"
 
   # Git author used to commit to the repository.
 
@@ -894,12 +1026,6 @@ release:
   # Defaults to `jreleaser@kordamp.org`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
-
-  # Signs commits with the configured credentials.
-  # The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
-  # Defaults to `false`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  sign = false
 
   # Changelog customization.
 
@@ -934,7 +1060,7 @@ release:
   # The template to use for each change.
   # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  changelog.change = "- {{commitShortHash}} {{commitTitle}}"
+  changelog.format = "- {{commitShortHash}} {{commitTitle}}"
 
   # The template to use for the whole changelog.
   # Defaults is shown.
@@ -951,10 +1077,36 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.contentTemplate = "path/to/template/changelog.tpl"
 
-  # Hide uncategorized commits.
-  # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  changelog.hideUncategorized = true
+  [[release.github.changelog.contributors]]
+    # Enables the contributors block.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    enable = true
+
+    # The template to use for each contributor.
+    # Defaults to `{{contributorName}}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    format = "- {{contributorName}} ({{contributorUsernameAsLink}})"
+
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[release.github.changelog.hide]]
+    # Hide uncategorized commits.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    uncategorized = true
+
+    # Hide matching categories.
+    # Entries must exactly match category titles defined below.
+    # Defaults to empty.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    categories = ["Merge"]
+
+    # Hide matching contributor names.
+    # Value may be plain text or regex.
+    # Defaults to empty.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    contributors = ["[bot]"]
 
   # A list of labels to be included.
   # Only changes matching this list will be included.
@@ -978,10 +1130,12 @@ release:
     label = "issue"
 
     # Matches the text of the first commit line.
+    # Value may be plain text or regex.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     title = "^fix:"
 
     # Matches the full text of the commit.
+    # Value may be plain text or regex.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     body = "Fixes #"
 
@@ -1019,24 +1173,6 @@ release:
   # Defaults to `{{tagName}}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   milestone.name = "{{tagName}}"
-
-  # The target branch to use.
-  # May define a `JRELEASER_BRANCH` environment variable instead.
-  # Defaults to the branch pointed by HEAD.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  branch = "main"
-
-  # Marks the release as a draft.
-  # May define a `JRELEASER_DRAFT` environment variable instead.
-  # Defaults to `false`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  draft = false
-
-  # Marks the release as prerelease.
-  # May define a `JRELEASER_PRERELEASE` environment variable instead.
-  # Defaults to `false`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  prerelease = false
 
   # The following properties define <span class="icon"><i class="fa fa-dot-circle"></i></span> URL formats.
   # Defaults are shown.
@@ -1090,22 +1226,23 @@ release:
       "readTimeout": 60,
 
       // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "owner": "duke",
 
       // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
+      // If unspecified, will use ${project.name}.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "name": "app",
 
       // The GitHub host url.
-      // Defaults to `github.com`.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "host": "github.com",
 
       // Username used for authoring commits. Must have write access to the repository.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      // If left unspecified, the `JRELEASER_GITHUB_USERNAME`
+      // environment variable must be defined.
+      // Defaults to the repository's owner.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "username": "duke",
 
       // Password or OAuth token with write access to the repository.
@@ -1113,6 +1250,11 @@ release:
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "token": "__DO_NOT_SET_HERE__",
+
+      // The GitHub API endpoint to use.
+      // You can skip `/api/v1` as it will be added by default.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      "apiEndpoint": "https://api.github.com",
 
       // The tag associated with the release.
       // May define a `JRELEASER_TAG_NAME` environment variable instead.
@@ -1152,11 +1294,55 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "skipTag": false,
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `https://api.github.com`.
+      // Signs commits with the configured credentials.
+      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "apiEndpoint": "https://api.github.com",
+      "sign": false,
+
+      // The target branch to use.
+      // May define a `JRELEASER_BRANCH` environment variable instead.
+      // Defaults to the branch pointed by HEAD.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "branch": "main",
+
+      // Release files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "files": true,
+
+      // Release distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "artifacts": true,
+
+      // Release checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "checksums": true,
+
+      // Release signature files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "signatures": true,
+
+      // Marks the release as a draft.
+      // May define a `JRELEASER_DRAFT` environment variable instead.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "draft": false,
+
+      // Marks the release as prerelease.
+      // May define a `JRELEASER_PRERELEASE` environment variable instead.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "prerelease": false,
+
+      // Links the release with a discussion.
+      // The named category must exist.
+      // Defaults to empty.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "discussionCategoryName": "Announcements",
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1171,12 +1357,6 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "email": "jreleaser@kordamp.org"
       },
-
-      // Signs commits with the configured credentials.
-      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "sign": false,
 
       // Changelog customization.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1212,7 +1392,7 @@ release:
         // The template to use for each change.
         // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "change": "- {{commitShortHash}} {{commitTitle}}",
+        "format": "- {{commitShortHash}} {{commitTitle}}",
 
         // The template to use for the whole changelog.
         // Defaults is shown.
@@ -1225,10 +1405,42 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "contentTemplate": "path/to/template/changelog.tpl",
 
-        // Hide uncategorized commits.
-        // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "hideUncategorized": true,
+        "contributors": {
+          // Enables the contributors block.
+          // Defaults to `true`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "enabled": true,
+
+          // The template to use for each contributor.
+          // Defaults to `{{contributorName}}`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "format": "- {{contributorName}} ({{contributorUsernameAsLink}})"
+        },
+
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "hide": {
+          // Hide uncategorized commits.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "uncategorized": true,
+
+          // Hide matching categories.
+          // Entries must exactly match category titles defined below.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "categories": [
+            "Merge"
+          ],
+
+          // Hide matching contributor names.
+          // Value may be plain text or regex.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "contributors": [
+            "[bot]"
+          ]
+        },
 
         // A list of labels to be included.
         // Only changes matching this list will be included.
@@ -1257,10 +1469,12 @@ release:
             "label": "issue",
 
             // Matches the text of the first commit line.
+            // Value may be plain text or regex.
             // <span class="icon"><i class="fa fa-dot-circle"></i></span>
             "title": "^fix:",
 
             // Matches the full text of the commit.
+            // Value may be plain text or regex.
             // <span class="icon"><i class="fa fa-dot-circle"></i></span>
             "body": "Fixes #"
           }
@@ -1315,24 +1529,6 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "name": "{{tagName}}"
       },
-
-      // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
-      // Defaults to the branch pointed by HEAD.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "branch": "main",
-
-      // Marks the release as a draft.
-      // May define a `JRELEASER_DRAFT` environment variable instead.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "draft": false,
-
-      // Marks the release as prerelease.
-      // May define a `JRELEASER_PRERELEASE` environment variable instead.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "prerelease": false,
 
       // The following properties define <span class="icon"><i class="fa fa-dot-circle"></i></span> URL formats.
       // Defaults are shown.
@@ -1401,28 +1597,29 @@ release:
 
       &lt;!--
         The user or organization that owns the repository.
-        If unspecified, will read it from the 'origin' git remote.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
       &lt;owner&gt;duke&lt;/owner&gt;
 
       &lt;!--
         The name of the repository.
-        If unspecified, will read it from the 'origin' git remote.
+        If unspecified, will use ${project.name}.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;name&gt;app&lt;/name&gt;
 
       &lt;!--
         The GitHub host url.
-        Defaults to `github.com`.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
       &lt;host&gt;github.com&lt;/host&gt;
 
       &lt;!--
         Username used for authoring commits. Must have write access to the repository.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        If left unspecified, the `JRELEASER_GITHUB_USERNAME`
+        environment variable must be defined.
+        Defaults to the repository's owner.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;username&gt;duke&lt;/username&gt;
 
@@ -1433,6 +1630,13 @@ release:
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+      &lt;!--
+        The GitHub API endpoint to use.
+        You can skip `/api/v1` as it will be added by default.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      --&gt;
+      &lt;apiEndpoint&gt;https://api.github.com&lt;/apiEndpoint&gt;
 
       &lt;!--
         The tag associated with the release.
@@ -1487,12 +1691,72 @@ release:
       &lt;skipTag&gt;false&lt;/skipTag&gt;
 
       &lt;!--
-        The GitHub API endpoint to use.
-        Update it if using GitHub Enterprise.
-        Defaults to `https://api.github.com`.
+        Signs commits with the configured credentials.
+        The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+        Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;apiEndpoint&gt;https://api.github.com&lt;/apiEndpoint&gt;
+      &lt;sign&gt;false&lt;/sign&gt;
+
+      &lt;!--
+        The target branch to use.
+        May define a `JRELEASER_BRANCH` environment variable instead.
+        Defaults to the branch pointed by HEAD.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;branch&gt;main&lt;/branch&gt;
+
+      &lt;!--
+        Release files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;files&gt;true&lt;/files&gt;
+
+      &lt;!--
+        Release distribution artifacts.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;artifacts&gt;true&lt;/artifacts&gt;
+
+      &lt;!--
+        Release checksum files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;checksums&gt;true&lt;/checksums&gt;
+
+      &lt;!--
+        Release signature files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;signatures&gt;true&lt;/signatures&gt;
+
+      &lt;!--
+        Marks the release as a draft.
+        May define a `JRELEASER_DRAFT` environment variable instead.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;draft&gt;false&lt;/draft&gt;
+
+      &lt;!--
+        Marks the release as prerelease.
+        May define a `JRELEASER_PRERELEASE` environment variable instead.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;prerelease&gt;false&lt;/prerelease&gt;
+
+      &lt;!--
+        Links the release with a discussion.
+        The named category must exist.
+        Defaults to empty.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;discussionCategoryName&gt;Announcements&lt;/discussionCategoryName&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -1514,14 +1778,6 @@ release:
         --&gt;
         &lt;email&gt;jreleaser@kordamp.org&lt;/email&gt;
       &lt;/commitAuthor&gt;
-
-      &lt;!--
-        Signs commits with the configured credentials.
-        The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
-        Defaults to `false`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;sign&gt;false&lt;/sign&gt;
 
       &lt;!--
         Changelog customization.
@@ -1572,7 +1828,7 @@ release:
           Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
-        &lt;change&gt;- {{commitShortHash}} {{commitTitle}}&lt;/change&gt;
+        &lt;format&gt;- {{commitShortHash}} {{commitTitle}}&lt;/format&gt;
 
         &lt;!--
           The template to use for the whole changelog.
@@ -1595,11 +1851,55 @@ release:
         &lt;contentTemplate&gt;path/to/template/changelog.tpl&lt;/contentTemplate&gt;
 
         &lt;!--
-          Hide uncategorized commits.
-          Defaults to `false`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;hideUncategorized&gt;true&lt;/hideUncategorized&gt;
+        &lt;contributors&gt;
+          &lt;!--
+            Enables the contributors block.
+            Defaults to `true`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;enabled&gt;true&lt;/enabled&gt;
+
+          &lt;!--
+            The template to use for each contributor.
+            Defaults to `{{contributorName}}`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;format&gt;- {{contributorName}} ({{contributorUsernameAsLink}})&lt;/format&gt;
+        &lt;/contributors&gt;
+
+        &lt;!--
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;hide&gt;
+          &lt;!--
+            Hide uncategorized commits.
+            Defaults to `false`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;uncategorized&gt;true&lt;/uncategorized&gt;
+
+          &lt;!--
+            Hide matching categories.
+            Entries must exactly match category titles defined below.
+            Defaults to empty.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;categories&gt;
+            &lt;category&gt;Merge&lt;/category&gt;
+          &lt;/categories&gt;
+
+          &lt;!--
+            Hide matching contributor names.
+            Value may be plain text or regex.
+            Defaults to empty.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;contributors&gt;
+            &lt;contributor&gt;[bot]&lt;/contributor&gt;
+          &lt;/contributors&gt;
+        &lt;/hide&gt;
 
         &lt;!--
           A list of labels to be included.
@@ -1637,12 +1937,14 @@ release:
 
             &lt;!--
               Matches the text of the first commit line.
+              Value may be plain text or regex.
               <span class="icon"><i class="fa fa-dot-circle"></i></span>
             --&gt;
             &lt;title&gt;^fix:&lt;/title&gt;
 
             &lt;!--
               Matches the full text of the commit.
+              Value may be plain text or regex.
               <span class="icon"><i class="fa fa-dot-circle"></i></span>
             --&gt;
             &lt;body&gt;Fixes #&lt;/body&gt;
@@ -1657,11 +1959,11 @@ release:
         &lt;categories&gt;
           &lt;category&gt;
             &lt;title&gt;🚀 Features&lt;/title&gt;
-            &lt;labelsAsString&gt;feature,enhancement&lt;/labelsAsString&gt;
+            &lt;labels&gt;feature,enhancement&lt;/labels&gt;
           &lt;/category&gt;
           &lt;category&gt;
             &lt;title&gt;🐛 Bug Fixes&lt;/title&gt;
-            &lt;labelsAsString&gt;bug,fix&lt;/labelsAsString&gt;
+            &lt;labels&gt;bug,fix&lt;/labels&gt;
           &lt;/category&gt;
         &lt;/categories&gt;
 
@@ -1702,30 +2004,6 @@ release:
          --&gt;
         &lt;name&gt;{{tagName}}&lt;/name&gt;
       &lt;/milestone&gt;
-
-      &lt;!--
-        The target branch to use.
-        May define a `JRELEASER_BRANCH` environment variable instead.
-        Defaults to the branch pointed by HEAD.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;branch&gt;main&lt;/branch&gt;
-
-      &lt;!--
-        Marks the release as a draft.
-        May define a `JRELEASER_DRAFT` environment variable instead.
-        Defaults to `false`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;draft&gt;false&lt;/draft&gt;
-
-      &lt;!--
-        Marks the release as prerelease.
-        May define a `JRELEASER_PRERELEASE` environment variable instead.
-        Defaults to `false`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;prerelease&gt;false&lt;/prerelease&gt;
 
       &lt;!--
         The following properties define <span class="icon"><i class="fa fa-dot-circle"></i></span> URL formats.
@@ -1798,22 +2076,23 @@ release:
       readTimeout = 60
 
       // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       owner = 'duke'
 
       // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
+      // If unspecified, will use ${project.name}.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name = 'app'
 
       // The GitHub host url.
-      // Defaults to `github.com`.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       host = 'github.com'
 
       // Username used for authoring commits. Must have write access to the repository.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      // If left unspecified, the `JRELEASER_GITHUB_USERNAME`
+      // environment variable must be defined.
+      // Defaults to the repository's owner.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username = 'duke'
 
       // Password or OAuth token with write access to the repository.
@@ -1821,6 +2100,11 @@ release:
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token = '__DO_NOT_SET_HERE__'
+
+      // The GitHub API endpoint to use.
+      // You can skip `/api/v1` as it will be added by default.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      apiEndpoint = 'https://api.github.com'
 
       // The tag associated with the release.
       // May define a `JRELEASER_TAG_NAME` environment variable instead.
@@ -1860,11 +2144,55 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       skipTag = false
 
-      // The GitHub API endpoint to use.
-      // Update it if using GitHub Enterprise.
-      // Defaults to `https://api.github.com`.
+      // Signs commits with the configured credentials.
+      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      apiEndpoint = 'https://api.github.com'
+      sign = false
+
+      // The target branch to use.
+      // May define a `JRELEASER_BRANCH` environment variable instead.
+      // Defaults to the branch pointed by HEAD.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>v
+      branch = 'main'
+
+      // Release files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files = true
+
+      // Release distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      artifacts = true
+
+      // Release checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      checksums = true
+
+      // Release signature files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      signatures = true
+
+      // Marks the release as a draft.
+      // May define a `JRELEASER_DRAFT` environment variable instead.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      draft = false
+
+      // Marks the release as prerelease.
+      // May define a `JRELEASER_PRERELEASE` environment variable instead.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      prerelease = false
+
+      // Links the release with a discussion.
+      // The named category must exist.
+      // Defaults to empty.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      discussionCategoryName = 'Announcements'
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1879,12 +2207,6 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         email = 'jreleaser@kordamp.org'
       }
-
-      // Signs commits with the configured credentials.
-      // The <a href="../signing.html" class="page">Signing</a> section must be configured as well.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      sign = false
 
       // Changelog customization.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1920,7 +2242,7 @@ release:
         // The template to use for each change.
         // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        change = '- {{commitShortHash}} {{commitTitle}}'
+        format = '- {{commitShortHash}} {{commitTitle}}'
 
         // The template to use for the whole changelog.
         // Defaults is shown.
@@ -1933,10 +2255,38 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         contentTemplate = 'path/to/template/changelog.tpl'
 
-        // Hide uncategorized commits.
-        // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        hideUncategorized = true
+        contributors {
+          // Enables the contributors block.
+          // Defaults to `true`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          enabled = true
+
+          // The template to use for each contributor.
+          // Defaults to `{{contributorName}}`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          format = '- {{contributorName}} ({{contributorUsernameAsLink}})'
+        }
+
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        hide {
+          // Hide uncategorized commits.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          uncategorized = true
+
+          // Hide matching categories.
+          // Entries must exactly match category titles defined below.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          categories = ['Merge']
+
+          // Hide matching contributor names.
+          // Value may be plain text or regex.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          contributors = ['[bot]']
+        }
 
         // A list of labels to be included.
         // Only changes matching this list will be included.
@@ -1964,10 +2314,12 @@ release:
           label = 'issue'
 
           // Matches the text of the first commit line.
+          // Value may be plain text or regex.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           title = '^fix:'
 
           // Matches the full text of the commit.
+          // Value may be plain text or regex.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           body = 'Fixes #'
         }
@@ -2018,24 +2370,6 @@ release:
         name = '{{tagName}}'
       }
 
-      // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
-      // Defaults to the branch pointed by HEAD.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>v
-      branch = 'main'
-
-      // Marks the release as a draft.
-      // May define a `JRELEASER_DRAFT` environment variable instead.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      draft = false
-
-      // Marks the release as prerelease.
-      // May define a `JRELEASER_PRERELEASE` environment variable instead.
-      // Defaults to `false`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      prerelease = false
-
       // The following properties define <span class="icon"><i class="fa fa-dot-circle"></i></span> URL formats.
       // Defaults are shown.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -2060,6 +2394,8 @@ release:
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       issueTrackerUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/issues'
+    }
+  }
 }</code></pre>
 </div>
 </div>
@@ -2075,11 +2411,11 @@ release:
 <p>You may define either <code>content</code> or <code>contentTemplate</code>, with the latter taking precedence over the former.</p>
 </div>
 <div class="paragraph">
-<p>Changelog format applies only to the automatically generated changelog, that is, formatting wo&#8217;t occur if the <code>external</code>
+<p>Changelog formatting applies only to the automatically generated changelog, that is, formatting won&#8217;t occur if the <code>external</code>
 property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.</p>
 </div>
 <div class="paragraph">
-<p>The <code>change</code> property only accepts the following name templates:</p>
+<p>The <code>changelog.format</code> property only accepts the following name templates:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -2119,6 +2455,58 @@ property is set. Format applies only to local commits at the moment, the use of 
 <p>The <code>content</code> and <code>contentTemplate</code> accept all <a href="../name-templates.html" class="page">Name Templates</a>, take special consideration on
 <code>{{changelogChanges}}</code> and <code>{{changelogContributors}}</code> as they define the parsed commits.</p>
 </div>
+<div class="sect2">
+<h3 id="_contributors"><a class="anchor" href="#_contributors"></a>Contributors</h3>
+<div class="paragraph">
+<p>Contributor names are added to the formatted changelog by default. You may choose to provide a custom format or disable
+this behavior completely. The <code>contributors.format</code> property accepts the following templates:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contributorName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s name as plain text</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contributorNameAsLink</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s name as a link</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contributorUsername</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s username as plain text</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contributorUsernameAsLink</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s username as a link</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The use of <code>{{contributorNameAsLink}}</code>, <code>{{contributorUsername}}</code>, or <code>{{contributorUsernameAsLink}}</code> incurs on a
+network call to the remote service to find out information related to the given contributor.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use a <code>-</code> or <code>*</code> character as prefix in <code>format</code> to list each contributor on its own row.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The following configuration</p>
 </div>
@@ -2132,7 +2520,7 @@ property is set. Format applies only to local commits at the moment, the use of 
     sign: true
     changelog:
       formatted: ALWAYS
-      change: '- {{commitShortHash}} {{commitTitle}}'
+      format: '- {{commitShortHash}} {{commitTitle}}'
       labelers:
         - label: 'feature'
           title: 'Resolves #'
@@ -2156,8 +2544,7 @@ property is set. Format applies only to local commits at the moment, the use of 
           labels:
             - 'task'
       replacers:
-        - search: '\[chore\] '
-          replace: ''</code></pre>
+        - search: '\[chore\] '</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2167,6 +2554,60 @@ property is set. Format applies only to local commits at the moment, the use of 
 <div class="content">
 <img src="../../_images/jreleaser-changelog-render.jpg" alt="jreleaser changelog render">
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_git_remote"><a class="anchor" href="#_git_remote"></a>Git Remote</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser asumes the default Git remote to be named <code>origin</code> however not everyone uses that name. Should you need to use
+a different name you may define an environment variable named <code>JRELEASER_DEFAULT_GIT_REMOTE</code> whose value is the name
+of the remote.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You <strong>must</strong> use an environment variable, can not use external properties as explained in
+<a href="../environment.html" class="page">Environment</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_release"><a class="anchor" href="#_skip_release"></a>Skip Release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have the option to skip artifacts and files from a release using these fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>files</code>. Affects files defined by <a href="../files.html" class="page">Files</a>.</p>
+</li>
+<li>
+<p><code>artifacts</code>. Affects files defined by the <code>artifacts</code> section of a <a href="../distributions.html" class="page">Distribution</a>.</p>
+</li>
+<li>
+<p><code>checksums</code>. Affects the calculated checksums for artifacts and files.</p>
+</li>
+<li>
+<p><code>signatures</code>. Affects the generated signature files for artifacts, files, and checksums.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally you may decide to skip artifacts by defining the <code>skipRelease</code> extra property as <code>true</code>. The associated
+signature file may be skipped as well by defining <code>skipReleaseSignatures</code> as an extra property on the artifact. You may
+also define either of this two properties on the owning <code>distribution</code> in which case the settings apply to all artifacts
+found in the distribution.</p>
 </div>
 </div>
 </div>

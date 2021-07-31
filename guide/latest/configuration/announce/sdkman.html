@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
@@ -473,9 +480,24 @@
 </aside>
 <article class="doc">
 <h1 class="page">Sdkman</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Publishes a release to <a href="https://sdkman.io">SdkMan!</a>. Please follow the instructions at
+<p>Publishes a release to <a href="https://sdkman.io">Sdkman</a>. Please follow the instructions at
 <a href="https://sdkman.io/vendors" class="bare">https://sdkman.io/vendors</a> to register your project as a candidate and obtain publishing credentials.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If this announcer is enabled but no <a href="../packagers/sdkman.html" class="page">Sdkman</a> packager is active in a distribution
+then the whole project will be released and announced.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -520,11 +542,11 @@
 <div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
+announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   sdkman:
-
-    # Enable or disable this announcer.
+    # Enables or disables Sdkman.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -540,33 +562,39 @@
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     readTimeout: 60
 
-    # The name of the candidate registered in thew SdkMan! database.
+    # Additional properties used when evaluating templates.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    extraProperties:
+      # Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
+      foo: bar
+
+    # The name of the candidate registered in thew Sdkman database.
     # If unspecified, will use ${project.name}.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     candidate: app
 
-    # Announce a major release if `true`, minor release if `false`.
-    # Defaults to `true`.
+    # Sdkman command to use.
+    # Valid values are [`MAJOR`, `MINOR`]
+    # Defaults to `MAJOR`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    major: true
+    command: MAJOR
 
-    # The consumer key for publishing to SdkMan!.
+    # The release notes URL to use.
+    # Defaults to `${release.<git>.releaseNotesUrl}.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    releaseNotesUrl: https://host.com/{{projectName}}/{{tagName}}
+
+    # The consumer key for publishing to Sdkman.
     # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     consumerKey: __DO_NOT_SET_HERE__
 
-    # The consumer token for publishing to SdkMan!.
+    # The consumer token for publishing to Sdkman.
     # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    consumerToken: __DO_NOT_SET_HERE__
-
-    # Additional properties used when evaluating templates.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    extraProperties:
-      # Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
-      foo: bar</code></pre>
+    consumerToken: __DO_NOT_SET_HERE__</code></pre>
 </div>
 </div>
 </div>
@@ -575,8 +603,7 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 [announce.sdkman]
-
-  # Enable or disable this announcer.
+  # Enables or disables Sdkman.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -592,32 +619,38 @@
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
 
-  # The name of the candidate registered in thew SdkMan! database.
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
+
+  # The name of the candidate registered in thew Sdkman database.
   # If unspecified, will use ${project.name}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   candidate = "app"
 
-  # Announce a major release if `true`, minor release if `false`.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  major = true
+  # The release notes URL to use.
+  # Defaults to `${release.<git>.releaseNotesUrl}.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  releaseNotesUrl = "https://host.com/{{projectName}}/{{tagName}}"
 
-  # The consumer key for publishing to SdkMan!.
+  # Sdkman command to use.
+  # Valid values are [`MAJOR`, `MINOR`]
+  # Defaults to `MAJOR`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  command = "MAJOR"
+
+  # The consumer key for publishing to Sdkman.
   # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   consumerKey = "__DO_NOT_SET_HERE__"
 
-  # The consumer token for publishing to SdkMan!.
+  # The consumer token for publishing to Sdkman.
   # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  consumerToken = "__DO_NOT_SET_HERE__"
-
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.</code></pre>
+  consumerToken = "__DO_NOT_SET_HERE__"</code></pre>
 </div>
 </div>
 </div>
@@ -629,7 +662,7 @@
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "sdkman": {
-      // Enable or disable this announcer.
+      // Enables or disables Sdkman.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -645,34 +678,40 @@
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "readTimeout": 60,
 
-      // The name of the candidate registered in thew SdkMan! database.
-      // If unspecified, will use ${project.name}.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "candidate": "app",
-
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "major": true,
-
-      // The consumer key for publishing to SdkMan!.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "consumerKey": "__DO_NOT_SET_HERE__",
-
-      // The consumer token for publishing to SdkMan!.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "consumerToken": "__DO_NOT_SET_HERE__",
-
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
         // Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
         "foo": "bar"
-      }
+      },
+
+      // The name of the candidate registered in thew Sdkman database.
+      // If unspecified, will use ${project.name}.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "candidate": "app",
+
+      // The release notes URL to use.
+      // Defaults to `${release.<git>.releaseNotesUrl}.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "releaseNotesUrl": "https://host.com/{{projectName}}/{{tagName}}",
+
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "command": "MAJOR",
+
+      // The consumer key for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "consumerKey": "__DO_NOT_SET_HERE__",
+
+      // The consumer token for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "consumerToken": "__DO_NOT_SET_HERE__"
     }
   }
 }</code></pre>
@@ -692,7 +731,7 @@
     --&gt;
     &lt;sdkman&gt;
       &lt;!--
-        Enable or disable this announcer.
+        Enables or disables Sdkman.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -714,36 +753,6 @@
       &lt;readTimeout&gt;60&lt;/readTimeout&gt;
 
       &lt;!--
-        The name of the candidate registered in thew SdkMan! database.
-        If unspecified, will use ${project.name}.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;candidate&gt;app&lt;/candidate&gt;
-
-      &lt;!--
-        Announce a major release if `true`, minor release if `false`.
-        Defaults to `true`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;major&gt;true&lt;/major&gt;
-
-      &lt;!--
-        The consumer key for publishing to SdkMan!.
-        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-        environment variable must be defined.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;consumerKey&gt;__DO_NOT_SET_HERE__&lt;/consumerKey&gt;
-
-      &lt;!--
-        The consumer token for publishing to SdkMan!.
-        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-        environment variable must be defined.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;consumerToken&gt;__DO_NOT_SET_HERE__&lt;/consumerToken&gt;
-
-      &lt;!--
         Additional properties used when evaluating templates.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
@@ -753,6 +762,44 @@
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
+
+      &lt;!--
+        The name of the candidate registered in thew Sdkman database.
+        If unspecified, will use ${project.name}.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;candidate&gt;app&lt;/candidate&gt;
+
+      &lt;!--
+        The release notes URL to use.
+        Defaults to `${release.&lt;git&gt;.releaseNotesUrl}.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;releaseNotesUrl&gt;https://host.com/{{projectName}}/{{tagName}}&lt;/releaseNotesUrl&gt;
+
+      &lt;!--
+        Sdkman command to use.
+        Valid values are [`MAJOR`, `MINOR`]
+        Defaults to `MAJOR`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;command&gt;MAJOR&lt;/command&gt;
+
+      &lt;!--
+        The consumer key for publishing to Sdkman.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;consumerKey&gt;__DO_NOT_SET_HERE__&lt;/consumerKey&gt;
+
+      &lt;!--
+        The consumer token for publishing to Sdkman.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;consumerToken&gt;__DO_NOT_SET_HERE__&lt;/consumerToken&gt;
     &lt;/sdkman&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -763,10 +810,11 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     sdkman {
-      // Enable or disable this announcer.
+      // Enables or disables Sdkman.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -782,32 +830,38 @@
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout = 60
 
-      // The name of the candidate registered in thew SdkMan! database.
-      // If unspecified, will use ${project.name}.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      candidate = 'app'
-
-      // Announce a major release if `true`, minor release if `false`.
-      // Defaults to `true`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      major = true
-
-      // The consumer key for publishing to SdkMan!.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      consumerKey = "__DO_NOT_SET_HERE__"
-
-      // The consumer token for publishing to SdkMan!.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      consumerToken = "__DO_NOT_SET_HERE__"
-
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
+
+      // The name of the candidate registered in thew Sdkman database.
+      // If unspecified, will use ${project.name}.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      candidate = 'app'
+
+      // The release notes URL to use.
+      // Defaults to `${release.<git>.releaseNotesUrl}.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      releaseNotesUrl = 'https://host.com/{{projectName}}/{{tagName}}'
+
+      // Sdkman command to use.
+      // Valid values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      command = 'MAJOR'
+
+      // The consumer key for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      consumerKey = '__DO_NOT_SET_HERE__'
+
+      // The consumer token for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      consumerToken = '__DO_NOT_SET_HERE__'
     }
   }
 }</code></pre>
@@ -816,8 +870,13 @@
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This announcer has the following considerations:</p>
+<p>This announcer has the following requirements:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -835,7 +894,7 @@
 artifact will override any previous matches by platform.</p>
 </li>
 <li>
-<p>You may explicitly skip a distribution by defining an extra property named <code>skipSdkman</code> with any value.</p>
+<p>You may explicitly skip a distribution or artifact by defining an extra property named <code>skipSdkman</code> with a <code>true</code> value.</p>
 </li>
 <li>
 <p>Announcing will be skipped if no suitable artifacts are found.</p>
@@ -857,6 +916,8 @@ artifact will override any previous matches by platform.</p>
 <p><code>linux</code>.</p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </article>
   </div>

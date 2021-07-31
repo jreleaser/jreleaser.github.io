@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/snap.html">Snap</a>
@@ -534,11 +541,11 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
 <div class="tab-pane" aria-labelledby="tabset1_yaml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
+announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   googleChat:
-
-    # Enable or disable this announcer.
+    # Enables or disables GoogleChat.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -552,7 +559,13 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
     # Defines the read timeout in seconds.
     # Defaults to `60`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    readTimeout: 6
+    readTimeout: 60
+
+    # Additional properties used when evaluating templates.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    extraProperties:
+      # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
+      foo: bar
 
     # The webhook associated with a specific GoogleChat room.
     # If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
@@ -569,13 +582,7 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
     # Defaults to `src/jreleaser/templates/googleChat.tpl`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    messageTemplate: path/to/template/googleChat.tpl
-
-    # Additional properties used when evaluating templates.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    extraProperties:
-      # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
-      foo: bar</code></pre>
+    messageTemplate: path/to/template/googleChat.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -584,8 +591,7 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 [announce.googleChat]
-
-  # Enable or disable this announcer.
+  # Enables or disables GoogleChat.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -600,6 +606,11 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
   # Defaults to `60`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
 
   # The webhook associated with a specific GoogleChat room.
   # If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
@@ -616,12 +627,7 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
   # Defaults to `src/jreleaser/templates/googleChat.tpl`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  messageTemplate = "path/to/template/googleChat.tpl"
-
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.</code></pre>
+  messageTemplate = "path/to/template/googleChat.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -629,11 +635,11 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "googleChat": {
-
-      // Enable or disable this announcer.
+      // Enables or disables GoogleChat.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -648,6 +654,13 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
       // Defaults to `60`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "readTimeout": 60,
+
+      // Additional properties used when evaluating templates.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
+        "foo": "bar"
+      },
 
       // The webhook associated with a specific GoogleChat room.
       // If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
@@ -664,14 +677,7 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // Defaults to `src/jreleaser/templates/googleChat.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "messageTemplate": "path/to/template/googleChat.tpl",
-
-      // Additional properties used when evaluating templates.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
-        "foo": "bar"
-      }
+      "messageTemplate": "path/to/template/googleChat.tpl"
     }
   }
 }</code></pre>
@@ -690,9 +696,8 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;googleChat&gt;
-
       &lt;!--
-        Enable or disable this announcer.
+        Enables or disables GoogleChat.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -712,6 +717,17 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;readTimeout&gt;60&lt;/readTimeout&gt;
+
+      &lt;!--
+        Additional properties used when evaluating templates.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
 
       &lt;!--
         The webhook associated with a specific GoogleChat room.
@@ -734,17 +750,6 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;messageTemplate&gt;path/to/template/googleChat.tpl&lt;/messageTemplate&gt;
-
-      &lt;!--
-        Additional properties used when evaluating templates.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;extraProperties&gt;
-        &lt;!--
-          Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
-        --&gt;
-        &lt;foo&gt;bar&lt;/foo&gt;
-      &lt;/extraProperties&gt;
     &lt;/googleChat&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -755,11 +760,11 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     googleChat {
-
-      // Enable or disable this announcer.
+      // Enables or disables GoogleChat.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -774,6 +779,11 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
       // Defaults to `60`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout = 60
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties.put('foo', 'bar')
 
       // The webhook associated with a specific GoogleChat room.
       // If left unspecified, the `JRELEASER_GOOGLE_CHAT_WEBHOOK`
@@ -791,11 +801,6 @@ setting the <code>JRELEASER_GOOGLE_CHAT_WEBHOOK</code> environment variable over
       // Defaults to `src/jreleaser/templates/googleChat.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       messageTemplate = 'path/to/template/googleChat.tpl'
-
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `googleChat`, i.e, `googleChatFoo`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      extraProperties.put('foo', 'bar')
     }
   }
 }</code></pre>

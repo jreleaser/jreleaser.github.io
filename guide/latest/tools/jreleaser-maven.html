@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../configuration/announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
@@ -488,7 +495,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
   &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
   &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;0.5.0&lt;/version&gt;
+  &lt;version&gt;0.6.0&lt;/version&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
@@ -533,6 +540,10 @@ the matching JReleaser element has not been explicitly configured:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">project.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.website</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.organization.url</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">project.website</p></td>
 </tr>
 <tr>
@@ -583,6 +594,33 @@ first, if not found then <code>&lt;developer&gt;&lt;id&gt;</code> will be used a
 </div>
 </div>
 <div class="sect1">
+<h2 id="_environment_variables"><a class="anchor" href="#_environment_variables"></a>Environment Variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following settings may also be specified via environment variables</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment Variable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEFAULT_GIT_REMOTE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">origin</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -625,6 +663,18 @@ User property: <code>jreleaser.config.full</code></p>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -807,6 +857,18 @@ Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
 </li>
 <li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -841,6 +903,18 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -883,6 +957,18 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -939,6 +1025,18 @@ Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
 </li>
 <li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -985,6 +1083,18 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -1041,6 +1151,18 @@ Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
 </li>
 <li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1093,6 +1215,18 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -1149,6 +1283,18 @@ Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
 </li>
 <li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1189,6 +1335,18 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>skip<br>
@@ -1305,6 +1463,12 @@ Type: String<br>
 User property: <code>jreleaser.project.name</code></p>
 </li>
 <li>
+<p>projectSnapshotLabel<br>
+The project snapshot label.<br>
+Type: String<br>
+User property: <code>jreleaser.project.snapshot.label</code></p>
+</li>
+<li>
 <p>projectSnapshotPattern<br>
 The project snapshot pattern.<br>
 Type: String<br>
@@ -1327,6 +1491,18 @@ User property: <code>jreleaser.project.version.pattern</code></p>
 The release name.<br>
 Type: String<br>
 User property: <code>jreleaser.release.name</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
 </li>
 <li>
 <p>signing<br>

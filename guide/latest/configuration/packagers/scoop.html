@@ -8,6 +8,7 @@
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <link rel="stylesheet" href="../../../../_/css/admonitions.css">
     <link rel="stylesheet" href="../../../../_/css/fontawesome.css">
@@ -154,6 +155,9 @@
     <a class="nav-link" href="../announce/index.html">Announce</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/discord.html">Discord</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -239,6 +243,9 @@
   </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="snap.html">Snap</a>
@@ -556,11 +563,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
 
-    # Directory with file templates used to prepare the Scoop distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-    # If specified, path must exist.
+    # Let the release continue if the packager fails.
+    # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/scoop/templates
+    continueOnError: true
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -568,30 +574,26 @@ packagers:
       # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
       foo: bar
 
-    # URL used to check the latest version.
-    # Defaults to the releaser's `latestReleaseUrl`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    checkverUrl: https://host/path
+    # Directory with file templates used to prepare the Scoop distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+    # If specified, path must exist.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    templateDirectory: path/to/scoop/templates
 
-    # URL used to download a new version.
-    # Defaults to the releaser's `downloadUrl`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    autoupdateUrl: https://host/path
-
-    # Git author used to commit to the bucket repository.
+    # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     commitAuthor:
       # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
+      # Defaults to `jreleaserbot`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: jreleaserbot
 
       # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
+      # Defaults to `jreleaser@kordamp.org`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
-    # Git repository to push the formula to.
+    # Git repository to push the manifest to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     bucket:
@@ -602,20 +604,38 @@ packagers:
       owner: duke
 
       # The name of the bucket repository.
-      # Defaults to `scoop-${repoOwner}`.
+      # Defaults to `scoop-duke`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: scoop-duke
 
+      # The target branch to use.
+      # May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+      # Defaults to the branch pointed by HEAD.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      branch: HEAD
+
       # Username used for authoring commits. Must have write access to the bucket repository.
+      # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+      # environment variable must be defined.
       # Defaults to the same username as the release repository.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the bucket repository.
       # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      token: __DO_NOT_SET_HERE__</code></pre>
+      token: __DO_NOT_SET_HERE__
+
+    # URL used to check the latest version.
+    # Defaults to the releaser's `latestReleaseUrl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    checkverUrl: https://host/path
+
+    # URL used to download a new version.
+    # Defaults to the releaser's `downloadUrl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    autoupdateUrl: https://host/path</code></pre>
 </div>
 </div>
 </div>
@@ -630,16 +650,65 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
+  # Let the release continue if the packager fails.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  continueOnError = true
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+
   # Directory with file templates used to prepare the Scoop distribution.
   # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
   # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/scoop/templates"
 
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+  # Git author used to commit to the repository.
+
+  # Name used when authoring commits.
+  # Defaults to `jreleaserbot`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  commitAuthor.name = "jreleaserbot"
+
+  # E-mail used when authoring commits.
+  # Defaults to `jreleaser@kordamp.org`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  commitAuthor.email = "jreleaser@kordamp.org"
+
+  # Git repository to push the manifest to.
+  # Defaults are shown.
+
+  # The owner of the bucket repository.
+  # Defaults to the same owner as the release repository.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  bucket.owner = "duke"
+
+  # The name of the bucket repository.
+  # Defaults to `scoop-duke`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  bucket.name = "scoop-duke"
+
+  # The target branch to use.
+  # May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+  # Defaults to the branch pointed by HEAD.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  bucket.branch = "HEAD"
+
+  # Username used for authoring commits. Must have write access to the bucket repository.
+  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+  # environment variable must be defined.
+  # Defaults to the same username as the release repository.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  bucket.username = "duke"
+
+  # Password or OAuth token with write access to the bucket repository.
+  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  bucket.token = "__DO_NOT_SET_HERE__"
 
   # URL used to check the latest version.
   # Defaults to the releaser's `latestReleaseUrl`.
@@ -649,42 +718,7 @@ packagers:
   # URL used to download a new version.
   # Defaults to the releaser's `downloadUrl`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  autoupdateUrl = "https://host/path"
-
-  # Git author used to commit to the bucket repository.
-
-  # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  commitAuthor.email = "jreleaser@kordamp.org"
-
-  # Git repository to push the formula to.
-
-  # The owner of the bucket repository.
-  # Defaults to the same owner as the release repository.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.owner = "duke"
-
-  # The name of the bucket repository.
-  # Defaults to `scoop-${repoOwner}`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.nam = "scoop-duke"
-
-  # Username used for authoring commits. Must have write access to the bucket repository.
-  # Defaults to the same username as the release repository.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.username = "duke"
-
-  # Password or OAuth token with write access to the bucket repository.
-  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
-  # environment variable must be defined.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  bucket.token = "__DO_NOT_SET_HERE__"</code></pre>
+  autoupdateUrl = "https://host/path"</code></pre>
 </div>
 </div>
 </div>
@@ -702,11 +736,10 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/scoop/templates",
+      "continueOnError": true,
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -715,17 +748,13 @@ packagers:
         "foo": "bar"
       },
 
-      // URL used to check the latest version.
-      // Defaults to the releaser's `latestReleaseUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "checkverUrl": "https://host/path",
+      // Directory with file templates used to prepare the Scoop distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "templateDirectory": "path/to/scoop/templates",
 
-      // URL used to download a new version.
-      // Defaults to the releaser's `downloadUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "autoupdateUrl": "https://host/path",
-
-      // Git author used to commit to the bucket repository.
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "commitAuthor": {
         // Name used when authoring commits.
@@ -739,7 +768,7 @@ packagers:
         "email": "jreleaser@kordamp.org"
       },
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "bucket": {
@@ -750,13 +779,21 @@ packagers:
         "owner": "duke",
 
         // The name of the bucket repository.
-        // Defaults to `scoop-${repoOwner}`.
+        // Defaults to `scoop-duke`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "scoop-duke",
 
+        // The target branch to use.
+        // May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "branch": "HEAD",
+
         // Username used for authoring commits. Must have write access to the bucket repository.
+        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the bucket repository.
@@ -764,7 +801,17 @@ packagers:
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "token": "__DO_NOT_SET_HERE__"
-      }
+      },
+
+      // URL used to check the latest version.
+      // Defaults to the releaser's `latestReleaseUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "checkverUrl": "https://host/path",
+
+      // URL used to download a new version.
+      // Defaults to the releaser's `downloadUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "autoupdateUrl": "https://host/path"
     }
   }
 }</code></pre>
@@ -792,12 +839,11 @@ packagers:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the Scoop distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-        If specified, path must exist.
+        Let the release continue if the packager fails.
+        Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;templateDirectory&gt;&gt;path/to/scoop/templates&lt;/templateDirectory&gt;
+      &lt;continueOnError&gt;true&lt;/continueOnError&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -811,18 +857,12 @@ packagers:
       &lt;/extraProperties&gt;
 
       &lt;!--
-        URL used to check the latest version.
-        Defaults to the releaser's `latestReleaseUrl`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        Directory with file templates used to prepare the Scoop distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+        If specified, path must exist.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;checkverUrl&gt;https://host/path&lt;/checkverUrl&gt;
-
-      &lt;!--
-        URL used to download a new version.
-        Defaults to the releaser's `downloadUrl`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      --&gt;
-      &lt;autoupdateUrl&gt;https://host/path&lt;/autoupdateUrl&gt;
+      &lt;templateDirectory&gt;&gt;path/to/scoop/templates&lt;/templateDirectory&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -846,7 +886,7 @@ packagers:
       &lt;/commitAuthor&gt;
 
       &lt;!--
-        Git repository to push the formula to.
+        Git repository to push the manifest to.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -861,15 +901,25 @@ packagers:
 
         &lt;!--
           The name of the bucket repository.
-          Defaults to `scoop-${repoOwner}`.
+          Defaults to `scoop-duke`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;name&gt;scoop-duke&lt;/name&gt;
 
         &lt;!--
+          The target branch to use.
+          May define a `JRELEASER_SCOOP_${GIT}_BRANCH`` environment variable instead.
+          Defaults to the branch pointed by HEAD.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
           Username used for authoring commits. Must have write access to the bucket repository.
+          If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+          environment variable must be defined.
           Defaults to the same username as the release repository.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;username&gt;duke&lt;/username&gt;
 
@@ -881,6 +931,20 @@ packagers:
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
       &lt;/bucket&gt;
+
+      &lt;!--
+        URL used to check the latest version.
+        Defaults to the releaser's `latestReleaseUrl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;checkverUrl&gt;https://host/path&lt;/checkverUrl&gt;
+
+      &lt;!--
+        URL used to download a new version.
+        Defaults to the releaser's `downloadUrl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;autoupdateUrl&gt;https://host/path&lt;/autoupdateUrl&gt;
     &lt;/scoop&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -901,42 +965,37 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
-      // If specified, path must exist.
+      // Let the release continue if the packager fails.
+      // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/scoop/templates'
+      continueOnError = true
 
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // URL used to check the latest version.
-      // Defaults to the releaser's `latestReleaseUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      checkverUrl = 'https://host/path'
+      // Directory with file templates used to prepare the Scoop distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+      // If specified, path must exist.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      templateDirectory = 'path/to/scoop/templates'
 
-      // URL used to download a new version.
-      // Defaults to the releaser's `downloadUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      autoupdateUrl = 'https://host/path'
-
-      // Git author used to commit to the bucket repository.
+      // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       commitAuthor {
         // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
+        // Defaults to `jreleaserbot`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'jreleaserbot'
 
         // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
+        // Defaults to `jreleaser@kordamp.org`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         email = 'jreleaser@kordamp.org'
       }
 
-      // Git repository to push the formula to.
+      // Git repository to push the manifest to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       bucket {
@@ -947,13 +1006,21 @@ packagers:
         owner = 'duke'
 
         // The name of the bucket repository.
-        // Defaults to `scoop-${repoOwner}`.
+        // Defaults to `scoop-duke`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'scoop-duke'
 
+        // The target branch to use.
+        // May define a `JRELEASER_BRANCH` environment variable instead.
+        // Defaults to the branch pointed by HEAD.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        branch = 'HEAD'
+
         // Username used for authoring commits. Must have write access to the bucket repository.
+        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+        // environment variable must be defined.
         // Defaults to the same username as the release repository.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the bucket repository.
@@ -962,6 +1029,16 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
       }
+
+      // URL used to check the latest version.
+      // Defaults to the releaser's `latestReleaseUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      checkverUrl = 'https://host/path'
+
+      // URL used to download a new version.
+      // Defaults to the releaser's `downloadUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      autoupdateUrl = 'https://host/path'
     }
   }
 }</code></pre>
