@@ -1,4 +1,10 @@
 = Homebrew
+:tool_id:       brew
+:tool_name:     Homebrew
+:tool_env_var:  HOMEBREW
+:tool_tap:      tap
+:tool_tap_name: homebrew-tap
+:tool_manifest: formula
 
 The `brew` section specifies how the formula should be created. You can check the
 link:https://docs.brew.sh/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
@@ -7,7 +13,7 @@ link:https://docs.brew.sh/Cask-Cookbook[cask-cookbook] for more details.
 
 NOTE: Only artifacts with `.zip`, `.jar` extension may be packaged with Homebrew to create a formula.
 
-NOTE: Only artifacts with `.dmg`, `.pkg` extension may be packaged with Homebrew to create a cask.
+NOTE: Only artifacts with `.zip`, `.dmg`, `.pkg` extension may be packaged with Homebrew to create a cask.
 
 WARNING: Snapshots are *not* supported.
 
@@ -17,29 +23,28 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-packagers:
-  # icon:dot-circle[]
-  brew:
-    # Enables or disables Homebrew.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # icon:dot-circle[]
-    active: ALWAYS
+include::partial$packagers/yaml/common-head.adoc[]
 
-    # Directory with file templates used to prepare the Homebrew distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-    # If specified, path must exist.
-    # icon:dot-circle[]
-    templateDirectory: path/to/brew/templates
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
 
     # The class name of the generated formula.
     # If left unspecified, will use `{{projectNameCapitalized}}`.
     # icon:dot-circle[] icon:file-alt[]
     formulaName: App
+
+    # Create a formula that supports OSX & Linux.
+    # Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+    # Default is `false`.
+    # icon:dot-circle[]
+    multiPlatform: false
 
     # Customize the livecheck block.
     # Default is empty.
@@ -69,56 +74,16 @@ packagers:
       # mapped as `depends_on "key4"`
       key4: 'null'
 
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-      foo: bar
-
-    # Git author used to commit to the tap repository.
-    # icon:dot-circle[]
-    commitAuthor:
-      # Name used when authoring commits.
-      # If left undefined, will use the releaser's commit name.
-      # icon:dot-circle[]
-      name: jreleaserbot
-
-      # E-mail used when authoring commits.
-      # If left undefined, will use the releaser's commit email.
-      # icon:dot-circle[]
-      email: pass:[jreleaser@kordamp.org]
-
-    # Git repository to push the formula to.
-    # Defaults are shown.
-    # icon:dot-circle[]
-    tap:
-
-      # The owner of the tap repository.
-      # Defaults to the same owner as the release repository.
-      # icon:dot-circle[]
-      owner: duke
-
-      # The name of the tap repository.
-      # Defaults to `homebrew-tap`.
-      # icon:dot-circle[]
-      name: homebrew-tap
-
-      # Username used for authoring commits. Must have write access to the tap repository.
-      # Defaults to the same username as the release repository.
-      # icon:dot-circle[]
-      username: duke
-
-      # Password or OAuth token with write access to the tap repository.
-      # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
-
     # Cask configuration.
     # Requires artifact with extension `.dmg` or `.pkg`.
     # Defaults are shown.
     # icon:dot-circle[]
     cask:
+
+      # Favors producing a cask instead of a formula.
+      # Default is `false`.
+      # icon:dot-circle[]
+      enabled: true
 
       # The class name of the generated cask.
       # If left unspecified, will use `{{projectName}}`.
@@ -140,6 +105,11 @@ packagers:
       # icon:dot-circle[] icon:file-alt[]
       appName: App.app
 
+      # URL providing an appcast feed to find updates for this Cask.
+      # Default is empty.
+      # icon:dot-circle[] icon:file-alt[]
+      appcast: pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom]
+
       # Procedures to uninstall the Cask.
       # icon:dot-circle[]
       uninstall:
@@ -152,29 +122,31 @@ packagers:
         trash:
           - '~/Library/Caches/App'
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-[packagers.brew]
-  # Enables or disables Homebrew.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
+include::partial$packagers/toml/common-head.adoc[]
 
-  # Directory with file templates used to prepare the Homebrew distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/brew/templates"
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
 
   # The class name of the generated formula.
   # If left unspecified, will use `{{projectNameCapitalized}}`.
   # icon:dot-circle[] icon:file-alt[]
   formulaName = "App"
+
+  # Create a formula that supports OSX & Linux.
+  # Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+  # Default is `false`.
+  # icon:dot-circle[]
+  multiPlatform = false
 
   # Customize the livecheck block.
   # Default is empty.
@@ -200,51 +172,15 @@ TOML::
   # mapped as `depends_on "key4"`
   dependencies.key4 = "null"
 
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-
-  # Git author used to commit to the tap repository.
-
-  # Name used when authoring commits.
-  # If left undefined, will use the releaser's commit name.
-  # icon:dot-circle[]
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # If left undefined, will use the releaser's commit email.
-  # icon:dot-circle[]
-  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
-
-  # Git repository to push the formula to.
-  # Defaults are shown.
-
-  # The owner of the tap repository.
-  # Defaults to the same owner as the release repository.
-  # icon:dot-circle[]
-  tap.owner = "duke"
-
-  # The name of the tap repository.
-  # Defaults to `homebrew-tap`.
-  # icon:dot-circle[]
-  tap.name = "homebrew-tap"
-
-  # Username used for authoring commits. Must have write access to the tap repository.
-  # Defaults to the same username as the release repository.
-  # icon:dot-circle[]
-  tap.username = "duke"
-
-  # Password or OAuth token with write access to the tap repository.
-  # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  tap.token = "__DO_NOT_SET_HERE__"
-
   # Cask configuration.
   # Requires artifact with extension `.dmg` or `.pkg`.
   # Defaults are shown.
   # icon:dot-circle[]
+
+  # Favors producing a cask instead of a formula.
+  # Default is `false`.
+  # icon:dot-circle[]
+  cask.enabled = true
 
   # The class name of the generated cask.
   # If left unspecified, will use `{{projectName}}`.
@@ -259,12 +195,17 @@ TOML::
   # Relative path to the .pkg file.
   # If left unspecified, will use the filename of the .pkg file.
   # icon:dot-circle[] icon:file-alt[]
-  cask.pkgNam = "app-1.0.0.pkg"
+  cask.pkgName = "app-1.0.0.pkg"
 
   # Name of the application folder.
   # If left unspecified, will use `{{brewFormulaName}}.app`.
   # icon:dot-circle[] icon:file-alt[]
   cask.appName = "App.app"
+
+  # URL providing an appcast feed to find updates for this Cask.
+  # Default is empty.
+  # icon:dot-circle[] icon:file-alt[]
+  cask.appcast = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom]"
 
   # Procedures to uninstall the Cask.
   # icon:dot-circle[]
@@ -276,36 +217,35 @@ TOML::
   pass:[[[packagers.brew.cask.zap]]]
     trash = ["~/Library/Caches/App"]
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "packagers": {
-    // icon:dot-circle[]
-    "brew": {
-      // Enables or disables Homebrew.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      "active": "ALWAYS",
+include::partial$packagers/json/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Homebrew distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      "templateDirectory": "path/to/brew/templates",
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
 
       // The class name of the generated formula.
       // If left unspecified, will use `{{projectNameCapitalized}}`.
       // icon:dot-circle[] icon:file-alt[]
       "formulaName": "App",
 
-      / Customize the livecheck block.
-      / Default is empty.
-      / icon:dot-circle[] icon:file-alt[]
+      // Create a formula that supports OSX & Linux.
+      // Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+      // Default is `false`.
+      // icon:dot-circle[]
+      "multiPlatform": false,
+
+      // Customize the livecheck block.
+      // Default is empty.
+      // icon:dot-circle[] icon:file-alt[]
       "livecheck": [
         "url 'pass:[https://host/sparkle/appcast-release.xml]'",
         "strategy :sparkle"
@@ -333,59 +273,16 @@ JSON::
         "key4": "null"
       },
 
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-        "foo": "bar"
-      },
-
-      // Git author used to commit to the tap repository.
-      // icon:dot-circle[]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        "name": "jreleaserbot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        "email": "pass:[jreleaser@kordamp.org]"
-      },
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      "tap": {
-
-        // The owner of the tap repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        "owner": "duke",
-
-        // The name of the tap repository.
-        // Defaults to `homebrew-tap`.
-        // icon:dot-circle[]
-        "name": "homebrew-tap",
-
-        // Username used for authoring commits. Must have write access to the tap repository.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[]
-        "username": "duke",
-
-        // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__"
-      },
-
       // Cask configuration.
       // Requires artifact with extension `.dmg` or `.pkg`.
       // Defaults are shown.
       // icon:dot-circle[]
       "cask": {
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // icon:dot-circle[]
+        "enabled": true,
 
         // The class name of the generated cask.
         // If left unspecified, will use `{{projectName}}`.
@@ -407,6 +304,11 @@ JSON::
         // icon:dot-circle[] icon:file-alt[]
         "appName": "App.app",
 
+        // URL providing an appcast feed to find updates for this Cask.
+        // Default is empty.
+        // icon:dot-circle[] icon:file-alt[]
+        "appcast": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom]",
+
         // Procedures to uninstall the Cask.
         // icon:dot-circle[]
         "uninstall": {
@@ -423,39 +325,22 @@ JSON::
           }
         }
       }
-    }
-  }
-}
+include::partial$packagers/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <packagers>
-    <!--
-      icon:dot-circle[]
-    -->
-    <brew>
-      <!--
-        Enables or disables Homebrew.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        icon:dot-circle[]
-      -->
-      <active>ALWAYS</active>
+include::partial$packagers/maven/common-head.adoc[]
 
-      <!--
-        Directory with file templates used to prepare the Homebrew distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-        If specified, path must exist.
-        icon:dot-circle[]
-      -->
-      <templateDirectory>>path/to/brew/templates</templateDirectory>
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
 
       <!--
         The class name of the generated formula.
@@ -463,6 +348,14 @@ Maven::
         icon:dot-circle[] icon:file-alt[]
       -->
       <formulaName>App</formulaName>
+
+      <!--
+        Create a formula that supports OSX & Linux.
+        Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+        Default is `false`.
+        icon:dot-circle[]
+      -->
+      <multiPlatform>false</multiPlatform>
 
       <!--
         Customize the livecheck block.
@@ -517,81 +410,17 @@ Maven::
       </dependencies>
 
       <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
-
-      <!--
-        Git author used to commit to the repository.
-        icon:dot-circle[]
-      -->
-      <commitAuthor>
-
-        <!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          icon:dot-circle[]
-        -->
-        <name>jreleaserbot</name>
-
-        <!--
-          E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser@kordamp.org]`.
-          icon:dot-circle[]
-        -->
-        <email>pass:[jreleaser@kordamp.org]</email>
-      </commitAuthor>
-
-      <!--
-        Git repository to push the formula to.
-        Defaults are shown.
-        icon:dot-circle[]
-      -->
-      <tap>
-
-        <!--
-          The owner of the tap repository.
-          Defaults to the same owner as the release repository.
-          icon:dot-circle[]
-        -->
-        <owner>duke</owner>
-
-        <!--
-          The name of the tap repository.
-          Defaults to `homebrew-tap`.
-          icon:dot-circle[]
-        -->
-        <name>homebrew-tap</name>
-
-        <!--
-          Username used for authoring commits. Must have write access to the tap repository.
-          Defaults to the same username as the release repository.
-          icon:dot-circle[]
-        -->
-        <username>duke</username>
-
-        <!--
-          Password or OAuth token with write access to the tap repository.
-          If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <token>__DO_NOT_SET_HERE__</token>
-      </tap>
-
-      <!--
         Cask configuration.
         Requires artifact with extension `.dmg` or `.pkg`.
         Defaults are shown.
         icon:dot-circle[]
       -->
       <cask>
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // icon:dot-circle[]
+        <enabled>true</enabled>
 
         <!--
           The class name of the generated cask.
@@ -622,6 +451,13 @@ Maven::
         <appName>App.app</appName>
 
         <!--
+          URL providing an appcast feed to find updates for this Cask.
+          Default is empty.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <appcast>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom]</appcast>
+
+        <!--
           Procedures to uninstall the Cask.
           icon:dot-circle[]
         -->
@@ -641,36 +477,33 @@ Maven::
           </trash>
         </zap>
        </cask>
-    </brew>
-  </packagers>
-</jreleaser>
+include::partial$packagers/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  packagers {
-    // icon:dot-circle[]
-    brew {
-      // Enables or disables Homebrew.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      active = 'ALWAYS'
+include::partial$packagers/gradle/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Homebrew distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/brew`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      templateDirectory = 'path/to/brew/templates'
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
 
       // The class name of the generated formula.
       // If left unspecified, will use `{{projectNameCapitalized}}`.
       // icon:dot-circle[] icon:file-alt[]
       formulaName = 'App'
+
+      // Create a formula that supports OSX & Linux.
+      // Applicable to distributions of type [JLINK, NATIVE_IMAGE, BINARY].
+      // Default is `false`.
+      // icon:dot-circle[]
+      multiPlatform = false
 
       // Customize the livecheck block.
       // Default is empty.
@@ -701,57 +534,16 @@ jreleaser {
         addDependency('key4')
       }
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `brew`, i.e, `brewFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
-
-      // Git author used to commit to the tap repository.
-      // icon:dot-circle[]
-      commitAuthor {
-        // Name used when authoring commits.
-        // If left undefined, will use the releaser's commit name.
-        // icon:dot-circle[]
-        name = 'jreleaserbot'
-
-        // E-mail used when authoring commits.
-        // If left undefined, will use the releaser's commit email.
-        // icon:dot-circle[]
-        email = 'pass:[jreleaser@kordamp.org]'
-      }  
-
-      // Git repository to push the formula to.
-      // Defaults are shown.
-      // icon:dot-circle[]
-      tap {
-
-        // The owner of the tap repository.
-        // Defaults to the same owner as the release repository.
-        // icon:dot-circle[]
-        owner = 'duke'
-
-        // The name of the tap repository.
-        // Defaults to `homebrew-tap`.
-        // icon:dot-circle[]
-        name = 'homebrew-tap'
-
-        // Username used for authoring commits. Must have write access to the tap repository.
-        // Defaults to the same username as the release repository.
-        // icon:dot-circle[]
-        username = 'duke'
-
-        // Password or OAuth token with write access to the tap repository.
-        // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
-      }
-
       // Cask configuration.
       // Requires artifact with extension `.dmg` or `.pkg`.
       // Defaults are shown.
       // icon:dot-circle[]
       cask {
+
+        // Favors producing a cask instead of a formula.
+        // Default is `false`.
+        // icon:dot-circle[]
+        enabled = true
 
         // The class name of the generated cask.
         // If left unspecified, will use `{{projectName}}`.
@@ -773,6 +565,11 @@ jreleaser {
         // icon:dot-circle[] icon:file-alt[]
         appName = 'App.app'
 
+        // URL providing an appcast feed to find updates for this Cask.
+        // Default is empty.
+        // icon:dot-circle[] icon:file-alt[]
+        appcast = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases.atom]'
+
         // Procedures to uninstall the Cask.
         // icon:dot-circle[]
         uninstall = [
@@ -789,10 +586,9 @@ jreleaser {
           ]
         ]
       }
-    }
-  }      
-}
+include::partial$packagers/gradle/common-footer.adoc[]
 ----
+--
 ====
 
 Template files may be initialized using the `template` command.
@@ -837,7 +633,7 @@ homebrew repositories.
 
 == Casks
 
-Casks require either a `.dmg` or a `.pkg` artifact. Distributions that provide more than one of these files can mark which
+Casks require a `.zip`, .dmg` or a `.pkg` artifact. Distributions that provide more than one of these files can mark which
 artifacts should be skipped from being resolved as a Cask candidate by adding a `skipBrew` extra property to the target
 artifacts.
 

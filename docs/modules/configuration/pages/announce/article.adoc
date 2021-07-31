@@ -1,0 +1,353 @@
+= Article
+:tool_id:       article
+:tool_name:     Article
+:tool_env_var:  ARTICLE
+:tool_tap:      docs
+:tool_tap_name: duke-docs
+:tool_manifest: templates
+
+Processes file templates suitable for publication as {tool_id}s, blogs, pages, etc.
+
+Processed files may be uploaded to a Git repository of your choosing.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  # icon:dot-circle[]
+  article:
+
+    # Enable or disable this announcer.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[]
+    active: ALWAYS
+
+    # Directory with file templates.
+    # Defaults to `src/jreleaser/templates/article`.
+    # Path must exist.
+    # icon:dot-circle[]
+    templateDirectory: src/jreleaser/templates/article
+
+    # Defines a list of files.
+    # Each entry must define a path: field.
+    # The path may be relative to templateDirectory or absolute.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    files:
+      - path: path/to/some/file.md
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties:
+      # Key will be capitalized and prefixed with `article`, i.e, `articleFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+# icon:dot-circle[]
+[announce.article]
+
+  # Enable or disable this announcer.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Directory with file templates.
+  # Defaults to `src/jreleaser/templates/article`.
+  # Path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "src/jreleaser/templates/article"
+
+  # Defines a list of files.
+  # Each entry must define a path: field.
+  # The path may be relative to templateDirectory or absolute.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  files = [
+    { path = "path/to/some/file.md" }
+  ]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `article`, i.e, `articleFoo`.
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    // icon:dot-circle[]
+    "article": {
+
+      // Enable or disable this announcer.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[]
+      "active": "ALWAYS",
+
+      // Directory with file templates.
+      // Defaults to `src/jreleaser/templates/article`.
+      // Path must exist.
+      // icon:dot-circle[]
+      "templateDirectory": "src/jreleaser/templates/article",
+
+      // Defines a list of files.
+      // Each entry must define a path: field.
+      // The path may be relative to templateDirectory or absolute.
+      // icon:exclamation-triangle[] icon:file-alt[]
+      "files": [
+        {
+          "path": "path/to/some/file.md"
+        }
+      ]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // Additional properties used when evaluating templates.
+      // icon:dot-circle[] icon:file-alt[]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `article`, i.e, `articleFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <announce>
+    <!--
+      icon:dot-circle[]
+    -->
+    <article>
+
+      <!--
+        Enable or disable this announcer.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        icon:dot-circle[]
+      -->
+      <active>ALWAYS</active>
+
+      <!--
+        Directory with file templates.
+        Defaults to `src/jreleaser/templates/article`.
+        Path must exist.
+        icon:dot-circle[]
+      -->
+      <templateDirectory>src/jreleaser/templates/article</templateDirectory>
+
+      <!--
+        Defines a list of files.
+        Each entry must define a path: field.
+        The path may be relative to templateDirectory or absolute.
+        icon:exclamation-triangle[] icon:file-alt[]
+      -->
+      <files>
+        <files>
+          <path>path/to/some/file.md</path>
+        <file>
+      </files>
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        Additional properties used when evaluating templates.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `article`, i.e, `articleFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </article>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    // icon:dot-circle[]
+    article {
+
+      // Enable or disable this announcer.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[]
+      active = 'ALWAYS'
+
+      // Directory with file templates.
+      // Defaults to `src/jreleaser/templates/article`.
+      // Path must exist.
+      // icon:dot-circle[]
+      templateDirectory = 'src/jreleaser/templates/article'
+
+      // Defines a list of files.
+      // Each entry must define a path: field.
+      // The path may be relative to templateDirectory or absolute.
+      // icon:exclamation-triangle[] icon:file-alt[]
+      file {
+        path = 'path/to/some/file.md'
+      }
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `article`, i.e, `articleFoo`.
+      // icon:dot-circle[] icon:file-alt[]
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Example
+
+Given a project configured as
+
+[source,yaml]
+.jreleaser.yml
+----
+project:
+  version: 1.2.3
+  description: Sample application
+  longDescription: Sample application
+  website: https://github.com/duke/app
+  authors:
+    - Duke
+  license: Apache-2.0
+  java:
+    groupId: com.acme
+    version: 8
+    mainClass: com.acme.Main
+  extraProperties:
+    inceptionYear: 2021
+
+releaser:
+  github:
+    owner: duke
+
+distributions:
+  app:
+    artifacts:
+      - path: 'target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.zip'
+
+announce:
+  article:
+    active: always
+    repository:
+      name: docs
+    files:
+      - path: 'post.adoc'
+        transform: '_posts/{{#f_now}}YYYY-MM-dd{{/f_now}}/{{projectName}}-{{#f_dash}}{{projectVersion}}{{/f_dash}}-released.adoc'
+----
+
+And file named `post.adoc` located at `src/jreleaser/templates/article`
+
+[source]
+----
+---
+layout: post
+title: '{{projectNameCapitalized}} {{projectEffectiveVersion}} released'
+date: {{#f_now}}YYYY-MM-dd{{/f_now}}
+tags: release
+synopsis: {{projectEffectiveVersion}} is the latest release.
+author: duke
+---
+
+We just released {{projectNameCapitalized}} {{projectEffectiveVersion}} with a new round of bugfixes and documentation improvements.
+
+== Full changelog
+
+You can get {{releaseNotesUrl}}[the full changelog of {{projectEffectiveVersion}} on GitHub].
+----
+
+Generates the following file structure
+
+[source]
+----
+out
+└── jreleaser
+    ├── output.properties
+    ├── prepare
+    │   └── article
+    │       └── _posts
+    │           └── 2021-07-26
+    │               └── app-1-0-0-released.adoc
+    ├── release
+    │   └── CHANGELOG.md
+    └── trace.log
+----
+
+The contents of the parsed template look like this
+
+[source]
+----
+---
+layout: post
+title: 'App 1.2.3 released'
+date: 2021-07-26
+tags: release
+synopsis: 1.0.0 is the latest release.
+author: duke
+---
+
+We just released App 1.2.3 with a new round of bugfixes and documentation improvements.
+
+== Full changelog
+
+You can get https://github.com/duke/app/releases/tag/v1.2.3[the full changelog of 1.2.3 on GitHub].
+----
+
+This file will be uploaded to the pass:[https://github.com/duke/docs] repository as 
+`_posts/2021-07-26/app-1-0-0-released.adoc`.
+

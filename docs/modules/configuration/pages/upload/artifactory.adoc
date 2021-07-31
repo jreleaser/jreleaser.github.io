@@ -16,6 +16,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -43,10 +44,14 @@ upload:
       # icon:dot-circle[]
       readTimeout: 60
 
-      # URL of the Artifactory instance + path.
-      # The artifact file name will be appended automatically.
+      # URL of the Artifactory instance + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
-      target: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]
+      uploadUrl: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]
+
+      # URL of the Artifactory instance + path + artifact.
+      # If undefined, will use the same value as `uploadUrl`.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      downloadUrl: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]
 
       # The username that can write to the repository.
       # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -89,8 +94,10 @@ upload:
         # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -114,10 +121,14 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # URL of the Artifactory instance + path.
-  # The artifact file name will be appended automatically.
+  # URL of the Artifactory instance + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
-  target = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]"
+  uploadUrl = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]"
+
+  # URL of the Artifactory instance + path + artifact.
+  # If undefined, will use the same value as `uploadUrl`.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  downloadUrl = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]"
 
   # The username that can write to the repository.
   # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -159,8 +170,10 @@ TOML::
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -189,10 +202,14 @@ JSON::
         // icon:dot-circle[]
         "readTimeout": 60,
 
-        // URL of the Artifactory instance + path.
-        // The artifact file name will be appended automatically.
+        // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "target": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]",
+        "uploadUrl": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]",
+
+        // URL of the Artifactory instance + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "downloadUrl": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]",
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -240,10 +257,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -282,11 +301,17 @@ Maven::
         <readTimeout>60</readTimeout>
 
         <!--
-          URL of the Artifactory instance + path.
-          The artifact file name will be appended automatically.
+          URL of the Artifactory instance + path + artifact.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <target>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]</target>
+        <uploadUrl>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]</uploadUrl>
+
+        <!--
+          URL of the Artifactory instance + path + artifact.
+          If undefined, will use the same value as `uploadUrl`.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <downloadUrl>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]</downloadUrl>
 
         <!--
           The username that can write to the repository.
@@ -350,8 +375,10 @@ Maven::
   </upload>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -380,10 +407,14 @@ jreleaser {
         // icon:dot-circle[]
         readTimeout = 60
 
-        // URL of the Artifactory instance + path.
-        // The artifact file name will be appended automatically.
+        // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        target = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}]'
+        uploadUrl = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]'
+
+        // URL of the Artifactory instance + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        downloadUrl = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactfileName}}]'
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -429,14 +460,25 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
-== Target
+== UploadUrl
 
-The target is the URL to upload the artifacts to (without the name of the artifact).
+The uploadUrl is the URL to upload the artifacts to.
 
-An example configuration can look like
-`target: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}'`.
+An example configuration may look like
+`uploadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactfileName}}'`.
+
+And will result in a final deployment like
+`pass:[https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactfileName}}'`.
 
 And will result in a final deployment like
 `pass:[https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip]`.
@@ -464,4 +506,19 @@ The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_PASSWOR
 you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_PASSWORD`. The name will be
 transformed to uppercase.
 
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Artifactory` and `<name>` resolves to the capitalized name of the artifactory instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadArtifactoryFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadArtifactoryFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadArtifactoryFooBar`.
 

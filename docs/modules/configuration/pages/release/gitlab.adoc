@@ -1,4 +1,13 @@
 = GitLab
+:gitservice_id:       gitlab
+:gitservice_name:     GitLab
+:gitservice_env_name: GITLAB
+:gitservice_host:     gitlab.com
+:gitservice_api:      https://gitlab.com
+
+Configure releases to {gitservice_api}.
+
+IMPORTANT: You must define a value for both `host` and `apiEndpoint` if using GitLab Enterprise or your own GitLab instance.
 
 include::partial$legend.adoc[]
 
@@ -6,38 +15,11 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:exclamation-triangle[]
-release:
-  # Repo in which the release will be created.
-  # icon:exclamation-triangle[]
-  gitlab:
-    # Disables or enables publication to GitLab.
-    # defaults to `true`.
-    # icon:dot-circle[]
-    enabled: true
-
-    # Defines the connection timeout in seconds.
-    # Defaults to `20`.
-    # icon:dot-circle[]
-    connectTimeout: 20
-
-    # Defines the read timeout in seconds.
-    # Defaults to `60`.
-    # icon:dot-circle[]
-    readTimeout: 60
-
-    # The user or organization that owns the repository.
-    # If unspecified, will read it from the 'origin' git remote.
-    # icon:dot-circle[]
-    owner: duke
-
-    # The name of the repository.
-    # If unspecified, will read it from the 'origin' git remote.
-    # icon:dot-circle[]
-    name: app
+include::partial$release/yaml/common-head.adoc[]
 
     # The id of the GitLab repository.
     # The parameter is specific to GitLab Releases and could be
@@ -45,213 +27,11 @@ release:
     # icon:dot-circle[]
     identifier: 123
 
-    # The GitLab host url.
-    # Defaults to `gitlab.com`.
-    # icon:exclamation-triangle[]
-    host: gitlab.com
+include::partial$release/yaml/commitauthor.adoc[]
 
-    # Username used for authoring commits. Must have write access to the repository.
-    # icon:exclamation-triangle[]
-    username: duke
+include::partial$release/yaml/changelog.adoc[]
 
-    # Password or OAuth token with write access to the repository.
-    # If left unspecified, the `JRELEASER_GITLAB_TOKEN`
-    # environment variable must be defined.
-    # icon:exclamation-triangle[] icon:eye-slash[]
-    token: __DO_NOT_SET_HERE__
-
-    # The tag associated with the release.
-    # May define a `JRELEASER_TAG_NAME` environment variable instead.
-    # If left unspecified, will use `v{{projectVersion}}`.
-    # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-    tagName: v1.0.0
-
-    # The name of the release.
-    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
-    # If left unspecified, will use `Release {{tagName}}`.
-    # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-    releaseName: Release v1.0.0
-
-    # Drops and creates an existing release with matching tag.
-    # May define a `JRELEASER_OVERWRITE` environment variable instead.
-    # Defaults to `false`.
-    # icon:dot-circle[] icon:eye-slash[]
-    overwrite: true
-
-    # Appends artifacts to an existing release with matching tag,
-    # useful if `overwrite` is set to `false`.
-    # May define a `JRELEASER_UPDATE` environment variable instead.
-    # Defaults to `false`.
-    # icon:dot-circle[] icon:eye-slash[]
-    update: true
-
-    # Release sections to be updated.
-    # Valid values are [`TITLE`, `BODY`, `ASSETS`].
-    # Defaults to `ASSETS`.
-    # icon:dot-circle[]
-    updateSections:
-      - ASSETS
-
-    # Skips creating a tag.
-    # Useful when the tag was created externally.
-    # May define a `JRELEASER_SKIP_TAG` environment variable instead.
-    # Defaults to `false`.
-    # icon:dot-circle[] icon:eye-slash[]
-    skipTag: false
-
-    # The GitLab API endpoint to use.
-    # You can skip `/api/v4` as it will be added by default.
-    # Defaults to `pass:[https://gitlab.com]`.
-    # icon:dot-circle[]
-    apiEndpoint: pass:[https://gitlab.com]
-
-    # Git author used to commit to the repository.
-    # icon:dot-circle[]
-    commitAuthor:
-      # Name used when authoring commits.
-      # Defaults to `jreleaserbot`.
-      # icon:dot-circle[]
-      name: jreleaserbot
-
-      # E-mail used when authoring commits.
-      # Defaults to `pass:[jreleaser@kordamp.org]`.
-      # icon:dot-circle[]
-      email: pass:[jreleaser@kordamp.org]
-
-    # Signs commits with the configured credentials.
-    # The xref:configuration:signing.adoc[] section must be configured as well.
-    # Defaults to `false`.
-    # icon:dot-circle[]
-    sign: false
-
-    # Changelog customization.
-    # icon:dot-circle[]
-    changelog:
-      # Disables or enables the changelog.
-      # defaults to `true`.
-      # icon:dot-circle[]
-      enabled: true
-
-      # Sorts commits in ascending (oldest first) or descending (newer first).
-      # Valid values are: `ASC`, `DESC`.
-      # Defaults to `DESC`.
-      # icon:dot-circle[]
-      sort: DESC
-
-      # Path to an external file that contains the changelog, read as is.
-      # May be a relative path to the configuration file or an absolute path.
-      # If unspecified, JReleaser will automatically calculate the changelog.
-      # icon:dot-circle[]
-      external: path/to/changelog.md
-
-      # Create explicit markdown links for commit hashes.
-      # Defaults to `false`.
-      # icon:dot-circle[]
-      links: false
-
-      # Enables or disables formatting options.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      # Defaults to `NEVER`.
-      # icon:dot-circle[]
-      formatted: ALWAYS
-
-      # The template to use for each change.
-      # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
-      # icon:dot-circle[] icon:file-alt[]
-      change: '- {{commitShortHash}} {{commitTitle}}'
-
-      # The template to use for the whole changelog.
-      # Defaults is shown.
-      # icon:dot-circle[] icon:file-alt[]
-      content: |
-        # Changelog
-
-        {{changelogChanges}
-        {{changelogContributors}}
-
-      # Path to a template file that defines the contents.
-      # Review the available xref:configuration:name-templates.adoc[].
-      # Defaults to `src/jreleaser/templates/changelog.tpl`.
-      # icon:dot-circle[]
-      contentTemplate: path/to/template/changelog.tpl
-
-      # Hide uncategorized commits.
-      # Defaults to `false`.
-      # icon:dot-circle[]
-      hideUncategorized: true
-
-      # A list of labels to be included.
-      # Only changes matching this list will be included.
-      # Defaults to empty.
-      # icon:dot-circle[]
-      includeLabels:
-        - 'issue'
-
-      # A list of labels to be excluded.
-      # Changes matching this list will be excluded.
-      # Defaults to empty.
-      # icon:dot-circle[]
-      excludeLabels:
-        - 'issue'
-
-      # Defines rules that apply labels to changes.
-      # Matchers are evaluated independently; the label will
-      # be set if at least one of the matchers meets the criteria.
-      # icon:dot-circle[]
-      labelers:
-          # The label to be applied.
-          # icon:exclamation-triangle[]
-        - label: 'issue'
-
-          # Matches the text of the first commit line.
-          # icon:dot-circle[]
-          title: '^fix:'
-
-          # Matches the full text of the commit.
-          # icon:dot-circle[]
-          body: 'Fixes #'
-
-      # Groups changes by category.
-      # Defaults are shown.
-      # icon:dot-circle[]
-      categories:
-        - title: '🚀 Features'
-          labels:
-            - 'feature'
-            - 'enhancement'
-        - title: '🐛 Bug Fixes'
-          labels:
-            - 'bug'
-            - 'fix'
-
-      # Defines rules for replacing the generated content.
-      # Each replacer is applied in order.
-      # icon:dot-circle[] icon:file-alt[]
-      replacers:
-        - search: '\[chore\]\s'
-          replace: ''
-        - search: '/CVE-(\d{4})-(\d+)/g'
-          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
-
-    # A milestone associated with the release
-    # icon:dot-circle[]
-    milestone:
-      # Close the milestone (if it exists and still active) upon release.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      close: true
-
-      # The name/title of the milestone.
-      # May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
-      # Defaults to `{{tagName}}`.
-      # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      name: '{{tagName}}'
-
-    # The target branch to use.
-    # May define a `JRELEASER_BRANCH` environment variable instead.
-    # Defaults to the branch pointed by HEAD.
-    # icon:dot-circle[] icon:eye-slash[]
-    branch: main
+include::partial$release/yaml/milestone.adoc[]
 
     # The following properties define icon:dot-circle[] URL formats.
     # Defaults are shown.
@@ -278,245 +58,26 @@ release:
     # icon:dot-circle[] icon:file-alt[]
     issueTrackerUrl: pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues]
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# Repo in which the release will be created.
-# icon:exclamation-triangle[]
-[release.gitlab]
-  # Disables or enables publication to GitLab.
-  # defaults to `true`.
-  # icon:dot-circle[]
-  enabled = true
-
-  # Defines the connection timeout in seconds.
-  # Defaults to `20`.
-  # icon:dot-circle[]
-  connectTimeout = 20
-
-  # Defines the read timeout in seconds.
-  # Defaults to `60`.
-  # icon:dot-circle[]
-  readTimeout = 60
-
-  # The user or organization that owns the repository.
-  # icon:exclamation-triangle[]
-  owner = "duke"
-
-  # The name of the repository.
-  # If unspecified, will use ${project.name}.
-  # icon:dot-circle[]
-  name = "app"
+include::partial$release/toml/common-head.adoc[]
 
   # The id of the GitLab repository.
   # The parameter is specific to GitLab Releases and could be
   # necessary if the token-owner sees multiple same-named repositories.
   # icon:dot-circle[]
-  identifier: 123
+  identifier = "123"
 
-  # The GitLab host url.
-  # Defaults to `gitlab.com`.
-  # icon:exclamation-triangle[]
-  host = "gitlab.com"
+include::partial$release/toml/commitauthor.adoc[]
 
-  # Username used for authoring commits. Must have write access to the repository.
-  # icon:exclamation-triangle[]
-  username = "duke"
+include::partial$release/toml/changelog.adoc[]
 
-  # Password or OAuth token with write access to the repository.
-  # If left unspecified, the `JRELEASER_GITLAB_TOKEN`
-  # environment variable must be defined.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
-
-  # The tag associated with the release.
-  # May define a `JRELEASER_TAG_NAME` environment variable instead.
-  # If left unspecified, will use `v{{projectVersion}}`.
-  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-  tagName = "v1.0.0"
-
-  # The name of the release.
-  # If left unspecified, will use `Release {{tagName}}`.
-  # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
-  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-  releaseName = "Release v1.0.0"
-
-  # Drops and creates an existing release with matching tag.
-  # May define a `JRELEASER_OVERWRITE` environment variable instead.
-  # Defaults to `false`.
-  # icon:dot-circle[] icon:eye-slash[]
-  overwrite = true
-
-  # Appends artifacts to an existing release with matching tag,
-  # useful if `overwrite` is set to `false`.
-  # May define a `JRELEASER_UPDATE` environment variable instead.
-  # Defaults to `false`.
-  # icon:dot-circle[] icon:eye-slash[]
-  update = true
-
-  # Release sections to be updated.
-  # Valid values are [`TITLE`, `BODY`, `ASSETS`].
-  # Defaults to `ASSETS`.
-  # icon:dot-circle[]
-  updateSections = ["ASSETS"]
-
-  # Skips creating a tag.
-  # Useful when the tag was created externally.
-  # May define a `JRELEASER_SKIP_TAG` environment variable instead.
-  # Defaults to `false`.
-  # icon:dot-circle[] icon:eye-slash[]
-  skipTag = false
-
-  # The GitLab API endpoint to use.
-  # You can skip `/api/v4` as it will be added by default.
-  # Defaults to `pass:[https://gitlab.com]`.
-  # icon:dot-circle[]
-  apiEndpoint = "pass:[https://gitlab.com]"
-
-  # Git author used to commit to the repository.
-
-  # Name used when authoring commits.
-  # Defaults to `jreleaserbot`.
-  # icon:dot-circle[]
-  commitAuthor.name = "jreleaserbot"
-
-  # E-mail used when authoring commits.
-  # Defaults to `pass:[jreleaser@kordamp.org]`.
-  # icon:dot-circle[]
-  commitAuthor.email = "pass:[jreleaser@kordamp.org]"
-
-  # Signs commits with the configured credentials.
-  # The xref:configuration:signing.adoc[] section must be configured as well.
-  # Defaults to `false`.
-  # icon:dot-circle[]
-  sign = false
-
-  # Changelog customization.
-
-  # Disables or enables the changelog.
-  # defaults to `true`.
-  # icon:dot-circle[]
-  changelog.enabled = true
-
-  # Sorts commits in ascending (oldest first) or descending (newer first).
-  # Valid values are: `ASC`, `DESC`.
-  # Defaults to `DESC`.
-  # icon:dot-circle[]
-  changelog.sort = "DESC"
-
-  # Path to an external file that contains the changelog, read as is.
-  # May be a relative path to the configuration file or an absolute path.
-  # If unspecified, JReleaser will automatically calculate the changelog.
-  # icon:dot-circle[]
-  changelog.external = "path/to/changelog.md"
-
-  # Create explicit markdown links for commit hashes.
-  # Defaults to `false`.
-  # icon:dot-circle[]
-  changelog.links = false
-
-  # Enables or disables formatting options.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  changelog.formatted = "ALWAYS"
-
-  # The template to use for each change.
-  # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
-  # icon:dot-circle[] icon:file-alt[]
-  changelog.change = "- {{commitShortHash}} {{commitTitle}}"
-
-  # The template to use for the whole changelog.
-  # Defaults is shown.
-  # icon:dot-circle[] icon:file-alt[]
-  changelog.content = """
-    # Changelog
-
-    {{changelogChanges}
-    {{changelogContributors}}"""
-
-  # Path to a template file that defines the contents.
-  # Review the available xref:configuration:name-templates.adoc[].
-  # Defaults to `src/jreleaser/templates/changelog.tpl`.
-  # icon:dot-circle[]
-  changelog.contentTemplate = "path/to/template/changelog.tpl"
-
-  # Hide uncategorized commits.
-  # Defaults to `false`.
-  # icon:dot-circle[]
-  changelog.hideUncategorized = true
-
-  # A list of labels to be included.
-  # Only changes matching this list will be included.
-  # Defaults to empty.
-  # icon:dot-circle[]
-  changelog.includeLabels = ["issue"]
-
-  # A list of labels to be excluded.
-  # Changes matching this list will be excluded.
-  # Defaults to empty.
-  # icon:dot-circle[]
-  changelog.excludeLabels = ["issue"]
-
-  # Defines rules that apply labels to changes.
-  # Matchers are evaluated independently; the label will
-  # be set if at least one of the matchers meets the criteria.
-  # icon:dot-circle[]
-  pass:[[[release.gitlab.changelog.labelers]]]
-    # The label to be applied.
-    # icon:exclamation-triangle[]
-    label = "issue"
-
-    # Matches the text of the first commit line.
-    # icon:dot-circle[]
-    title = "^fix:"
-
-    # Matches the full text of the commit.
-    # icon:dot-circle[]
-    body = "Fixes #"
-
-  # Groups changes by category.
-  # Defaults are shown.
-  # icon:dot-circle[]
-  pass:[[[release.gitlab.changelog.categories]]]
-    title = "🚀 Features"
-    labels = ["feature", "enhancement"]
-
-  pass:[[[release.gitlab.changelog.categories]]]
-    title = "🐛 Bug Fixes"
-    labels = ["bug", "fix"]
-
-  # Defines rules for replacing the generated content.
-  # Each replacer is applied in order.
-  # icon:dot-circle[] icon:file-alt[]
-  pass:[[[release.gitlab.changelog.replacers]]]
-    search = "\[chore\]\s"
-    replace = ""
-
-  pass:[[[release.gitlab.changelog.replacers]]]
-    search = "/CVE-(\d{4})-(\d+)/g"
-    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
-
-  # A milestone associated with the release
-
-  # Close the milestone (if it exists and still open) upon release.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  milestone.close = true
-
-  # The name/title of the milestone.
-  # May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
-  # Defaults to `{{tagName}}`.
-  # icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-  milestone.name = "{{tagName}}"
-
-  # The target branch to use.
-  # May define a `JRELEASER_BRANCH` environment variable instead.
-  # Defaults to the branch pointed by HEAD.
-  # icon:dot-circle[] icon:eye-slash[]
-  branch = "main"
+include::partial$release/toml/milestone.adoc[]
 
   # The following properties define icon:dot-circle[] URL formats.
   # Defaults are shown.
@@ -543,41 +104,14 @@ TOML::
   # icon:dot-circle[] icon:file-alt[]
   issueTrackerUrl = "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues]"
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:exclamation-triangle[]
-  "release": {
-    // Repo in which the release will be created.
-    // icon:exclamation-triangle[]
-    "gitlab": {
-      // Disables or enables publication to GitLab.
-      // defaults to `true`.
-      // icon:dot-circle[]
-      "enabled": true,
-
-      // Defines the connection timeout in seconds.
-      // Defaults to `20`.
-      // icon:dot-circle[]
-      "connectTimeout": 20,
-
-      // Defines the read timeout in seconds.
-      // Defaults to `60`.
-      // icon:dot-circle[]
-      "readTimeout": 60,
-
-      // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
-      "owner": "duke",
-
-      // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
-      "name": "app",
+include::partial$release/json/common-head.adoc[]
 
       // The id of the GitLab repository.
       // The parameter is specific to GitLab Releases and could be
@@ -585,228 +119,11 @@ JSON::
       // icon:dot-circle[]
       "identifier": "123",
 
-      // The GitLab host url.
-      // Defaults to `gitlab.com`.
-      // icon:exclamation-triangle[]
-      "host": "gitlab.com",
+include::partial$release/json/commitauthor.adoc[]
 
-      // Username used for authoring commits. Must have write access to the repository.
-      // icon:exclamation-triangle[]
-      "username": "duke",
+include::partial$release/json/changelog.adoc[]
 
-      // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITLAB_TOKEN`
-      // environment variable must be defined.
-      // icon:exclamation-triangle[] icon:eye-slash[]
-      "token": "__DO_NOT_SET_HERE__",
-
-      // The tag associated with the release.
-      // May define a `JRELEASER_TAG_NAME` environment variable instead.
-      // If left unspecified, will use `v{{projectVersion}}`.
-      // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      "tagName": "v1.0.0",
-
-      // The name of the release.
-      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
-      // If left unspecified, will use `Release {{tagName}}`.
-      // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      "releaseName": "Release v1.0.0",
-
-      // Drops and creates an existing release with matching tag.
-      // May define a `JRELEASER_OVERWRITE` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "overwrite": true,
-
-      // Appends artifacts to an existing release with matching tag,
-      // useful if `overwrite` is set to `false`.
-      // May define a `JRELEASER_UPDATE` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "update": true,
-
-      // Release sections to be updated.
-      // Valid values are [`TITLE`, `BODY`, `ASSETS`].
-      // Defaults to `ASSETS`.
-      // icon:dot-circle[]
-      "updateSections": ["ASSETS"],
-
-      // Skips creating a tag.
-      // Useful when the tag was created externally.
-      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "skipTag": false,
-
-      // The GitLab API endpoint to use.
-      // You can skip `/api/v4` as it will be added by default.
-      // Defaults to `pass:[https://gitlab.com]`.
-      // icon:dot-circle[]
-      "apiEndpoint": "pass:[https://gitlab.com]",
-
-      // Git author used to commit to the repository.
-      // icon:dot-circle[]
-      "commitAuthor": {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        "name": "jreleaserbot",
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        "email": "pass:[jreleaser@kordamp.org]"
-      },
-
-      // Signs commits with the configured credentials.
-      // The xref:configuration:signing.adoc[] section must be configured as well.
-      // Defaults to `false`.
-      // icon:dot-circle[]
-      "sign": false,
-
-      // Changelog customization.
-      // icon:dot-circle[]
-      "changelog": {
-        // Disables or enables the changelog.
-        // defaults to `true`.
-        // icon:dot-circle[]
-        "enabled": true,
-
-        // Sorts commits in ascending (oldest first) or descending (newer first).
-        // Valid values are: `ASC`, `DESC`.
-        // Defaults to `DESC`.
-        // icon:dot-circle[]
-        "sort": "DESC",
-
-        // Path to an external file that contains the changelog, read as is.
-        // May be a relative path to the configuration file or an absolute path.
-        // If unspecified, JReleaser will automatically calculate the changelog.
-        // icon:dot-circle[]
-        "external": "path/to/changelog.md",
-
-        // Create explicit markdown links for commit hashes.
-        // Defaults to `false`.
-        // icon:dot-circle[]
-        "links": false,
-
-        // Enables or disables formatting options.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        "formatted": "ALWAYS",
-
-        // The template to use for each change.
-        // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
-        // icon:dot-circle[] icon:file-alt[]
-        "change": "- {{commitShortHash}} {{commitTitle}}",
-
-        // The template to use for the whole changelog.
-        // Defaults is shown.
-        // icon:dot-circle[] icon:file-alt[]
-        "content": "#Changelog\n\n{{changelogChanges}}\n{{changelogContributors}}",
-
-        // Path to a template file that defines the contents.
-        // Review the available xref:configuration:name-templates.adoc[].
-        // Defaults to `src/jreleaser/templates/changelog.tpl`.
-        // icon:dot-circle[]
-        "contentTemplate": "path/to/template/changelog.tpl",
-
-        // Hide uncategorized commits.
-        // Defaults to `false`.
-        // icon:dot-circle[]
-        "hideUncategorized": true,
-
-        // A list of labels to be included.
-        // Only changes matching this list will be included.
-        // Defaults to empty.
-        // icon:dot-circle[]
-        "includeLabels": [
-           "issue"
-        ],
-
-        // A list of labels to be excluded.
-        // Changes matching this list will be excluded.
-        // Defaults to empty.
-        // icon:dot-circle[]
-        "excludeLabels": [
-           "issue"
-        ],
-
-        // Defines rules that apply labels to changes.
-        // Matchers are evaluated independently; the label will
-        // be set if at least one of the matchers meets the criteria.
-        // icon:dot-circle[]
-        "labelers": [
-          {
-            // The label to be applied.
-            // icon:exclamation-triangle[]
-            "label": "issue",
-
-            // Matches the text of the first commit line.
-            // icon:dot-circle[]
-            "title": "^fix:",
-
-            // Matches the full text of the commit.
-            // icon:dot-circle[]
-            "body": "Fixes #"
-          }
-        ],
-
-        // Groups changes by category.
-        // Defaults are shown.
-        // icon:dot-circle[]
-        "categories": [
-          {
-            "title": "🚀 Features",
-            "labels": [
-              "feature",
-              "enhancement"
-            ]
-          },
-          {
-            "title": "🐛 Bug Fixes",
-            "labels": [
-              "bug",
-              "fix"
-            ]
-          }
-        ],
-
-        // Defines rules for replacing the generated content.
-        // Each replacer is applied in order.
-        // icon:dot-circle[] icon:file-alt[]
-        "replacers": [
-          {
-            "search": "\[chore\]\s",
-            "replace": ""
-          },
-          {
-            "search": "/CVE-(\d{4})-(\d+)/g",
-            "replace": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
-          }
-        ]
-      },
-
-      // A milestone associated with the release
-      // icon:dot-circle[]
-      "milestone": {
-        // Close the milestone (if it exists and still open) upon release.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "close": true,
-
-        // The name/title of the milestone.
-        // May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
-        // Defaults to `{{tagName}}`.
-        // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-        "name": "{{tagName}}"
-      },
-
-      // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
-      // Defaults to the branch pointed by HEAD.
-      // icon:dot-circle[] icon:eye-slash[]
-      "branch": "main",
+include::partial$release/json/milestone.adoc[]
 
       // The following properties define icon:dot-circle[] URL formats.
       // Defaults are shown.
@@ -832,61 +149,16 @@ JSON::
 
       // icon:dot-circle[] icon:file-alt[]
       "issueTrackerUrl": "pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues]"
-    }
-  }
-}
+include::partial$release/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:exclamation-triangle[]
-  -->
-  <release>
-    <!--
-      Repo in which the release will be created.
-      icon:exclamation-triangle[]
-    -->
-    <gitlab>
-
-      <!--
-        Disables or enables publication to GitLab.
-        defaults to `true`.
-        icon:dot-circle[]
-      -->
-      <enabled>true</enabled>
-
-      <!--
-        Defines the connection timeout in seconds.
-        Defaults to `20`.
-        icon:dot-circle[]
-      -->
-      <connectTimeout>20</connectTimeout>
-
-      <!--
-        Defines the read timeout in seconds.
-        Defaults to `60`.
-        icon:dot-circle[]
-      -->
-      <readTimeout>60</readTimeout>
-
-      <!--
-        The user or organization that owns the repository.
-        If unspecified, will read it from the 'origin' git remote.
-        icon:dot-circle[]
-      -->
-      <owner>duke</owner>
-
-      <!--
-        The name of the repository.
-        If unspecified, will read it from the 'origin' git remote.
-        icon:dot-circle[]
-      -->
-      <name>app</name>
-
+include::partial$release/maven/common-head.adoc[]
 
       <!--
         The id of the GitLab repository.
@@ -896,302 +168,11 @@ Maven::
       -->
      <identifier>123</identifier>
 
-      <!--
-        The GitLab host url.
-        Defaults to `gitlab.com`.
-        icon:exclamation-triangle[]
-      -->
-      <host>gitlab.com</host>
+include::partial$release/maven/commitauthor.adoc[]
 
-      <!--
-        Username used for authoring commits. Must have write access to the repository.
-        icon:exclamation-triangle[]
-      -->
-      <username>duke</username>
+include::partial$release/maven/changelog.adoc[]
 
-      <!--
-        Password or OAuth token with write access to the repository.
-        If left unspecified, the `JRELEASER_GITLAB_TOKEN` 
-        environment variable must be defined.
-        icon:exclamation-triangle[] icon:eye-slash[]
-      -->
-      <token>__DO_NOT_SET_HERE__</token>
-
-      <!--
-        The tag associated with the release.
-        May define a `JRELEASER_TAG_NAME` environment variable instead.
-        If left unspecified, will use `v{{projectVersion}}`.
-        icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      -->
-      <tagName>v1.0.0</tagName>
-
-      <!--
-        The name of the release.
-        May define a `JRELEASER_RELEASE_NAME` environment variable instead.
-        If left unspecified, will use `Release {{tagName}}`.
-        icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      -->
-      <releaseName>Release v1.0.0</releaseName>
-
-      <!--
-        Drops and creates an existing release with matching tag.
-        May define a `JRELEASER_OVERWRITE` environment variable instead.
-        Defaults to `false`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <overwrite>true</overwrite>
-
-      <!--
-        Appends artifacts to an existing release with matching tag,
-        useful if `overwrite` is set to `false`.
-        May define a `JRELEASER_UPDATE` environment variable instead.
-        Defaults to `false`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <update>true</update>
-
-      <!--
-        Release sections to be updated.
-        Valid values are [`TITLE`, `BODY`, `ASSETS`].
-        Defaults to `ASSETS`.
-        icon:dot-circle[]
-      -->
-      <updateSections>
-          <updateSection>ASSETS</updateSection>
-      </updateSections>
-
-      <!--
-        Skips creating a tag.
-        Useful when the tag was created externally.
-        May define a `JRELEASER_SKIP_TAG` environment variable instead.
-        Defaults to `false`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <skipTag>false</skipTag>
-
-      <!--
-        The GitLab API endpoint to use.
-        You can skip `/api/v4` as it will be added by default.
-        Defaults to `pass:[https://gitlab.com]`.
-        icon:dot-circle[]
-      -->
-      <apiEndpoint>pass:[https://gitlab.com]</apiEndpoint>
-
-      <!--
-        Git author used to commit to the repository.
-        icon:dot-circle[]
-      -->
-      <commitAuthor>
-
-        <!--
-           Name used when authoring commits.
-          Defaults to `jreleaserbot`.
-          icon:dot-circle[]
-        -->
-        <name>jreleaserbot</name>
-
-        <!--
-          E-mail used when authoring commits.
-          Defaults to `pass:[jreleaser@kordamp.org]`.
-          icon:dot-circle[]
-        -->
-        <email>pass:[jreleaser@kordamp.org]</email>
-      </commitAuthor>
-
-      <!--
-        Signs commits with the configured credentials.
-        The xref:configuration:signing.adoc[] section must be configured as well.
-        Defaults to `false`.
-        icon:dot-circle[]
-      -->
-      <sign>false</sign>
-
-      <!--
-        Changelog customization.
-        icon:dot-circle[]
-      -->
-      <changelog>
-
-        <!--
-           Disables or enables the changelog.
-          defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <enabled>true</enabled>
-
-        <!--
-          Sorts commits in ascending (oldest first) or descending (newer first).
-          Valid values are>`ASC`, `DESC`.
-          Defaults to `DESC`.
-          icon:dot-circle[]
-        -->
-        <sort>DESC</sort>
-
-        <!--
-          Path to an external file that contains the changelog, read as is.
-          May be a relative path to the configuration file or an absolute path.
-          If unspecified, JReleaser will automatically calculate the changelog.
-          icon:dot-circle[]
-        -->
-        <external>path/to/changelog.md</external>
-
-        <!--
-          Create explicit markdown links for commit hashes.
-          Defaults to `false`.
-          icon:dot-circle[]
-        -->
-        <links>false</links>
-
-        <!--
-          Enables or disables formatting options.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `NEVER`.
-          icon:dot-circle[]
-        -->
-        <formatted>ALWAYS</formatted>
-
-        <!--
-          The template to use for each change.
-          Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <change>- {{commitShortHash}} {{commitTitle}}</change>
-
-        <!--
-          The template to use for the whole changelog.
-          Defaults is shown.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <content>
-          # Changelog
-
-          {{changelogChanges}
-          {{changelogContributors}}
-        </content>
-
-        <!--
-          Path to a template file that defines the contents.
-          Review the available xref:configuration:name-templates.adoc[].
-          Defaults to `src/jreleaser/templates/changelog.tpl`.
-          icon:dot-circle[]
-        -->
-        <contentTemplate>path/to/template/changelog.tpl</contentTemplate>
-
-        <!--
-          Hide uncategorized commits.
-          Defaults to `false`.
-          icon:dot-circle[]
-        -->
-        <hideUncategorized>true</hideUncategorized>
-
-        <!--
-          A list of labels to be included.
-          Only changes matching this list will be included.
-          Defaults to empty.
-          icon:dot-circle[]
-        -->
-        <includeLabels>
-          <includeLabel>issue</includeLabel>
-        </includeLabels>
-
-        <!--
-          A list of labels to be excluded.
-          Changes matching this list will be excluded.
-          Defaults to empty.
-          icon:dot-circle[]
-        -->
-        <excludeLabels>
-          <excludeLabel>issue</excludeLabel>
-        </excludeLabels>
-
-        <!--
-          Defines rules that apply labels to changes.
-          Matchers are evaluated independently; the label will
-          be set if at least one of the matchers meets the criteria.
-          icon:dot-circle[]
-        -->
-        <labelers>
-          <labeler>
-            <!--
-              The label to be applied.
-              icon:exclamation-triangle[]
-            -->
-            <label>issue</label>
-
-            <!--
-              Matches the text of the first commit line.
-              icon:dot-circle[]
-            -->
-            <title>^fix:</title>
-
-            <!--
-              Matches the full text of the commit.
-              icon:dot-circle[]
-            -->
-            <body>Fixes #</body>
-          </labeler>
-        </labelers>
-
-        <!--
-          Groups changes by category.
-          Defaults are shown.
-          icon:dot-circle[]
-        -->
-        <categories>
-          <category>
-            <title>🚀 Features</title>
-            <labelsAsString>feature,enhancement</labelsAsString>
-          </category>
-          <category>
-            <title>🐛 Bug Fixes</title>
-            <labelsAsString>bug,fix</labelsAsString>
-          </category>
-        </categories>
-
-        <!--
-          Defines rules for replacing the generated content.
-          Each replacer is applied in order.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <replacers>
-          <replacer>
-            <search>\[chore\]\s</search>
-          </replacer>
-          <replacer>
-            <search>/CVE-(\d{4})-(\d+)/g</search>
-            <replace>https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2</replace>
-          </replacer>
-        </replacers>
-      </changelog>
-
-      <!--
-        A milestone associated with the release
-        icon:dot-circle[]
-      -->
-      <milestone>
-
-        <!--
-          Close the milestone (if it exists and still open) upon release.
-          Defaults to `true`.
-          icon:dot-circle[]
-         -->
-        <close>true</close>
-
-        <!--
-          The name/title of the milestone.
-          May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
-          Defaults to `{{tagName}}`.
-          icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-         -->
-        <name>{{tagName}}</name>
-      </milestone>
-      <!--
-        The target branch to use.
-        May define a `JRELEASER_BRANCH` environment variable instead.
-        Defaults to the branch pointed by HEAD.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <branch>main</branch>
+include::partial$release/maven/milestone.adoc[]
 
       <!--
         The following properties define icon:dot-circle[] URL formats.
@@ -1233,268 +214,28 @@ Maven::
         icon:dot-circle[] icon:file-alt[]
       -->
       <issueTrackerUrl>pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues]</issueTrackerUrl>
-    </gitlab>
-  </release>
-</jreleaser>
+include::partial$release/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:exclamation-triangle[]
-  release {
-    // Repo in which the release will be created.
-    // icon:exclamation-triangle[]
-    gitlab {
-      // Disables or enables publication to GitLab.
-      // defaults to `true`.
-      // icon:dot-circle[]
-      enabled = true
-
-      // Defines the connection timeout in seconds.
-      // Defaults to `20`.
-      // icon:dot-circle[]
-      connectTimeout = 20
-
-      // Defines the read timeout in seconds.
-      // Defaults to `60`.
-      // icon:dot-circle[]
-      readTimeout = 60
-
-      // The user or organization that owns the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
-      owner = 'duke'
-
-      // The name of the repository.
-      // If unspecified, will read it from the 'origin' git remote.
-      // icon:dot-circle[]
-      name = 'app'
+include::partial$release/gradle/common-head.adoc[]
 
       // The id of the GitLab repository.
       // The parameter is specific to GitLab Releases and could be
       // necessary if the token-owner sees multiple same-named repositories.
       // icon:dot-circle[]
-      identifier == '123'
+      identifier = '123'
 
-      // The GitLab host url.
-      // Defaults to `gitlab.com`.
-      // icon:exclamation-triangle[]
-      host = 'gitlab.com'
+include::partial$release/gradle/commitauthor.adoc[]
 
-      // Username used for authoring commits. Must have write access to the repository.
-      // icon:exclamation-triangle[]
-      username = 'duke'
+include::partial$release/gradle/changelog.adoc[]
 
-      // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITLAB_TOKEN`
-      // environment variable must be defined.
-      // icon:exclamation-triangle[] icon:eye-slash[]
-      token = '__DO_NOT_SET_HERE__'
-
-      // The tag associated with the release.
-      // May define a `JRELEASER_TAG_NAME` environment variable instead.
-      // If left unspecified, will use `v{{projectVersion}}`.
-      // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      tagName = 'v1.0.0'
-
-      // The name of the release.
-      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
-      // If left unspecified, will use `Release {{tagName}}`.
-      // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-      releaseName = 'Release v1.0.0'
-
-      // Drops and creates an existing release with matching tag.
-      // May define a `JRELEASER_OVERWRITE` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      overwrite = true
-
-      // Appends artifacts to an existing release with matching tag,
-      // useful if `overwrite` is set to `false`.
-      // May define a `JRELEASER_UPDATE` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      update = true
-
-      // Release sections to be updated.
-      // Valid values are [`TITLE`, `BODY`, `ASSETS`].
-      // Defaults to `ASSETS`.
-      // icon:dot-circle[]
-      updateSection('ASSETS')
-
-      // Skips creating a tag.
-      // Useful when the tag was created externally.
-      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
-      // Defaults to `false`.
-      // icon:dot-circle[] icon:eye-slash[]
-      skipTag = false
-
-      // The GitLab API endpoint to use.
-      // You can skip `/api/v4` as it will be added by default.
-      // Defaults to `pass:[https://gitlab.com]`.
-      // icon:dot-circle[]
-      apiEndpoint = 'pass:[https://gitlab.com]'
-
-      // Git author used to commit to the repository.
-      // icon:dot-circle[]
-      commitAuthor {
-        // Name used when authoring commits.
-        // Defaults to `jreleaserbot`.
-        // icon:dot-circle[]
-        name = 'jreleaserbot'
-
-        // E-mail used when authoring commits.
-        // Defaults to `pass:[jreleaser@kordamp.org]`.
-        // icon:dot-circle[]
-        email = 'pass:[jreleaser@kordamp.org]'
-      }
-
-      // Signs commits with the configured credentials.
-      // The xref:configuration:signing.adoc[] section must be configured as well.
-      // Defaults to `false`.
-      // icon:dot-circle[]
-      sign = false
-
-      // Changelog customization.
-      // icon:dot-circle[]
-      changelog {
-        // Disables or enables the changelog.
-        // defaults to `true`.
-        // icon:dot-circle[]
-        enabled = true
-
-        // Sorts commits in ascending (oldest first) or descending (newer first).
-        // Valid values are = `ASC`, `DESC`.
-        // Defaults to `DESC`.
-        // icon:dot-circle[]
-        sort = 'DESC'
-
-        // Path to an external file that contains the changelog, read as is.
-        // May be a relative path to the configuration file or an absolute path.
-        // If unspecified, JReleaser will automatically calculate the changelog.
-        // icon:dot-circle[]
-        external = 'path/to/changelog.md'
-
-        // Create explicit markdown links for commit hashes.
-        // Defaults to `false`.
-        // icon:dot-circle[]
-        links = false
-
-        // Enables or disables formatting options.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        formatted = 'ALWAYS'
-
-        // The template to use for each change.
-        // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
-        // icon:dot-circle[] icon:file-alt[]
-        change = '- {{commitShortHash}} {{commitTitle}}'
-
-        // The template to use for the whole changelog.
-        // Defaults is shown.
-        // icon:dot-circle[] icon:file-alt[]
-        content = '#Changelog\n\n{{changelogChanges}}\n{{changelogContributors}}'
-
-        // Path to a template file that defines the contents.
-        // Review the available xref:configuration:name-templates.adoc[].
-        // Defaults to `src/jreleaser/templates/changelog.tpl`.
-        // icon:dot-circle[]
-        contentTemplate = 'path/to/template/changelog.tpl'
-
-        // Hide uncategorized commits.
-        // Defaults to `false`.
-        // icon:dot-circle[]
-        hideUncategorized = true
-
-        // A list of labels to be included.
-        // Only changes matching this list will be included.
-        // Defaults to empty.
-        // icon:dot-circle[]
-        includeLabels = [
-           'issue'
-        ]
-
-        // A list of labels to be excluded.
-        // Changes matching this list will be excluded.
-        // Defaults to empty.
-        // icon:dot-circle[]
-        excludeLabels = [
-           'issue'
-        ]
-
-        // Defines rules that apply labels to changes.
-        // Matchers are evaluated independently; the label will
-        // be set if at least one of the matchers meets the criteria.
-        // icon:dot-circle[]
-        labeler {
-          // The label to be applied.
-          // icon:exclamation-triangle[]
-          label = 'issue'
-
-          // Matches the text of the first commit line.
-          // icon:dot-circle[]
-          title = '^fix:'
-
-          // Matches the full text of the commit.
-          // icon:dot-circle[]
-          body = 'Fixes #'
-        }
-
-        // Groups changes by category.
-        // Defaults are shown.
-        // icon:dot-circle[]
-        category  {
-          title = '🚀 Features'
-          labels = [
-            'feature',
-            'enhancement'
-          ]
-        }
-        category {
-          title = '🐛 Bug Fixes'
-          labels = [
-            'bug',
-            'fix'
-          ]
-        }
-
-        // Defines rules for replacing the generated content.
-        // Each replacer is applied in order.
-        // icon:dot-circle[] icon:file-alt[]
-        replacer {
-          search = '\[chore\]\s'
-          replace = ''
-        }
-        replacer {
-          search = '/CVE-(\d{4})-(\d+)/g'
-          replace = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
-        }
-      }
-
-      // A milestone associated with the release
-      // icon:dot-circle[]
-      milestone {
-        // Close the milestone (if it exists and still active) upon release.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        close = true
-
-        // The name/title of the milestone.
-        // May define a `JRELEASER_MILESTONE_NAME` environment variable instead.
-        // Defaults to `{{tagName}}`.
-        // icon:dot-circle[] icon:eye-slash[] icon:file-alt[]
-        name = '{{tagName}}'
-      }
-
-      // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
-      // Defaults to the branch pointed by HEAD.
-      // icon:dot-circle[] icon:eye-slash[]
-      branch = 'main'
+include::partial$release/gradle/milestone.adoc[]
 
       // The following properties define icon:dot-circle[] URL formats.
       // Defaults are shown.
@@ -1520,73 +261,15 @@ jreleaser {
 
       // icon:dot-circle[] icon:file-alt[]
       issueTrackerUrl = 'pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/issues]'
-}
+include::partial$release/gradle/common-footer.adoc[]
 ----
+--
 ====
 
-== Changelog
+include::partial$release/changelog.adoc[]
 
-You may define either `content` or `contentTemplate`, with the latter taking precedence over the former.
+include::partial$release/remote.adoc[]
 
-Changelog format applies only to the automatically generated changelog, that is, formatting wo't occur if the `external`
-property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.
+include::partial$release/skip-release.adoc[]
 
-The `change` property only accepts the following name templates:
-
-[%header, cols="<2,<5", width="100%"]
-|===
-| Key             | Description
-| commitShortHash | head commit hash abbreviated to 7 characters
-| commitFullHash  | head commit hash
-| commitTitle     | first line of the commit message
-| commitAuthor    | full name of the commit author
-| commitsUrl      | commits URl as provided by the Git host
-|===
-
-The `content` and `contentTemplate` accept all xref:configuration:name-templates.adoc[], take special consideration on
-`{{changelogChanges}}` and `{{changelogContributors}}` as they define the parsed commits.
-
-The following configuration
-
-[source,yaml]
-----
-release:
-  gitlab:
-    username: aalmiray
-    overwrite: true
-    draft: false
-    sign: true
-    changelog:
-      formatted: ALWAYS
-      change: '- {{commitShortHash}} {{commitTitle}}'
-      labelers:
-        - label: 'feature'
-          title: 'Resolves #'
-          body: 'Resolves #'
-        - label: 'issue'
-          title: 'Fixes #'
-          body: 'Fixes #'
-        - label: 'issue'
-          title: 'Relates to #'
-          body: 'Relates to #'
-        - label: 'task'
-          title: '[chore]'
-      categories:
-        - title: '🚀 Features'
-          labels:
-            - 'feature'
-        - title: '✅ Issues'
-          labels:
-            - 'issue'
-        - title: '🧰 Tasks'
-          labels:
-            - 'task'
-      replacers:
-        - search: '\[chore\] '
-          replace: ''
-----
-
-Generates a changelog similar to
-
-image::ROOT:jreleaser-changelog-render.jpg[]
 

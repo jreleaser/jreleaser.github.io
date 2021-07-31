@@ -14,6 +14,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -50,8 +51,14 @@ assemble:
       # Name of the generated image.
       # If left undefined, will use 
       # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+      # Generated artifacts always have the platform as suffix.
       # icon:dot-circle[] icon:file-alt[]
-      imageName: app
+      imageName: 'app-{{projectVersion}}'
+
+      # Name transformation of the generated image.
+      # Transformed artifacts always have the platform as suffix.
+      # icon:dot-circle[] icon:file-alt[]
+      imageNameTransform: 'app-{{projectEffectiveVersion}}'
       
       # Name of main module (if any).
       # Define only if the application is modular.
@@ -97,24 +104,19 @@ assemble:
       # Defines a list of additional JARs as globs.
       # icon:dot-circle[]
       jars:
-          # The directory to search.
-          # If undefined, will use the project's basedir.
-          # icon:dot-circle[] icon:file-alt[]
-        - directory: some/directory
+          # The pattern to use.
+          # May use glob or regex pattern syntax.
+          # icon:exclamation-triangle[] icon:file-alt[]
+        - pattern: path/to/**/*.jar
 
-          # The pattern to apply for inclusion.
-          # If undefined, will use `*`.
-          # icon:dot-circle[]
-          include: '*.jar'
-
-          # The pattern to apply for exclusion.
-          # icon:dot-circle[]
-          exclude: 'secret'
-
-          # Recursive search.
-          # Defaults to `false`.
-          # icon:dot-circle[]
-          recursive: true
+      # Defines a list of additional files as globs.
+      # These files will be added to the assembled Zip file.
+      # icon:dot-circle[]
+      files:
+          # The pattern to use.
+          # May use glob or regex pattern syntax.
+          # icon:exclamation-triangle[] icon:file-alt[]
+        - pattern: path/to/**/*.txt
 
       # Additional properties used when evaluating templates.
       # icon:dot-circle[] icon:file-alt[]
@@ -155,8 +157,10 @@ assemble:
           # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
           foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -189,8 +193,14 @@ TOML::
   # Name of the generated image.
   # If left undefined, will use
   # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+  # Generated artifacts always have the platform as suffix.
   # icon:dot-circle[] icon:file-alt[]
-  imageName = "app"
+  imageName = "app-{{projectVersion}}"
+
+  # Name transformation of the generated image.
+  # Transformed artifacts always have the platform as suffix.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNameTransform = "app-{{projectEffectiveVersion}}"
 
   # Name of main module (if any).
   # Define only if the application is modular.
@@ -230,24 +240,19 @@ TOML::
   # Defines a list of additional JARs as globs.
   # icon:dot-circle[]
   pass:[[[assemble.jlink.app.jars]]]
-    # The directory to search.
-    # If undefined, will use the project's basedir.
-    # icon:dot-circle[] icon:file-alt[]
-    directory = "some/directory"
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    pattern = "path/to/**/*.jar"
 
-    # The pattern to apply for inclusion.
-    # If undefined, will use `*`.
-    # icon:dot-circle[]
-    include = "*.jar"
-
-    # The pattern to apply for exclusion.
-    # icon:dot-circle[]
-    exclude = "secret"
-
-    # Recursive search.
-    # Defaults to `false`.
-    # icon:dot-circle[]
-    recursive = true
+  # Defines a list of additional files as globs.
+  # These files will be added to the assembled Zip file.
+  # icon:dot-circle[]
+  pass:[[[assemble.jlink.app.files]]]
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    pattern = "path/to/**/*.txt"
 
   # Additional properties used when evaluating templates.
   # icon:dot-circle[] icon:file-alt[]
@@ -284,8 +289,10 @@ TOML::
   java.extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -323,8 +330,14 @@ JSON::
         // Name of the generated image.
         // If left undefined, will use
         // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // Generated artifacts always have the platform as suffix.
         // icon:dot-circle[] icon:file-alt[]
-        "imageName": "app",
+        "imageName": "app-{{projectVersion}}",
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageNameTransform": "app-{{projectEffectiveVersion}}",
 
         // Name of main module (if any).
         // Define only if the application is modular.
@@ -380,24 +393,22 @@ JSON::
         // icon:dot-circle[]
         "jars": [
           {
-            // The directory to search.
-            // If undefined, will use the project's basedir.
-            // icon:dot-circle[] icon:file-alt[]
-            "directory": "some/directory",
+            // The pattern to use.
+            // May use glob or regex pattern syntax.
+            // icon:exclamation-triangle[] icon:file-alt[]
+            "pattern": "path/to/**/*.jar"
+          }
+        ],
 
-            // The pattern to apply for inclusion.
-            // If undefined, will use `*`.
-            // icon:dot-circle[]
-            "include": "*.jar",
-
-            // The pattern to apply for exclusion.
-            // icon:dot-circle[]
-            "exclude": "secret",
-
-            // Recursive search.
-            // Defaults to `false`.
-            // icon:dot-circle[]
-            "recursive": true
+        // Defines a list of additional files as globs.
+        // These files will be added to the assembled Zip file.
+        // icon:dot-circle[]
+        "files": [
+          {
+            // The pattern to use.
+            // May use glob or regex pattern syntax.
+            // icon:exclamation-triangle[] icon:file-alt[]
+            "pattern": "path/to/**/*.txt"
           }
         ],
 
@@ -447,10 +458,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -482,14 +495,6 @@ Maven::
         <exported>true</exported>
 
         <!--
-          The distribution type.
-          Used to determine packager templates.
-          Supported values are>[JAVA_BINARY].
-          icon:exclamation-triangle[]
-        -->
-        <type>JAVA_BINARY</type>
-
-        <!--
           Name of the executable launcher.
           If left undefined, will use ${distribution.name}.
           icon:dot-circle[]
@@ -508,9 +513,17 @@ Maven::
           Name of the generated image.
           If left undefined, will use
           ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+          Generated artifacts always have the platform as suffix.
           icon:dot-circle[] icon:file-alt[]
         -->
-        <imageName>app</imageName>
+        <imageName>app-{{projectVersion}}</imageName>
+
+        <!--
+          Name transformation of the generated image.
+          Transformed artifacts always have the platform as suffix.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageNameTransform>app</imageNameTransform>
 
         <!--
           Name of main module (if any).
@@ -581,33 +594,30 @@ Maven::
         <jars>
           <jar>
             <!--
-              The directory to search.
-              If undefined, will use the project's basedir.
-              icon:dot-circle[] icon:file-alt[]
+              The pattern to use.
+              May use glob or regex pattern syntax.
+              icon:exclamation-triangle[] icon:file-alt[]
             -->
-            <directory>some/directory</directory>
-
-            <!--
-              The pattern to apply for inclusion.
-              If undefined, will use `*`.
-              icon:dot-circle[]
-            -->
-            <include>*.jar</include>
-
-            <!--
-             The pattern to apply for exclusion.
-             icon:dot-circle[]
-            -->
-            <exclude>secret</exclude>
-
-            <!--
-              Recursive search.
-              Defaults to `false`.
-              icon:dot-circle[]
-            -->
-            <recursive>true</recursive>
+            <pattern>path/to/**/*.jar</pattern>
           </jar>
         </jars>
+
+        <!--
+          Defines a list of additional files as globs.
+          These files will be added to the assembled Zip file.
+          icon:dot-circle[]
+        -->
+        <files>
+          <file>
+            <!--
+              The pattern to use.
+              May use glob or regex pattern syntax.
+              icon:exclamation-triangle[] icon:file-alt[]
+            -->
+            <pattern>path/to/**/*.txt</pattern>
+          </jar>
+          </file>
+        </files>
 
         <!--
           Additional properties used when evaluating templates.
@@ -675,8 +685,10 @@ Maven::
   </assemble>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -714,8 +726,14 @@ jreleaser {
         // Name of the generated image.
         // If left undefined, will use
         // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // Generated artifacts always have the platform as suffix.
         // icon:dot-circle[] icon:file-alt[]
-        imageName = 'app'
+        imageName = 'app-{{projectVersion}}'
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        imageNameTransform = 'app-{{projectEffectiveVersion}}'
 
         // Name of main module (if any).
         // Define only if the application is modular.
@@ -767,24 +785,20 @@ jreleaser {
         // Defines a list of additional JARs as globs.
         // icon:dot-circle[]
         jars {
-          // The directory to search.
-          // If undefined, will use the project's basedir.
-          // icon:dot-circle[] icon:file-alt[]
-          directory = 'some/directory'
+          // The pattern to use.
+          // May use glob or regex pattern syntax.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          pattern = 'path/to/**/*.jar'
+        }
 
-          // The pattern to apply for inclusion.
-          // If undefined, will use `*`.
-          // icon:dot-circle[]
-          include = '*.jar'
-
-          // The pattern to apply for exclusion.
-          // icon:dot-circle[]
-          exclude = 'secret'
-
-          // Recursive search.
-          // Defaults to `false`.
-          // icon:dot-circle[]
-          recursive = true
+        // Defines a list of additional JARs as globs.
+        // These files will be added to the assembled Zip file.
+        // icon:dot-circle[]
+        files {
+          // The pattern to use.
+          // May use glob or regex pattern syntax.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          pattern = 'path/to/**/*.txt'
         }
 
         // Additional properties used when evaluating templates.
@@ -829,5 +843,6 @@ jreleaser {
   }
 }
 ----
+--
 ====
 

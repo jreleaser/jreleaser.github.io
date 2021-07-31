@@ -6,6 +6,39 @@ also support templates. A template name can be used as `{{name}}`
 
 The following is a list of pre-defined template names:
 
+== Functions
+
+The following functions may be used to modify text:
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                 | Description
+| f_now               | formats the current timestamp
+| f_underscores       | transforms `.` and `-` into `_`
+| f_dash              | transforms `.` and `_` into `-`
+| f_slash             | transforms `.` and `-` into `/`
+| f_upper             | invokes `toUpperCase()`
+| f_lower             | invokes `toLowerCase()`
+| f_capitalize        | invokes `capitalize()`
+| f_uncapitalize      | invokes `uncapitalize()`
+|===
+
+Example:
+
+[source]
+----
+{{#f_now}}YYYY-MM-dd{{/f_now}}
+{{#f_dash}}1.2.3{{/f_dash}}
+----
+
+Results in
+
+[source]
+----
+2021-07-26
+1-2-3
+----
+
 == Build
 
 The following names are related to the current build
@@ -36,6 +69,7 @@ Additionally, every key/value from `environment.properties` becomes available
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -43,16 +77,20 @@ environment:
   properties:
     foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
 [environment]
   properties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -64,10 +102,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <environment>
@@ -77,8 +117,10 @@ Maven::
   </environment>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -88,6 +130,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 The key `foo` becomes `{{foo}}` and will be evaluated to the String `bar`.
@@ -107,8 +150,8 @@ The following names are related to xref:configuration:project.adoc[]
 | projectVersionMinor      | the minor number (if any) of the project's version (semver)
 | projectVersionPatch      | the patch number (if any) of the project's version (semver)
 | projectVersionTag        | the tag (if any) of the project's version (semver)
-| projectVersionNumber     | the version number of the project's version (java_module)
-| projectVersionPrerelease | the prelease (if any) of the project's version (java_module)
+| projectVersionNumber     | the version number (no build, no tag) of the project's version (semver, java_module)
+| projectVersionPrerelease | the prerelease (if any) of the project's version (java_module)
 | projectVersionBuild      | the build info (if any) of the project's version (semver, java_module)
 | projectDescription       | the project description
 | projectLongDescription   | the project long description
@@ -118,7 +161,7 @@ The following names are related to xref:configuration:project.adoc[]
 | projectVendor            | the project's vendor (if any)
 | projectDocsUrl           | link to the project's documentation
 | projectAuthorsBySpace    | space separated list of author names
-| projectAuthorsByComma    | commma separated list of author names
+| projectAuthorsByComma    | comma separated list of author names
 | projectTagsBySpace       | space separate list of project tags
 | projectTagsByComma       | comma separate list of project tags
 | projectJavaGroupId       | the project groupId (Maven coordinates)
@@ -130,6 +173,30 @@ The following names are related to xref:configuration:project.adoc[]
 | projectJavaVersionTag    | the project Java version (tag)
 | projectJavaVersionBuild  | the project Java version (build)
 | projectJavaMainClass     | the main class launched by the executable script launcher
+|===
+
+There are convenient variants of the project's version formatted with underscores (`_`) and dashes (`-`) instead of
+dots (`.`). These variants are:
+
+ - projectVersionWithUnderscores
+ - projectVersionWithDashes
+ - projectEffectiveVersionWithUnderscores
+ - projectEffectiveVersionWithDashes
+ - projectVersionNumberWithUnderscores
+ - projectVersionNumberWithDashes
+
+Which would resolve to the following, assuming `project.snapshot.label` was set to `{{projectVersionNumber}}.EarlyAccess`.
+
+[%header, width="100%"]
+|===
+| Key                                    | Version
+| projectVersion                         | 1.2.3-TAG
+| projectVersionWithUnderscores          | 1_2_3_TAG
+| projectVersionWithDashes               | 1-2-3-TAG
+| projectEffectiveVersionWithUnderscores | 1_2_3_EarlyAccess
+| projectEffectiveVersionWithDashes      | 1-2-3-EarlyAccess
+| projectVersionNumberWithUnderscores    | 1_2_3
+| projectVersionNumberWithDashes         | 1-2-3
 |===
 
 The value of `projectEffectiveVersion` is calculated as follows:
@@ -144,6 +211,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -153,8 +221,10 @@ project:
     # with `project`, i.e, `projectFoo`.
     foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -163,8 +233,10 @@ TOML::
   # with `project`, i.e, `projectFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -178,10 +250,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <project>
@@ -195,8 +269,10 @@ Maven::
   </project>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -208,6 +284,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 Additionally, every key/value from `project.java.extraProperties` is mapped with `java` as key prefix and the capitalized
@@ -217,6 +294,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -227,8 +305,10 @@ project:
       # with `java`, i.e, `javaFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -237,8 +317,10 @@ TOML::
   # with `java`, i.e, `javaFoo`.
   java.extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -254,10 +336,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <project>
@@ -273,8 +357,10 @@ Maven::
   </project>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -288,6 +374,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Platform
@@ -364,6 +451,7 @@ and the capitalized key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -374,8 +462,10 @@ distributions:
       # with `distribution`, i.e, `distributionFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -384,8 +474,10 @@ TOML::
   # with `distribution`, i.e, `distributionFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -401,10 +493,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <distributions>
@@ -420,8 +514,10 @@ Maven::
   </distributions>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -435,6 +531,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 Additionally, every key/value from `distribution.<name>.java.extraProperties` is mapped with `java` as key prefix
@@ -444,6 +541,7 @@ and the capitalized key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -455,8 +553,10 @@ distributions:
         # with `java`, i.e, `javaFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -465,8 +565,10 @@ TOML::
   # with `java`, i.e, `javaFoo`.
   java.extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -484,10 +586,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <distributions>
@@ -505,8 +609,10 @@ Maven::
   </distributions>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -522,6 +628,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Artifact
@@ -537,6 +644,17 @@ The following names identify an artifact without explicit `platform`
 | artifactName           | the name of the artifact file without extension
 |===
 
+The following names match an artifact without explicit `platform` when xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                               | Description
+| artifactDownloadUrl               | the URL required to download the artifact
+| artifactDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifactDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
 The following names match the first artifact in a distribution
 
 [%header, cols="<2,<5", width="100%"]
@@ -548,19 +666,41 @@ The following names match the first artifact in a distribution
 | distributionArtifactName     | the name of the artifact file without extension
 |===
 
+The following names match the first artifact in a distribution when xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                   | Description
+| distributionDownloadUrl               | the URL required to download the artifact
+| distributionDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| distributionDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
 Additional names become available when the artifact defines a `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                                           | Description
-| artifact{{CapitalizedPlatform}}Url            | the URL required to download the artifact
-| artifact{{CapitalizedPlatform}}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
-| artifact{{CapitalizedPlatform}}FileName       | the name of the artifact file
-| artifact{{CapitalizedPlatform}}Name           | the name of the artifact file without extension
+| Key                               | Description
+| artifact${Platform}Url            | the URL required to download the artifact
+| artifact${Platform}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
+| artifact${Platform}FileName       | the name of the artifact file
+| artifact${Platform}Name           | the name of the artifact file without extension
+|===
+
+Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                          | Description
+| artifact${Platform}DownloadUrl               | the URL required to download the artifact
+| artifact${Platform}Download${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifact${Platform}Download${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
 |===
 
 Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
-artifact, and `artifact{{CapitalizedPlatform}}` for all artifacts, and the capitalized key.
+artifact, and `artifact{{Platform}}` for all artifacts, and the capitalized key.
 
 Thus, for artifacts defined as
 
@@ -568,6 +708,7 @@ Thus, for artifacts defined as
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -585,8 +726,10 @@ distributions:
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
         platform: osx
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -601,8 +744,10 @@ pass:[[[distributions.app.artifact]]]
   path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
   platform = "osx"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -633,10 +778,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <checksum>
@@ -663,8 +810,10 @@ Maven::
   </distributions>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -689,6 +838,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 The following names will be calculated:
@@ -724,6 +874,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -735,8 +886,10 @@ upload:
         # with `artifactory`, i.e, `artifactoryFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -745,8 +898,10 @@ TOML::
   # with `artifactory`, i.e, `artifactoryFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -764,10 +919,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <upload>
@@ -785,8 +942,10 @@ Maven::
   </upload>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -802,6 +961,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Brew
@@ -827,6 +987,9 @@ The following names are related to xref:configuration:packagers/homebrew.adoc[]
 | brewCaskUninstall    | the `uninstall` section
 | brewCaskHasZap       | if the cask defines a `zap` section
 | brewCaskZap          | the `zap` section
+| brewCaskHasAppcast   | if the cask defines an `appcast` URL
+| brewCaskAppcast      | the `appcast` url
+| brewCaskHasBinary    | if the cask contains a `.zip` artifact
 |===
 
 Additionally, every key/value from `brew.extraProperties` is mapped with `brew` as key prefix and the capitalized
@@ -836,6 +999,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -846,8 +1010,10 @@ packagers:
       # with `brew`, i.e, `brewFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -856,8 +1022,10 @@ TOML::
   # with `brew`, i.e, `brewFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -873,10 +1041,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -892,8 +1062,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -907,6 +1079,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Chocolatey
@@ -928,6 +1101,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -938,8 +1112,10 @@ packagers:
       # with `chocolatey`, i.e, `chocolateyFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -948,8 +1124,10 @@ TOML::
   # with `chocolatey`, i.e, `chocolateyFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -965,10 +1143,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -984,8 +1164,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -999,6 +1181,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Docker
@@ -1010,7 +1193,7 @@ The following names are related to xref:configuration:packagers/homedocker.adoc[
 | Key             | Description
 | dockerBaseImage | the base Docker image
 | dockerLabels    | a list of formatted labels
-| dockerSpecName  | tha name of the current Docker spec
+| dockerSpecName  | the name of the current Docker spec
 |===
 
 Additionally, every key/value from `docker.extraProperties` is mapped with `docker` as key prefix and the capitalized
@@ -1020,6 +1203,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1030,8 +1214,10 @@ packagers:
       # with `docker`, i.e, `dockerFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1040,8 +1226,10 @@ TOML::
   # with `docker`, i.e, `dockerFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1057,10 +1245,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -1076,8 +1266,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1091,6 +1283,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Discord
@@ -1102,6 +1295,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1112,8 +1306,10 @@ announce:
       # with `discord`, i.e, `discordFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1122,8 +1318,10 @@ TOML::
   # with `discord`, i.e, `discordFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1139,10 +1337,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1158,8 +1358,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1173,6 +1375,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == GitHub Discussions
@@ -1184,6 +1387,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1194,8 +1398,10 @@ announce:
       # with `discussions`, i.e, `discussionsFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1204,8 +1410,10 @@ TOML::
   # with `discussions`, i.e, `discussionsFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1221,10 +1429,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1240,8 +1450,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1255,6 +1467,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Gitter
@@ -1266,6 +1479,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1276,8 +1490,10 @@ announce:
       # with `gitter`, i.e, `gitterFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1286,8 +1502,10 @@ TOML::
   # with `gitter`, i.e, `gitterFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1303,10 +1521,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1322,8 +1542,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1337,6 +1559,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == GoogleChat
@@ -1348,6 +1571,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1358,8 +1582,10 @@ announce:
       # with `googleChat`, i.e, `googleChatFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1368,8 +1594,10 @@ TOML::
   # with `googleChat`, i.e, `googleChatFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1385,10 +1613,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1404,8 +1634,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1419,6 +1651,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Http
@@ -1430,6 +1663,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1441,8 +1675,10 @@ upload:
         # with `http`, i.e, `httpFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1451,8 +1687,10 @@ TOML::
   # with `http`, i.e, `httpFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1470,10 +1708,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <upload>
@@ -1491,8 +1731,10 @@ Maven::
   </upload>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1508,6 +1750,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == JBang
@@ -1534,6 +1777,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1544,8 +1788,10 @@ packagers:
       # with `jbang`, i.e, `jbangFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1554,8 +1800,10 @@ TOML::
   # with `jbang`, i.e, `jbangFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1571,10 +1819,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -1590,8 +1840,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1605,6 +1857,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Mail
@@ -1616,6 +1869,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1626,8 +1880,10 @@ announce:
       # with `mail`, i.e, `mailFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1636,8 +1892,10 @@ TOML::
   # with `mail`, i.e, `mailFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1653,10 +1911,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1672,8 +1932,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1687,6 +1949,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Mastodon
@@ -1698,6 +1961,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1708,8 +1972,10 @@ announce:
       # with `mastodon`, i.e, `mastodonFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1718,8 +1984,10 @@ TOML::
   # with `mastodon`, i.e, `mastodonFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1735,10 +2003,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1754,8 +2024,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1769,6 +2041,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Mattermost
@@ -1780,6 +2053,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1790,8 +2064,10 @@ announce:
       # with `mattermost`, i.e, `mattermostFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1800,8 +2076,10 @@ TOML::
   # with `mattermost`, i.e, `mattermostFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1817,10 +2095,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -1836,8 +2116,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1851,6 +2133,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Scoop
@@ -1873,6 +2156,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1883,8 +2167,10 @@ packagers:
       # with `scoop`, i.e, `scoopFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1893,8 +2179,10 @@ TOML::
   # with `scoop`, i.e, `scoopFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1910,10 +2198,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -1929,8 +2219,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -1944,6 +2236,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Sdkman
@@ -1955,6 +2248,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -1965,8 +2259,10 @@ announce:
       # with `sdkman`, i.e, `sdkmanFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -1975,8 +2271,10 @@ TOML::
   # with `sdkman`, i.e, `sdkmanFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -1992,10 +2290,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2011,8 +2311,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2026,6 +2328,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Slack
@@ -2037,6 +2340,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2047,8 +2351,10 @@ announce:
       # with `slack`, i.e, `slackFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2057,8 +2363,10 @@ TOML::
   # with `slack`, i.e, `slackFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2074,10 +2382,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2093,8 +2403,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2108,6 +2420,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Snap
@@ -2161,6 +2474,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2171,8 +2485,10 @@ packagers:
       # with `snap`, i.e, `snapFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2181,8 +2497,10 @@ TOML::
   # with `snap`, i.e, `snapFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2198,10 +2516,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <packagers>
@@ -2217,8 +2537,10 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2232,6 +2554,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Teams
@@ -2243,6 +2566,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2253,8 +2577,10 @@ announce:
       # with `teams`, i.e, `teamsFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2263,8 +2589,10 @@ TOML::
   # with `teams`, i.e, `teamsFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2280,10 +2608,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2299,8 +2629,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2314,6 +2646,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Twitter
@@ -2325,6 +2658,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2335,8 +2669,10 @@ announce:
       # with `twitter`, i.e, `twitterFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2345,8 +2681,10 @@ TOML::
   # with `twitter`, i.e, `twitterFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2362,10 +2700,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2381,8 +2721,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2396,6 +2738,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Webhooks
@@ -2407,6 +2750,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2418,8 +2762,10 @@ announce:
         # with `webhook`, i.e, `webhookFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2428,8 +2774,10 @@ TOML::
   # with `webhook`, i.e, `webhookFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2447,10 +2795,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2468,8 +2818,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2485,6 +2837,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 == Zulip
@@ -2496,6 +2849,7 @@ key, such that
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -2506,8 +2860,10 @@ announce:
       # with `zulip`, i.e, `zulipFoo`.
       foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -2516,8 +2872,10 @@ TOML::
   # with `zulip`, i.e, `zulipFoo`.
   extraProperties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -2533,10 +2891,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <announce>
@@ -2552,8 +2912,10 @@ Maven::
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -2567,5 +2929,6 @@ jreleaser {
   }
 }
 ----
+--
 ====
 

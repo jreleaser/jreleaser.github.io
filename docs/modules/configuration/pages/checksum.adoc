@@ -1,7 +1,7 @@
 = Checksum
 
 JReleaser calculates checksums for all input files and artifacts. These checksums are grouped into a single file named
-`checksums.txt` which in turn may be signed and uploaded to a release.
+`checksums_<algorithm>.txt` which in turn may be signed and uploaded to a release.
 
 Use the following options to customize how checksums are handled:
 
@@ -11,6 +11,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -34,9 +35,16 @@ checksum:
   # Defaults to `false`.
   # icon:dot-circle[]
   individual: true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files: true
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -58,9 +66,16 @@ TOML::
   # Defaults to `false`.
   # icon:dot-circle[]
   individual = true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files = true
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -86,14 +101,21 @@ JSON::
     // Uploads individual checksum files.
     // Defaults to `false`.
     // icon:dot-circle[]
-    "individual": true
+    "individual": true,
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "files": true
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -126,11 +148,20 @@ Maven::
       icon:dot-circle[]
     -->
     <individual>true</individual>
+
+    <!--
+      Whether to checksum files in the `files` section or not.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <files>true</files>
   </checksum>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -154,7 +185,36 @@ jreleaser {
     // Defaults to `false`.
     // icon:dot-circle[]
     individual = true
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    files = true
   }
 }
 ----
+--
 ====
+
+== Extra Properties
+
+Both xref:configuration:distributions.adoc[] and xref:ROOT:artifacts.adoc[Artifacts] may define an extra property named
+"individualChecksum". If the value is set to `true` then the checksums for the given element will also be added to the
+release files.
+
+The precedence rules are:
+
+ * If the Artifact has a property "individualChecksum":
+   ** if the property resolves to `true` then the individual checksum is released.
+   ** if the property resolves to `false` then the individual checksum is skipped and no more rules are checked.
+ * If the Distribution has a property "individualChecksum":
+   ** if the property resolves to `true` then individual checksums for all its artifacts are released.
+   ** if the property resolves to `false` then all of its individual checksums are skipped and no more rules are checked.
+ * If the `checksum.individual` property is set:
+   ** if the property resolves to `true` then individual checksums are released.
+   ** if the property resolves to `false` then no individual checksums are released.
+
+== Skip Checksum
+
+Artifacts and globs in the xref:configuration:files.adoc[] section may define an extra property will prevent checksum
+calculation. The name of this property must match `skipChecksum` and be set to `true`.

@@ -26,6 +26,16 @@ Commands:
   full-release  Perform a full release.
 ----
 
+== Environment Variables
+
+The following settings may also be specified via environment variables
+
+|===
+| Setting          | Environment Variable         | Default
+| output-directory | JRELEASER_OUTPUT_DIRECTORY   | out
+|                  | JRELEASER_DEFAULT_GIT_REMOTE | origin
+|===
+
 == Install
 
 [tabs]
@@ -117,8 +127,9 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 [source]
 ----
 $ jreleaser config -h
-Usage: jreleaser config [-adfhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                        [-od=<outputdir>]
+Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=<basedir>]
+                        [-c=<configFile>] [-od=<outputdir>] [-p=<key=value>]...
+                        [-sp=<platform>]...
 Display current configuration.
   -a, --assembly            Display assembly configuration.
   -b, --basedir=<basedir>   Base directory.
@@ -132,7 +143,14 @@ Display current configuration.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 ----
@@ -196,7 +214,7 @@ The value of `--tool-name` must match any of the available xref:configuration:pa
 $ jreleaser assemble -h
 Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=<assemblerName>] [-b=<basedir>]
                           [-c=<configFile>] [-dn=<distributionName>]
-                          [-od=<outputdir>]
+                          [-od=<outputdir>] [-p=<key=value>]...
 Assemble distributions.
       -an, --assembler-name=<assemblerName>
                             The name of the assembler.
@@ -212,6 +230,8 @@ Assemble distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
@@ -235,7 +255,7 @@ This command must be invoked separatedly from the others as some of the assmeble
 ----
 $ jreleaser changelog -h
 Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                           [-od=<outputdir>]
+                           [-od=<outputdir>] [-p=<key=value>]...
 Calculate the changelog.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -247,6 +267,8 @@ Calculate the changelog.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
@@ -262,8 +284,9 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser checksum -h
-Usage: jreleaser checksum [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                          [-od=<outputdir>]
+Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
+                          [-c=<configFile>] [-od=<outputdir>]
+                          [-p=<key=value>]... [-sp=<platform>]...
 Calculate checksums.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -275,7 +298,14 @@ Calculate checksums.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 ----
@@ -290,8 +320,8 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser sign -h
-Usage: jreleaser sign [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                      [-od=<outputdir>]
+Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
+                      [-od=<outputdir>] [-p=<key=value>]... [-sp=<platform>]...
 Sign release artifacts.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -303,7 +333,14 @@ Sign release artifacts.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 ----
@@ -317,10 +354,12 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 
 [source]
 ----
-Usage: jreleaser upload [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
-                        [-od=<outputdir>] [-un=<uploaderName>]
-                        [-ut=<uploaderType>]
-Uploads all artifacts.
+$ jreleaser upload -h
+Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+                        [-c=<configFile>] [-od=<outputdir>]
+                        [-un=<uploaderName>] [-ut=<uploaderType>]
+                        [-p=<key=value>]... [-sp=<platform>]...
+Upload all artifacts.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
@@ -331,7 +370,14 @@ Uploads all artifacts.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
       -un, --uploader-name=<uploaderName>
                             The name of the uploader.
       -ut, --uploader-type=<uploaderType>
@@ -385,7 +431,7 @@ $ jreleaser upload --uploader-type artifactory --uploader-name mine
 ----
 $ jreleaser release -h
 Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
-                         [--draft] [-grs] [--overwrite] [--prerelease]
+                         [--draft] [-grs] [--overwrite] [--prerelease] [-scp]
                          [--signing-armored] [--signing-enabled] [--skip-tag]
                          [--update] [-b=<basedir>] [--branch=<branch>]
                          [-c=<configFile>] [--changelog=<changelog>]
@@ -393,15 +439,16 @@ Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
                          [--commit-author-name=<commitAuthorName>]
                          [--milestone-name=<milestoneName>] [-od=<outputdir>]
                          [--project-name=<projectName>]
+                         [--project-snapshot-label=<projectSnapshotLabel>]
                          [--project-snapshot-pattern=<projectSnapshotPattern>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
                          [--release-name=<releaseName>] [--tag-name=<tagName>]
-                         [--username=<username>] [--file=<files>]...
-                         [--glob=<globs>]...
-                         [--update-section=<updateSections>]...
-Create or update a release..
-      --auto-config          Model auto configuration..
+                         [--username=<username>] [--file=<file>]...
+                         [--glob=<file>]... [-p=<key=value>]...
+                         [-sp=<platform>]... [--update-section=<section>]...
+Create or update a release.
+      --auto-config          Model auto configuration.
   -b, --basedir=<basedir>    Base directory.
       --branch=<branch>      The release branch.
   -c, --config-file=<configFile>
@@ -415,8 +462,8 @@ Create or update a release..
                              Commit author name.
   -d, --debug                Set log level to debug.
       --draft                If the release is a draft.
-      --file=<files>         Input file(s) to be uploaded.
-      --glob=<globs>         Input file(s) to be uploaded (as globs).
+      --file=<file>          Input file to be uploaded. Repeatable.
+      --glob=<file>          Input file to be uploaded (as glob). Repeatable.
       -grs, --git-root-search
                              Searches for the Git root.
   -h, --help                 Show this help message and exit.
@@ -426,9 +473,13 @@ Create or update a release..
       -od, --output-directory=<outputdir>
                              Output directory.
       --overwrite            Overwrite an existing release.
+  -p, --set-property=<key=value>
+                             Sets the value of a property. Repeatable.
       --prerelease           If the release is a prerelease.
       --project-name=<projectName>
                              The project name.
+      --project-snapshot-label=<projectSnapshotLabel>
+                             The project snapshot label.
       --project-snapshot-pattern=<projectSnapshotPattern>
                              The project snapshot pattern.
       --project-version=<projectVersion>
@@ -438,13 +489,18 @@ Create or update a release..
   -q, --quiet                Log errors only.
       --release-name=<releaseName>
                              The release name.
+      -scp, --select-current-platform
+                             Activates paths matching the current platform.
       --signing-armored      Generate ascii armored signatures.
       --signing-enabled      Sign files.
       --skip-tag             Skip tagging the release.
+      -sp, --select-platform=<platform>
+                             Activates paths matching the given platform.
+                               Repeatable.
       --tag-name=<tagName>   The release tag.
       --update               Update an existing release.
-      --update-section=<updateSections>
-                             Release section to be updated.
+      --update-section=<section>
+                             Release section to be updated. Repeatable.
       --username=<username>  Git username.
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
@@ -481,9 +537,10 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser prepare -h
-Usage: jreleaser prepare [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                         [-dn=<distributionName>] [-od=<outputdir>]
-                         [-tn=<toolName>]
+Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-dn=<distributionName>]
+                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
+                         [-sp=<platform>]...
 Prepare all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -497,7 +554,14 @@ Prepare all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=<toolName>
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -544,9 +608,10 @@ $ jreleaser prepare --distribution-name app --tool-name brew
 [source]
 ----
 $ jreleaser package -h
-Usage: jreleaser package [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
-                         [-dn=<distributionName>] [-od=<outputdir>]
-                         [-tn=<toolName>]
+Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-dn=<distributionName>]
+                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
+                         [-sp=<platform>]...
 Package all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -560,7 +625,14 @@ Package all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=<toolName>
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -611,10 +683,11 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser publish -h
-Usage: jreleaser publish [-dhiqVwy] [-grs] [-b=<basedir>] [-c=<configFile>]
-                         [-dn=<distributionName>] [-od=<outputdir>]
-                         [-tn=<toolName>]
-Publishes all distributions.
+Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-dn=<distributionName>]
+                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
+                         [-sp=<platform>]...
+Publish all distributions.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file
@@ -627,7 +700,14 @@ Publishes all distributions.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
       -tn, --tool-name=<toolName>
                             The name of the tool.
   -V, --version             Print version information and exit.
@@ -678,8 +758,9 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser announce -h
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-an=<announcerName>]
+Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=<announcerName>]
                           [-b=<basedir>] [-c=<configFile>] [-od=<outputdir>]
+                          [-p=<key=value>]... [-sp=<platform>]...
 Announce a release.
       -an, --announcer-name=<announcerName>
                             The name of the announcer.
@@ -693,7 +774,14 @@ Announce a release.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
@@ -728,8 +816,9 @@ mutations should occur when this mode is activated.
 [source]
 ----
 $ jreleaser full-release -h
-Usage: jreleaser full-release [-dhiqVwy] [-grs] [-b=<basedir>]
+Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                               [-c=<configFile>] [-od=<outputdir>]
+                              [-p=<key=value>]... [-sp=<platform>]...
 Perform a full release.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
@@ -741,7 +830,14 @@ Perform a full release.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
+  -p, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.

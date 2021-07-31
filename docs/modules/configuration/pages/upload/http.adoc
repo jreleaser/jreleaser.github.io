@@ -13,6 +13,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -40,9 +41,14 @@ upload:
       # icon:dot-circle[]
       readTimeout: 60
 
-      # URL of the HTTP/HTTPS server + path.
+      # URL of the HTTP/HTTPS server + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
-      target: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]
+      uploadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]
+
+      # URL of the HTTP/HTTPS server + path + artifact.
+      # If undefined, will use the same value as `uploadUrl`.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      downloadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]
 
       # The username required for authorization.
       # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -97,8 +103,10 @@ upload:
         # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
         foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -122,10 +130,14 @@ TOML::
   # icon:dot-circle[]
   readTimeout = 60
 
-  # URL of the HTTP/HTTPS server + path.
-  # The artifact file name will be appended automatically.
+  # URL of the HTTP/HTTPS server + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
-  target = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]"
+  uploadUrl = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]"
+
+  # URL of the HTTP/HTTPS server + path + artifact.
+  # If undefined, will use the same value as `uploadUrl`.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  downloadUrl = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]"
 
   # The username required for authorization.
   # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -178,8 +190,10 @@ TOML::
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -208,10 +222,14 @@ JSON::
         // icon:dot-circle[]
         "readTimeout": 60,
 
-        // URL of the HTTP/HTTPS server + path.
-        // The artifact file name will be appended automatically.
+        // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "target": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]",
+        "uploadUrl": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]",
+
+        // URL of the HTTP/HTTPS server + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "downloadUrl": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]",
 
         // The username required for authorization.
         // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -272,10 +290,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -314,11 +334,17 @@ Maven::
         <readTimeout>60</readTimeout>
 
         <!--
-          URL of the HTTP/HTTPS server + path.
-          The artifact file name will be appended automatically.
+          URL of the HTTP/HTTPS server + path + artifact.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <target>pass:[https:my.zulipchat.com/api/v1]</target>
+        <uploadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]</uploadUrl>
+
+        <!--
+          URL of the HTTP/HTTPS server + path + artifact.
+          If undefined, will use the same value as `uploadUrl`.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <downloadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]</downloadUrl>
 
         <!--
           The username required for authorization.
@@ -399,8 +425,10 @@ Maven::
   </upload>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -429,10 +457,14 @@ jreleaser {
         // icon:dot-circle[]
         readTimeout = 60
 
-        // URL of the HTTP/HTTPS server + path.
-        // The artifact file name will be appended automatically.
+        // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        target = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+        uploadUrl = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]'
+
+        // URL of the HTTP/HTTPS server + path + artifact.
+        // If undefined, will use the same value as `uploadUrl`.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        downloadUrl = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactfileName}}]'
 
         // The username required for authorization.
         // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
@@ -489,14 +521,25 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
-== Target
+== UploadUrl
 
-The target is the URL to upload the artifacts to.
+The uploadUrl is the URL to upload the artifacts to.
 
-An example configuration can look like
-`target: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFileName}}'`.
+An example configuration may look like
+`uploadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactfileName}}'`.
+
+And will result in a final deployment like
+`pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactfileName}}'`.
 
 And will result in a final deployment like
 `pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
@@ -521,4 +564,20 @@ be used. This means that the name per configured instance needs to be unique.
 The name of the environment variable will be `JRELEASER_HTTP_NAME_PASSWORD`. If your instance is named `production`,
 you need to store the secret in the environment variable `JRELEASER_HTTP_PRODUCTION_PASSWORD`. The name will be
 transformed to uppercase.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Http` and `<name>` resolves to the capitalized name of the http instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadHttpFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadHttpFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadHttpFooBar`.
 

@@ -14,6 +14,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -53,9 +54,26 @@ signing:
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   passphrase: __DO_NOT_SET_HERE__
+
+  # Sign files.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files: true
+
+  # Sign distribution artifacts.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  artifacts: true
+
+  # Sign checksum files.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  checksums: true
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -95,9 +113,26 @@ TOML::
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   passphrase = "__DO_NOT_SET_HERE__"
+
+  # Sign files.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files = true
+
+  # Sign distribution artifacts.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  artifacts = true
+
+  # Sign checksum files.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  checksums = true
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -136,14 +171,31 @@ JSON::
     // If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
     // environment variable must be defined.
     // icon:exclamation-triangle[] icon:eye-slash[]
-    "passphrase": "__DO_NOT_SET_HERE__"
+    "passphrase": "__DO_NOT_SET_HERE__",
+
+     // Sign files.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "files": true,
+
+    // Sign distribution artifacts.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "artifacts": true,
+
+    // Sign checksum files.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "checksums": true
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -197,11 +249,34 @@ Maven::
       icon:exclamation-triangle[] icon:eye-slash[]
     -->  
     <passphrase>__DO_NOT_SET_HERE__</passphrase>
+
+    <!--
+      Sign files.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <files>true</files>
+
+    <!--
+      Sign distribution artifacts.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <artifacts>true</artifacts>
+
+    <!--
+      Sign checksum files.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <checksums>true</checksums>
   </signing>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -242,9 +317,25 @@ jreleaser {
     // environment variable must be defined.
     // icon:exclamation-triangle[] icon:eye-slash[]
     passphrase = '__DO_NOT_SET_HERE__'
+
+    // Sign files.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    files = true
+
+    // Sign distribution artifacts.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    artifacts = true
+
+    // Sign checksum files.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    checksums = true
   }
 }
 ----
+--
 ====
 
 WARNING: Prefer the use of xref:configuration:environment.adoc[] if the configuration is stored at a public repository.
@@ -257,3 +348,7 @@ When the mode is set to `MEMORY` (the default) then the values of `JRELEASER_GPG
 When the mode is set to `FILE` then the values of `JRELEASER_GPG_PUBLIC_KEY` and
 `JRELEASER_GPG_SECRET_KEY` are treated as file paths pointing to files that the keys.
 
+== Skip Signing
+
+Distributions and Artifacts may define an extra property that may stop them from being signed. The name of this property
+must match `skipSigning` and be set to `true`. Setting this property on a distribution skips all of its artifacts.

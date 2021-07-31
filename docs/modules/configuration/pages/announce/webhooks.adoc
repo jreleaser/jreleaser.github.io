@@ -11,8 +11,9 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 announce:
   # icon:dot-circle[]
@@ -36,7 +37,13 @@ announce:
       # Defines the read timeout in seconds.
       # Defaults to `60`.
       # icon:dot-circle[]
-      readTimeout: 6
+      readTimeout: 60
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[] icon:file-alt[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        foo: bar
 
       # The webhook associated with a specific Gitter room.
       # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
@@ -60,17 +67,13 @@ announce:
       # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
       # icon:dot-circle[]
       messageTemplate: path/to/template/myWebhook.tpl
-
-      # Additional properties used when evaluating templates.
-      # icon:dot-circle[] icon:file-alt[]
-      extraProperties:
-        # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
-        foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 # Webhooks require a name.
 # icon:exclamation-triangle[]
@@ -91,6 +94,11 @@ TOML::
   # Defaults to `60`.
   # icon:dot-circle[]
   readTimeout = 60
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
 
   # The webhook associated with a specific Gitter room.
   # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
@@ -114,16 +122,13 @@ TOML::
   # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
   # icon:dot-circle[]
   messageTemplate = "path/to/template/myWebhook.tpl"
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 {
   "announce": {
@@ -150,6 +155,13 @@ JSON::
         // icon:dot-circle[]
         "readTimeout": 60,
 
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[] icon:file-alt[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          "foo": "bar"
+        },
+
         // The webhook associated with a specific Gitter room.
         // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
         // environment variable must be defined.
@@ -171,23 +183,18 @@ JSON::
         // Review the available xref:configuration:name-templates.adoc[].
         // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
         // icon:dot-circle[]
-        "messageTemplate": "path/to/template/myWebhook.tpl",
-
-        // Additional properties used when evaluating templates.
-        // icon:dot-circle[] icon:file-alt[]
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
-          "foo": "bar"
-        }
+        "messageTemplate": "path/to/template/myWebhook.tpl"
       }
     }
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -228,6 +235,17 @@ Maven::
         <readTimeout>60</readTimeout>
 
         <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
           The webhook associated with a specific Gitter room.
           If left unspecified, the `JRELEASER_${name}_WEBHOOK` environment variable must be defined.
           icon:exclamation-triangle[] icon:eye-slash[]
@@ -256,26 +274,17 @@ Maven::
           icon:dot-circle[]
         -->
         <messageTemplate>path/to/template/myWebhook.tpl</messageTemplate>
-
-        <!--
-          Additional properties used when evaluating templates.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <extraProperties>
-          <!--
-            Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
-          -->
-          <foo>bar</foo>
-        </extraProperties>
       </myWebhook>
     </webhooks>
   </announce>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 jreleaser {
   announce {
@@ -302,6 +311,11 @@ jreleaser {
         // icon:dot-circle[]
         readTimeout = 60
 
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+
         // The webhook associated with a specific Gitter room.
         // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
         // environment variable must be defined.
@@ -324,16 +338,12 @@ jreleaser {
         // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
         // icon:dot-circle[]
         messageTemplate = 'path/to/template/myWebhook.tpl'
-
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
-        // icon:dot-circle[] icon:file-alt[]
-        extraProperties.put('foo', 'bar')
       }
     }
   }
 }
 ----
+--
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.

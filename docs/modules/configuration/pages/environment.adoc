@@ -14,6 +14,7 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 ----
@@ -32,8 +33,10 @@ environment:
   properties:
     foo: bar
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 ----
@@ -51,8 +54,10 @@ TOML::
   # icon:dot-circle[]
   properties.foo = "bar"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 ----
@@ -74,10 +79,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -103,8 +110,10 @@ Maven::
   </environment>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
 [subs="+macros"]
 ----
@@ -124,6 +133,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 Formats currently supported for the file configurable in the `variables` field are:
@@ -137,30 +147,37 @@ Formats currently supported for the file configurable in the `variables` field a
 ====
 PROPERTIES::
 +
+--
 [source,properties]
 [subs="+macros"]
 .config.properties
 ----
 JRELEASER_GITHUB_TOKEN = b9df0920aefcbfa69f57c4f02bae4396
 ----
+--
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 .config.yml
 ----
 JRELEASER_GITHUB_TOKEN: b9df0920aefcbfa69f57c4f02bae4396
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 .config.toml
 ----
 JRELEASER_GITHUB_TOKEN = "b9df0920aefcbfa69f57c4f02bae4396"
 ----
+--
 JSON::
 +
+--
 [source,json]
 [subs="+macros"]
 .config.json
@@ -169,6 +186,7 @@ JSON::
   "JRELEASER_GITHUB_TOKEN": "b9df0920aefcbfa69f57c4f02bae4396"
 }
 ----
+--
 ====
 
 NOTE: The config file must use the appropriate file extension that matches the format in use.
@@ -195,6 +213,7 @@ As an example, the `JRELEASER_GPG_PUBLIC_KEY` key/value may be written as follow
 ====
 YAML::
 +
+--
 [source,yaml]
 [subs="+macros"]
 .config.yml
@@ -206,8 +225,10 @@ JRELEASER_GPG_PUBLIC_KEY: |
   ...
   -----END PGP PUBLIC KEY BLOCK-----
 ----
+--
 TOML::
 +
+--
 [source,toml]
 [subs="+macros"]
 .config.toml
@@ -218,6 +239,7 @@ mQGiBEYVIwERBACndCqn1kKjVD8r2YjYAsqzNQet/U7wn6pIrvKd+23W+LH04tRY
 ...
 -----END PGP PUBLIC KEY BLOCK-----"""
 ----
+--
 ====
 
 Take special note that the empty line at the 2nd row is required, otherwise you may get an error similar
@@ -342,27 +364,33 @@ The following key/values may be defined as properties or as environment variable
 | JRELEASER_PROJECT_VERSION          | the project version
 | JRELEASER_PROJECT_VERSION_PATTERN  | the project version pattern
 | JRELEASER_PROJECT_SNAPSHOT_PATTERN | a regex to determine if the project version is snapshot
+| JRELEASER_PROJECT_SNAPSHOT_LABEL   | the snapshot tag
 |===
 
 === Release
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                      | Description
-| JRELEASER_TAG_NAME       | the release tag name
-| JRELEASER_RELEASE_NAME   | the release name
-| JRELEASER_MILESTONE_NAME | the milestone name/title
-| JRELEASER_BRANCH         | the release branch
-| JRELEASER_OVERWRITE      | overwrite an existing release
-| JRELEASER_UPDATE         | update an existing release
-| JRELEASER_SKIP_TAG       | skip tagging the release
-| JRELEASER_PRERELEASE     | release is a prerelease (github/gitea)
-| JRELEASER_DRAFT          | release is a draft (github/gitea)
-| JRELEASER_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_CODEBERG_TOKEN | a Codeberg personal token
-| JRELEASER_GENERIC_TOKEN  | a git personal token or password
+| Key                         | Description
+| JRELEASER_TAG_NAME          | the release tag name
+| JRELEASER_RELEASE_NAME      | the release name
+| JRELEASER_MILESTONE_NAME    | the milestone name/title
+| JRELEASER_BRANCH            | the release branch
+| JRELEASER_OVERWRITE         | overwrite an existing release
+| JRELEASER_UPDATE            | update an existing release
+| JRELEASER_SKIP_TAG          | skip tagging the release
+| JRELEASER_PRERELEASE        | release is a prerelease (github/gitea)
+| JRELEASER_DRAFT             | release is a draft (github/gitea)
+| JRELEASER_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_GENERIC_TOKEN     | a git personal token or password
+| JRELEASER_GENERIC_USERNAME  | a username with commit access
 |===
 
 === Signing
@@ -373,6 +401,25 @@ The following key/values may be defined as properties or as environment variable
 | JRELEASER_GPG_PASSPHRASE | the passphrase to decrypt the secret key
 | JRELEASER_GPG_PUBLIC_KEY | the public key used for signing
 | JRELEASER_GPG_SECRET_KEY | the secret key used for signing
+|===
+
+=== Article
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                 | Description
+| JRELEASER_ARTICLE_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_ARTICLE_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_ARTICLE_GITHUB_BRANCH     | the branch to use
+| JRELEASER_ARTICLE_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_ARTICLE_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_ARTICLE_GITLAB_BRANCH     | the branch to use
+| JRELEASER_ARTICLE_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_ARTICLE_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_ARTICLE_GITEA_BRANCH      | the branch to use
+| JRELEASER_ARTICLE_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_ARTICLE_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_ARTICLE_CODEBERG_BRANCH   | the branch to use
 |===
 
 === Artifactory
@@ -388,22 +435,38 @@ The following key/values may be defined as properties or as environment variable
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                               | Description
-| JRELEASER_HOMEBREW_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_HOMEBREW_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_HOMEBREW_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_HOMEBREW_CODEBERG_TOKEN | a Codeberg personal token
+| Key                                  | Description
+| JRELEASER_HOMEBREW_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_HOMEBREW_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_HOMEBREW_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_HOMEBREW_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_HOMEBREW_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
 |===
 
 === Chocolatey
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                                 | Description
-| JRELEASER_CHOCOLATEY_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_CHOCOLATEY_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_CHOCOLATEY_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_CHOCOLATEY_CODEBERG_TOKEN | a Codeberg personal token
+| Key                                    | Description
+| JRELEASER_CHOCOLATEY_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_CHOCOLATEY_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_CHOCOLATEY_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_CHOCOLATEY_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_CHOCOLATEY_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
 |===
 
 === Discord
@@ -418,8 +481,21 @@ The following key/values may be defined as properties or as environment variable
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                               | Description
-| JRELEASER_DOCKER_${NAME}_PASSWORD | a docker password matching the named server
+| Key                                | Description
+| JRELEASER_DOCKER_${NAME}_USERNAME  | a docker username matching the named server
+| JRELEASER_DOCKER_${NAME}_PASSWORD  | a docker password matching the named server
+| JRELEASER_DOCKER_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_DOCKER_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_DOCKER_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_DOCKER_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_DOCKER_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
 |===
 
 === GitHub Discussions
@@ -450,11 +526,19 @@ The following key/values may be defined as properties or as environment variable
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                            | Description
-| JRELEASER_JBANG_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_JBANG_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_JBANG_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_JBANG_CODEBERG_TOKEN | a Codeberg personal token
+| Key                               | Description
+| JRELEASER_JBANG_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_JBANG_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_JBANG_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_JBANG_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_JBANG_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
 |===
 
 === Http
@@ -494,11 +578,19 @@ The following key/values may be defined as properties or as environment variable
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                            | Description
-| JRELEASER_SCOOP_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_SCOOP_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_SCOOP_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_SCOOP_CODEBERG_TOKEN | a Codeberg personal token
+| Key                               | Description
+| JRELEASER_SCOOP_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_SCOOP_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_SCOOP_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_SCOOP_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_SCOOP_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
 |===
 
 === Sdkman
@@ -506,8 +598,8 @@ The following key/values may be defined as properties or as environment variable
 [%header, cols="<1,<1", width="100%"]
 |===
 | Key                             | Description
-| JRELEASER_SDKMAN_CONSUMER_KEY   | the consumer key required by SdkMan!
-| JRELEASER_SDKMAN_CONSUMER_TOKEN | the consumer token required by SdkMan!
+| JRELEASER_SDKMAN_CONSUMER_KEY   | the consumer key required by Sdkman
+| JRELEASER_SDKMAN_CONSUMER_TOKEN | the consumer token required by Sdkman
 |===
 
 === Slack
@@ -523,11 +615,19 @@ The following key/values may be defined as properties or as environment variable
 
 [%header, cols="<1,<1", width="100%"]
 |===
-| Key                           | Description
-| JRELEASER_SNAP_GITHUB_TOKEN   | a GitHub token with `repo` scope
-| JRELEASER_SNAP_GITLAB_TOKEN   | a GitLab token with `api` scope
-| JRELEASER_SNAP_GITEA_TOKEN    | a Gitea personal token
-| JRELEASER_SNAP_CODEBERG_TOKEN | a Codeberg personal token
+| Key                              | Description
+| JRELEASER_SNAP_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_SNAP_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_SNAP_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_SNAP_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_SNAP_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
 |===
 
 === Teams

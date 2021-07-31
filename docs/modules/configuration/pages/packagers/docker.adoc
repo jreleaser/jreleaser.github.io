@@ -1,4 +1,10 @@
 = Docker
+:tool_id:       docker
+:tool_name:     Docker
+:tool_env_var:  DOCKER
+:tool_tap:      docker
+:tool_tap_name: app-docker
+:tool_manifest: Dockerfile
 
 Creates link:https://www.docker.com/[Docker] images.
 
@@ -15,24 +21,17 @@ include::partial$legend.adoc[]
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-packagers:
-  # icon:dot-circle[]
-  docker:
-    # Enables or disables Docker.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # icon:dot-circle[]
-    active: ALWAYS
+include::partial$packagers/yaml/common-head.adoc[]
 
-    # Directory with file templates used to prepare the Docker distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
-    # If specified, path must exist.
-    # icon:dot-circle[]
-    templateDirectory: path/to/docker/templates
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
 
     # The base Docker image to use.
     # icon:dot-circle[] icon:file-alt[]
@@ -67,12 +66,6 @@ packagers:
     labels:
       foo: bar
 
-    # Additional properties used when evaluating templates.
-    # icon:dot-circle[] icon:file-alt[]
-    extraProperties:
-      # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-      foo: bar
-
     # A list of docker registries where images will be published.
     # Image publication will be disabled if no registries are configured.
     # icon:dot-circle[]
@@ -89,8 +82,10 @@ packagers:
         server: pass:[https://myregistry.com]
 
         # The user that can publish images.
+        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+        # environment variable must be defined.
         # Defaults to the same username as the release repository.
-        # icon:dot-circle[]
+        # icon:dot-circle[] icon:eye-slash[]
         username: duke
 
         # Password for login into the registry
@@ -104,24 +99,20 @@ packagers:
         # icon:dot-circle[]
         repositoryName: duke
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-[packagers.docker]
-  # Enables or disables Docker.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
+include::partial$packagers/toml/common-head.adoc[]
 
-  # Directory with file templates used to prepare the Docker distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/docker/templates"
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
 
   # The base Docker image to use.
   # icon:dot-circle[] icon:file-alt[]
@@ -153,11 +144,6 @@ TOML::
   # icon:dot-circle[]
   labels.foo = "bar"
 
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-
   # A list of docker registries where images will be published.
   # Image publication will be disabled if no registries are configured.
   # icon:dot-circle[]
@@ -173,8 +159,10 @@ TOML::
     server = "pass:[https://myregistry.com]"
 
     # The user that can publish images.
+    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+    # environment variable must be defined.
     # Defaults to the same username as the release repository.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     username = "duke"
 
     # Password for login into the registry
@@ -188,27 +176,20 @@ TOML::
     # icon:dot-circle[]
     repositoryName = "duke"
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "packagers": {
-    // icon:dot-circle[]
-    "docker": {
-      // Enables or disables Docker.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      "active": "ALWAYS",
+include::partial$packagers/json/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Docker distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      "templateDirectory": "path/to/docker/templates",
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
 
       // The base Docker image to use.
       // icon:dot-circle[] icon:file-alt[]
@@ -248,13 +229,6 @@ JSON::
         "foo": "bar"
       },
 
-      // Additional properties used when evaluating templates.
-      // icon:dot-circle[] icon:file-alt[]
-      "extraProperties": {
-        // Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-        "foo": "bar"
-      },
-
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
       // icon:dot-circle[]
@@ -272,8 +246,10 @@ JSON::
           "server": "pass:[https://myregistry.com]",
 
           // The user that can publish images.
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+          // environment variable must be defined.
           // Defaults to the same username as the release repository.
-          // icon:dot-circle[]
+          // icon:dot-circle[] icon:eye-slash[]
           "username": "duke",
 
           // Password for login into the registry
@@ -288,39 +264,22 @@ JSON::
           "repositoryName": "duke"
         }
       ]
-    }
-  }
-}
+include::partial$packagers/json/common-footer.adoc[]
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <packagers>
-    <!--
-      icon:dot-circle[]
-    -->
-    <docker>
-      <!--
-        Enables or disables Docker.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        Defaults to `NEVER`.
-        icon:dot-circle[]
-      -->
-      <active>ALWAYS</active>
+include::partial$packagers/maven/common-head.adoc[]
 
-      <!--
-        Directory with file templates used to prepare the Docker distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
-        If specified, path must exist.
-        icon:dot-circle[]
-      -->
-      <templateDirectory>>path/to/docker/templates</templateDirectory>
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
 
       <!--
         The base Docker image to use.
@@ -373,17 +332,6 @@ Maven::
       </labels>
 
       <!--
-        Additional properties used when evaluating templates.
-        icon:dot-circle[] icon:file-alt[]
-      -->
-      <extraProperties>
-        <!--
-          Key will be capitalized and prefixed with `docker`, i.e, `dockerFoo`.
-        -->
-        <foo>bar</foo>
-      </extraProperties>
-
-      <!--
         A list of docker registries where images will be published.
         Image publication will be disabled if no registries are configured.
         icon:dot-circle[]
@@ -406,8 +354,10 @@ Maven::
 
           <!--
             The user that can publish images.
+            If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+            environment variable must be defined.
             Defaults to the same username as the release repository.
-            icon:dot-circle[]
+            icon:dot-circle[] icon:eye-slash[]
           -->
           <username>duke</username>
 
@@ -427,31 +377,22 @@ Maven::
           <repositoryName>duke</repositoryName>
         </registry>
       </registries>
-    </docker>
-  </packagers>
-</jreleaser>
+include::partial$packagers/maven/common-footer.adoc[]
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  packagers {
-    // icon:dot-circle[]
-    docker {
-      // Enables or disables Docker.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      // Defaults to `NEVER`.
-      // icon:dot-circle[]
-      active = 'ALWAYS'
+include::partial$packagers/gradle/common-head.adoc[]
 
-      // Directory with file templates used to prepare the Docker distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/docker`.
-      // If specified, path must exist.
-      // icon:dot-circle[]
-      templateDirectory = 'path/to/docker/templates'
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
 
       // The base Docker image to use.
       // icon:dot-circle[] icon:file-alt[]
@@ -482,11 +423,6 @@ jreleaser {
       // icon:dot-circle[]
       addLabel('foo', 'bar')
 
-      // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
-      // icon:dot-circle[] icon:file-alt[]
-      extraProperties.put('foo', 'bar')
-
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
       // icon:dot-circle[]
@@ -503,8 +439,10 @@ jreleaser {
           server = 'pass:[https://myregistry.com]'
 
           // The user that can publish images.
+          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
+          // environment variable must be defined.
           // Defaults to the same username as the release repository.
-          // icon:dot-circle[]
+          // icon:dot-circle[] icon:eye-slash[]
           username = 'duke'
 
           // Password for login into the registry
@@ -519,13 +457,15 @@ jreleaser {
           repositoryName = 'duke'
         }
       }
-    }
-  }      
-}
+include::partial$packagers/gradle/common-footer.adoc[]
 ----
+--
 ====
 
 Template files may be initialized using the `template` command.
+
+NOTE: The respository token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
+be one of [`JRELEASER_DOCKER_GITHUB_TOKEN`, `JRELEASER_DOCKER_GITLAB_TOKEN`, `JRELEASER_DOCKER_GITEA_TOKEN`].
 
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a Dockerfile like the following one:
@@ -541,7 +481,7 @@ LABEL "org.opencontainers.image.licenses"="Apache-2.0"
 LABEL "org.opencontainers.image.version"="1.2.3"
 LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
 
-COPY assembly/app-1.2.3.zip /app-1.2.3.zip
+COPY assembly/* /
 
 RUN unzip app-1.2.3.zip && \
     rm app-1.2.3.zip && \
@@ -557,7 +497,8 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]
 Different values for the default base image will be used depending on the distribution type:
 
  * `azul/zulu-openjdk-alpine:${distribution.java.version}-jre` for JAVA_BINARY and SINGLE_JAR distributions.
- * `alpine:latest` for JLINK distributions.
+ * `ubuntu:latest` for JLINK distributions when the artifact has a `linux` platform.
+ * `alpine:latest` for JLINK distributions when the artifact has a `linux_musl` platform.
  * `scratch` for NATIVE_IMAGE distributions.
 
 == Default Labels
@@ -582,8 +523,9 @@ a template to the `imageNames` field.
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 project:
   name: app
@@ -594,10 +536,12 @@ packagers:
     imageNames:
       - "myuser/{{projectName}}"
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 [project]
   name = "app"
@@ -606,10 +550,12 @@ TOML::
   active = "ALWAYS"
   imageNames = ["myuser/{{projectName}}"]
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 {
   "project": {
@@ -626,10 +572,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
 <!-- project.artifactId = app -->
 <jreleaser>
@@ -643,10 +591,12 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 // project.name = app
 jreleaser {
@@ -658,6 +608,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 This will build the following images:
@@ -682,8 +633,9 @@ Some users might want to when version to push docker tags `:v1`, `:v1.6`, `:v1.6
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 project:
   name: app
@@ -697,10 +649,12 @@ packagers:
     - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
     - "myuser/myimage:latest"
 ----
+--
 TOML::
 +
+--
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 [project]
   name = "app"
@@ -713,10 +667,12 @@ TOML::
     "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
     "myuser/myimage:latest"]
 ----
+--
 JSON::
 +
+--
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 {
   "project": {
@@ -736,10 +692,12 @@ JSON::
   }
 }
 ----
+--
 Maven::
 +
+--
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="attributes,verbatim,+macros"]
 ----
 <!-- project.artifactId = app -->
 <jreleaser>
@@ -756,10 +714,12 @@ Maven::
   </packagers>
 </jreleaser>
 ----
+--
 Gradle::
 +
+--
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 // project.name = app
 jreleaser {
@@ -774,6 +734,7 @@ jreleaser {
   }
 }
 ----
+--
 ====
 
 This will build the following images:
@@ -805,8 +766,9 @@ settings:
 ====
 YAML::
 +
+--
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
 environment:
   properties:
@@ -881,6 +843,7 @@ distributions:
           preCommands:
             - 'RUN apk add unzip'
 ----
+--
 ====
 
 This generates two different images:
