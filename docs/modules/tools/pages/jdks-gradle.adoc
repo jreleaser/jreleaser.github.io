@@ -54,17 +54,16 @@ jdks {
         url = 'https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip'
         checksum = 'abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a'
     }
-    graal21_1_0_linux {
-        platform = 'linux'
-        url = 'https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz'
-        checksum = '39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7'
-    }
 }
 ----
 
 == Tasks
 
 The following tasks are provided per JDK
+
+=== copyJdkFromCache<name>
+
+Copies a JDK archive from the Gradle cache directory into the build directory.
 
 === downloadJdk<name>
 
@@ -74,8 +73,7 @@ Downloads a JDK with a matching name.
 
 Verifies the integrity of the JDK archive with a matching name.
 
-
-=== downloadJdk<name>
+=== unpackJdk<name>
 
 Unpacks the JDK archive with a matching name.
 
@@ -118,11 +116,6 @@ Listing all JDKS
 $ gm listJdks
 
 > Task :listJdks
-== JDK graal21_1_0_linux ==
-url: https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
-checksum: 39252954d2cb16dbc8ce4269f8b93a326a0efffdce04625615e827fe5b5e4ab7
-platform: linux
-
 == JDK zulu11Linux ==
 url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 checksum: 9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60
@@ -145,9 +138,6 @@ Setup all JDKS
 ----
 $ gm setuJdks
 
-> Task :downloadJdkGraal21_1_0_linux
-Download https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
-
 > Task :downloadJdkZulu11Linux
 Download https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 
@@ -158,8 +148,6 @@ Download https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
 Download https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
 
 > Task :downloadJdks
-> Task :verifyJdkGraal21_1_0_linux
-> Task :unpackJdkGraal21_1_0_linux
 > Task :verifyJdkZulu11Linux
 > Task :unpackJdkZulu11Linux
 > Task :verifyJdkZulu11Osx
@@ -186,21 +174,21 @@ Tasks runnable from root project 'app'
 
 Jdks tasks
 ----------
+copyJdkFromCacheZulu11Linux - Copy JDK zulu11Linux from cache
+copyJdkFromCacheZulu11Osx - Copy JDK zulu11Osx from cache
+copyJdkFromCacheZulu11Windows - Copy JDK zulu11Windows from cache
 copyJdksFromCache - Copy JDKs from Gradle cache
 copyJdksToCache - Copy JDKs to Gradle cache
-downloadJdkGraal21_1_0_linux - Download JDK graal21_1_0_linux
 downloadJdks - Download all JDKs
 downloadJdkZulu11Linux - Download JDK zulu11Linux
 downloadJdkZulu11Osx - Download JDK zulu11Osx
 downloadJdkZulu11Windows - Download JDK zulu11Windows
 listJdks - Lists all JDKs
 setupJdks - Setups all JDKs
-unpackJdkGraal21_1_0_linux - Unpack JDK graal21_1_0_linux
 unpackJdks - Unpack all JDKs
 unpackJdkZulu11Linux - Unpack JDK zulu11Linux
 unpackJdkZulu11Osx - Unpack JDK zulu11Osx
 unpackJdkZulu11Windows - Unpack JDK zulu11Windows
-verifyJdkGraal21_1_0_linux - Verify JDK graal21_1_0_linux
 verifyJdks - Verify all JDKs
 verifyJdkZulu11Linux - Verify JDK zulu11Linux
 verifyJdkZulu11Osx - Verify JDK zulu11Osx
