@@ -10,11 +10,12 @@ Its goal is to simplify creating releases and publishing
 artifacts to multiple package managers while providing
 customizable options.
 
-Usage: jreleaser [-hV] [COMMAND]
+Usage: jreleaser [-hV] [-D=<key=value>]... [COMMAND]
 
 Options:
-  -h, --help      Show this help message and exit.
-  -V, --version   Print version information and exit.
+  -D=<key=value>    Sets a System property. Repeatable..
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
 
 Commands:
   init          Create a jreleaser config file.
@@ -115,10 +116,12 @@ $ jreleaser init -h
 Create a jreleaser config file.
 
 Usage: jreleaser init [-dhioqVw] [-b=<basedir>] [-f=<format>] [-od=<outputdir>]
+                      [-D=<key=value>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
   -f, --format=<format>     Configuration file format.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
@@ -144,8 +147,8 @@ $ jreleaser config -h
 Display current configuration.
 
 Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=<basedir>]
-                        [-c=<configFile>] [-od=<outputdir>] [-p=<key=value>]...
-                        [-sp=<platform>]...
+                        [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
+                        [-p=<key=value>]... [-sp=<platform>]...
 
 Options:
   -a, --assembly            Display assembly configuration.
@@ -153,6 +156,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
   -f, --full                Display full configuration.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -187,12 +191,14 @@ $ jreleaser template -h
 Generate a tool/announcer template.
 
 Usage: jreleaser template [-dhioqsVw] [-b=<basedir>] [-od=<outputdir>]
-                          ([-an=<announcerName>] | [-dn=<distributionName>
-                          -tn=<toolName> [-dt=<distributionType>]])
+                          [-D=<key=value>]... ([-an=<announcerName>] |
+                          [-dn=<distributionName> -tn=<toolName>
+                          [-dt=<distributionType>]])
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -240,7 +246,8 @@ Assemble distributions.
 
 Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=<assemblerName>] [-b=<basedir>]
                           [-c=<configFile>] [-dn=<distributionName>]
-                          [-od=<outputdir>] [-p=<key=value>]...
+                          [-od=<outputdir>] [-D=<key=value>]...
+                          [-p=<key=value>]...
 
 Options:
       -an, --assembler-name=<assemblerName>
@@ -249,6 +256,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
       -grs, --git-root-search
@@ -286,13 +294,15 @@ $ jreleaser changelog -h
 Calculate the changelog.
 
 Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
-                           [-od=<outputdir>] [-p=<key=value>]...
+                           [-od=<outputdir>] [-D=<key=value>]...
+                           [-p=<key=value>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -322,13 +332,15 @@ Calculate checksums.
 
 Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
-                          [-p=<key=value>]... [-sp=<platform>]...
+                          [-D=<key=value>]... [-p=<key=value>]...
+                          [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -362,13 +374,15 @@ $ jreleaser sign -h
 Sign release artifacts.
 
 Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
-                      [-od=<outputdir>] [-p=<key=value>]... [-sp=<platform>]...
+                      [-od=<outputdir>] [-D=<key=value>]... [-p=<key=value>]...
+                      [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -404,13 +418,15 @@ Upload all artifacts.
 Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                         [-c=<configFile>] [-od=<outputdir>]
                         [-un=<uploaderName>] [-ut=<uploaderType>]
-                        [-p=<key=value>]... [-sp=<platform>]...
+                        [-D=<key=value>]... [-p=<key=value>]...
+                        [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -483,8 +499,9 @@ Create or update a release.
 
 Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
-                         [-p=<key=value>]... [-sp=<platform>]...
-                         ([--auto-config] [--project-name=<projectName>]
+                         [-D=<key=value>]... [-p=<key=value>]...
+                         [-sp=<platform>]... [[--auto-config]
+                         [--project-name=<projectName>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
                          [--project-snapshot-pattern=<projectSnapshotPattern>]
@@ -503,13 +520,14 @@ Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [--commit-author-name=<commitAuthorName>]
                          [--commit-author-email=<commitAuthorEmail>]
                          [--signing-enabled] [--signing-armored]
-                         [--file=<file>]... [--glob=<glob>]...)
+                         [--file=<file>]... [--glob=<glob>]...]
 
 Options:
   -b, --basedir=<basedir>    Base directory.
   -c, --config-file=<configFile>
                              The config file.
   -d, --debug                Set log level to debug.
+  -D=<key=value>             Sets a System property. Repeatable.
       -grs, --git-root-search
                              Searches for the Git root.
   -h, --help                 Show this help message and exit.
@@ -611,14 +629,15 @@ Prepare all distributions.
 
 Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
-                         [-sp=<platform>]...
+                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
+                         [-p=<key=value>]... [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
       -grs, --git-root-search
@@ -687,14 +706,15 @@ Package all distributions.
 
 Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
-                         [-sp=<platform>]...
+                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
+                         [-p=<key=value>]... [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
       -grs, --git-root-search
@@ -767,14 +787,15 @@ Publish all distributions.
 
 Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-p=<key=value>]...
-                         [-sp=<platform>]...
+                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
+                         [-p=<key=value>]... [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -dn, --distribution-name=<distributionName>
                             The name of the distribution.
       -grs, --git-root-search
@@ -847,7 +868,8 @@ Announce a release.
 
 Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=<announcerName>]
                           [-b=<basedir>] [-c=<configFile>] [-od=<outputdir>]
-                          [-p=<key=value>]... [-sp=<platform>]...
+                          [-D=<key=value>]... [-p=<key=value>]...
+                          [-sp=<platform>]...
 
 Options:
       -an, --announcer-name=<announcerName>
@@ -856,6 +878,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -910,13 +933,15 @@ Perform a full release.
 
 Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                               [-c=<configFile>] [-od=<outputdir>]
-                              [-p=<key=value>]... [-sp=<platform>]...
+                              [-D=<key=value>]... [-p=<key=value>]...
+                              [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
+  -D=<key=value>            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
