@@ -1,6 +1,8 @@
 = Artifactory
+:uploader_id:   artifactory
+:uploader_name: Artifactory
 
-Uploads artifacts, files, and signatures to an Artifactory instance.
+Uploads artifacts, files, and signatures to an {uploader_name} instance.
 
 .Prerequisites:
 
@@ -18,31 +20,9 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-upload:
-  # icon:dot-circle[]
-  artifactory:
-    # Uploaders require a name.
-    # icon:exclamation-triangle[]
-    app:
-
-      # Enables or disables the uploader.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      # Defaults to `NEVER`.
-      # icon:dot-circle[]
-      active: ALWAYS
-
-      # Defines the connection timeout in seconds.
-      # Defaults to `20`.
-      # icon:dot-circle[]
-      connectTimeout: 20
-
-      # Defines the read timeout in seconds.
-      # Defaults to `60`.
-      # icon:dot-circle[]
-      readTimeout: 60
+include::partial$upload/yaml/common-head.adoc[]
 
       # URL of the Artifactory instance + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
@@ -72,54 +52,15 @@ upload:
       # Defaults to `BEARER`.
       # icon:dot-circle[]
       authorization: BASIC
-
-      # Upload files.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      files: true
-
-      # Upload distribution artifacts.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      artifacts: true
-
-      # Upload signatures.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      signatures: true
-
-      # Additional properties used when evaluating templates.
-      # icon:dot-circle[]
-      extraProperties:
-        # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-        foo: bar
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# Uploaders require a name.
-# icon:exclamation-triangle[]
-[upload.artifactory.app]
-
-  # Enables or disables the uploader.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
-
-  # Defines the connection timeout in seconds.
-  # Defaults to `20`.
-  # icon:dot-circle[]
-  connectTimeout = 20
-
-  # Defines the read timeout in seconds.
-  # Defaults to `60`.
-  # icon:dot-circle[]
-  readTimeout = 60
+include::partial$upload/toml/common-head.adoc[]
 
   # URL of the Artifactory instance + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
@@ -149,58 +90,15 @@ TOML::
   # Defaults to `BEARER`.
   # icon:dot-circle[]
   authorization = "BASIC"
-
-  # Upload files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  files = true
-
-  # Upload distribution artifacts.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  artifacts = true
-
-  # Upload signatures.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  signatures = true
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "upload": {
-    // icon:dot-circle[]
-    "artifactory": {
-      // Uploaders require a name.
-      // icon:exclamation-triangle[]
-      "app": {
-
-        // Enables or disables the uploader.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        "active": "ALWAYS",
-
-        // Defines the connection timeout in seconds.
-        // Defaults to `20`.
-        // icon:dot-circle[]
-        "connectTimeout": 20,
-
-        // Defines the read timeout in seconds.
-        // Defaults to `60`.
-        // icon:dot-circle[]
-        "readTimeout": 60,
+include::partial$upload/json/common-head.adoc[]
 
         // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
@@ -229,76 +127,17 @@ JSON::
         // `BEARER` requires a token (set as password).
         // Defaults to `BEARER`.
         // icon:dot-circle[]
-        "authorization": "BEARER",
-
-        // Upload files.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "files": true,
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "artifacts": true,
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "signatures": true,
-
-        // Additional properties used when evaluating templates.
-        // icon:dot-circle[]
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-          "foo": "bar"
-        }
-      }
-    }
-  }
-}
+        "authorization": "BEARER"
+include::partial$upload/json/common-footer.adoc[]
 ----
 --
 Maven::
 +
 --
 [source,xml]
-[subs="verbatim,+macros"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <upload>
-    <!--
-      icon:dot-circle[]
-    -->
-    <artifactory>
-      <!--
-        Uploaders require a name.
-        icon:exclamation-triangle[]
-      -->
-      <app>
-        <!--
-          Enables or disables the distribution.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `ALWAYS`.
-          icon:dot-circle[]
-        -->
-        <active>ALWAYS</active>
-
-        <!--
-          Defines the connection timeout in seconds.
-          Defaults to `20`.
-          icon:dot-circle[]
-        -->
-        <connectTimeout>20</connectTimeout>
-
-        <!--
-          Defines the read timeout in seconds.
-          Defaults to `60`.
-          icon:dot-circle[]
-        -->
-        <readTimeout>60</readTimeout>
+include::partial$upload/maven/common-head.adoc[]
 
         <!--
           URL of the Artifactory instance + path + artifact.
@@ -338,74 +177,16 @@ Maven::
           icon:dot-circle[]
         -->
         <authorization>BEARER</authorization>
-
-        <!--
-          Upload files.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <files>true</files>
-
-        <!--
-          Upload distribution artifacts.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <artifacts>true</artifacts>
-
-        <!--
-          Upload signatures.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <signatures>true</signatures>
-
-        <!--
-          Additional properties used when evaluating templates.
-          icon:dot-circle[]
-        -->
-        <extraProperties>
-          <!--
-            Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-          -->
-          <foo>bar</foo>
-        </extraProperties>
-      </app>
-    </artifactory>
-  </upload>
-</jreleaser>
+include::partial$upload/maven/common-footer.adoc[]
 ----
 --
 Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  upload {
-    // icon:dot-circle[]
-    artifactory {
-      // Uploaders require a name.
-      // icon:exclamation-triangle[]
-      app {
-
-        // Enables or disables the uploader.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        active = 'ALWAYS'
-
-        // Defines the connection timeout in seconds.
-        // Defaults to `20`.
-        // icon:dot-circle[]
-        connectTimeout = 20
-
-        // Defines the read timeout in seconds.
-        // Defaults to `60`.
-        // icon:dot-circle[]
-        readTimeout = 60
+include::partial$upload/gradle/common-head.adoc[]
 
         // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
@@ -435,30 +216,7 @@ jreleaser {
         // Defaults to `BEARER`.
         // icon:dot-circle[]
         authorization = 'BEARER'
-
-        // Upload files.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        files = true
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        artifacts = true
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        signatures = true
-
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-        // icon:dot-circle[]
-        extraProperties.put('foo', 'bar')
-      }
-    }
-  }
-}
+include::partial$upload/gradle/common-footer.adoc[]
 ----
 --
 ====

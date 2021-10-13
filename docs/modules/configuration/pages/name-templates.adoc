@@ -2139,6 +2139,105 @@ jreleaser {
 --
 ====
 
+== S3
+
+Every key/value from `s3.extraProperties` is mapped with `s3` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+upload:
+  s3:
+    app:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `s3`, i.e, `s3Foo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[upload.s3.app]
+  # Key will be capitalized and prefixed
+  # with `s3`, i.e, `s3Foo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "upload": {
+    "s3": {
+      "app": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `s3`, i.e, `s3Foo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <s3>
+      <app>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `s3`, i.e, `s3Foo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </app>
+    </s3>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  upload {
+    s3 {
+      app {
+        // Key will be capitalized and prefixed
+        // with `s3`, i.e, `s3Foo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
 == Scoop
 
 The following names are related to xref:configuration:packagers/scoop.adoc[]

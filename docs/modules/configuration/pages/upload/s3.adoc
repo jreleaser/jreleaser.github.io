@@ -1,0 +1,338 @@
+= AWS S3
+:uploader_id:   s3
+:uploader_name: AWS S3
+
+Uploads artifacts, files, and signatures to an {uploader_name} bucket.
+
+.Prerequisites:
+
+ * An AWS account with S3 access.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+      # The region where the S3 bucket is located.
+      # If left unspecified, the `JRELEASER_S3_${name}_REGION`
+      # environment variable must be defined.
+      # icon:exclamation-triangle[] icon:eye-slash[]
+      region: us-east-2
+
+      # The name of the bucket.
+      # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+      # environment variable must be defined.
+      # icon:exclamation-triangle[] icon:eye-slash[]
+      bucket: releases
+
+      # The artifact path within the bucket.
+      # If left unspecified, the `JRELEASER_S3_${name}_PATH`
+      # environment variable may be defined.
+      # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+      path: '{{projectName}}/{{tagName}}/{{artifactFileName}}'
+
+      # The accessKeyId required for authorization.
+      # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+      # environment variable must be defined.
+      # icon:dot-circle[] icon:eye-slash[]
+      accessKeyId: __DO_NOT_SET_HERE__
+
+      # The secretKey required for authorization.
+      # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+      # environment variable must be defined.
+      # icon:dot-circle[] icon:eye-slash[]
+      secretKey: __DO_NOT_SET_HERE__
+
+      # The AWS sessionToken when you use temporal credentials.
+      # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+      # environment variable must be defined.
+      # icon:dot-circle[] icon:eye-slash[]
+      sessionToken: __DO_NOT_SET_HERE__
+
+      # Additional headers to be sent to the server.
+      # Values accept xref:configuration:name-templates.adoc[].
+      # icon:dot-circle[] icon:file-alt[]
+      headers:
+        'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+  # The region where the S3 bucket is located.
+  # If left unspecified, the `JRELEASER_S3_${name}_REGION`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  region = "us-east-2"
+
+  # The name of the bucket.
+  # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  bucket = "releases"
+
+  # The artifact path within the bucket.
+  # If left unspecified, the `JRELEASER_S3_${name}_PATH`
+  # environment variable may be defined.
+  # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+  path = "{{projectName}}/{{tagName}}/{{artifactFileName}}"
+
+  # The accessKeyId required for authorization.
+  # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  accessKeyId = "__DO_NOT_SET_HERE__"
+
+  # The secretKey required for authorization..
+  # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  secretKey = "__DO_NOT_SET_HERE__"
+
+  # The AWS sessionToken when you use temporal credentials.
+  # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  sessionToken = "__DO_NOT_SET_HERE__"
+
+  # Additional headers to be sent to the server.
+  # Values accept xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+        // The region where the S3 bucket is located.
+        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        "region": "us-east-2",
+
+        // The name of the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        "bucket": "releases",
+
+        // The artifact path within the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
+        // environment variable may be defined.
+        // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        "path": "{{projectName}}/{{tagName}}/{{artifactFileName}}",
+
+        // The accessKeyId required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        "accessKeyId": "__DO_NOT_SET_HERE__",
+
+        // The secretKey required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        "secretKey": "__DO_NOT_SET_HERE__",
+
+        // The AWS sessionToken when you use temporal credentials.
+        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        "sessionToken": "__DO_NOT_SET_HERE__",
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        "headers": {
+          "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
+        }
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+        <!--
+          The region where the S3 bucket is located.
+          If left unspecified, the `JRELEASER_S3_${name}_REGION`
+          environment variable must be defined.
+          icon:exclamation-triangle[] icon:eye-slash[]
+        -->
+        <region>us-east-2</region>
+
+        <!--
+          The name of the bucket.
+          If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+          environment variable must be defined.
+          icon:exclamation-triangle[] icon:eye-slash[]
+        -->
+        <bucket>releases</bucket>
+
+        <!--
+          If left unspecified, the `JRELEASER_S3_${name}_PATH`
+          environment variable may be defined.
+          icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        -->
+        <path>{{projectName}}/{{tagName}}/{{artifactFileName}}</path>
+
+        <!--
+          The accessKeyId required for authorization.
+          If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+          environment variable must be defined.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <accessKeyId>__DO_NOT_SET_HERE__</accessKeyId>
+
+        <!--
+          The secretKey required for authorization.
+          If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+          environment variable must be defined.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <secretKey>__DO_NOT_SET_HERE__</secretKey>
+
+        <!--
+          The AWS sessionToken when you use temporal credentials.
+          If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+          environment variable must be defined.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <sessionToken>__DO_NOT_SET_HERE__</sessionToken>
+
+        <!--
+          Additional headers to be sent to the server.
+          Values accept xref:configuration:name-templates.adoc[].
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <headers>
+          <X-ARTIFACT-PLATFORM>{{artifactPlatform}}</X-ARTIFACT-PLATFORM>
+        </headers>
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+        // The region where the S3 bucket is located.
+        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        region = 'us-east-2'
+
+        // The name of the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        bucket = 'releases'
+
+        // The artifact path within the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
+        // environment variable may be defined.
+        // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        path = '{{projectName}}/{{tagName}}/{{artifactFileName}}'
+
+        // The accessKeyId required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        accessKeyId = '__DO_NOT_SET_HERE__'
+
+        // The secretKey required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        secretKey = '__DO_NOT_SET_HERE__'
+
+        // The AWS sessionToken when you use temporal credentials.
+        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        sessionToken = '__DO_NOT_SET_HERE__'
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Crendentials
+
+JReleaser uses the link:http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html[DefaultAWSCredentialsProviderChain]
+ to look up the AWS credentials. If you want to override the credentials feel free to set `accessKeyId` and `secretKey`
+ and (optionally depends on configuration) `sessionToken`. If these properties are set then JReleaser will ignore `DefaultAWSCredentialsProviderChain`.
+
+== AccessKeyId
+
+The accessKeyId will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_S3_NAME_ACCESS_KEY_ID`. If your instance is named `production`,
+you can store the accessKeyId in the environment variable `JRELEASER_S3_PRODUCTION_ACCESS_KEY_ID`. The name will be
+transformed to uppercase.
+
+If a configured accessKeyId is found in the configuration file, then the environment variable is not used at all.
+
+== SecretKey
+
+The secretKey will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_S3_NAME_SECRET_KEY`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_S3_PRODUCTION_SECRET_KEY`. The name will be
+transformed to uppercase.
+
+== SessionToken
+
+The sessionToken will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_S3_NAME_SESSION_TOKEN`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_S3_PRODUCTION_SESSION_TOKEN`. The name will be
+transformed to uppercase.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `S3` and `<name>` resolves to the capitalized name of the S3 instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadS3Foo`.
+* if the name is `fooBar` the resulting property key is `skipUploadS3FooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadS3FooBar`.
+
