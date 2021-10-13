@@ -38,6 +38,12 @@ include::partial$upload/yaml/common-head.adoc[]
       # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
       path: '{{projectName}}/{{tagName}}/{{artifactFileName}}'
 
+      # Custom download URL.
+      # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
+      # environment variable may be defined.
+      # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+      downloadUrl: 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+
       # The accessKeyId required for authorization.
       # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
       # environment variable must be defined.
@@ -89,6 +95,12 @@ include::partial$upload/toml/common-head.adoc[]
   # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
   path = "{{projectName}}/{{tagName}}/{{artifactFileName}}"
 
+  # Custom download URL.
+  # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
+  # environment variable may be defined.
+  # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+  downloadUrl = "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]"
+
   # The accessKeyId required for authorization.
   # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
   # environment variable must be defined.
@@ -138,6 +150,12 @@ include::partial$upload/json/common-head.adoc[]
         // environment variable may be defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         "path": "{{projectName}}/{{tagName}}/{{artifactFileName}}",
+
+        // Custom download URL.
+        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
+        // environment variable may be defined.
+        // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        "downloadUrl": "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]",
 
         // The accessKeyId required for authorization.
         // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
@@ -196,6 +214,14 @@ include::partial$upload/maven/common-head.adoc[]
           icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         -->
         <path>{{projectName}}/{{tagName}}/{{artifactFileName}}</path>
+
+        <!--
+          Custom download URL.
+          If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
+          environment variable may be defined.
+          icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        -->
+        <downloadUrl>pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]</downloadUrl>
 
         <!--
           The accessKeyId required for authorization.
@@ -258,6 +284,12 @@ include::partial$upload/gradle/common-head.adoc[]
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         path = '{{projectName}}/{{tagName}}/{{artifactFileName}}'
 
+        // Custom download URL.
+        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
+        // environment variable may be defined.
+        // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
+        downloadUrl = 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+
         // The accessKeyId required for authorization.
         // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
         // environment variable must be defined.
@@ -285,7 +317,17 @@ include::partial$upload/gradle/common-footer.adoc[]
 --
 ====
 
-== Crendentials
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'pass:[https://s3.amazonaws.com/{{projectName}}/downloads/{{projectVersion}}/{{artifactFileName}}]'`.
+
+And will result in a final URL like
+`pass:[https://s3.amazonaws.com/app/downloads/1.0.0/app-1.0.0.zip]`.
+
+== Credentials
 
 JReleaser uses the link:http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html[DefaultAWSCredentialsProviderChain]
  to look up the AWS credentials. If you want to override the credentials feel free to set `accessKeyId` and `secretKey`
