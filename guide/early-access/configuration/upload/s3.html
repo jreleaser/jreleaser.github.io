@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Native Image :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/assemble/native-image.html">
+    <title>AWS S3 :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/upload/s3.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -200,13 +200,13 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Assemble</a>
+    <a class="nav-link" href="../assemble/index.html">Assemble</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="jlink.html">Jlink</a>
+    <a class="nav-link" href="../assemble/jlink.html">Jlink</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="native-image.html">Native Image</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../assemble/native-image.html">Native Image</a>
   </li>
 </ul>
   </li>
@@ -281,16 +281,16 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../upload/index.html">Upload</a>
+    <a class="nav-link" href="index.html">Upload</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../upload/artifactory.html">Artifactory</a>
+    <a class="nav-link" href="artifactory.html">Artifactory</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../upload/http.html">Http</a>
+    <a class="nav-link" href="http.html">Http</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../upload/s3.html">AWS S3</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="s3.html">AWS S3</a>
   </li>
 </ul>
   </li>
@@ -464,41 +464,37 @@
   <ul>
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
-    <li><a href="index.html">Assemble</a></li>
-    <li><a href="native-image.html">Native Image</a></li>
+    <li><a href="index.html">Upload</a></li>
+    <li><a href="s3.html">AWS S3</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/assemble/native-image.html">latest</a>
-    <a class="version is-current" href="native-image.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="s3.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/assemble/native-image.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/upload/s3.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Native Image</h1>
+<h1 class="page">AWS S3</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>Creates a Native Image binary using <a href="https://www.graalvm.org/reference-manual/native-image/">GraalVM Native Image</a>.</p>
+<p>Uploads artifacts, files, and signatures to an AWS S3 bucket.</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-You need a local installation of GraalVM. JReleaser will <strong>not</strong> install GraalVM for you, however it can
-install the <code>native-image</code> command if needed. You may configure the <a href="../../tools/jdks-maven.html" class="page">JDKs Maven Plugin</a> or the
-<a href="../../tools/jdks-gradle.html" class="page">JDKs Gradle Plugin</a> to downloads a GraalVM distribution.
-</td>
-</tr>
-</table>
+<div class="ulist">
+<div class="title">Prerequisites:</div>
+<ul>
+<li>
+<p>An AWS account with S3 access.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -544,228 +540,177 @@ install the <code>native-image</code> command if needed. You may configure the <
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-assemble:
+upload:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  nativeImage:
-    # Assemblers require a name.
+  s3:
+    # Uploaders require a name.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     app:
 
-      # Enables or disables the assembler.
+      # Enables or disables the uploader.
       # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active: ALWAYS
 
-      # Export the assembled artifacts as a matching named distribution.
+      # Defines the connection timeout in seconds.
+      # Defaults to `20`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      connectTimeout: 20
+
+      # Defines the read timeout in seconds.
+      # Defaults to `60`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      readTimeout: 60
+
+      # Upload files.
       # Defaults to `true`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      exported: true
+      files: true
 
-      # Name of the executable launcher.
-      # If left undefined, will use ${assembler.name}.
+      # Upload distribution artifacts.
+      # Defaults to `true`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      executable: app
+      artifacts: true
 
-      # Directory with file templates used to prepare the NativeImage assembler.
-      # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-      # If specified, path must exist.
+      # Upload signatures.
+      # Defaults to `true`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory: path/to/nativeImage/templates
-
-      # Name of the generated image.
-      # If left undefined, will use
-      # ${assembler.executable}-${project.version}.
-      # Generated artifacts always have the platform as suffix.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      imageName: 'app-{{projectVersion}}'
-
-      # Name transformation of the generated image.
-      # Transformed artifacts always have the platform as suffix.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      imageNameTransform: 'app-{{projectEffectiveVersion}}'
-
-      # The GraalVM JDK to use.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      graal:
-        path: path/to/graalvm
-
-      # A list of build arguments.
-      # The `-H:Name` argument will always be replaced with the
-      # value of $executable.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      args:
-        - "--install-exit-handlers"
-
-      # The executable JAR that contains the application.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      mainJar:
-        path: path/to/app.jar
-
-      # Defines a list of additional JARs as globs.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      jars:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - pattern: path/to/**/*.jar
-
-      # Defines a list of additional files as globs.
-      # These files will be added to the assembled Zip file.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      files:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - pattern: path/to/**/*.txt
+      signatures: true
 
       # Additional properties used when evaluating templates.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       extraProperties:
-        # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+        # Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
         foo: bar
 
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      java:
-        # Maven coordinates: groupId.
-        # If left undefined, will use ${project.java.groupId}.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        groupId: com.acme
+      # The region where the S3 bucket is located.
+      # If left unspecified, the `JRELEASER_S3_${name}_REGION`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      region: us-east-2
 
-        # Maven coordinates: artifactId.
-        # If left undefined, will use ${project.java.artifactId}.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        artifactId: app
+      # The name of the bucket.
+      # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      bucket: releases
 
-        # The minimum Java version required by consumers to run the application.
-        # If left undefined, will use ${project.java.version}.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        version: 8
+      # The artifact path within the bucket.
+      # If left unspecified, the `JRELEASER_S3_${name}_PATH`
+      # environment variable may be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      path: '{{projectName}}/{{tagName}}/{{artifactFileName}}'
 
-        # The application's entry point.
-        # If left undefined, will use ${project.java.mainClass}.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        mainClass: com.acme.Main
+      # The accessKeyId required for authorization.
+      # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      accessKeyId: __DO_NOT_SET_HERE__
 
-        # Identifies the project as being member of a multi-project build.
-        # If left undefined, will use ${project.java.multiProject}.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        multiProject: false
+      # The secretKey required for authorization.
+      # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      secretKey: __DO_NOT_SET_HERE__
 
-        # Additional properties used when evaluating templates.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        extraProperties:
-          # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-          foo: bar</code></pre>
+      # The AWS sessionToken when you use temporal credentials.
+      # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      sessionToken: __DO_NOT_SET_HERE__
+
+      # Additional headers to be sent to the server.
+      # Values accept <a href="../name-templates.html" class="page">Name Templates</a>.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      headers:
+        'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'</code></pre>
 </div>
 </div>
 </div>
 <div class="tab-pane" aria-labelledby="tabset1_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Assemblers require a name.
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Uploaders require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[assemble.nativeImage.app]
+[upload.s3.app]
 
-  # Enables or disables the assembler.
+  # Enables or disables the uploader.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
 
-  # Export the assembled artifacts as a matching named distribution.
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  readTimeout = 60
+
+  # Upload files.
   # Defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  exported = true
+  files = true
 
-  # Name of the executable launcher.
-  # If left undefined, will use ${assembler.name}.
+  # Upload distribution artifacts.
+  # Defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  executable = "app"
+  artifacts = true
 
-  # Directory with file templates used to prepare the NativeImage assembler.
-  # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-  # If specified, path must exist.
+  # Upload signatures.
+  # Defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/nativeImage/templates"
-
-  # Name of the generated image.
-  # If left undefined, will use
-  # ${assembler.executable}-${project.version}.
-  # Generated artifacts always have the platform as suffix.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  imageName = "app-{{projectVersion}}"
-
-  # Name transformation of the generated image.
-  # Transformed artifacts always have the platform as suffix.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  imageNameTransform = "app-{{projectEffectiveVersion}}"
-
-  # The GraalVM JDK to use.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  graal = { path = "path/to/graalvm" }
-
-  # A list of build arguments.
-  # The `-H:Name` argument will always be replaced with the
-  # value of $executable.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  args = ["--install-exit-handlers"]
-
-  # The executable JAR that contains the application.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  mainJar = { path = "path/to/app.jar" }
-
-  # Defines a list of additional JARs as globs.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.nativeImage.app.jars]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    pattern = "path/to/**/*.jar"
-
-  # Defines a list of additional files as globs.
-  # These files will be added to the assembled Zip file.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.nativeImage.app.files]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    pattern = "path/to/**/*.txt"
+  signatures = true
 
   # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+  # Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
 
-  # Maven coordinates: groupId.
-  # If left undefined, will use ${project.java.groupId}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.groupId = "com.acme"
+  # The region where the S3 bucket is located.
+  # If left unspecified, the `JRELEASER_S3_${name}_REGION`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  region = "us-east-2"
 
-  # Maven coordinates: artifactId.
-  # If left undefined, will use ${project.java.artifactId}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.artifactId = "app"
+  # The name of the bucket.
+  # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  bucket = "releases"
 
-  # The minimum Java version required by consumers to run the application.
-  # If left undefined, will use ${project.java.version}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.version = "8"
+  # The artifact path within the bucket.
+  # If left unspecified, the `JRELEASER_S3_${name}_PATH`
+  # environment variable may be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  path = "{{projectName}}/{{tagName}}/{{artifactFileName}}"
 
-  # The application's entry point.
-  # If left undefined, will use ${project.java.mainClass}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.mainClass = "com.acme.Main"
+  # The accessKeyId required for authorization.
+  # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  accessKeyId = "__DO_NOT_SET_HERE__"
 
-  # Identifies the project as being member of a multi-project build.
-  # If left undefined, will use ${project.java.multiProject}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.multiProject = false
+  # The secretKey required for authorization..
+  # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  secretKey = "__DO_NOT_SET_HERE__"
 
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.</code></pre>
+  # The AWS sessionToken when you use temporal credentials.
+  # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  sessionToken = "__DO_NOT_SET_HERE__"
+
+  # Additional headers to be sent to the server.
+  # Values accept <a href="../name-templates.html" class="page">Name Templates</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"</code></pre>
 </div>
 </div>
 </div>
@@ -774,130 +719,92 @@ assemble:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  "assemble": {
+  "upload": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "nativeImage": {
-      // Assemblers require a name.
+    "s3": {
+      // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "app": {
 
-        // Enables or disables the assembler.
+        // Enables or disables the uploader.
         // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "active": "ALWAYS",
 
-        // Export the assembled artifacts as a matching named distribution.
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "connectTimeout": 20,
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "readTimeout": 60,
+
+        // Upload files.
         // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "exported": true,
+        "files": true,
 
-        // Name of the executable launcher.
-        // If left undefined, will use ${assembler.name}.
+        // Upload distribution artifacts.
+        // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "executable": "app",
+        "artifacts": true,
 
-        // Directory with file templates used to prepare the NativeImage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-        // If specified, path must exist.
+        // Upload signatures.
+        // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "templateDirectory": "path/to/nativeImage/templates",
-
-        // Name of the generated image.
-        // If left undefined, will use
-        // ${assembler.executable}-${project.version}.
-        // Generated artifacts always have the platform as suffix.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "imageName": "app-{{projectVersion}}",
-
-        // Name transformation of the generated image.
-        // Transformed artifacts always have the platform as suffix.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "imageNameTransform": "app-{{projectEffectiveVersion}}",
-
-        // The GraalVM JDK to use.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "graal": {
-          "path": "path/to/graalvm"
-        },
-
-        // A list of build arguments.
-        // The `-H:Name` argument will always be replaced with the
-        // value of $executable.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "args": [
-          "--install-exit-handlers"
-        ],
-
-        // The executable JAR that contains the application.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "mainJar": {
-          "path": "path/to/app.jar"
-        },
-
-        // Defines a list of additional JARs as globs.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "jars": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "pattern": "path/to/**/*.jar"
-          }
-        ],
-
-        // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "files": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "pattern": "path/to/**/*.txt"
-          }
-        ],
+        "signatures": true,
 
         // Additional properties used when evaluating templates.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "extraProperties": {
-          // Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+          // Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
           "foo": "bar"
         },
 
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "java": {
-          // Maven coordinates: groupId.
-          // If left undefined, will use ${project.java.groupId}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "groupId": "com.acme",
+        // The region where the S3 bucket is located.
+        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "region": "us-east-2",
 
-          // Maven coordinates: artifactId.
-          // If left undefined, will use ${project.java.artifactId}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "artifactId": "app",
+        // The name of the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "bucket": "releases",
 
-          // The minimum Java version required by consumers to run the application.
-          // If left undefined, will use ${project.java.version}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "version": "8",
+        // The artifact path within the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
+        // environment variable may be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "path": "{{projectName}}/{{tagName}}/{{artifactFileName}}",
 
-          // The application's entry point.
-          // If left undefined, will use ${project.java.mainClass}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "mainClass": "com.acme.Main",
+        // The accessKeyId required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "accessKeyId": "__DO_NOT_SET_HERE__",
 
-          // Identifies the project as being member of a multi-project build.
-          // If left undefined, will use ${project.java.multiProject}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "multiProject": false,
+        // The secretKey required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "secretKey": "__DO_NOT_SET_HERE__",
 
-          // Additional properties used when evaluating templates.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "extraProperties": {
-            // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-            "foo": "bar"
-          }
+        // The AWS sessionToken when you use temporal credentials.
+        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "sessionToken": "__DO_NOT_SET_HERE__",
+
+        // Additional headers to be sent to the server.
+        // Values accept <a href="../name-templates.html" class="page">Name Templates</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "headers": {
+          "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
         }
       }
     }
@@ -913,13 +820,13 @@ assemble:
   &lt;!--
     <span class="icon"><i class="fa fa-dot-circle"></i></span>
   --&gt;
-  &lt;assemble&gt;
+  &lt;upload&gt;
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;nativeImage&gt;
+    &lt;s3&gt;
       &lt;!--
-        Assemblers require a name.
+        Uploaders require a name.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
       &lt;app&gt;
@@ -932,165 +839,109 @@ assemble:
         &lt;active&gt;ALWAYS&lt;/active&gt;
 
         &lt;!--
-          Export the assembled artifacts as a matching named distribution.
+          Defines the connection timeout in seconds.
+          Defaults to `20`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;connectTimeout&gt;20&lt;/connectTimeout&gt;
+
+        &lt;!--
+          Defines the read timeout in seconds.
+          Defaults to `60`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;readTimeout&gt;60&lt;/readTimeout&gt;
+
+        &lt;!--
+          Upload files.
           Defaults to `true`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;exported&gt;true&lt;/exported&gt;
+        &lt;files&gt;true&lt;/files&gt;
 
         &lt;!--
-          Name of the executable launcher.
-          If left undefined, will use ${distribution.name}.
+          Upload distribution artifacts.
+          Defaults to `true`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;executable&gt;app&lt;/executable&gt;
+        &lt;artifacts&gt;true&lt;/artifacts&gt;
 
         &lt;!--
-          Directory with file templates used to prepare the NativeImage assembler.
-          Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-          If specified, path must exist.
+          Upload signatures.
+          Defaults to `true`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;templateDirectory&gt;&gt;path/to/brew/templates&lt;/templateDirectory&gt;
-
-        &lt;!--
-          Name of the generated image.
-          If left undefined, will use
-          ${assembler.executable}-${project.version}.
-          Generated artifacts always have the platform as suffix.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;imageName&gt;app-{{projectVersion}}&lt;/imageName&gt;
-
-        &lt;!--
-          Name transformation of the generated image.
-          Transformed artifacts always have the platform as suffix.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;imageNameTransform&gt;app&lt;/imageNameTransform&gt;
-
-        &lt;!--
-          The GraalVM JDK to use.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;graal&gt;
-          &lt;path&gt;path/to/graalvm&lt;/path&gt;
-        &lt;/graal&gt;
-
-        &lt;!--
-          The executable JAR that contains the application.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;path/to/app.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-
-        &lt;!--
-          A list of build arguments.
-          The `-H =Name` argument will always be replaced with the
-          value of $executable.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;args&gt;
-          &lt;arg&gt;--install-exit-handlers&lt;/arg&gt;
-        &lt;/args&gt;
-
-        &lt;!--
-          Defines a list of additional JARs as globs.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;jars&gt;
-          &lt;jar&gt;
-            &lt;!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;pattern&gt;path/to/**/*.jar&lt;/pattern&gt;
-          &lt;/jar&gt;
-        &lt;/jars&gt;
-
-        &lt;!--
-          Defines a list of additional files as globs.
-          These files will be added to the assembled Zip file.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;files&gt;
-          &lt;file&gt;
-            &lt;!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;pattern&gt;path/to/**/*.txt&lt;/pattern&gt;
-          &lt;/jar&gt;
-          &lt;/file&gt;
-        &lt;/files&gt;
+        &lt;signatures&gt;true&lt;/signatures&gt;
 
         &lt;!--
           Additional properties used when evaluating templates.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;extraProperties&gt;
           &lt;!--
-            Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
+            Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
           --&gt;
           &lt;foo&gt;bar&lt;/foo&gt;
         &lt;/extraProperties&gt;
 
         &lt;!--
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          The region where the S3 bucket is located.
+          If left unspecified, the `JRELEASER_S3_${name}_REGION`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;java&gt;
-          &lt;!--
-            Maven coordinates&gt;groupId.
-            If left undefined, will use ${project.java.groupId}.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;groupId&gt;com.acme&lt;/groupId&gt;
+        &lt;region&gt;us-east-2&lt;/region&gt;
 
-          &lt;!--
-            Maven coordinates&gt;artifactId.
-            If left undefined, will use ${project.java.artifactId}.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;artifactId&gt;app&lt;/artifactId&gt;
+        &lt;!--
+          The name of the bucket.
+          If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;bucket&gt;releases&lt;/bucket&gt;
 
-          &lt;!--
-            The minimum Java version required by consumers to run the application.
-            If left undefined, will use ${project.java.version}.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;version&gt;8&lt;/version&gt;
+        &lt;!--
+          If left unspecified, the `JRELEASER_S3_${name}_PATH`
+          environment variable may be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;path&gt;{{projectName}}/{{tagName}}/{{artifactFileName}}&lt;/path&gt;
 
-          &lt;!--
-            The application's entry point.
-            If left undefined, will use ${project.java.mainClass}.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
+        &lt;!--
+          The accessKeyId required for authorization.
+          If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;accessKeyId&gt;__DO_NOT_SET_HERE__&lt;/accessKeyId&gt;
 
-          &lt;!--
-            Identifies the project as being member of a multi-project build.
-            If left undefined, will use ${project.java.multiProject}.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;multiProject&gt;false&lt;/multiProject&gt;
+        &lt;!--
+          The secretKey required for authorization.
+          If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;secretKey&gt;__DO_NOT_SET_HERE__&lt;/secretKey&gt;
 
-          &lt;!--
-            Additional properties used when evaluating templates.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;extraProperties&gt;
-            &lt;!--
-              Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-            --&gt;
-            &lt;foo&gt;bar&lt;/foo&gt;
-          &lt;/extraProperties&gt;
-        &lt;/java&gt;
+        &lt;!--
+          The AWS sessionToken when you use temporal credentials.
+          If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;sessionToken&gt;__DO_NOT_SET_HERE__&lt;/sessionToken&gt;
+
+        &lt;!--
+          Additional headers to be sent to the server.
+          Values accept <a href="../name-templates.html" class="page">Name Templates</a>.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;headers&gt;
+          &lt;X-ARTIFACT-PLATFORM&gt;{{artifactPlatform}}&lt;/X-ARTIFACT-PLATFORM&gt;
+        &lt;/headers&gt;
       &lt;/app&gt;
-    &lt;/nativeImage&gt;
-  &lt;/assemble&gt;
+    &lt;/s3&gt;
+  &lt;/upload&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
 </div>
@@ -1100,127 +951,191 @@ assemble:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  assemble {
+  upload {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    nativeImage {
-      // Assemblers require a name.
+    s3 {
+      // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app {
 
-        // Enables or disables the assembler.
+        // Enables or disables the uploader.
         // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         active = 'ALWAYS'
 
-        // Export the assembled artifacts as a matching named distribution.
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        connectTimeout = 20
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        readTimeout = 60
+
+        // Upload files.
         // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        exported = true
+        files = true
 
-        // Name of the executable launcher.
-        // If left undefined, will use ${assembler.name}.
+        // Upload distribution artifacts.
+        // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        executable = 'app'
+        artifacts = true
 
-        // Directory with file templates used to prepare the NativeImage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-        // If specified, path must exist.
+        // Upload signatures.
+        // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        templateDirectory = 'path/to/nativeImage/templates'
-
-        // Name of the generated image.
-        // If left undefined, will use
-        // ${assembler.executable}-${project.version}.
-        // Generated artifacts always have the platform as suffix.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        imageName = 'app-{{projectVersion}}'
-
-        // Name transformation of the generated image.
-        // Transformed artifacts always have the platform as suffix.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        imageNameTransform = 'app-{{projectEffectiveVersion}}'
-
-        // The GraalVM JDK to use.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        graal {
-          path = 'path/to/graalvm'
-        }
-
-        // A list of build arguments.
-        // The `-H =Name` argument will always be replaced with the
-        // value of $executable.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        addArg('--install-exit-handlers')
-
-        // The executable JAR that contains the application.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        mainJar {
-          path = 'path/to/app.jar'
-        }
-
-        // Defines a list of additional JARs as globs.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        jars {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          pattern = 'path/to/**/*.jar'
-        }
-
-        // Defines a list of additional JARs as globs.
-        // These files will be added to the assembled Zip file.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        files {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          pattern = 'path/to/**/*.txt'
-        }
+        signatures = true
 
         // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        // Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        java {
-          // Maven coordinates = groupId.
-          // If left undefined, will use ${project.java.groupId}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          groupI = 'com.acme'
+        // The region where the S3 bucket is located.
+        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        region = 'us-east-2'
 
-          // Maven coordinates = artifactId.
-          // If left undefined, will use ${project.java.artifactId}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          artifactId = 'app'
+        // The name of the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        bucket = 'releases'
 
-          // The minimum Java version required by consumers to run the application.
-          // If left undefined, will use ${project.java.version}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          version = '8'
+        // The artifact path within the bucket.
+        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
+        // environment variable may be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        path = '{{projectName}}/{{tagName}}/{{artifactFileName}}'
 
-          // The application's entry point.
-          // If left undefined, will use ${project.java.mainClass}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          mainClass = 'com.acme.Main'
+        // The accessKeyId required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        accessKeyId = '__DO_NOT_SET_HERE__'
 
-          // Identifies the project as being member of a multi-project build.
-          // If left undefined, will use ${project.java.multiProject}.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          multiProject = false
+        // The secretKey required for authorization.
+        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        secretKey = '__DO_NOT_SET_HERE__'
 
-          // Additional properties used when evaluating templates.
-          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          extraProperties.put('foo', 'bar')
-        }
+        // The AWS sessionToken when you use temporal credentials.
+        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        sessionToken = '__DO_NOT_SET_HERE__'
+
+        // Additional headers to be sent to the server.
+        // Values accept <a href="../name-templates.html" class="page">Name Templates</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
       }
     }
   }
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_crendentials"><a class="anchor" href="#_crendentials"></a>Crendentials</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser uses the <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html">DefaultAWSCredentialsProviderChain</a>
+ to look up the AWS credentials. If you want to override the credentials feel free to set <code>accessKeyId</code> and <code>secretKey</code>
+ and (optionally depends on configuration) <code>sessionToken</code>. If these properties are set then JReleaser will ignore <code>DefaultAWSCredentialsProviderChain</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accesskeyid"><a class="anchor" href="#_accesskeyid"></a>AccessKeyId</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The accessKeyId will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_ACCESS_KEY_ID</code>. If your instance is named <code>production</code>,
+you can store the accessKeyId in the environment variable <code>JRELEASER_S3_PRODUCTION_ACCESS_KEY_ID</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>If a configured accessKeyId is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secretkey"><a class="anchor" href="#_secretkey"></a>SecretKey</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The secretKey will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_SECRET_KEY</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_S3_PRODUCTION_SECRET_KEY</code>. The name will be
+transformed to uppercase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sessiontoken"><a class="anchor" href="#_sessiontoken"></a>SessionToken</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The sessionToken will be stored in an environment variable. The configured name of the S3 server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_SESSION_TOKEN</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_S3_PRODUCTION_SESSION_TOKEN</code>. The name will be
+transformed to uppercase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_upload"><a class="anchor" href="#_skip_upload"></a>Skip Upload</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>skipUpload</code>: skipped from all uploaders.</p>
+</li>
+<li>
+<p><code>skipUpload&lt;type&gt;</code>: skipped from the typed uploader.</p>
+</li>
+<li>
+<p><code>skipUpload&lt;type&gt;&lt;name&gt;</code>: skipped from the typed and named uploader.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Where <code>&lt;type&gt;</code> resolves to <code>S3</code> and <code>&lt;name&gt;</code> resolves to the capitalized name of the S3 instance, such
+that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if the name is <code>foo</code> the resulting property key is <code>skipUploadS3Foo</code>.</p>
+</li>
+<li>
+<p>if the name is <code>fooBar</code> the resulting property key is <code>skipUploadS3FooBar</code>.</p>
+</li>
+<li>
+<p>if the name is <code>foo-bar</code> the resulting property key is <code>skipUploadS3FooBar</code>.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
