@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Twitter :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/twitter.html">
+    <title>Telegram :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/announce/telegram.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -187,10 +187,10 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="teams.html">Teams</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="telegram.html">Telegram</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="twitter.html">Twitter</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -471,28 +471,27 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="twitter.html">Twitter</a></li>
+    <li><a href="telegram.html">Telegram</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/announce/twitter.html">latest</a>
-    <a class="version is-current" href="twitter.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="telegram.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/announce/twitter.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/announce/telegram.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Twitter</h1>
+<h1 class="page">Telegram</h1>
 <div class="paragraph">
-<p>Tweets a new release. You must register a new Twitter application and obtain the set of credentials. Follow the
-instructions from <a href="https://developer.twitter.com/en/portal/projects-and-apps">Twitter</a> to complete this task.
-Note: Remember to set permissions to include Write access and make sure to re-generate access tokens if you changed permissions.</p>
+<p>Posts a message to a <a href="https://mattermost.com/">Telegram</a> chat. You must create a <a href="https://core.telegram.org/bots">Bot</a>
+for this announcer to work. You must also obtain the <code>chatId</code> for the particular chat/channel where the message will be sent.</p>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -540,8 +539,8 @@ Note: Remember to set permissions to include Write access and make sure to re-ge
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  twitter:
-    # Enables or disables Twitter.
+  telegram:
+    # Enables or disables Telegram.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -560,37 +559,31 @@ announce:
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
-      # Key will be capitalized and prefixed with `twitter`, i.e, `twitterFoo`.
+      # Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
       foo: bar
 
-    # The consumer key.
-    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+    # The token associated with a Telegram bot.
+    # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    consumerKey: __DO_NOT_SET_HERE__
+    token: __DO_NOT_SET_HERE__
 
-    # The consumer token.
-    # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_SECRET`
+    # The identifier of the chat where announcemnts will be posted.
+    # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    consumerToken: __DO_NOT_SET_HERE__
-
-    # The access token.
-    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-    # environment variable must be defined.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    accessToken: __DO_NOT_SET_HERE__
-
-    # The access token secret.
-    # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN_SECRET`
-    # environment variable must be defined.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    accessTokenSecret: __DO_NOT_SET_HERE__
+    chatId: __DO_NOT_SET_HERE__
 
     # The announcement message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    status: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'</code></pre>
+    message: '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    # Path to a template file that contains the message.
+    # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+    # Defaults to `src/jreleaser/templates/mattermost.tpl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    messageTemplate: path/to/template/mattermost.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -598,8 +591,8 @@ announce:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[announce.twitter]
-  # Enables or disables Twitter.
+[announce.telegram]
+  # Enables or disables Telegram.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -618,36 +611,30 @@ announce:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `twitter`, i.e, `twitterFoo`.
+  # Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
 
-  # The consumer key.
-  # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+  # The token associated with a Telegram bot.
+  # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  consumerKey = "__DO_NOT_SET_HERE__"
+  token = "__DO_NOT_SET_HERE__"
 
-  # The consumer token.
-  # If left unspecified, the `JRELEASER_TWITTER_CONSUMER_SECRET`
+  # The identifier of the chat where announcemnts will be posted.
+  # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  consumerToken = "__DO_NOT_SET_HERE__"
-
-  # The access token.
-  # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-  # environment variable must be defined.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  accessToken = "__DO_NOT_SET_HERE__"
-
-  # The access token secret.
-  # If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN_SECRET`
-  # environment variable must be defined.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  accessTokenSecret = "__DO_NOT_SET_HERE__"
+  chatId = "__DO_NOT_SET_HERE__"
 
   # The announcement message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  status = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"</code></pre>
+  message = "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # Path to a template file that contains the message.
+  # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+  # Defaults to `src/jreleaser/templates/mattermost.tpl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  messageTemplate = "path/to/template/mattermost.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -658,8 +645,8 @@ announce:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "twitter": {
-      // Enables or disables Twitter.
+    "telegram": {
+      // Enables or disables Telegram.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -678,38 +665,32 @@ announce:
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
-        // Key will be capitalized and prefixed with `twitter`, i.e, `twitterFoo`.
+        // Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
         "foo": "bar"
       },
 
-      // The consumer key.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+      // The token associated with a Telegram bot.
+      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "consumerKey": "__DO_NOT_SET_HERE__",
+      "token": "__DO_NOT_SET_HERE__",
 
-      // The consumer token.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_SECRET`
+      // The identifier of the chat where announcemnts will be posted.
+      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "consumerToken": "__DO_NOT_SET_HERE__",
-
-      // The access token.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "accessToken": "__DO_NOT_SET_HERE__",
-
-      // The access token secret.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN_SECRET`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "accessTokenSecret": "__DO_NOT_SET_HERE__",
+      "chatId": "__DO_NOT_SET_HERE__",
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "status": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+      "message": "<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/mattermost.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "messageTemplate": "path/to/template/mattermost.tpl"
     }
   }
 }</code></pre>
@@ -727,9 +708,9 @@ announce:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;twitter&gt;
+    &lt;telegram&gt;
       &lt;!--
-        Enables or disables Twitter.
+        Enables or disables Telegram.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -756,50 +737,41 @@ announce:
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `twitter`, i.e, `twitterFoo`.
+          Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
 
       &lt;!--
-        The consumer key.
-        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
-        environment variable must be defined.
+        The token associated with a Telegram bot.
+        If left unspecified, the `JRELEASER_TELEGRAM_TOKEN` environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;consumerKey&gt;__DO_NOT_SET_HERE__&lt;/consumerKey&gt;
+      &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
 
       &lt;!--
-        The consumer token.
-        If left unspecified, the `JRELEASER_TWITTER_CONSUMER_SECRET`
+        The identifier of the chat where announcemnts will be posted.
+        If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
         environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;consumerToken&gt;__DO_NOT_SET_HERE__&lt;/consumerToken&gt;
-
-      &lt;!--
-        The access token.
-        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-        environment variable must be defined.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;accessToken&gt;__DO_NOT_SET_HERE__&lt;/accessToken&gt;
-
-      &lt;!--
-        The access token secret.
-        If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN_SECRET`
-        environment variable must be defined.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      --&gt;
-      &lt;accessTokenSecret&gt;__DO_NOT_SET_HERE__&lt;/accessTokenSecret&gt;
+      &lt;chatId&gt;__DO_NOT_SET_HERE__&lt;/chatId&gt;
 
       &lt;!--
         The announcement message.
         Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
-      &lt;status&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
-    &lt;/twitter&gt;
+      &lt;message&gt;<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/message&gt;
+
+      &lt;!--
+        Path to a template file that contains the message.
+        Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+        Defaults to `src/jreleaser/templates/mattermost.tpl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;messageTemplate&gt;path/to/template/mattermost.tpl&lt;/messageTemplate&gt;
+    &lt;/telegram&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -812,8 +784,8 @@ announce:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    twitter {
-      // Enables or disables Twitter.
+    telegram {
+      // Enables or disables Telegram.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -830,38 +802,32 @@ announce:
       readTimeout = 60
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `twitter`, i.e, `twitterFoo`.
+      // Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // The consumer key.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_KEY`
+      // The token associated with a Telegram bot.
+      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      consumerKey = '__DO_NOT_SET_HERE__'
+      token = '__DO_NOT_SET_HERE__'
 
-      // The consumer token.
-      // If left unspecified, the `JRELEASER_TWITTER_CONSUMER_SECRET`
+      // The identifier of the chat where announcemnts will be posted.
+      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      consumerToken = '__DO_NOT_SET_HERE__'
-
-      // The access token.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      accessToken = '__DO_NOT_SET_HERE__'
-
-      // The access token secret.
-      // If left unspecified, the `JRELEASER_TWITTER_ACCESS_TOKEN_SECRET`
-      // environment variable must be defined.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      accessTokenSecret = '__DO_NOT_SET_HERE__'
+      chatId = '__DO_NOT_SET_HERE__'
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      status = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      message = '<span class="icon"><i class="fa fa-rocket"></i></span> {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
+      // Defaults to `src/jreleaser/templates/mattermost.tpl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      messageTemplate = 'path/to/template/mattermost.tpl'
     }
   }
 }</code></pre>
@@ -869,6 +835,12 @@ announce:
 </div>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>You may define either <code>message</code> or <code>messageTemplate</code>, with the former taking precedence over the latter.</p>
+</div>
+<div class="paragraph">
+<p>The template file may be initialized using the <code>template</code> command.</p>
 </div>
 </article>
   </div>
