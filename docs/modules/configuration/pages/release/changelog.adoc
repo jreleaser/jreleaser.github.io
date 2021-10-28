@@ -1,0 +1,194 @@
+= Changelog
+
+You may define either `content` or `contentTemplate`, with the latter taking precedence over the former.
+
+Changelog formatting applies only to the automatically generated changelog, that is, formatting won't occur if the `external`
+property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.
+
+The `changelog.format` property only accepts the following name templates:
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key             | Description
+| commitShortHash | head commit hash abbreviated to 7 characters
+| commitFullHash  | head commit hash
+| commitTitle     | first line of the commit message
+| commitAuthor    | full name of the commit author
+| commitsUrl      | commits URl as provided by the Git host
+|===
+
+The `content` and `contentTemplate` accept all xref:configuration:name-templates.adoc[], take special consideration on
+`{{changelogChanges}}` and `{{changelogContributors}}` as they define the parsed commits.
+
+== Commits
+
+If you wish to generate the changelog between two tags, with tags in between, you may configure `previousTagName`.
+It generates the changelog based on all commits between the two tags. (`git log <previousTagName>...<tagName>`).
+
+If not defined, it will default to the logical previous tag of the defined `tagName`.
+
+== Contributors
+
+Contributor names are added to the formatted changelog by default. You may choose to provide a custom format or disable
+this behavior completely. The `contributors.format` property accepts the following templates:
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                       | Description
+| contributorName           | the contributor's name as plain text
+| contributorNameAsLink     | the contributor's name as a link
+| contributorUsername       | the contributor's username as plain text
+| contributorUsernameAsLink | the contributor's username as a link
+|===
+
+The use of `{{contributorNameAsLink}}`, `{{contributorUsername}}`, or `{{contributorUsernameAsLink}}` incurs on a
+network call to the remote service to find out information related to the given contributor.
+
+NOTE: Use a `-` or `*` character as prefix in `format` to list each contributor on its own row.
+
+The following configuration
+
+[source,yaml]
+[subs="attributes,+macros"]
+----
+release:
+  github:
+    username: aalmiray
+    overwrite: true
+    draft: false
+    sign: true
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      labelers:
+        - label: 'feature'
+          title: 'Resolves #'
+          body: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+          body: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+          body: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+      categories:
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: '\[chore\] '
+----
+
+Generates a changelog similar to
+
+image::ROOT:jreleaser-changelog-render.jpg[]
+
+== Presets
+
+Presets define conventions applicable to:
+
+ * labelers
+ * categories
+ * replacers
+ * hide
+   ** categories
+   ** contributors
+
+You may apply a preset while at the same time define additional elements. Your configuration takes precedence over the
+preset's, allowing you to add/merge. For the time being you can't remove a setting defined by a preset.
+
+=== Gitmoji
+
+Commit messages that follow the link:https://gitmoji.dev/[Gitmoji] convention will be automatically labeled and
+categorized. The following table shows mappings that you may use when this preset is applied:
+
+[%header, cols="<,<,^,<2"]
+|===
+| Category      | Label            | Emoji | Keyword
+| Merge         | merge            | 🔀    | :twisted_rightwards_arrows:
+| Added         | added            | ✨    | :sparkles:
+| Added         | added            | 🎉    | :tada:
+| Added         | added            | ✅    | :white_check_mark:
+| Added         | added            | 👷    | :construction_worker:
+| Added         | added            | 📈    | :chart_with_upwards_trend:
+| Added         | added            | ➕    | :heavy_plus_sign:
+| Added         | added            | 🔊    | :loud_sound:
+| Changed       | changed          | 🎨    | :art:
+| Changed       | changed          | ⚡️    | :zap:
+| Changed       | changed          | 💄    | :lipstick:
+| Changed       | changed          | 🚨    | :rotating_light:
+| Changed       | changed          | 📌    | :pushpin:
+| Changed       | changed          | ♻️    | :recycle:
+| Changed       | changed          | 🔧    | :wrench:
+| Changed       | changed          | 🔨    | :hammer:
+| Changed       | changed          | ⏪    | :rewind:
+| Changed       | changed          | 👽    | :alien:
+| Changed       | changed          | 🚚    | :truck:
+| Changed       | changed          | 🍱    | :bento:
+| Changed       | changed          | ♿️    | :wheelchair:
+| Changed       | changed          | 💬    | :speech_balloon:
+| Changed       | changed          | 🗃    | :card_file_box:
+| Changed       | changed          | 🚸    | :children_crossing:
+| Changed       | changed          | 🏗    | :building_construction:
+| Changed       | changed          | 📱    | :iphone:
+| Changed       | changed          | 📦    | :package:
+| Breaking      | breaking_changes | 💥    | :boom:
+| Deprecated    | deprecated       | 🗑    | :wastebasket:
+| Removed       | Removed          | ➖    | :heavy_minus_sign:
+| Removed       | Removed          | 🔥    | :fire:
+| Removed       | Removed          | 🔇    | :mute:
+| Removed       | Removed          | ⚰️    | :coffin:
+| Fixed         | fixed            | 🐛    | :bug:
+| Fixed         | fixed            | 🚑    | :ambulance:
+| Fixed         | fixed            | 🍎    | :apple:
+| Fixed         | fixed            | 🍏    | :green_apple:
+| Fixed         | fixed            | 🐧    | :penguin:
+| Fixed         | fixed            | 🏁    | :checkered_flag:
+| Fixed         | fixed            | 🤖    | :robot:
+| Fixed         | fixed            | 💚    | :green_heart:
+| Fixed         | fixed            | ✏️    | :pencil2:
+| Fixed         | fixed            | 🩹️    | :adhesive_bandage:
+| Security      | security         | 🔒️    | :lock:
+| Security      | security         | 🛂    | :passport_control:
+| Documentation | documentation    | 📝    | :pencil:
+| Documentation | documentation    | 📝    | :memo:
+| Documentation | documentation    | 🌐    | :globe_with_meridians:
+| Documentation | documentation    | 📄    | :page_facing_up:
+| Documentation | documentation    | 💡    | :bulb:
+| Dependencies  | dependencies     | ⬆️    | :arrow_up:
+| Dependencies  | dependencies     | ⬇️    | :arrow_down:
+| Miscellaneous | misc             | 💩    | :poop:
+| Miscellaneous | misc             | 🚧    | :construction:
+| Miscellaneous | misc             | 🍻    | :beers:
+| Miscellaneous | misc             | 👥    | :busts_in_silhouette:
+| Miscellaneous | misc             | 🤡    | :clown_face:
+| Miscellaneous | misc             | 🥚    | :egg:
+| Miscellaneous | misc             | 🙈    | :see_no_evil:
+| Miscellaneous | misc             | 📸    | :camera_flash:
+| Miscellaneous | misc             | ⚗️    | :alembic:
+| Miscellaneous | misc             | 🔍    | :mag:
+| Miscellaneous | misc             | 🥅    | :goal_net:
+| Miscellaneous | misc             | 🧐    | :monocle_face:
+| Miscellaneous | misc             | 🧪    | :test_tube:
+| Miscellaneous | misc             | 👔    | :necktie:
+| Miscellaneous | misc             | 👌    | :ok_hand:
+| Release       | release          | 🚀    | :rocket:
+| Release       | release          | 🔖    | :bookmark:
+|===
+
+The following commit messages are equivalent:
+
+[source]
+----
+🐛 Random number generator always returns 4.
+:bug: Random number generator always returns 4.
+----
+
+Keywords are automatically replaced by their corresponding emoji in the generated changelog.
