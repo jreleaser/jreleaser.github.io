@@ -280,6 +280,9 @@
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="gitlab.html">GitLab</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="changelog.html">Changelog</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -744,6 +747,13 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       formatted: ALWAYS
 
+      # Preconfigured changelog options.
+      # Valid values are [`gitmoji`].
+      # Requires `formatted` to be enabled.
+      # Defaults to empty.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      preset: 'gitmoji'
+
       # The template to use for each change.
       # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1081,6 +1091,13 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.formatted = "ALWAYS"
 
+  # Preconfigured changelog options.
+  # Valid values are [`gitmoji`].
+  # Requires `formatted` to be enabled.
+  # Defaults to empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.preset = "gitmoji"
+
   # The template to use for each change.
   # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1417,6 +1434,13 @@ release:
         // Defaults to `NEVER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "formatted": "ALWAYS",
+
+        // Preconfigured changelog options.
+        // Valid values are [`gitmoji`].
+        // Requires `formatted` to be enabled.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "preset": "gitmoji",
 
         // The template to use for each change.
         // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
@@ -1858,6 +1882,15 @@ release:
         &lt;formatted&gt;ALWAYS&lt;/formatted&gt;
 
         &lt;!--
+          Preconfigured changelog options.
+          Valid values are [`gitmoji`].
+          Requires `formatted` to be enabled.
+          Defaults to empty.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;preset&gt;gitmoji&lt;/preset&gt;
+
+        &lt;!--
           The template to use for each change.
           Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2280,6 +2313,13 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         formatted = 'ALWAYS'
 
+        // Preconfigured changelog options.
+        // Valid values are [`gitmoji`].
+        // Requires `formatted` to be enabled.
+        // Defaults to empty.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        preset = 'gitmoji'
+
         // The template to use for each change.
         // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2444,170 +2484,6 @@ release:
 }</code></pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_changelog"><a class="anchor" href="#_changelog"></a>Changelog</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You may define either <code>content</code> or <code>contentTemplate</code>, with the latter taking precedence over the former.</p>
-</div>
-<div class="paragraph">
-<p>Changelog formatting applies only to the automatically generated changelog, that is, formatting won&#8217;t occur if the <code>external</code>
-property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.</p>
-</div>
-<div class="paragraph">
-<p>The <code>changelog.format</code> property only accepts the following name templates:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 28.5714%;">
-<col style="width: 71.4286%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Key</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commitShortHash</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">head commit hash abbreviated to 7 characters</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commitFullHash</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">head commit hash</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commitTitle</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">first line of the commit message</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commitAuthor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">full name of the commit author</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commitsUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">commits URl as provided by the Git host</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The <code>content</code> and <code>contentTemplate</code> accept all <a href="../name-templates.html" class="page">Name Templates</a>, take special consideration on
-<code>{{changelogChanges}}</code> and <code>{{changelogContributors}}</code> as they define the parsed commits.</p>
-</div>
-<div class="sect2">
-<h3 id="_commits"><a class="anchor" href="#_commits"></a>Commits</h3>
-<div class="paragraph">
-<p>If you wish to generate the changelog between two tags, with tags in between, you may configure <code>previousTagName</code>.
-It generates the changelog based on all commits between the two tags. (<code>git log &lt;previousTagName&gt;&#8230;&#8203;&lt;tagName&gt;</code>).</p>
-</div>
-<div class="paragraph">
-<p>If not defined, it will default to the logical previous tag of the defined <code>tagName</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_contributors"><a class="anchor" href="#_contributors"></a>Contributors</h3>
-<div class="paragraph">
-<p>Contributor names are added to the formatted changelog by default. You may choose to provide a custom format or disable
-this behavior completely. The <code>contributors.format</code> property accepts the following templates:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 28.5714%;">
-<col style="width: 71.4286%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Key</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contributorName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s name as plain text</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contributorNameAsLink</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s name as a link</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contributorUsername</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s username as plain text</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contributorUsernameAsLink</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the contributor&#8217;s username as a link</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The use of <code>{{contributorNameAsLink}}</code>, <code>{{contributorUsername}}</code>, or <code>{{contributorUsernameAsLink}}</code> incurs on a
-network call to the remote service to find out information related to the given contributor.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Use a <code>-</code> or <code>*</code> character as prefix in <code>format</code> to list each contributor on its own row.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The following configuration</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">release:
-  gitlab:
-    username: aalmiray
-    overwrite: true
-    draft: false
-    sign: true
-    changelog:
-      formatted: ALWAYS
-      format: '- {{commitShortHash}} {{commitTitle}}'
-      labelers:
-        - label: 'feature'
-          title: 'Resolves #'
-          body: 'Resolves #'
-        - label: 'issue'
-          title: 'Fixes #'
-          body: 'Fixes #'
-        - label: 'issue'
-          title: 'Relates to #'
-          body: 'Relates to #'
-        - label: 'task'
-          title: '[chore]'
-      categories:
-        - title: '🚀 Features'
-          labels:
-            - 'feature'
-        - title: '✅ Issues'
-          labels:
-            - 'issue'
-        - title: '🧰 Tasks'
-          labels:
-            - 'task'
-      replacers:
-        - search: '\[chore\] '</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generates a changelog similar to</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../../_images/jreleaser-changelog-render.jpg" alt="jreleaser changelog render">
 </div>
 </div>
 </div>
