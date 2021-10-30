@@ -188,6 +188,9 @@
     <a class="nav-link" href="../announce/teams.html">Teams</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/telegram.html">Telegram</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/twitter.html">Twitter</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -202,6 +205,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../assemble/index.html">Assemble</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../assemble/archive.html">Archive</a>
+  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../assemble/jlink.html">Jlink</a>
   </li>
@@ -274,6 +280,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../release/gitlab.html">GitLab</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../release/changelog.html">Changelog</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -288,6 +297,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="http.html">Http</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="s3.html">AWS S3</a>
   </li>
 </ul>
   </li>
@@ -410,6 +422,15 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../examples/springboot-cli-app.html">Spring Boot CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../examples/quarkus-cli-app.html">Quarkus CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../examples/micronaut-cli-app.html">Micronaut CLI Application</a>
   </li>
 </ul>
   </li>
@@ -578,6 +599,27 @@ upload:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       readTimeout: 60
 
+      # Upload files.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files: true
+
+      # Upload distribution artifacts.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      artifacts: true
+
+      # Upload signatures.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      signatures: true
+
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+        foo: bar
+
       # URL of the Artifactory instance + path + artifact.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       uploadUrl: https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}
@@ -601,32 +643,11 @@ upload:
 
       # The authorization method to use.
       # Valid values are [`BASIC`, `BEARER`].
-      # `Basic` requires both username &amp; password.
+      # `Basic` requires both username & password.
       # `BEARER` requires a token (set as password).
       # Defaults to `BEARER`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      authorization: BASIC
-
-      # Upload files.
-      # Defaults to `true`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      files: true
-
-      # Upload distribution artifacts.
-      # Defaults to `true`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      artifacts: true
-
-      # Upload signatures.
-      # Defaults to `true`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      signatures: true
-
-      # Additional properties used when evaluating templates.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      extraProperties:
-        # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-        foo: bar</code></pre>
+      authorization: BASIC</code></pre>
 </div>
 </div>
 </div>
@@ -653,6 +674,26 @@ upload:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   readTimeout = 60
 
+  # Upload files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  files = true
+
+  # Upload distribution artifacts.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  artifacts = true
+
+  # Upload signatures.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  signatures = true
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+
   # URL of the Artifactory instance + path + artifact.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   uploadUrl = "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}"
@@ -676,31 +717,11 @@ upload:
 
   # The authorization method to use.
   # Valid values are [`BASIC`, `BEARER`].
-  # `Basic` requires both username &amp; password.
+  # `Basic` requires both username & password.
   # `BEARER` requires a token (set as password).
   # Defaults to `BEARER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BASIC"
-
-  # Upload files.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  files = true
-
-  # Upload distribution artifacts.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  artifacts = true
-
-  # Upload signatures.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  signatures = true
-
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.</code></pre>
+  authorization = "BASIC"</code></pre>
 </div>
 </div>
 </div>
@@ -732,6 +753,28 @@ upload:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "readTimeout": 60,
 
+        // Upload files.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "files": true,
+
+        // Upload distribution artifacts.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "artifacts": true,
+
+        // Upload signatures.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "signatures": true,
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+          "foo": "bar"
+        },
+
         // URL of the Artifactory instance + path + artifact.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "uploadUrl": "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}",
@@ -755,33 +798,11 @@ upload:
 
         // The authorization method to use.
         // Valid values are [`BASIC`, `BEARER`].
-        // `Basic` requires both username &amp; password.
+        // `Basic` requires both username & password.
         // `BEARER` requires a token (set as password).
         // Defaults to `BEARER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "authorization": "BEARER",
-
-        // Upload files.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "files": true,
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "artifacts": true,
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "signatures": true,
-
-        // Additional properties used when evaluating templates.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-          "foo": "bar"
-        }
+        "authorization": "BEARER"
       }
     }
   }
@@ -829,6 +850,38 @@ upload:
         &lt;readTimeout&gt;60&lt;/readTimeout&gt;
 
         &lt;!--
+          Upload files.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;files&gt;true&lt;/files&gt;
+
+        &lt;!--
+          Upload distribution artifacts.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;artifacts&gt;true&lt;/artifacts&gt;
+
+        &lt;!--
+          Upload signatures.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;signatures&gt;true&lt;/signatures&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
+
+        &lt;!--
           URL of the Artifactory instance + path + artifact.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
@@ -866,38 +919,6 @@ upload:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;authorization&gt;BEARER&lt;/authorization&gt;
-
-        &lt;!--
-          Upload files.
-          Defaults to `true`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;files&gt;true&lt;/files&gt;
-
-        &lt;!--
-          Upload distribution artifacts.
-          Defaults to `true`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;artifacts&gt;true&lt;/artifacts&gt;
-
-        &lt;!--
-          Upload signatures.
-          Defaults to `true`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;signatures&gt;true&lt;/signatures&gt;
-
-        &lt;!--
-          Additional properties used when evaluating templates.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;extraProperties&gt;
-          &lt;!--
-            Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-          --&gt;
-          &lt;foo&gt;bar&lt;/foo&gt;
-        &lt;/extraProperties&gt;
       &lt;/app&gt;
     &lt;/artifactory&gt;
   &lt;/upload&gt;
@@ -933,6 +954,26 @@ upload:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         readTimeout = 60
 
+        // Upload files.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        files = true
+
+        // Upload distribution artifacts.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        artifacts = true
+
+        // Upload signatures.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        signatures = true
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        extraProperties.put('foo', 'bar')
+
         // URL of the Artifactory instance + path + artifact.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         uploadUrl = 'https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'
@@ -956,31 +997,11 @@ upload:
 
         // The authorization method to use.
         // Valid values are [`BASIC`, `BEARER`].
-        // `Basic` requires both username &amp; password.
+        // `Basic` requires both username & password.
         // `BEARER` requires a token (set as password).
         // Defaults to `BEARER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         authorization = 'BEARER'
-
-        // Upload files.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        files = true
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        artifacts = true
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        signatures = true
-
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        extraProperties.put('foo', 'bar')
       }
     }
   }

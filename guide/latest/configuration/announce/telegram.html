@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gitter :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/gitter.html">
+    <title>Telegram :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/announce/telegram.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -163,7 +163,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="discussions.html">GitHub Discussions</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="gitter.html">Gitter</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -187,7 +187,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="teams.html">Teams</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="telegram.html">Telegram</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -483,58 +483,27 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Announce</a></li>
-    <li><a href="gitter.html">Gitter</a></li>
+    <li><a href="telegram.html">Telegram</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">latest</button>
   <div class="version-menu">
-    <a class="version is-current" href="gitter.html">latest</a>
-    <a class="version" href="../../../early-access/configuration/announce/gitter.html">early-access</a>
+    <a class="version is-current" href="telegram.html">latest</a>
+    <a class="version" href="../../../early-access/configuration/announce/telegram.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/gitter.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/configuration/pages/announce/telegram.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gitter</h1>
+<h1 class="page">Telegram</h1>
 <div class="paragraph">
-<p>Posts a message to a <a href="https://gitter.im/">Gitter</a> room. You must create a custom webhook for this announcer to work.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Log into <a href="https://gitter.im/">Gitter</a>.</p>
-</li>
-<li>
-<p>Browse to the room you want to integrate to.</p>
-</li>
-<li>
-<p>Click on the <code>Settings</code> menu and select <code>Integrations</code>.</p>
-</li>
-<li>
-<p>Click on the <code>CUSTOM</code> button.</p>
-</li>
-<li>
-<p>Copy the generated webhook URL.</p>
-</li>
-</ol>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
-setting the <code>JRELEASER_GITTER_WEBHOOK</code> environment variable over explicitly setting a value in the configuration DSL.
-</td>
-</tr>
-</table>
+<p>Posts a message to a <a href="https://mattermost.com/">Telegram</a> chat. You must create a <a href="https://core.telegram.org/bots">Bot</a>
+for this announcer to work. You must also obtain the <code>chatId</code> for the particular chat/channel where the message will be sent.</p>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -582,8 +551,8 @@ setting the <code>JRELEASER_GITTER_WEBHOOK</code> environment variable over expl
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  gitter:
-    # Enables or disables Gitter.
+  telegram:
+    # Enables or disables Telegram.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -602,14 +571,20 @@ announce:
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
-      # Key will be capitalized and prefixed with `gitter`, i.e, `gitterFoo`.
+      # Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
       foo: bar
 
-    # The webhook associated with a specific Gitter room.
-    # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+    # The token associated with a Telegram bot.
+    # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
     # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    webhook: __DO_NOT_SET_HERE__
+    token: __DO_NOT_SET_HERE__
+
+    # The identifier of the chat where announcemnts will be posted.
+    # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
+    # environment variable must be defined.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    chatId: __DO_NOT_SET_HERE__
 
     # The announcement message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -618,9 +593,9 @@ announce:
 
     # Path to a template file that contains the message.
     # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-    # Defaults to `src/jreleaser/templates/gitter.tpl`.
+    # Defaults to `src/jreleaser/templates/mattermost.tpl`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    messageTemplate: path/to/template/gitter.tpl</code></pre>
+    messageTemplate: path/to/template/mattermost.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -628,8 +603,8 @@ announce:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[announce.gitter]
-  # Enables or disables Gitter.
+[announce.telegram]
+  # Enables or disables Telegram.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -648,13 +623,19 @@ announce:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `gitter`, i.e, `gitterFoo`.
+  # Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
 
-  # The webhook associated with a specific Gitter room.
-  # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+  # The token associated with a Telegram bot.
+  # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  webhook = "__DO_NOT_SET_HERE__"
+  token = "__DO_NOT_SET_HERE__"
+
+  # The identifier of the chat where announcemnts will be posted.
+  # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  chatId = "__DO_NOT_SET_HERE__"
 
   # The announcement message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -663,9 +644,9 @@ announce:
 
   # Path to a template file that contains the message.
   # Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-  # Defaults to `src/jreleaser/templates/gitter.tpl`.
+  # Defaults to `src/jreleaser/templates/mattermost.tpl`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  messageTemplate = "path/to/template/gitter.tpl"</code></pre>
+  messageTemplate = "path/to/template/mattermost.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -676,8 +657,8 @@ announce:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "announce": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "gitter": {
-      // Enables or disables Gitter.
+    "telegram": {
+      // Enables or disables Telegram.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -696,15 +677,21 @@ announce:
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
-        // Key will be capitalized and prefixed with `gitter`, i.e, `gitterFoo`.
+        // Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
         "foo": "bar"
       },
 
-      // The webhook associated with a specific Gitter room.
-      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+      // The token associated with a Telegram bot.
+      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "webhook": "__DO_NOT_SET_HERE__",
+      "token": "__DO_NOT_SET_HERE__",
+
+      // The identifier of the chat where announcemnts will be posted.
+      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "chatId": "__DO_NOT_SET_HERE__",
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -713,9 +700,9 @@ announce:
 
       // Path to a template file that contains the message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // Defaults to `src/jreleaser/templates/gitter.tpl`.
+      // Defaults to `src/jreleaser/templates/mattermost.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "messageTemplate": "path/to/template/gitter.tpl"
+      "messageTemplate": "path/to/template/mattermost.tpl"
     }
   }
 }</code></pre>
@@ -733,9 +720,9 @@ announce:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;gitter&gt;
+    &lt;telegram&gt;
       &lt;!--
-        Enables or disables Gitter.
+        Enables or disables Telegram.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -762,17 +749,25 @@ announce:
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `gitter`, i.e, `gitterFoo`.
+          Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
 
       &lt;!--
-        The webhook associated with a specific Gitter room.
-        If left unspecified, the `JRELEASER_GITTER_WEBHOOK` environment variable must be defined.
+        The token associated with a Telegram bot.
+        If left unspecified, the `JRELEASER_TELEGRAM_TOKEN` environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;webhook&gt;__DO_NOT_SET_HERE__&lt;/webhook&gt;
+      &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+      &lt;!--
+        The identifier of the chat where announcemnts will be posted.
+        If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;chatId&gt;__DO_NOT_SET_HERE__&lt;/chatId&gt;
 
       &lt;!--
         The announcement message.
@@ -784,11 +779,11 @@ announce:
       &lt;!--
         Path to a template file that contains the message.
         Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-        Defaults to `src/jreleaser/templates/gitter.tpl`.
+        Defaults to `src/jreleaser/templates/mattermost.tpl`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;messageTemplate&gt;path/to/template/gitter.tpl&lt;/messageTemplate&gt;
-    &lt;/gitter&gt;
+      &lt;messageTemplate&gt;path/to/template/mattermost.tpl&lt;/messageTemplate&gt;
+    &lt;/telegram&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -801,8 +796,8 @@ announce:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   announce {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    gitter {
-      // Enables or disables Gitter.
+    telegram {
+      // Enables or disables Telegram.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -819,15 +814,21 @@ announce:
       readTimeout = 60
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `gitter`, i.e, `gitterFoo`.
+      // Key will be capitalized and prefixed with `telegram`, i.e, `telegramFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // The webhook associated with a specific Gitter room.
-      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+      // The token associated with a Telegram bot.
+      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
       // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      webhook = '__DO_NOT_SET_HERE__'
+      token = '__DO_NOT_SET_HERE__'
+
+      // The identifier of the chat where announcemnts will be posted.
+      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      chatId = '__DO_NOT_SET_HERE__'
 
       // The announcement message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
@@ -836,9 +837,9 @@ announce:
 
       // Path to a template file that contains the message.
       // Review the available <a href="../name-templates.html" class="page">Name Templates</a>.
-      // Defaults to `src/jreleaser/templates/gitter.tpl`.
+      // Defaults to `src/jreleaser/templates/mattermost.tpl`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      messageTemplate = 'path/to/template/gitter.tpl'
+      messageTemplate = 'path/to/template/mattermost.tpl'
     }
   }
 }</code></pre>

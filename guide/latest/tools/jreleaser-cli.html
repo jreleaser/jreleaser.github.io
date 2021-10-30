@@ -188,6 +188,9 @@
     <a class="nav-link" href="../configuration/announce/teams.html">Teams</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/telegram.html">Telegram</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/announce/twitter.html">Twitter</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -202,6 +205,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../configuration/assemble/index.html">Assemble</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/assemble/archive.html">Archive</a>
+  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/assemble/jlink.html">Jlink</a>
   </li>
@@ -274,6 +280,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/release/gitlab.html">GitLab</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/changelog.html">Changelog</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -288,6 +297,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/upload/http.html">Http</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/s3.html">AWS S3</a>
   </li>
 </ul>
   </li>
@@ -411,6 +423,15 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../examples/cross-platform-jlink.html">Cross Platform Jlink</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../examples/springboot-cli-app.html">Spring Boot CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../examples/quarkus-cli-app.html">Quarkus CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../examples/micronaut-cli-app.html">Micronaut CLI Application</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -487,10 +508,18 @@
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser -h
-Usage: jreleaser [-hV] [COMMAND]
-jreleaser
-  -h, --help      Show this help message and exit.
-  -V, --version   Print version information and exit.
+JReleaser is a release automation tool for Java projects.
+Its goal is to simplify creating releases and publishing
+artifacts to multiple package managers while providing
+customizable options.
+
+Usage: jreleaser [-hV] [-D=&lt;key=value&gt;]... [COMMAND]
+
+Options:
+  -D=&lt;key=value&gt;    Sets a System property. Repeatable.
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
+
 Commands:
   init          Create a jreleaser config file.
   config        Display current configuration.
@@ -505,7 +534,9 @@ Commands:
   package       Package all distributions.
   publish       Publish all distributions.
   announce      Announce a release.
-  full-release  Perform a full release.</code></pre>
+  full-release  Perform a full release.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 </div>
@@ -642,10 +673,15 @@ uncompress and copy to the desired location.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser init -h
-Usage: jreleaser init [-dhioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;] [-od=&lt;outputdir&gt;]
 Create a jreleaser config file.
+
+Usage: jreleaser init [-dhioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;] [-od=&lt;outputdir&gt;]
+                      [-D=&lt;key=value&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
   -f, --format=&lt;format&gt;     Configuration file format.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
@@ -654,7 +690,9 @@ Create a jreleaser config file.
                             Output directory.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -669,15 +707,19 @@ Create a jreleaser config file.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser config -h
-Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
-                        [-sp=&lt;platform&gt;]...
 Display current configuration.
+
+Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                        [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+
+Options:
   -a, --assembly            Display assembly configuration.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
   -f, --full                Display full configuration.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -694,7 +736,9 @@ Display current configuration.
                             Activates paths matching the given platform.
                               Repeatable.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -710,12 +754,17 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser template -h
-Usage: jreleaser template [-dhioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
-                          ([-an=&lt;announcerName&gt;] | [-dn=&lt;distributionName&gt;
-                          -tn=&lt;toolName&gt; [-dt=&lt;distributionType&gt;]])
 Generate a tool/announcer template.
+
+Usage: jreleaser template [-dhioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
+                          [-D=&lt;key=value&gt;]... ([-an=&lt;announcerName&gt;] |
+                          [-dn=&lt;distributionName&gt; -tn=&lt;toolName&gt;
+                          [-dt=&lt;distributionType&gt;]])
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -735,7 +784,9 @@ Tool templates
                             The type of the distribution.
                             Defaults to JAVA_BINARY.
       -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.</code></pre>
+                            The name of the tool.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -764,16 +815,21 @@ Tool templates
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser assemble -h
+Assemble distributions.
+
 Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=&lt;assemblerName&gt;] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                          [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
-Assemble distributions.
+                          [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                          [-p=&lt;key=value&gt;]...
+
+Options:
       -an, --assembler-name=&lt;assemblerName&gt;
                             The name of the assembler.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -dn, --distribution-name=&lt;distributionName&gt;
                             The name of the distribution.
       -grs, --git-root-search
@@ -786,7 +842,9 @@ Assemble distributions.
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -812,13 +870,18 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser changelog -h
-Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                           [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]...
 Calculate the changelog.
+
+Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                           [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                           [-p=&lt;key=value&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -829,7 +892,9 @@ Calculate the changelog.
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -845,14 +910,19 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser checksum -h
+Calculate checksums.
+
 Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-Calculate checksums.
+                          [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                          [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -868,7 +938,9 @@ Calculate checksums.
                             Activates paths matching the given platform.
                               Repeatable.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -884,13 +956,18 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser sign -h
-Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                      [-od=&lt;outputdir&gt;] [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 Sign release artifacts.
+
+Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                      [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                      [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -906,7 +983,9 @@ Sign release artifacts.
                             Activates paths matching the given platform.
                               Repeatable.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -922,15 +1001,20 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser upload -h
+Upload all artifacts.
+
 Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                         [-un=&lt;uploaderName&gt;] [-ut=&lt;uploaderType&gt;]
-                        [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-Upload all artifacts.
+                        [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                        [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -951,7 +1035,9 @@ Upload all artifacts.
                             The type of the uploader.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.</code></pre>
+  -y, --dryrun              Skip remote operations.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1021,32 +1107,60 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser release -h
-Usage: jreleaser release [-dhiqVwy] [--auto-config] [--changelog-formatted]
-                         [--draft] [-grs] [--overwrite] [--prerelease]
-                         [--project-snapshot-full-changelog] [-scp]
-                         [--signing-armored] [--signing-enabled]
-                         [--skip-release] [--skip-tag] [--update]
-                         [-b=&lt;basedir&gt;] [--branch=&lt;branch&gt;] [-c=&lt;configFile&gt;]
-                         [--changelog=&lt;changelog&gt;]
-                         [--commit-author-email=&lt;commitAuthorEmail&gt;]
-                         [--commit-author-name=&lt;commitAuthorName&gt;]
-                         [--milestone-name=&lt;milestoneName&gt;] [-od=&lt;outputdir&gt;]
-                         [--prerelease-pattern=&lt;prereleasePattern&gt;]
+Create or update a release.
+
+Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[--auto-config]
                          [--project-name=&lt;projectName&gt;]
-                         [--project-snapshot-label=&lt;projectSnapshotLabel&gt;]
-                         [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
-                         [--release-name=&lt;releaseName&gt;] [--tag-name=&lt;tagName&gt;]
-                         [--username=&lt;username&gt;] [--file=&lt;file&gt;]...
-                         [--glob=&lt;file&gt;]... [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [--update-section=&lt;section&gt;]...
-Create or update a release.
-      --auto-config          Model auto configuration.
+                         [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
+                         [--project-snapshot-label=&lt;projectSnapshotLabel&gt;]
+                         [--project-snapshot-full-changelog]
+                         [--tag-name=&lt;tagName&gt;]
+                         [--previous-tag-name=&lt;previousTagName&gt;]
+                         [--release-name=&lt;releaseName&gt;]
+                         [--milestone-name=&lt;milestoneName&gt;] [--prerelease]
+                         [--prerelease-pattern=&lt;prereleasePattern&gt;] [--draft]
+                         [--overwrite] [--update]
+                         [--update-section=&lt;section&gt;]... [--skip-tag]
+                         [--skip-release] [--branch=&lt;branch&gt;]
+                         [--changelog=&lt;changelog&gt;] [--changelog-formatted]
+                         [--username=&lt;username&gt;]
+                         [--commit-author-name=&lt;commitAuthorName&gt;]
+                         [--commit-author-email=&lt;commitAuthorEmail&gt;]
+                         [--signing-enabled] [--signing-armored]
+                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]
+
+Options:
   -b, --basedir=&lt;basedir&gt;    Base directory.
-      --branch=&lt;branch&gt;      The release branch.
   -c, --config-file=&lt;configFile&gt;
-                             The config file
+                             The config file.
+  -d, --debug                Set log level to debug.
+  -D=&lt;key=value&gt;             Sets a System property. Repeatable.
+      -grs, --git-root-search
+                             Searches for the Git root.
+  -h, --help                 Show this help message and exit.
+  -i, --info                 Set log level to info.
+      -od, --output-directory=&lt;outputdir&gt;
+                             Output directory.
+  -p, --set-property=&lt;key=value&gt;
+                             Sets the value of a property. Repeatable.
+  -q, --quiet                Log errors only.
+      -scp, --select-current-platform
+                             Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                             Activates paths matching the given platform.
+                               Repeatable.
+  -V, --version              Print version information and exit.
+  -w, --warn                 Set log level to warn.
+  -y, --dryrun               Skip remote operations.
+
+Auto Config Options:
+      --auto-config          Activate auto configuration.
+      --branch=&lt;branch&gt;      The release branch.
       --changelog=&lt;changelog&gt;
                              Path to changelog file.
       --changelog-formatted  Format generated changelog.
@@ -1054,24 +1168,17 @@ Create or update a release.
                              Commit author e-mail.
       --commit-author-name=&lt;commitAuthorName&gt;
                              Commit author name.
-  -d, --debug                Set log level to debug.
       --draft                If the release is a draft.
       --file=&lt;file&gt;          Input file to be uploaded. Repeatable.
-      --glob=&lt;file&gt;          Input file to be uploaded (as glob). Repeatable.
-      -grs, --git-root-search
-                             Searches for the Git root.
-  -h, --help                 Show this help message and exit.
-  -i, --info                 Set log level to info.
+      --glob=&lt;glob&gt;          Input file to be uploaded (as glob). Repeatable.
       --milestone-name=&lt;milestoneName&gt;
                              The milestone name.
-      -od, --output-directory=&lt;outputdir&gt;
-                             Output directory.
       --overwrite            Overwrite an existing release.
-  -p, --set-property=&lt;key=value&gt;
-                             Sets the value of a property. Repeatable.
       --prerelease           If the release is a prerelease.
       --prerelease-pattern=&lt;prereleasePattern&gt;
                              The prerelease pattern.
+      --previous-tag-name=&lt;previousTagName&gt;
+                             The previous release tag.
       --project-name=&lt;projectName&gt;
                              The project name.
       --project-snapshot-full-changelog
@@ -1085,26 +1192,19 @@ Create or update a release.
                              The project version.
       --project-version-pattern=&lt;projectVersionPattern&gt;
                              The project version pattern.
-  -q, --quiet                Log errors only.
       --release-name=&lt;releaseName&gt;
                              The release name.
-      -scp, --select-current-platform
-                             Activates paths matching the current platform.
       --signing-armored      Generate ascii armored signatures.
       --signing-enabled      Sign files.
       --skip-release         Skip creating a release.
       --skip-tag             Skip tagging the release.
-      -sp, --select-platform=&lt;platform&gt;
-                             Activates paths matching the given platform.
-                               Repeatable.
       --tag-name=&lt;tagName&gt;   The release tag.
       --update               Update an existing release.
       --update-section=&lt;section&gt;
                              Release section to be updated. Repeatable.
       --username=&lt;username&gt;  Git username.
-  -V, --version              Print version information and exit.
-  -w, --warn                 Set log level to warn.
-  -y, --dryrun               Skip remote operations.</code></pre>
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1173,15 +1273,19 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser prepare -h
+Prepare all distributions.
+
 Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]...
-Prepare all distributions.
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
+                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -dn, --distribution-name=&lt;distributionName&gt;
                             The name of the distribution.
       -grs, --git-root-search
@@ -1201,7 +1305,9 @@ Prepare all distributions.
       -tn, --tool-name=&lt;toolName&gt;
                             The name of the tool.
   -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.</code></pre>
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1258,15 +1364,19 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser package -h
+Package all distributions.
+
 Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]...
-Package all distributions.
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
+                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -dn, --distribution-name=&lt;distributionName&gt;
                             The name of the distribution.
       -grs, --git-root-search
@@ -1287,7 +1397,9 @@ Package all distributions.
                             The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.</code></pre>
+  -y, --dryrun              Skip remote operations.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1357,15 +1469,19 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser publish -h
+Publish all distributions.
+
 Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]...
-Publish all distributions.
+                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
+                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -dn, --distribution-name=&lt;distributionName&gt;
                             The name of the distribution.
       -grs, --git-root-search
@@ -1386,7 +1502,9 @@ Publish all distributions.
                             The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.</code></pre>
+  -y, --dryrun              Skip remote operations.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1456,16 +1574,21 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser announce -h
+Announce a release.
+
 Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=&lt;announcerName&gt;]
                           [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-Announce a release.
+                          [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                          [-sp=&lt;platform&gt;]...
+
+Options:
       -an, --announcer-name=&lt;announcerName&gt;
                             The name of the announcer.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -1482,7 +1605,9 @@ Announce a release.
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.</code></pre>
+  -y, --dryrun              Skip remote operations.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1533,14 +1658,19 @@ mutations should occur when this mode is activated.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser full-release -h
+Perform a full release.
+
 Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                               [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                              [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-Perform a full release.
+                              [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                              [-sp=&lt;platform&gt;]...
+
+Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
-                            The config file
+                            The config file.
   -d, --debug               Set log level to debug.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -1557,7 +1687,9 @@ Perform a full release.
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.</code></pre>
+  -y, --dryrun              Skip remote operations.
+
+Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
 <div class="paragraph">
