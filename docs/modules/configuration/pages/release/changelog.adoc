@@ -152,6 +152,59 @@ ea65d99 (core) Add missing checks in loader
 8ac258c 🚨 (engine) Plugins require custom classloader
 ----
 
+==== Example
+
+The following configuration
+
+[source,yaml]
+[subs="attributes,+macros"]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: 'conventional-commits'
+      format: '- {{commitShortHash}} {{commitTitle}}'
+----
+
+For a project with the following commits
+
+[source]
+----
+* bda315f (HEAD -> main, upstream/main) docs: Add missing "`". (#1048)
+* 3adf1b5 fix: Do not force .java suffix for Quarkus based templates (#1039)
+* 013f328 feat: Startup scripts now use User-Agent header for downloads (#1037)
+* 47e2a81 fix: This fixes extraneous jbang.cmd output (#1041)
+* fe08627 refactor: Simplified `jbang.cmd` (#1038)
+* ea65d99 fix: add hint to user they can get updated catalog using --fresh (#1040)
+* 8ac258c fix: No longer pass Accept header (#1036)
+* 95a715e [patch] fix linux based java download
+* 275d31a fix: archive type for foojay. Fixes #1035
+* d42951d [patch]
+* 98866f1 fix: Add itest for issue #1019 (#1033)
+* 20514c7 fix: Now really fixed updating on Windows (#1031)
+* 9ed4116 [minor]
+* fb45502 chore: use jreleaser 0.7
+* 7419590 fix: edit now honors JBANG_EDITOR again
+* 3955647 fix: Not checking for new version on first run anymore (#1023)
+* 5e16e22 fix:  jbang edit suggests incorrect command when template renames out… (#1020)
+* 3ac5561 fix: --deps now gets special javafx treatments as //DEPS does (#1017)
+* 52b2377 fix: Fixed link to "Usage on Windows" (#1026)
+* 8d5ea6a fix: Fixed download URL in `jbang` script (#1021)
+* b750ebb fix: kotlin edit now link to source rather than cache location (#1015)
+* 6f87c70 chore: eliminate warnings from code base (#1011)
+* f842666 docs: Update spotless pre-commit hook url (#1009)
+* d297667 [patch] fix java 17 downloads
+* f6a32db fix: use termurin for java 17
+* 43b2c72 chore: remove j'bang from choco name, its just JBang
+* da0c971 fix: proper nuget
+* 30cf637 (tag: v0.80.1) [patch]
+----
+
+Generates a changelog similar to
+
+image::ROOT:jreleaser-changelog-preset-conventional-commits.png[]
+
 === Gitmoji
 
 Commit messages that follow the link:https://gitmoji.dev/[Gitmoji] convention will be automatically labeled and
@@ -240,3 +293,43 @@ The following commit messages are equivalent:
 ----
 
 Keywords are automatically replaced by their corresponding emoji in the generated changelog.
+
+==== Example
+
+The following configuration
+
+[source,yaml]
+[subs="attributes,+macros"]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: 'gitmoji'
+      format: '- {{commitShortHash}} {{commitTitle}}'
+----
+
+For a project with the following commits
+
+[source]
+----
+* 3dabd57 :bookmark: Release v2.2.0
+* a9b1bfe :bug: Fix init command (#204)
+* cdf76f9 :pushpin: Upgrade dependencies (#191)
+* f7ca721 :memo: Fix the link and update year (#197)
+* ceab8dc :sparkles: Add Cargo preset (#199)
+* d2ee43d :memo: Change documentation link in README (#196)
+* e06e08d :busts_in_silhouette: Add endormi as a contributor (#195)
+* 5e0a971 :docs: Add the documentation site (#194)
+* 20cf369 :bug: Fix a bug occuring when version is missing in configuration but passed as argument (#190)
+* b12dfec :ok_hand: Take care of review
+* 9a15406 :goal_net: Handle functional errors
+* 4e22239 :pencil: Improve documentation about presets (#189)
+* 1febf42 :wrench: Update lock file
+* 1635963 :memo: Improve Workflow section (#152)
+* a127469 :arrow_up: Upgrade dependencies
+----
+
+Generates a changelog similar to
+
+image::ROOT:jreleaser-changelog-preset-gitmoji.png[]
