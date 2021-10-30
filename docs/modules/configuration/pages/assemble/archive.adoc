@@ -1,0 +1,592 @@
+= Archive
+
+Creates a binary distribution archive.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+assemble:
+  # icon:dot-circle[]
+  archive:
+    # Assemblers require a name.
+    # icon:exclamation-triangle[]
+    app:
+
+      # Enables or disables the assembler.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[]
+      active: ALWAYS
+
+      # Export the assembled artifacts as a matching named distribution.
+      # Defaults to `true`.
+      # icon:dot-circle[]
+      exported: true
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[] icon:file-alt[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+        foo: bar
+
+      # Name of the archive.
+      # If left undefined, will use {{distributionName}}-{{projectVersion}}.
+      # icon:dot-circle[] icon:file-alt[]
+      archiveName: 'app-{{projectVersion}}'
+
+      # The distribution type.
+      # Used to determine packager templates.
+      # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+      # Defaults to `BINARY`.
+      # icon:dot-circle[]
+      type: JAVA_BINARY
+
+      # Attach the current platform to the archiveName.
+      # icon:dot-circle[]
+      attachPlatform: true
+
+      # Set of archive formats to use.
+      # Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+      # icon:dot-circle[]
+      formats:
+        - ZIP
+        - TGZ
+
+      # icon:exclamation-triangle[]
+      fileSets:
+          # The input directory to copy files from.
+          # icon:exclamation-triangle[]
+        - input: path/to/input/directory
+          # The target path inside the archive.
+          # If left undefined, defaults to the root of the archive.
+          # icon:dot-circle[]
+          output: path/to/archive/entry
+          # A set of files and directory to include.
+          # icon:dot-circle[]
+          includes:
+            - 'name_or_regex'
+          # A set of files and directory to exclude.
+          # icon:dot-circle[]
+          excludes:
+            - 'name_or_regex'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# Assemblers require a name.
+# icon:exclamation-triangle[]
+[assemble.archive.app]
+
+  # Enables or disables the assembler.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Export the assembled artifacts as a matching named distribution.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  exported = true
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+
+  # Name of the archive.
+  # If left undefined, will use {{distributionName}}-{{projectVersion}}.
+  # icon:dot-circle[] icon:file-alt[]
+  archiveName = "app-{{projectVersion}}"
+
+  # The distribution type.
+  # Used to determine packager templates.
+  # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+  # Defaults to `BINARY`.
+  # icon:dot-circle[]
+  distributionType = "JAVA_BINARY"
+
+  # Attach the current platform to the archiveName.
+  # icon:dot-circle[]
+  attachPlatform = true
+
+  # Set of archive formats to use.
+  # Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+  # icon:dot-circle[]
+  formats = [ "ZIP", "TGZ"]
+
+  # icon:exclamation-triangle[]
+  pass:[[[assemble.archive.app.fileSets]]]
+    # The input directory to copy files from.
+    # icon:exclamation-triangle[]
+    input = "path/to/input/directory"
+    # The target path inside the archive.
+    # If left undefined, defaults to the root of the archive.
+    # icon:dot-circle[]
+    output = "path/to/archive/entry"
+    # A set of files and directory to include.
+    # icon:dot-circle[]
+    includes = ["name_or_regex"]
+    # A set of files and directory to exclude.
+    # icon:dot-circle[]
+    excludes = ["name_or_regex"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "assemble": {
+    // icon:dot-circle[]
+    "archive": {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      "app": {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "active": "ALWAYS",
+
+        // Export the assembled artifacts as a matching named distribution.
+        // Defaults to `true`.
+        // icon:dot-circle[]
+        "exported": true,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[] icon:file-alt[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+          "foo": "bar"
+        },
+
+        // Name of the archive.
+        // If left undefined, will use {{distributionName}}-{{projectVersion}}.
+        // icon:dot-circle[] icon:file-alt[]
+        "archiveName": "app-{{projectVersion}}",
+
+        // The distribution type.
+        // Used to determine packager templates.
+        // Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+        // Defaults to `BINARY`.
+        // icon:dot-circle[]
+        "distributionType": "JAVA_BINARY",
+
+        // Attach the current platform to the archiveName.
+        // icon:dot-circle[]
+        "attachPlatform": true,
+
+        // Set of archive formats to use.
+        // Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+        // icon:dot-circle[]
+        "formats": [
+           "ZIP",
+           "TGZ"
+        ],
+
+        // icon:exclamation-triangle[]
+        "fileSets": [
+          {
+            // The input directory to copy files from.
+            // icon:exclamation-triangle[]
+            "input": "path/to/input/directory",
+
+            // The target path inside the archive.
+            // If left undefined, defaults to the root of the archive.
+            // icon:dot-circle[]
+            "output": "path/to/archive/entry",
+
+            // A set of files and directory to include.
+            // icon:dot-circle[]
+            "includes": ["name_or_regex"],
+
+            // A set of files and directory to exclude.
+            // icon:dot-circle[]
+            "excludes": ["name_or_regex"]
+          }
+        ]
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <assemble>
+    <!--
+      icon:dot-circle[]
+    -->
+    <archive>
+      <!--
+        Assemblers require a name.
+        icon:exclamation-triangle[]
+      -->
+      <app>
+        <!--
+          Enables or disables the distribution.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `ALWAYS`.
+          icon:dot-circle[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          Export the assembled artifacts as a matching named distribution.
+          Defaults to `true`.
+          icon:dot-circle[]
+        -->
+        <exported>true</exported>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
+          Name of the archive.
+          If left undefined, will use {{distributionName}}-{{projectVersion}}.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <archiveName>app-{{projectVersion}}</archiveName>
+
+        <!--
+          The distribution type.
+          Used to determine packager templates.
+          Supported values are>[JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+          Defaults to `BINARY`.
+          icon:dot-circle[]
+        -->
+        <distributionType>JAVA_BINARY</distributionType>
+
+        <!--
+          Attach the current platform to the archiveName.
+          Define only if the application is modular.
+          icon:dot-circle[]
+        -->
+        <attachPlatform>true</attachPlatform>
+
+        <!--
+          Set of archive formats to use.
+          Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+          icon:dot-circle[]
+        -->
+        <formats>
+          <format>ZIP</format>
+          <format>TGZ</format>
+        </formats>
+
+        <!--
+          icon:exclamation-triangle[]
+        -->
+        <fileSets>
+          <fileSet>
+            <!--
+              The input directory to copy files from.
+              icon:exclamation-triangle[]
+            -->
+            <input>path/to/input/directory</input>
+
+            <!--
+              The target path inside the archive.
+              If left undefined, defaults to the root of the archive.
+              icon:dot-circle[]
+            -->
+            <output>path/to/archive/entry</output>
+
+            <!--
+              A set of files and directory to include.
+              icon:dot-circle[]
+            -->
+            <includes>
+              <include>name_or_regex</include>
+            </includes>
+
+            <!--
+              A set of files and directory to exclude.
+              icon:dot-circle[]
+            -->
+            <excludes>
+              <exclude>name_or_regex</exclude>
+            </excludes>
+          </fileSet>
+        </fileSets>
+      </app>
+    </archive>
+  </assemble>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  assemble {
+    // icon:dot-circle[]
+    archive {
+      // Assemblers require a name.
+      // icon:exclamation-triangle[]
+      app {
+
+        // Enables or disables the assembler.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // Export the assembled artifacts as a matching named distribution.
+        // Defaults to `true`.
+        // icon:dot-circle[]
+        exported = true
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+
+        // Name of the archive.
+        // If left undefined, will use {{distributionName}}-{{projectVersion}}.
+        // icon:dot-circle[] icon:file-alt[]
+        archiveName = 'app-{{projectVersion}}'
+
+        // The distribution type.
+        // Used to determine packager templates.
+        // Supported values are = [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+        // Defaults to `BINARY`.
+        // icon:dot-circle[]
+        distributionType = 'JAVA_BINARY'
+
+        // Attach the current platform to the archiveName.
+        // Define only if the application is modular.
+        // icon:dot-circle[]
+        attachPlatform = true
+
+        // Set of archive formats to use.
+        // Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+        // icon:dot-circle[]
+        formats = [
+            'ZIP',
+            'TGZ'
+        ]
+
+        // icon:exclamation-triangle[]
+        fileSet {
+          // The input directory to copy files from.
+          // icon:exclamation-triangle[]
+          input = 'path/to/input/directory'
+          // The target path inside the archive.
+          // If left undefined, defaults to the root of the archive.
+          // icon:dot-circle[]
+          output = 'path/to/archive/entry'
+          // A set of files and directory to include.
+          // icon:dot-circle[]
+          includes = ['name_or_regex']
+          // A set of files and directory to exclude.
+          // icon:dot-circle[]
+          excludes = ['name_or_regex']
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Example
+
+Given the following file structure
+
+[source]
+----
+.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── release
+        └── app
+----
+
+And this assembly configuration
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  version: 1.0.0
+
+assemble:
+  archive:
+    app:
+      active: ALWAYS
+      fileSets:
+        - input: '.'
+          includes:
+            - 'LICENSE'
+            - 'README'
+        - input: 'target/release'
+          output: 'bin'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  version = "1.0.0"
+
+[assemble.archive.app]
+  active = "ALWAYS"
+  pass:[[[assemble.archive.app.fileSets]]]
+    input = "."
+    includes = ["LICENSE", "README"]
+  pass:[[[assemble.archive.app.fileSets]]]
+    input = "target/release"
+    output = "bin"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "version": "1.0.0"
+  },
+  "assemble": {
+    "archive": {
+      "app": {
+        "active": "ALWAYS",
+        "fileSets": [
+          {
+            "input": ".",
+            "includes": ["LICENSE", "README"]
+          },
+          {
+            "input": "target/release",
+            "output": "bin"
+          }
+        ]
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <project>
+    <version>1.0.0</version>
+  </project>
+  <assemble>
+    <archive>
+      <app>
+        <active>ALWAYS</active>
+        <fileSets>
+          <fileSet>
+            <input>.</input>
+            <includes>
+              <include>LICENSE</include>
+              <include>README</include>
+            </includes>
+          </fileSet>
+          <fileSet>
+            <input>target/release</input>
+            <output>bin</output>
+          </fileSet>
+        </fileSets>
+      </app>
+    </archive>
+  </assemble>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    version = '1.0.0'
+  }
+  assemble {
+    archive {
+      app {
+        active = 'ALWAYS'
+        fileSet {
+          input = '.'
+          includes = ['LICENSE', 'README']
+        }
+        fileSet {
+          input = 'target/release'
+          output = 'bin'
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+Results in an assembled Zip archive named `app-1.0.0.zip` with the following entries
+
+[source]
+----
+app-1.0.0
+├── LICENSE
+├── README
+└── bin
+    └── app
+----

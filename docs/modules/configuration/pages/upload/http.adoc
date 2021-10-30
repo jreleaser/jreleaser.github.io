@@ -1,6 +1,8 @@
 = Http
+:uploader_id:   http
+:uploader_name: HTTP
 
-Uploads artifacts, files, and signatures to an HTTP/HTTPS server
+Uploads artifacts, files, and signatures to an {uploader_name}/HTTPS server
 
 .Prerequisites:
 
@@ -15,31 +17,9 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-upload:
-  # icon:dot-circle[]
-  http:
-    # Uploaders require a name.
-    # icon:exclamation-triangle[]
-    app:
-
-      # Enables or disables the uploader.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      # Defaults to `NEVER`.
-      # icon:dot-circle[]
-      active: ALWAYS
-
-      # Defines the connection timeout in seconds.
-      # Defaults to `20`.
-      # icon:dot-circle[]
-      connectTimeout: 20
-
-      # Defines the read timeout in seconds.
-      # Defaults to `60`.
-      # icon:dot-circle[]
-      readTimeout: 60
+include::partial$upload/yaml/common-head.adoc[]
 
       # URL of the HTTP/HTTPS server + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
@@ -81,54 +61,15 @@ upload:
       # icon:dot-circle[] icon:file-alt[]
       headers:
         'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'
-
-      # Upload files.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      files: true
-
-      # Upload distribution artifacts.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      artifacts: true
-
-      # Upload signatures.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      signatures: true
-
-      # Additional properties used when evaluating templates.
-      # icon:dot-circle[]
-      extraProperties:
-        # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
-        foo: bar
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# Uploaders require a name.
-# icon:exclamation-triangle[]
-[upload.http.app]
-
-  # Enables or disables the uploader.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
-
-  # Defines the connection timeout in seconds.
-  # Defaults to `20`.
-  # icon:dot-circle[]
-  connectTimeout = 20
-
-  # Defines the read timeout in seconds.
-  # Defaults to `60`.
-  # icon:dot-circle[]
-  readTimeout = 60
+include::partial$upload/toml/common-head.adoc[]
 
   # URL of the HTTP/HTTPS server + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
@@ -169,58 +110,15 @@ TOML::
   # Values accept xref:configuration:name-templates.adoc[].
   # icon:dot-circle[] icon:file-alt[]
   headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"
-
-  # Upload files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  files = true
-
-  # Upload distribution artifacts.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  artifacts = true
-
-  # Upload signatures.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  signatures = true
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "upload": {
-    // icon:dot-circle[]
-    "http": {
-      // Uploaders require a name.
-      // icon:exclamation-triangle[]
-      "app": {
-
-        // Enables or disables the uploader.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        "active": "ALWAYS",
-
-        // Defines the connection timeout in seconds.
-        // Defaults to `20`.
-        // icon:dot-circle[]
-        "connectTimeout": 20,
-
-        // Defines the read timeout in seconds.
-        // Defaults to `60`.
-        // icon:dot-circle[]
-        "readTimeout": 60,
+include::partial$upload/json/common-head.adoc[]
 
         // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
@@ -262,76 +160,17 @@ JSON::
         // icon:dot-circle[] icon:file-alt[]
         "headers": {
           "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
-        },
-
-        // Upload files.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "files": true,
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "artifacts": true,
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "signatures": true,
-
-        // Additional properties used when evaluating templates.
-        // icon:dot-circle[]
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
-          "foo": "bar"
         }
-      }
-    }
-  }
-}
+include::partial$upload/json/common-footer.adoc[]
 ----
 --
 Maven::
 +
 --
 [source,xml]
-[subs="verbatim,+macros"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <upload>
-    <!--
-      icon:dot-circle[]
-    -->
-    <http>
-      <!--
-        Uploaders require a name.
-        icon:exclamation-triangle[]
-      -->
-      <app>
-        <!--
-          Enables or disables the distribution.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `ALWAYS`.
-          icon:dot-circle[]
-        -->
-        <active>ALWAYS</active>
-
-        <!--
-          Defines the connection timeout in seconds.
-          Defaults to `20`.
-          icon:dot-circle[]
-        -->
-        <connectTimeout>20</connectTimeout>
-
-        <!--
-          Defines the read timeout in seconds.
-          Defaults to `60`.
-          icon:dot-circle[]
-        -->
-        <readTimeout>60</readTimeout>
+include::partial$upload/maven/common-head.adoc[]
 
         <!--
           URL of the HTTP/HTTPS server + path + artifact.
@@ -388,74 +227,16 @@ Maven::
         <headers>
           <X-ARTIFACT-PLATFORM>{{artifactPlatform}}</X-ARTIFACT-PLATFORM>
         </headers>
-
-        <!--
-          Upload files.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <files>true</files>
-
-        <!--
-          Upload distribution artifacts.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <artifacts>true</artifacts>
-
-        <!--
-          Upload signatures.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <signatures>true</signatures>
-
-        <!--
-          Additional properties used when evaluating templates.
-          icon:dot-circle[]
-        -->
-        <extraProperties>
-          <!--
-            Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
-          -->
-          <foo>bar</foo>
-        </extraProperties>
-      </app>
-    </http>
-  </upload>
-</jreleaser>
+include::partial$upload/maven/common-footer.adoc[]
 ----
 --
 Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  upload {
-    // icon:dot-circle[]
-    http {
-      // Uploaders require a name.
-      // icon:exclamation-triangle[]
-      app {
-
-        // Enables or disables the uploader.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        active = 'ALWAYS'
-
-        // Defines the connection timeout in seconds.
-        // Defaults to `20`.
-        // icon:dot-circle[]
-        connectTimeout = 20
-
-        // Defines the read timeout in seconds.
-        // Defaults to `60`.
-        // icon:dot-circle[]
-        readTimeout = 60
+include::partial$upload/gradle/common-head.adoc[]
 
         // URL of the HTTP/HTTPS server + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
@@ -496,30 +277,7 @@ jreleaser {
         // Values accept xref:configuration:name-templates.adoc[].
         // icon:dot-circle[] icon:file-alt[]
         headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
-
-        // Upload files.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        files = true
-
-        // Upload distribution artifacts.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        artifacts = true
-
-        // Upload signatures.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        signatures = true
-
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
-        // icon:dot-circle[]
-        extraProperties.put('foo', 'bar')
-      }
-    }
-  }
-}
+include::partial$upload/gradle/common-footer.adoc[]
 ----
 --
 ====
@@ -541,7 +299,7 @@ The downloadUrl is the URL used to download artifacts from.
 An example configuration may look like
 `downloadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFileName}}'`.
 
-And will result in a final deployment like
+And will result in a final URL like
 `pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
 
 == Username

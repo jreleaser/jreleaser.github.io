@@ -44,6 +44,7 @@ release:
   github:
     overwrite: true
     sign: true
+    discussionCategoryName: Announcements
     changelog:
       formatted: ALWAYS
       format: '- {{commitShortHash}} {{commitTitle}}'
@@ -55,6 +56,12 @@ release:
           title: 'Merge pull'
         - label: 'merge_branch'
           title: 'Merge branch'
+        - label: 'translation'
+          title: '[translation]'
+        - label: 'task'
+          title: '[chore]'
+        - label: 'dependencies'
+          title: '[deps]'
         - label: 'feature'
           title: 'Resolves #'
           body: 'Resolves #'
@@ -64,10 +71,8 @@ release:
         - label: 'issue'
           title: 'Relates to #'
           body: 'Relates to #'
-        - label: 'task'
-          title: '[chore]'
-        - label: 'dependencies'
-          title: '[deps]'
+        - label: 'allcontributors'
+          title: 'docs: update'
       # Categorize commits by labels
       categories:
         - title: 'Merge'
@@ -83,21 +88,31 @@ release:
         - title: '🧰 Tasks'
           labels:
             - 'task'
+        - title: '🌐 Translation'
+          labels:
+            - 'translation'
         - title: '⚙️  Dependencies'
           labels:
             - 'dependencies'
+        - title: 'allcontributors'
+          labels:
+            - 'allcontributors'
       hide:
         # hide Merge commits
         categories:
           - 'Merge'
+          - 'allcontributors'
         # hide contributions from GitHub bots
         contributors:
           - 'GitHub'
+          - 'allcontributors'
       replacers:
         # Remove `[chore] ` from the commit message
         - search: '\[chore\] '
         # Remove `[deps] ` from the commit message
         - search: '\[deps\] '
+        # Remove `[translation] ` from the commit message
+        - search: '\[translation\] '
 
 # File signing is always active
 signing:
@@ -110,7 +125,7 @@ checksum:
   # Do not checksum additional files, only distribution artifacts
   files: false
 
-# Announcing a release only occurs whn it's not snapshot
+# Announcing a release only occurs when it's not snapshot
 announce:
   twitter:
     active: release

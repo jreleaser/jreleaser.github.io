@@ -150,9 +150,10 @@ The following names are related to xref:configuration:project.adoc[]
 | projectVersionMinor      | the minor number (if any) of the project's version (semver)
 | projectVersionPatch      | the patch number (if any) of the project's version (semver)
 | projectVersionTag        | the tag (if any) of the project's version (semver)
-| projectVersionNumber     | the version number (no build, no tag) of the project's version (semver, java_module)
-| projectVersionPrerelease | the prerelease (if any) of the project's version (java_module)
-| projectVersionBuild      | the build info (if any) of the project's version (semver, java_module)
+| projectVersionNumber     | the version number (no build, no tag) of the project's version (semver, java_runtime, java_module)
+| projectVersionOptional   | the optional part (if any) of the project's version (java_runtime)
+| projectVersionPrerelease | the prerelease part (if any) of the project's version (java_runtime, java_module)
+| projectVersionBuild      | the build part (if any) of the project's version (semver, java_runtime, java_module)
 | projectDescription       | the project description
 | projectLongDescription   | the project long description
 | projectWebsite           | link to the project website
@@ -402,6 +403,7 @@ The following names are related to xref:configuration:release/index.adoc[]
 | repoName              | the name of the Git repository
 | repoBranch            | the branch on which the release is made
 | tagName               | the tag being release, defaults to `v{{projectVersion}}`
+| previousTagName       | the tag to compare the release tag to, defaults to the previous tag
 | releaseName           | the release name, defaults to `Release {{tagName}}`
 | milestoneName         | the milestone name/title, defaults to `{{tagName}}`
 | repoCanonicalName     | the canonical name of the repository, `{{repoOwner}}/{{repoName}}`
@@ -444,7 +446,7 @@ The following names are related to xref:configuration:distributions.adoc[]
 | distributionJavaMainClass    | the main class launched by the executable script launcher
 |===
 
-Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix 
+Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix
 and the capitalized key, such that
 
 [tabs]
@@ -2137,6 +2139,105 @@ jreleaser {
 --
 ====
 
+== S3
+
+Every key/value from `s3.extraProperties` is mapped with `s3` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+upload:
+  s3:
+    app:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `s3`, i.e, `s3Foo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[upload.s3.app]
+  # Key will be capitalized and prefixed
+  # with `s3`, i.e, `s3Foo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "upload": {
+    "s3": {
+      "app": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `s3`, i.e, `s3Foo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <s3>
+      <app>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `s3`, i.e, `s3Foo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </app>
+    </s3>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  upload {
+    s3 {
+      app {
+        // Key will be capitalized and prefixed
+        // with `s3`, i.e, `s3Foo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
 == Scoop
 
 The following names are related to xref:configuration:packagers/scoop.adoc[]
@@ -2642,6 +2743,98 @@ jreleaser {
     teams {
       // Key will be capitalized and prefixed
       // with `teams`, i.e, `teamsFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Telegram
+
+Every key/value from `telegram.extraProperties` is mapped with `telegram` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  telegram:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `telegram`, i.e, `telegramFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.telegram]
+  # Key will be capitalized and prefixed
+  # with `telegram`, i.e, `telegramFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "telegram": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `telegram`, i.e, `telegramFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <telegram>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `telegram`, i.e, `telegramFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </telegram>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    telegram {
+      // Key will be capitalized and prefixed
+      // with `telegram`, i.e, `telegramFoo`.
       extraProperties.put('foo', 'bar')
     }
   }

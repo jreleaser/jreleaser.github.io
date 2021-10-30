@@ -28,6 +28,13 @@
   # icon:dot-circle[]
   changelog.formatted = "ALWAYS"
 
+  # Preconfigured changelog options.
+  # Valid values are [`gitmoji`, `conventional-commits`].
+  # Requires `formatted` to be enabled.
+  # Defaults to empty.
+  # icon:dot-circle[]
+  changelog.preset = "gitmoji"
+
   # The template to use for each change.
   # Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
   # icon:dot-circle[] icon:file-alt[]
@@ -39,7 +46,7 @@
   changelog.content = """
     # Changelog
 
-    {{changelogChanges}
+    {{changelogChanges}}
     {{changelogContributors}}"""
 
   # Path to a template file that defines the contents.
@@ -102,11 +109,13 @@
 
     # Matches the text of the first commit line.
     # Value may be plain text or regex.
+    # Use `regex:` as prefix to indicate a regex.
     # icon:dot-circle[]
-    title = "^fix:"
+    title = "regex:fix:"
 
     # Matches the full text of the commit.
     # Value may be plain text or regex.
+    # Use `regex:` as prefix to indicate a regex.
     # icon:dot-circle[]
     body = "Fixes #"
 
@@ -119,6 +128,8 @@
 
   pass:[[[]release.{gitservice_id}.changelog.categoriespass:[]]]
     title = "🐛 Bug Fixes"
+    # You may override the formate per category.
+    format = "- {{commitShortHash}} {{commitBody}}"
     labels = ["bug", "fix"]
 
   # Defines rules for replacing the generated content.

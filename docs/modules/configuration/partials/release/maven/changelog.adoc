@@ -43,6 +43,15 @@
         <formatted>ALWAYS</formatted>
 
         <!--
+          Preconfigured changelog options.
+          Valid values are [`gitmoji`, `conventional-commits`].
+          Requires `formatted` to be enabled.
+          Defaults to empty.
+          icon:dot-circle[]
+        -->
+        <preset>gitmoji</preset>
+
+        <!--
           The template to use for each change.
           Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
           icon:dot-circle[] icon:file-alt[]
@@ -57,7 +66,7 @@
         <content>
           # Changelog
 
-          {{changelogChanges}
+          {{changelogChanges}}
           {{changelogContributors}}
         </content>
 
@@ -157,13 +166,15 @@
             <!--
               Matches the text of the first commit line.
               Value may be plain text or regex.
+              Use `regex:` as prefix to indicate a regex.
               icon:dot-circle[]
             -->
-            <title>^fix:</title>
+            <title>regex:fix:</title>
 
             <!--
               Matches the full text of the commit.
               Value may be plain text or regex.
+              Use `regex:` as prefix to indicate a regex.
               icon:dot-circle[]
             -->
             <body>Fixes #</body>
@@ -182,6 +193,10 @@
           </category>
           <category>
             <title>🐛 Bug Fixes</title>
+            <!--
+              You may override the formate per category.
+            -->
+            <format>- {{commitShortHash}} {{commitBody}}</format>
             <labels>bug,fix</labels>
           </category>
         </categories>
