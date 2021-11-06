@@ -502,7 +502,7 @@
 <article class="doc">
 <h1 class="page">Jlink</h1>
 <div class="paragraph">
-<p>Creates a Java Runtime image using <a href="https://docs.oracle.com/en/java/javase/11/tools/jlink.html">Jlink</a>.</p>
+<p>Creates a Java Runtime image using <a href="https://docs.oracle.com/en/java/javase/11/tools/jlink.html">jlink</a>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -592,6 +592,12 @@ assemble:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       exported: true
 
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+        foo: bar
+
       # Name of the executable launcher.
       # If left undefined, will use ${assembler.name}.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -664,21 +670,6 @@ assemble:
           # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         - pattern: path/to/**/*.jar
 
-      # Defines a list of additional files as globs.
-      # These files will be added to the assembled Zip file.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      files:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - pattern: path/to/**/*.txt
-
-      # Additional properties used when evaluating templates.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      extraProperties:
-        # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-        foo: bar
-
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       java:
         # Maven coordinates: groupId.
@@ -710,7 +701,36 @@ assemble:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties:
           # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-          foo: bar</code></pre>
+          foo: bar
+
+      # Defines a list of additional files as globs.
+      # These files will be added to the assembled Zip file.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files:
+          # The pattern to use.
+          # May use glob or regex pattern syntax.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        - pattern: path/to/**/*.txt
+
+      # Defines a list of additional files as filesets.
+      # These files will be added to the assembled Zip file.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      fileSets:
+          # The input directory to copy files from.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        - input: path/to/input/directory
+          # The target path inside the archive.
+          # If left undefined, defaults to the root of the archive.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          output: path/to/archive/entry
+          # A set of files and directory to include.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          includes:
+            - 'name_or_regex'
+          # A set of files and directory to exclude.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          excludes:
+            - 'name_or_regex'</code></pre>
 </div>
 </div>
 </div>
@@ -731,6 +751,11 @@ assemble:
   # Defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   exported = true
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
 
   # Name of the executable launcher.
   # If left undefined, will use ${assembler.name}.
@@ -798,20 +823,6 @@ assemble:
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     pattern = "path/to/**/*.jar"
 
-  # Defines a list of additional files as globs.
-  # These files will be added to the assembled Zip file.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.jlink.app.files]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    pattern = "path/to/**/*.txt"
-
-  # Additional properties used when evaluating templates.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-
   # Maven coordinates: groupId.
   # If left undefined, will use ${project.java.groupId}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -840,7 +851,34 @@ assemble:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   java.extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+
+  # Defines a list of additional files as globs.
+  # These files will be added to the assembled Zip file.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[assemble.jlink.app.files]]
+    # The pattern to use.
+    # May use glob or regex pattern syntax.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    pattern = "path/to/**/*.txt"
+
+  # Defines a list of additional files as filesets.
+  # These files will be added to the assembled Zip file.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [[assemble.jlink.app.fileSets]]
+    # The input directory to copy files from.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    input = "path/to/input/directory"
+    # The target path inside the archive.
+    # If left undefined, defaults to the root of the archive.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    output = "path/to/archive/entry"
+    # A set of files and directory to include.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    includes = ["name_or_regex"]
+    # A set of files and directory to exclude.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    excludes = ["name_or_regex"]</code></pre>
 </div>
 </div>
 </div>
@@ -866,6 +904,13 @@ assemble:
         // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "exported": true,
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+          "foo": "bar"
+        },
 
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
@@ -951,25 +996,6 @@ assemble:
           }
         ],
 
-        // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "files": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "pattern": "path/to/**/*.txt"
-          }
-        ],
-
-        // Additional properties used when evaluating templates.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-          "foo": "bar"
-        },
-
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "java": {
           // Maven coordinates: groupId.
@@ -1003,7 +1029,43 @@ assemble:
             // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
             "foo": "bar"
           }
-        }
+        },
+
+        // Defines a list of additional files as globs.
+        // These files will be added to the assembled Zip file.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "files": [
+          {
+            // The pattern to use.
+            // May use glob or regex pattern syntax.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "pattern": "path/to/**/*.txt"
+          }
+        ],
+
+        // Defines a list of additional files as filesets.
+        // These files will be added to the assembled Zip file.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "fileSets": [
+          {
+            // The input directory to copy files from.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+            "input": "path/to/input/directory",
+
+            // The target path inside the archive.
+            // If left undefined, defaults to the root of the archive.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "output": "path/to/archive/entry",
+
+            // A set of files and directory to include.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "includes": ["name_or_regex"],
+
+            // A set of files and directory to exclude.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "excludes": ["name_or_regex"]
+          }
+        ]
       }
     }
   }
@@ -1042,6 +1104,17 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;exported&gt;true&lt;/exported&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
 
         &lt;!--
           Name of the executable launcher.
@@ -1152,33 +1225,6 @@ assemble:
         &lt;/jars&gt;
 
         &lt;!--
-          Defines a list of additional files as globs.
-          These files will be added to the assembled Zip file.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;files&gt;
-          &lt;file&gt;
-            &lt;!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;pattern&gt;path/to/**/*.txt&lt;/pattern&gt;
-          &lt;/file&gt;
-        &lt;/files&gt;
-
-        &lt;!--
-          Additional properties used when evaluating templates.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;extraProperties&gt;
-          &lt;!--
-            Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-          --&gt;
-          &lt;foo&gt;bar&lt;/foo&gt;
-        &lt;/extraProperties&gt;
-
-        &lt;!--
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;java&gt;
@@ -1228,6 +1274,60 @@ assemble:
             &lt;foo&gt;bar&lt;/foo&gt;
           &lt;/extraProperties&gt;
         &lt;/java&gt;
+
+        &lt;!--
+          Defines a list of additional files as globs.
+          These files will be added to the assembled Zip file.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;files&gt;
+          &lt;file&gt;
+            &lt;!--
+              The pattern to use.
+              May use glob or regex pattern syntax.
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;pattern&gt;path/to/**/*.txt&lt;/pattern&gt;
+          &lt;/file&gt;
+        &lt;/files&gt;
+
+        &lt;!--
+          Defines a list of additional files as filesets.
+          These files will be added to the assembled Zip file.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;fileSets&gt;
+          &lt;fileSet&gt;
+            &lt;!--
+              The input directory to copy files from.
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+            --&gt;
+            &lt;input&gt;path/to/input/directory&lt;/input&gt;
+
+            &lt;!--
+              The target path inside the archive.
+              If left undefined, defaults to the root of the archive.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;output&gt;path/to/archive/entry&lt;/output&gt;
+
+            &lt;!--
+              A set of files and directory to include.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;includes&gt;
+              &lt;include&gt;name_or_regex&lt;/include&gt;
+            &lt;/includes&gt;
+
+            &lt;!--
+              A set of files and directory to exclude.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;excludes&gt;
+              &lt;exclude&gt;name_or_regex&lt;/exclude&gt;
+            &lt;/excludes&gt;
+          &lt;/fileSet&gt;
+        &lt;/fileSets&gt;
       &lt;/app&gt;
     &lt;/jlink&gt;
   &lt;/assemble&gt;
@@ -1257,6 +1357,11 @@ assemble:
         // Defaults to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         exported = true
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
 
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
@@ -1337,21 +1442,6 @@ assemble:
           pattern = 'path/to/**/*.jar'
         }
 
-        // Defines a list of additional JARs as globs.
-        // These files will be added to the assembled Zip file.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        files {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          pattern = 'path/to/**/*.txt'
-        }
-
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        extraProperties.put('foo', 'bar')
-
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         java {
           // Maven coordinates = groupId.
@@ -1383,6 +1473,35 @@ assemble:
           // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           extraProperties.put('foo', 'bar')
+        }
+
+        // Defines a list of additional files as globs.
+        // These files will be added to the assembled Zip file.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        files {
+          // The pattern to use.
+          // May use glob or regex pattern syntax.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          pattern = 'path/to/**/*.txt'
+        }
+
+        // Defines a list of additional files as filesets.
+        // These files will be added to the assembled Zip file.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        fileSet {
+          // The input directory to copy files from.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          input = 'path/to/input/directory'
+          // The target path inside the archive.
+          // If left undefined, defaults to the root of the archive.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          output = 'path/to/archive/entry'
+          // A set of files and directory to include.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          includes = ['name_or_regex']
+          // A set of files and directory to exclude.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          excludes = ['name_or_regex']
         }
       }
     }
