@@ -1,6 +1,7 @@
 = Jlink
+:assembler_id: jlink
 
-Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[Jlink].
+Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[{assembler_id}].
 
 TIP: Cross platform Java runtime images may be created however you must ensure that all configured JDKs have the 
 same matching major version.
@@ -16,26 +17,9 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-assemble:
-  # icon:dot-circle[]
-  jlink:
-    # Assemblers require a name.
-    # icon:exclamation-triangle[]
-    app:
-
-      # Enables or disables the assembler.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      # Defaults to `NEVER`.
-      # icon:dot-circle[]
-      active: ALWAYS
-
-      # Export the assembled artifacts as a matching named distribution.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      exported: true
+include::partial$assemble/yaml/common-head.adoc[]
 
       # Name of the executable launcher.
       # If left undefined, will use ${assembler.name}.
@@ -109,6 +93,8 @@ assemble:
           # icon:exclamation-triangle[] icon:file-alt[]
         - pattern: path/to/**/*.jar
 
+include::partial$assemble/yaml/java.adoc[]
+
       # Defines a list of additional files as globs.
       # These files will be added to the assembled Zip file.
       # icon:dot-circle[]
@@ -118,66 +104,19 @@ assemble:
           # icon:exclamation-triangle[] icon:file-alt[]
         - pattern: path/to/**/*.txt
 
-      # Additional properties used when evaluating templates.
-      # icon:dot-circle[] icon:file-alt[]
-      extraProperties:
-        # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-        foo: bar
-
+      # Defines a list of additional files as filesets.
+      # These files will be added to the assembled Zip file.
       # icon:dot-circle[]
-      java:
-        # Maven coordinates: groupId.
-        # If left undefined, will use ${project.java.groupId}.
-        # icon:dot-circle[]
-        groupId: com.acme
-
-        # Maven coordinates: artifactId.
-        # If left undefined, will use ${project.java.artifactId}.
-        # icon:dot-circle[]
-        artifactId: app
-
-        # The minimum Java version required by consumers to run the application.
-        # If left undefined, will use ${project.java.version}.
-        # icon:dot-circle[]
-        version: 8
-
-        # The application's entry point.
-        # If left undefined, will use ${project.java.mainClass}.
-        # icon:dot-circle[]
-        mainClass: com.acme.Main
-
-        # Identifies the project as being member of a multi-project build.
-        # If left undefined, will use ${project.java.multiProject}.
-        # icon:dot-circle[]
-        multiProject: false
-
-        # Additional properties used when evaluating templates.
-        # icon:dot-circle[]
-        extraProperties:
-          # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-          foo: bar
+include::partial$assemble/yaml/filesets.adoc[]
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# Assemblers require a name.
-# icon:exclamation-triangle[]
-[assemble.jlink.app]
-
-  # Enables or disables the assembler.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
-
-  # Export the assembled artifacts as a matching named distribution.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  exported = true
+include::partial$assemble/toml/common-head.adoc[]
 
   # Name of the executable launcher.
   # If left undefined, will use ${assembler.name}.
@@ -245,6 +184,8 @@ TOML::
     # icon:exclamation-triangle[] icon:file-alt[]
     pattern = "path/to/**/*.jar"
 
+include::partial$assemble/toml/java.adoc[]
+
   # Defines a list of additional files as globs.
   # These files will be added to the assembled Zip file.
   # icon:dot-circle[]
@@ -254,67 +195,19 @@ TOML::
     # icon:exclamation-triangle[] icon:file-alt[]
     pattern = "path/to/**/*.txt"
 
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-
-  # Maven coordinates: groupId.
-  # If left undefined, will use ${project.java.groupId}.
+  # Defines a list of additional files as filesets.
+  # These files will be added to the assembled Zip file.
   # icon:dot-circle[]
-  java.groupId = "com.acme"
-
-  # Maven coordinates: artifactId.
-  # If left undefined, will use ${project.java.artifactId}.
-  # icon:dot-circle[]
-  java.artifactId = "app"
-
-  # The minimum Java version required by consumers to run the application.
-  # If left undefined, will use ${project.java.version}.
-  # icon:dot-circle[]
-  java.version = "8"
-
-  # The application's entry point.
-  # If left undefined, will use ${project.java.mainClass}.
-  # icon:dot-circle[]
-  java.mainClass = "com.acme.Main"
-
-  # Identifies the project as being member of a multi-project build.
-  # If left undefined, will use ${project.java.multiProject}.
-  # icon:dot-circle[]
-  java.multiProject = false
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[]
-  java.extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+include::partial$assemble/toml/filesets.adoc[]
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "assemble": {
-    // icon:dot-circle[]
-    "jlink": {
-      // Assemblers require a name.
-      // icon:exclamation-triangle[]
-      "app": {
-
-        // Enables or disables the assembler.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        "active": "ALWAYS",
-
-        // Export the assembled artifacts as a matching named distribution.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "exported": true,
+include::partial$assemble/json/common-head.adoc[]
 
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
@@ -400,6 +293,8 @@ JSON::
           }
         ],
 
+include::partial$assemble/json/java.adoc[]
+
         // Defines a list of additional files as globs.
         // These files will be added to the assembled Zip file.
         // icon:dot-circle[]
@@ -412,87 +307,20 @@ JSON::
           }
         ],
 
-        // Additional properties used when evaluating templates.
-        // icon:dot-circle[] icon:file-alt[]
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-          "foo": "bar"
-        },
-
+        // Defines a list of additional files as filesets.
+        // These files will be added to the assembled Zip file.
         // icon:dot-circle[]
-        "java": {
-          // Maven coordinates: groupId.
-          // If left undefined, will use ${project.java.groupId}.
-          // icon:dot-circle[]
-          "groupId": "com.acme",
-
-          // Maven coordinates: artifactId.
-          // If left undefined, will use ${project.java.artifactId}.
-          // icon:dot-circle[]
-          "artifactId": "app",
-
-          // The minimum Java version required by consumers to run the application.
-          // If left undefined, will use ${project.java.version}.
-          // icon:dot-circle[]
-          "version": "8",
-
-          // The application's entry point.
-          // If left undefined, will use ${project.java.mainClass}.
-          // icon:dot-circle[]
-          "mainClass": "com.acme.Main",
-
-          // Identifies the project as being member of a multi-project build.
-          // If left undefined, will use ${project.java.multiProject}.
-          // icon:dot-circle[]
-          "multiProject": false,
-
-          // Additional properties used when evaluating templates.
-          // icon:dot-circle[]
-          "extraProperties": {
-            // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-            "foo": "bar"
-          }
-        }
-      }
-    }
-  }
-}
+include::partial$assemble/json/filesets.adoc[]
+include::partial$assemble/json/common-footer.adoc[]
 ----
 --
 Maven::
 +
 --
 [source,xml]
-[subs="verbatim,+macros"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <assemble>
-    <!--
-      icon:dot-circle[]
-    -->
-    <jlink>
-      <!--
-        Assemblers require a name.
-        icon:exclamation-triangle[]
-      -->
-      <app>
-        <!--
-          Enables or disables the distribution.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `ALWAYS`.
-          icon:dot-circle[]
-        -->
-        <active>ALWAYS</active>
-
-        <!--
-          Export the assembled artifacts as a matching named distribution.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <exported>true</exported>
+include::partial$assemble/maven/common-head.adoc[]
 
         <!--
           Name of the executable launcher.
@@ -602,6 +430,8 @@ Maven::
           </jar>
         </jars>
 
+include::partial$assemble/maven/java.adoc[]
+
         <!--
           Defines a list of additional files as globs.
           These files will be added to the assembled Zip file.
@@ -619,97 +449,21 @@ Maven::
         </files>
 
         <!--
-          Additional properties used when evaluating templates.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <extraProperties>
-          <!--
-            Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-          -->
-          <foo>bar</foo>
-        </extraProperties>
-
-        <!--
+          Defines a list of additional files as filesets.
+          These files will be added to the assembled Zip file.
           icon:dot-circle[]
         -->
-        <java>
-          <!--
-            Maven coordinates>groupId.
-            If left undefined, will use ${project.java.groupId}.
-            icon:dot-circle[]
-          -->
-          <groupId>com.acme</groupId>
-
-          <!--
-            Maven coordinates>artifactId.
-            If left undefined, will use ${project.java.artifactId}.
-            icon:dot-circle[]
-          -->
-          <artifactId>app</artifactId>
-
-          <!--
-            The minimum Java version required by consumers to run the application.
-            If left undefined, will use ${project.java.version}.
-            icon:dot-circle[]
-          -->
-          <version>8</version>
-
-          <!--
-            The application's entry point.
-            If left undefined, will use ${project.java.mainClass}.
-            icon:dot-circle[]
-          -->
-          <mainClass>com.acme.Main</mainClass>
-
-          <!--
-            Identifies the project as being member of a multi-project build.
-            If left undefined, will use ${project.java.multiProject}.
-            icon:dot-circle[]
-          -->
-          <multiProject>false</multiProject>
-
-          <!--
-            Additional properties used when evaluating templates.
-            icon:dot-circle[]
-          -->
-          <extraProperties>
-            <!--
-              Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-            -->
-            <foo>bar</foo>
-          </extraProperties>
-        </java>
-      </app>
-    </jlink>
-  </assemble>
-</jreleaser>
+include::partial$assemble/maven/filesets.adoc[]
+include::partial$assemble/maven/common-footer.adoc[]
 ----
 --
 Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  assemble {
-    // icon:dot-circle[]
-    jlink {
-      // Assemblers require a name.
-      // icon:exclamation-triangle[]
-      app {
-
-        // Enables or disables the assembler.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        active = 'ALWAYS'
-
-        // Export the assembled artifacts as a matching named distribution.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        exported = true
+include::partial$assemble/gradle/common-head.adoc[]
 
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
@@ -790,7 +544,9 @@ jreleaser {
           pattern = 'path/to/**/*.jar'
         }
 
-        // Defines a list of additional JARs as globs.
+include::partial$assemble/gradle/java.adoc[]
+
+        // Defines a list of additional files as globs.
         // These files will be added to the assembled Zip file.
         // icon:dot-circle[]
         files {
@@ -800,47 +556,11 @@ jreleaser {
           pattern = 'path/to/**/*.txt'
         }
 
-        // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
-        // icon:dot-circle[] icon:file-alt[]
-        extraProperties.put('foo', 'bar')
-
+        // Defines a list of additional files as filesets.
+        // These files will be added to the assembled Zip file.
         // icon:dot-circle[]
-        java {
-          // Maven coordinates = groupId.
-          // If left undefined, will use ${project.java.groupId}.
-          // icon:dot-circle[]
-          groupI = 'com.acme'
-
-          // Maven coordinates = artifactId.
-          // If left undefined, will use ${project.java.artifactId}.
-          // icon:dot-circle[]
-          artifactId = 'app'
-
-          // The minimum Java version required by consumers to run the application.
-          // If left undefined, will use ${project.java.version}.
-          // icon:dot-circle[]
-          version = '8'
-
-          // The application's entry point.
-          // If left undefined, will use ${project.java.mainClass}.
-          // icon:dot-circle[]
-          mainClass = 'com.acme.Main'
-
-          // Identifies the project as being member of a multi-project build.
-          // If left undefined, will use ${project.java.multiProject}.
-          // icon:dot-circle[]
-          multiProject = false
-
-          // Additional properties used when evaluating templates.
-          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-          // icon:dot-circle[]
-          extraProperties.put('foo', 'bar')
-        }
-      }
-    }
-  }
-}
+include::partial$assemble/gradle/filesets.adoc[]
+include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
 ====
