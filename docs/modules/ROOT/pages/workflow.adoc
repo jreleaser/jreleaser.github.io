@@ -22,10 +22,20 @@ distributions for xref:_prepare[], xref:_package[], and xref:_publish[].
 
 Given the nature of platform specific distributions this step must be invoked separatedly from the others.
 
+xref:tools:jreleaser-cli.adoc#_assemble[{icon_cli_s} assemble],
+xref:tools:jreleaser-maven.adoc#_jreleaserassemble[{icon_maven_s} jreleaser:assemble],
+xref:tools:jreleaser-gradle.adoc#_jreleaserassemble[{icon_gradle_s} jreleaserAssemble],
+xref:tools:jreleaser-ant.adoc#_jreleaser_assemble[{icon_ant_s} jreleaser-assemble]
+
 == Changelog
 
 Creates the changelog, either by taking a supplemented external file or calculates it based on the last tag that matches
 the configuration.
+
+xref:tools:jreleaser-cli.adoc#_changelog[{icon_cli_s} changelog],
+xref:tools:jreleaser-maven.adoc#_jreleaserchangelog[{icon_maven_s} jreleaser:changelog],
+xref:tools:jreleaser-gradle.adoc#_jreleaserchangelog[{icon_gradle_s} jreleaserChangelog],
+xref:tools:jreleaser-ant.adoc#_jreleaser_changelog[{icon_ant_s} jreleaser-changelog]
 
 == Checksum
 
@@ -35,6 +45,11 @@ file configured in the xref:configuration:files.adoc[] section.
 All files must exist by the time Checksum is invoked, otherwise an error will occur.
 
 Checksums will be placed at `${basedir}/out/jreleaser/checksums`.
+
+xref:tools:jreleaser-cli.adoc#_checksum[{icon_cli_s} checksum],
+xref:tools:jreleaser-maven.adoc#_jreleaserchecksum[{icon_maven_s} jreleaser:checksum],
+xref:tools:jreleaser-gradle.adoc#_jreleaserchecksum[{icon_gradle_s} jreleaserChecksum],
+xref:tools:jreleaser-ant.adoc#_jreleaser_checksum[{icon_ant_s} jreleaser-checksum]
 
 == Sign
 
@@ -47,12 +62,22 @@ Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
 
 Depends on <<_checksum>>.
 
+xref:tools:jreleaser-cli.adoc#_sign[{icon_cli_s} sign],
+xref:tools:jreleaser-maven.adoc#_jreleasersign[{icon_maven_s} jreleaser:sign],
+xref:tools:jreleaser-gradle.adoc#_jreleasersign[{icon_gradle_s} jreleaserSign],
+xref:tools:jreleaser-ant.adoc#_jreleaser_sign[{icon_ant_s} jreleaser-sign]
+
 == Upload
 
 Uploads artifacts and files to the configured destinations. This step uploads signatures (if enabled), all distribution
 artifacts, and every matching file configured in the xref:configuration:files.adoc[] section. This step is optional.
 
 Depends on <<_sign>>.
+
+xref:tools:jreleaser-cli.adoc#_upload[{icon_cli_s} upload],
+xref:tools:jreleaser-maven.adoc#_jreleaserupload[{icon_maven_s} jreleaser:upload],
+xref:tools:jreleaser-gradle.adoc#_jreleaserupload[{icon_gradle_s} jreleaserUpload],
+xref:tools:jreleaser-ant.adoc#_jreleaser_upload[{icon_ant_s} jreleaser-upload]
 
 == Release
 
@@ -61,6 +86,11 @@ all checksums, signatures (if enabled), all distribution artifacts, and every ma
 xref:configuration:files.adoc[] section. Automatically calculates a changelog & tags the release.
 
 Depends on <<_upload>>.
+
+xref:tools:jreleaser-cli.adoc#_release[{icon_cli_s} release],
+xref:tools:jreleaser-maven.adoc#_jreleaserrelease[{icon_maven_s} jreleaser:release],
+xref:tools:jreleaser-gradle.adoc#_jreleaserrelease[{icon_gradle_s} jreleaserRelease],
+xref:tools:jreleaser-ant.adoc#_jreleaser_release[{icon_ant_s} jreleaser-release]
 
 == Prepare
 
@@ -73,6 +103,11 @@ Prepared files will be placed at `${basedir}/out/jreleaser/${distributionName}/$
 
 Depends on <<_checksum>>.
 
+xref:tools:jreleaser-cli.adoc#_prepare[{icon_cli_s} prepare],
+xref:tools:jreleaser-maven.adoc#_jreleaserprepare[{icon_maven_s} jreleaser:prepare],
+xref:tools:jreleaser-gradle.adoc#_jreleaserprepare[{icon_gradle_s} jreleaserPrepare],
+xref:tools:jreleaser-ant.adoc#_jreleaser_prepare[{icon_ant_s} jreleaser-prepare]
+
 == Package
 
 Processes the files created by the <<_prepare>> step to create specific packages. The xref:configuration:packagers/snap.adoc[]
@@ -83,6 +118,11 @@ matching prepared directory to their respective package directory.
 Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
 
 Depends on <<_prepare>>.
+
+xref:tools:jreleaser-cli.adoc#_package[{icon_cli_s} package],
+xref:tools:jreleaser-maven.adoc#_jreleaserpackage[{icon_maven_s} jreleaser:package],
+xref:tools:jreleaser-gradle.adoc#_jreleaserpackage[{icon_gradle_s} jreleaserPackage],
+xref:tools:jreleaser-ant.adoc#_jreleaser_package[{icon_ant_s} jreleaser-package]
 
 == Publish
 
@@ -95,6 +135,11 @@ Depends on <<_package>>.
 Does not explicitly depend on <<_release>> however some packagers such as Snap require downloading distribution files
 to locally build a snap.
 
+xref:tools:jreleaser-cli.adoc#_publish[{icon_cli_s} publish],
+xref:tools:jreleaser-maven.adoc#_jreleaserpublish[{icon_maven_s} jreleaser:publish],
+xref:tools:jreleaser-gradle.adoc#_jreleaserpublish[{icon_gradle_s} jreleaserPublish],
+xref:tools:jreleaser-ant.adoc#_jreleaser_publish[{icon_ant_s} jreleaser-publish]
+
 == Announce
 
 Announces the release to different media such as xref:configuration:announce/twitter.adoc[] or
@@ -102,6 +147,11 @@ xref:configuration:announce/zulip.adoc[]. xref:configuration:announce/sdkman.ado
 files had been released.
 
 Depends on <<_changelog>>.
+
+xref:tools:jreleaser-cli.adoc#_announce[{icon_cli_s} announce],
+xref:tools:jreleaser-maven.adoc#_jreleaserannounce[{icon_maven_s} jreleaser:announce],
+xref:tools:jreleaser-gradle.adoc#_jreleaserannounce[{icon_gradle_s} jreleaserAnnounce],
+xref:tools:jreleaser-ant.adoc#_jreleaser_announce[{icon_ant_s} jreleaser-announce]
 
 == Full Release
 
@@ -116,3 +166,8 @@ Executes all steps in single session in the following order:
 * <<_package>>
 * <<_publish>>
 * <<_announce>>
+
+xref:tools:jreleaser-cli.adoc#_full_release[{icon_cli_s} full-release],
+xref:tools:jreleaser-maven.adoc#_jreleaserfull_release[{icon_maven_s} jreleaser:full-release],
+xref:tools:jreleaser-gradle.adoc#_jreleaserfullrelease[{icon_gradle_s} jreleaserFullrelease],
+xref:tools:jreleaser-ant.adoc#_jreleaser_full_release[{icon_ant_s} jreleaser-full-release]
