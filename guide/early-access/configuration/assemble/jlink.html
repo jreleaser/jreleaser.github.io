@@ -501,6 +501,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Jlink</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Creates a Java Runtime image using <a href="https://docs.oracle.com/en/java/javase/11/tools/jlink.html">jlink</a>.</p>
 </div>
@@ -736,20 +738,29 @@ assemble:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       fileSets:
           # The input directory to copy files from.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         - input: path/to/input/directory
+
           # The target path inside the archive.
           # If left undefined, defaults to the root of the archive.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           output: path/to/archive/entry
+
           # A set of files and directory to include.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           includes:
             - 'name_or_regex'
+
           # A set of files and directory to exclude.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           excludes:
-            - 'name_or_regex'</code></pre>
+            - 'name_or_regex'
+
+          # Additional properties used when evaluating templates.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          extraProperties:
+            # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+            foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -905,18 +916,27 @@ assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.jlink.app.fileSets]]
     # The input directory to copy files from.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     input = "path/to/input/directory"
+
     # The target path inside the archive.
     # If left undefined, defaults to the root of the archive.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     output = "path/to/archive/entry"
+
     # A set of files and directory to include.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     includes = ["name_or_regex"]
+
     # A set of files and directory to exclude.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    excludes = ["name_or_regex"]</code></pre>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    excludes = ["name_or_regex"]
+
+    # Additional properties used when evaluating templates.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    [[assemble.jlink.app.fileSets.extraProperties]]
+      # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+      foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -1107,21 +1127,28 @@ assemble:
         "fileSets": [
           {
             // The input directory to copy files from.
-            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             "input": "path/to/input/directory",
 
             // The target path inside the archive.
             // If left undefined, defaults to the root of the archive.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             "output": "path/to/archive/entry",
 
             // A set of files and directory to include.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             "includes": ["name_or_regex"],
 
             // A set of files and directory to exclude.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "excludes": ["name_or_regex"]
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "excludes": ["name_or_regex"],
+
+            // Additional properties used when evaluating templates.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "extraProperties": {
+              // Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+              "foo": "bar"
+            }
           }
         ]
       }
@@ -1187,7 +1214,7 @@ assemble:
           If specified, path must exist.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;templateDirectory&gt;&gt;path/to/brew/templates&lt;/templateDirectory&gt;
+        &lt;templateDirectory&gt;path/to/brew/templates&lt;/templateDirectory&gt;
 
         &lt;!--
           Name of the generated image.
@@ -1386,20 +1413,20 @@ assemble:
           &lt;fileSet&gt;
             &lt;!--
               The input directory to copy files from.
-              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
             &lt;input&gt;path/to/input/directory&lt;/input&gt;
 
             &lt;!--
               The target path inside the archive.
               If left undefined, defaults to the root of the archive.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
             &lt;output&gt;path/to/archive/entry&lt;/output&gt;
 
             &lt;!--
               A set of files and directory to include.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
             &lt;includes&gt;
               &lt;include&gt;name_or_regex&lt;/include&gt;
@@ -1407,11 +1434,22 @@ assemble:
 
             &lt;!--
               A set of files and directory to exclude.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
             &lt;excludes&gt;
               &lt;exclude&gt;name_or_regex&lt;/exclude&gt;
             &lt;/excludes&gt;
+
+            &lt;!--
+              Additional properties used when evaluating templates.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;extraProperties&gt;
+              &lt;!--
+                Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+              --&gt;
+              &lt;foo&gt;bar&lt;/foo&gt;
+            &lt;/extraProperties&gt;
           &lt;/fileSet&gt;
         &lt;/fileSets&gt;
       &lt;/app&gt;
@@ -1596,18 +1634,26 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         fileSet {
           // The input directory to copy files from.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           input = 'path/to/input/directory'
+
           // The target path inside the archive.
           // If left undefined, defaults to the root of the archive.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           output = 'path/to/archive/entry'
+
           // A set of files and directory to include.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           includes = ['name_or_regex']
+
           // A set of files and directory to exclude.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           excludes = ['name_or_regex']
+
+          // Additional properties used when evaluating templates.
+          // Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          extraProperties.put('foo', 'bar')
         }
       }
     }
@@ -1615,6 +1661,32 @@ assemble:
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/assemblers/&lt;distribution-name&gt;/jlink</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>launcher.bat.tpl</code></p>
+</li>
+<li>
+<p><code>launcher.tpl</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
