@@ -65,8 +65,8 @@ include::partial$assemble/yaml/common-head.adoc[]
           platform: linux
 
       # The JDK to use.
-      # If undefined, will use the current JDK running JReleaser.
-      # icon:exclamation-triangle[] icon:file-alt[]
+      # If undefined, will find a matching JDK.
+      # icon:dot-circle[] icon:file-alt[]
       jdk:
         path: path/to/jdk
         platform: linux
@@ -179,8 +179,8 @@ include::partial$assemble/toml/common-head.adoc[]
     { path = "path/to/jdk", platform = "linux" }]
 
   # The JDK to use.
-  # If undefined, will use the current JDK running JReleaser.
-  # icon:exclamation-triangle[] icon:file-alt[]
+  # If undefined, will find a matching JDK.
+  # icon:dot-circle[] icon:file-alt[]
   jdk = { path = "path/to/jdk", platform = "linux" }
 
   # Configuration flags for Jdeps
@@ -297,8 +297,8 @@ include::partial$assemble/json/common-head.adoc[]
         ],
 
         // The JDK to use.
-        // If undefined, will use the current JDK running JReleaser.
-        // icon:exclamation-triangle[] icon:file-alt[]
+        // If undefined, will find a matching JDK.
+        // icon:dot-circle[] icon:file-alt[]
         "jdk": {
           "path": "path/to/jdk",
           "platform": "linux"
@@ -445,8 +445,8 @@ include::partial$assemble/maven/common-head.adoc[]
 
         <!--
           The JDK to use.
-          If undefined, will use the current JDK running JReleaser.
-          icon:exclamation-triangle[] icon:file-alt[]
+          If undefined, will find a matching JDK.
+          icon:dot-circle[] icon:file-alt[]
         -->
         <jdk>
           <path>path/to/jdk</path>
@@ -599,8 +599,8 @@ include::partial$assemble/gradle/common-head.adoc[]
         }
 
         // The JDK to use.
-        // If undefined, will use the current JDK running JReleaser.
-        // icon:exclamation-triangle[] icon:file-alt[]
+        // If undefined, will find a matching JDK.
+        // icon:dot-circle[] icon:file-alt[]
         jdk {
           path = 'path/to/jdk'
           platform = 'linux'
@@ -670,6 +670,20 @@ include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+== JDKs
+
+You may specify a value for both `jdk` and `targetJdks`, either, or none. The following rules apply to resolve which JDKs
+will be used to generate custom Java runtimes:
+
+. If both `jdk` and `targetJdks` are specified then they _must_ match the same major version.
+. If only `jdk` is specified then the `targetJdks` will contain a single entry matching the given `jdk`.
+. If no `jdk` is specified then a matching JDK will be searched in `targetJDKs`.
+. If no match is found in rule #3 then the currently executing JDK will be used leading to the same result as rule #2.
+
+Paths for `jdk` and `targetJdks` must exist in the file system. You may use the
+xref:tools:jdks-maven.adoc#_configuration_dsl[{icon_maven_s} jdks-maven-plugin] or
+xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download required JDKs.
 
 == Templates
 
