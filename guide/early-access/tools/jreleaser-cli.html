@@ -754,12 +754,11 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser template -h
-Generate a tool/announcer template.
+Generate a packager/announcer template.
 
 Usage: jreleaser template [-dhioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... ([-an=&lt;announcerName&gt;] |
-                          [-dn=&lt;distributionName&gt; -tn=&lt;toolName&gt;
-                          [-dt=&lt;distributionType&gt;]])
+                          [-D=&lt;key=value&gt;]... ([-an=&lt;announcer&gt;] |
+                          [-dn=&lt;distribution&gt; -pn=&lt;packager&gt; [-dt=&lt;type&gt;]])
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -774,17 +773,19 @@ Options:
   -s, --snapshot            Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
 Announcer templates
-      -an, --announcer-name=&lt;announcerName&gt;
+      -an, --announcer-name=&lt;announcer&gt;
                             The name of the announcer.
-Tool templates
-      -dn, --distribution-name=&lt;distributionName&gt;
+
+Packager templates
+      -dn, --distribution-name=&lt;distribution&gt;
                             The name of the distribution.
-      -dt, --distribution-type=&lt;distributionType&gt;
+      -dt, --distribution-type=&lt;type&gt;
                             The type of the distribution.
                             Defaults to JAVA_BINARY.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
+      -pn, --packager-name=&lt;packager&gt;
+                            The name of the packager.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -807,7 +808,7 @@ Documentation found at https://jreleaser.org</code></pre>
 <a href="../distributions/index.html" class="page">distribution types</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -817,21 +818,18 @@ Documentation found at https://jreleaser.org</code></pre>
 <pre class="highlightjs highlight"><code>$ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=&lt;assemblerName&gt;] [-b=&lt;basedir&gt;]
-                          [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
+Usage: jreleaser assemble [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                           [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                          [-p=&lt;key=value&gt;]...
+                          [-p=&lt;key=value&gt;]... [[[-an=&lt;assembler&gt;]...
+                          [-dn=&lt;distribution&gt;]...] | [[-xan=&lt;assembler&gt;]...
+                          [-xdn=&lt;distribution&gt;]...]]
 
 Options:
-      -an, --assembler-name=&lt;assemblerName&gt;
-                            The name of the assembler.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -844,6 +842,18 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Include Filter:
+      -an, --assembler-name=&lt;assembler&gt;
+                            Include an assembler. Repeatable.
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xan, --exclude-assembler=&lt;assembler&gt;
+                            Exclude an assembler. Repeatable.
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -855,14 +865,15 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--assembler-name</code> must match any of the available <a href="../configuration/assemble/index.html" class="page">assemblers</a>.</p>
+<p>The value of <code>--assembler-name</code> and <code>--exclude-assembler</code> must match any of the available
+<a href="../configuration/assemble/index.html" class="page">assemblers</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured found in the
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured assembler found in the
 <a href="../configuration/assemble/index.html" class="page">assemblers</a> section.</p>
 </div>
 <div class="paragraph">
-<p>This command must be invoked separatedly from the others as some of the assmeblers are platform specific.</p>
+<p>This command must be invoked separately from the others as some of the assmeblers are platform specific.</p>
 </div>
 </div>
 <div class="sect2">
@@ -915,7 +926,9 @@ Calculate checksums.
 Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]...
+                          [-sp=&lt;platform&gt;]... [-dn=&lt;distribution&gt;
+                          [-dn=&lt;distribution&gt;]... | -xdn=&lt;distribution&gt;
+                          [-xdn=&lt;distribution&gt;]...]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -940,6 +953,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -949,6 +968,10 @@ found at the current directory.</p>
 </div>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -960,7 +983,9 @@ Sign release artifacts.
 
 Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                       [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                      [-sp=&lt;platform&gt;]...
+                      [-sp=&lt;platform&gt;]... [-dn=&lt;distribution&gt;
+                      [-dn=&lt;distribution&gt;]... | -xdn=&lt;distribution&gt;
+                      [-xdn=&lt;distribution&gt;]...]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -985,6 +1010,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -994,6 +1025,10 @@ found at the current directory.</p>
 </div>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1004,10 +1039,10 @@ found at the current directory.</p>
 Upload all artifacts.
 
 Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                        [-un=&lt;uploaderName&gt;] [-ut=&lt;uploaderType&gt;]
-                        [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                        [-sp=&lt;platform&gt;]...
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                        [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                        [[[-ut=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] |
+                        [[-xut=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1029,13 +1064,21 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -un, --uploader-name=&lt;uploaderName&gt;
-                            The name of the uploader.
-      -ut, --uploader-type=&lt;uploaderType&gt;
-                            The type of the uploader.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -un, --uploader-name=&lt;name&gt;
+                            Include an uploader by name. Repeatable.
+      -ut, --uploader-type=&lt;uploader&gt;
+                            Include an uploader by type. Repeatable.
+
+Exclude Filter:
+      -xun, --exclude-uploader-name=&lt;name&gt;
+                            Exclude an uploader by name. Repeatable.
+      -xut, --exclude-uploader-type=&lt;uploader&gt;
+
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1048,10 +1091,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--uploader-type</code> must match the type of a configured <a href="../configuration/upload/index.html" class="page">uploader</a>.</p>
+<p>The value of <code>--uploader-type</code> and <code>--exclude-uploader-type</code> must match the type of a configured
+<a href="../configuration/upload/index.html" class="page">uploader</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--uploader-name</code> must match any of the available <a href="../configuration/upload/index.html" class="page">uploaders</a>.</p>
+<p>The value of <code>--uploader-name</code> and <code>--exclude-uploader-name</code> must match any of the available named
+<a href="../configuration/upload/index.html" class="page">uploaders</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1112,7 +1157,8 @@ Create or update a release.
 Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[--auto-config]
+                         [-sp=&lt;platform&gt;]... [[[-dn=&lt;distribution&gt;]...] |
+                         [[-xdn=&lt;distribution&gt;]...] | [[--auto-config]
                          [--project-name=&lt;projectName&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
@@ -1132,7 +1178,7 @@ Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [--commit-author-name=&lt;commitAuthorName&gt;]
                          [--commit-author-email=&lt;commitAuthorEmail&gt;]
                          [--signing-enabled] [--signing-armored]
-                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]
+                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;    Base directory.
@@ -1157,6 +1203,14 @@ Options:
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
   -y, --dryrun               Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                             Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                             Exclude a distribution. Repeatable.
 
 Auto Config Options:
       --auto-config          Activate auto configuration.
@@ -1242,6 +1296,10 @@ found at the current directory.</p>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
+<div class="paragraph">
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -1276,9 +1334,11 @@ mutations should occur when this mode is activated.
 Prepare all distributions.
 
 Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-dn=&lt;distribution&gt;]...
+                         [-pn=&lt;packager&gt;]...] | [[-xdn=&lt;distribution&gt;]...
+                         [-xpn=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1286,8 +1346,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -1302,10 +1360,20 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=&lt;packager&gt;
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1318,10 +1386,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager-name</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1347,7 +1417,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser prepare --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser prepare --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1355,7 +1425,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser prepare --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser prepare --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 </div>
@@ -1367,9 +1437,11 @@ found at the current directory.</p>
 Package all distributions.
 
 Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-dn=&lt;distribution&gt;]...
+                         [-pn=&lt;packager&gt;]...] | [[-xdn=&lt;distribution&gt;]...
+                         [-xpn=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1377,8 +1449,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -1393,11 +1463,21 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=&lt;packager&gt;
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1410,10 +1490,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager-name</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1439,7 +1521,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser package --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser package --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1447,7 +1529,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser package --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser package --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1472,9 +1554,11 @@ mutations should occur when this mode is activated.
 Publish all distributions.
 
 Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-dn=&lt;distribution&gt;]...
+                         [-pn=&lt;packager&gt;]...] | [[-xdn=&lt;distribution&gt;]...
+                         [-xpn=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1482,8 +1566,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -1498,11 +1580,21 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=&lt;packager&gt;
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1515,10 +1607,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution-name</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager-name</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1544,7 +1638,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser publish --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser publish --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1552,7 +1646,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser publish --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser publish --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1576,14 +1670,14 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=&lt;announcerName&gt;]
-                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]...
+                          [-sp=&lt;platform&gt;]... [-an=&lt;announcer&gt;
+                          [-an=&lt;announcer&gt;]... | -xan=&lt;announcer&gt;
+                          [-xan=&lt;announcer&gt;]...]
 
 Options:
-      -an, --announcer-name=&lt;announcerName&gt;
-                            The name of the announcer.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
@@ -1607,6 +1701,12 @@ Options:
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
 
+Filter:
+      -an, --announcer-name=&lt;announcer&gt;
+                            Include an announcer. Repeatable.
+      -xan, --exclude-announcer=&lt;announcer&gt;
+                            Exclude an announcer. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -1618,7 +1718,8 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--announcer-name</code> must match any of the available <a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
+<p>The value of <code>--announcer-name</code> and <code>--exclude-announcer</code> must match any of the available
+<a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
