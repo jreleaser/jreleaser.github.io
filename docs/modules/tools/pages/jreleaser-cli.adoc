@@ -188,12 +188,11 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser template -h
-Generate a tool/announcer template.
+Generate a packager/announcer template.
 
 Usage: jreleaser template [-dhioqsVw] [-b=<basedir>] [-od=<outputdir>]
-                          [-D=<key=value>]... ([-an=<announcerName>] |
-                          [-dn=<distributionName> -tn=<toolName>
-                          [-dt=<distributionType>]])
+                          [-D=<key=value>]... ([-an=<announcer>] |
+                          [-dn=<distribution> -pn=<packager> [-dt=<type>]])
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -208,17 +207,19 @@ Options:
   -s, --snapshot            Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
 Announcer templates
-      -an, --announcer-name=<announcerName>
+      -an, --announcer-name=<announcer>
                             The name of the announcer.
-Tool templates
-      -dn, --distribution-name=<distributionName>
+
+Packager templates
+      -dn, --distribution-name=<distribution>
                             The name of the distribution.
-      -dt, --distribution-type=<distributionType>
+      -dt, --distribution-type=<type>
                             The type of the distribution.
                             Defaults to JAVA_BINARY.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
+      -pn, --packager-name=<packager>
+                            The name of the packager.
 
 Documentation found at https://jreleaser.org
 ----
@@ -235,7 +236,7 @@ xref:configuration:distributions.adoc[distribution].
 The value of `--distribution-type` must match any of the available
 xref:ROOT:distributions/index.adoc[distribution types].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager-name` must match any of the available xref:configuration:packagers/index.adoc[].
 
 === assemble
 
@@ -244,21 +245,18 @@ The value of `--tool-name` must match any of the available xref:configuration:pa
 $ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=<assemblerName>] [-b=<basedir>]
-                          [-c=<configFile>] [-dn=<distributionName>]
+Usage: jreleaser assemble [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
                           [-od=<outputdir>] [-D=<key=value>]...
-                          [-p=<key=value>]...
+                          [-p=<key=value>]... [[[-an=<assembler>]...
+                          [-dn=<distribution>]...] | [[-xan=<assembler>]...
+                          [-xdn=<distribution>]...]]
 
 Options:
-      -an, --assembler-name=<assemblerName>
-                            The name of the assembler.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -271,7 +269,20 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Include Filter:
+      -an, --assembler-name=<assembler>
+                            Include an assembler. Repeatable.
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xan, --exclude-assembler=<assembler>
+                            Exclude an assembler. Repeatable.
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org
+
 ----
 
 If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
@@ -279,12 +290,13 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--assembler-name` must match any of the available xref:configuration:assemble/index.adoc[assemblers].
+The value of `--assembler-name` and `--exclude-assembler` must match any of the available
+xref:configuration:assemble/index.adoc[assemblers].
 
-The value of `--distribution-name` must match the name of a configured found in the
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured assembler found in the
 xref:configuration:assemble/index.adoc[assemblers] section.
 
-This command must be invoked separatedly from the others as some of the assmeblers are platform specific.
+This command must be invoked separately from the others as some of the assmeblers are platform specific.
 
 === changelog
 
@@ -333,7 +345,9 @@ Calculate checksums.
 Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-p=<key=value>]...
-                          [-sp=<platform>]...
+                          [-sp=<platform>]... [-dn=<distribution>
+                          [-dn=<distribution>]... | -xdn=<distribution>
+                          [-xdn=<distribution>]...]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -358,6 +372,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -365,6 +385,9 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
 
 === sign
 
@@ -375,7 +398,9 @@ Sign release artifacts.
 
 Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
                       [-od=<outputdir>] [-D=<key=value>]... [-p=<key=value>]...
-                      [-sp=<platform>]...
+                      [-sp=<platform>]... [-dn=<distribution>
+                      [-dn=<distribution>]... | -xdn=<distribution>
+                      [-xdn=<distribution>]...]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -400,6 +425,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -407,6 +438,9 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
 
 === upload
 
@@ -416,10 +450,10 @@ $ jreleaser upload -h
 Upload all artifacts.
 
 Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                        [-c=<configFile>] [-od=<outputdir>]
-                        [-un=<uploaderName>] [-ut=<uploaderType>]
-                        [-D=<key=value>]... [-p=<key=value>]...
-                        [-sp=<platform>]...
+                        [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
+                        [-p=<key=value>]... [-sp=<platform>]...
+                        [[[-ut=<uploader>]... [-un=<name>]...] |
+                        [[-xut=<uploader>]... [-xun=<name>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -441,13 +475,21 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -un, --uploader-name=<uploaderName>
-                            The name of the uploader.
-      -ut, --uploader-type=<uploaderType>
-                            The type of the uploader.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -un, --uploader-name=<name>
+                            Include an uploader by name. Repeatable.
+      -ut, --uploader-type=<uploader>
+                            Include an uploader by type. Repeatable.
+
+Exclude Filter:
+      -xun, --exclude-uploader-name=<name>
+                            Exclude an uploader by name. Repeatable.
+      -xut, --exclude-uploader-type=<uploader>
+
 
 Documentation found at https://jreleaser.org
 ----
@@ -457,9 +499,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--uploader-type` must match the type of a configured xref:configuration:upload/index.adoc[uploader].
+The value of `--uploader-type` and `--exclude-uploader-type` must match the type of a configured
+xref:configuration:upload/index.adoc[uploader].
 
-The value of `--uploader-name` must match any of the available xref:configuration:upload/index.adoc[uploaders].
+The value of `--uploader-name` and `--exclude-uploader-name` must match any of the available named
+xref:configuration:upload/index.adoc[uploaders].
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
@@ -500,7 +544,8 @@ Create or update a release.
 Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-p=<key=value>]...
-                         [-sp=<platform>]... [[--auto-config]
+                         [-sp=<platform>]... [[[-dn=<distribution>]...] |
+                         [[-xdn=<distribution>]...] | [[--auto-config]
                          [--project-name=<projectName>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
@@ -520,7 +565,7 @@ Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [--commit-author-name=<commitAuthorName>]
                          [--commit-author-email=<commitAuthorEmail>]
                          [--signing-enabled] [--signing-armored]
-                         [--file=<file>]... [--glob=<glob>]...]
+                         [--file=<file>]... [--glob=<glob>]...]]
 
 Options:
   -b, --basedir=<basedir>    Base directory.
@@ -545,6 +590,14 @@ Options:
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
   -y, --dryrun               Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=<distribution>
+                             Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=<distribution>
+                             Exclude a distribution. Repeatable.
 
 Auto Config Options:
       --auto-config          Activate auto configuration.
@@ -615,6 +668,9 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
+
 IMPORTANT: None of the command flags that override model properties can be used in this mode.
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -628,9 +684,11 @@ $ jreleaser prepare -h
 Prepare all distributions.
 
 Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-p=<key=value>]...
+                         [-sp=<platform>]... [[[-dn=<distribution>]...
+                         [-pn=<packager>]...] | [[-xdn=<distribution>]...
+                         [-xpn=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -638,8 +696,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -654,10 +710,20 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=<packager>
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -667,9 +733,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager-name` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -688,13 +756,13 @@ $ jreleaser prepare --distribution-name app
 Prepare all distributions with a single tool:
 [source]
 ----
-$ jreleaser prepare --tool-name brew
+$ jreleaser prepare --packager-name brew
 ----
 
 Prepare a single distribution with a single tool:
 [source]
 ----
-$ jreleaser prepare --distribution-name app --tool-name brew
+$ jreleaser prepare --distribution-name app --packager-name brew
 ----
 
 === package
@@ -705,9 +773,11 @@ $ jreleaser package -h
 Package all distributions.
 
 Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-p=<key=value>]...
+                         [-sp=<platform>]... [[[-dn=<distribution>]...
+                         [-pn=<packager>]...] | [[-xdn=<distribution>]...
+                         [-xpn=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -715,8 +785,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -731,11 +799,21 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=<packager>
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -745,9 +823,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager-name` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -766,13 +846,13 @@ $ jreleaser package --distribution-name app
 Package all distributions with a single tool:
 [source]
 ----
-$ jreleaser package --tool-name brew
+$ jreleaser package --packager-name brew
 ----
 
 Package a single distribution with a single tool:
 [source]
 ----
-$ jreleaser package --distribution-name app --tool-name brew
+$ jreleaser package --distribution-name app --packager-name brew
 ----
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -786,9 +866,11 @@ $ jreleaser publish -h
 Publish all distributions.
 
 Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-p=<key=value>]...
+                         [-sp=<platform>]... [[[-dn=<distribution>]...
+                         [-pn=<packager>]...] | [[-xdn=<distribution>]...
+                         [-xpn=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -796,8 +878,6 @@ Options:
                             The config file.
   -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
@@ -812,11 +892,21 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+      -dn, --distribution-name=<distribution>
+                            Include a distribution. Repeatable.
+      -pn, --packager-name=<packager>
+                            Include a packager. Repeatable.
+
+Exclude Filter:
+      -xdn, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xpn, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -826,9 +916,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution-name` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager-name` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -847,13 +939,13 @@ $ jreleaser publish --distribution-name app
 Publish all distributions with a single tool:
 [source]
 ----
-$ jreleaser publish --tool-name brew
+$ jreleaser publish --packager-name brew
 ----
 
 Publish a single distribution with a single tool:
 [source]
 ----
-$ jreleaser publish --distribution-name app --tool-name brew
+$ jreleaser publish --distribution-name app --packager-name brew
 ----
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -866,14 +958,14 @@ mutations should occur when this mode is activated.
 $ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=<announcerName>]
-                          [-b=<basedir>] [-c=<configFile>] [-od=<outputdir>]
+Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+                          [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-p=<key=value>]...
-                          [-sp=<platform>]...
+                          [-sp=<platform>]... [-an=<announcer>
+                          [-an=<announcer>]... | -xan=<announcer>
+                          [-xan=<announcer>]...]
 
 Options:
-      -an, --announcer-name=<announcerName>
-                            The name of the announcer.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
@@ -897,6 +989,12 @@ Options:
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
 
+Filter:
+      -an, --announcer-name=<announcer>
+                            Include an announcer. Repeatable.
+      -xan, --exclude-announcer=<announcer>
+                            Exclude an announcer. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -905,7 +1003,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--announcer-name` must match any of the available xref:configuration:announce/index.adoc[announcers].
+The value of `--announcer-name` and `--exclude-announcer` must match any of the available
+xref:configuration:announce/index.adoc[announcers].
 
 You may invoke this command in the following ways:
 
