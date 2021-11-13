@@ -645,6 +645,7 @@ The following names identify an artifact without explicit `platform`
 | artifactChecksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
 | artifactFileName       | the name of the artifact file
 | artifactName           | the name of the artifact file without extension
+| artifactSize           | the size (in bytes) of the artifact file
 |===
 
 The following names match an artifact without explicit `platform` when xref:configuration:upload/index.adoc[uploaders]
@@ -664,9 +665,11 @@ The following names match the first artifact in a distribution
 |===
 | Key                          | Description
 | distributionUrl              | the URL required to download the artifact
+| distributionSize             | the size (in bytes) of the artifact file
 | distributionChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
 | distributionArtifactFileName | the name of the artifact file
 | distributionArtifactName     | the name of the artifact file without extension
+| distributionArtifactSize     | the size (in bytes) of the artifact file
 | distributionArtifactPlatform | the artifact's platform (if any)
 |===
 
@@ -690,6 +693,7 @@ Additional names become available when the artifact defines a `platform`
 | artifact${Platform}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
 | artifact${Platform}FileName       | the name of the artifact file
 | artifact${Platform}Name           | the name of the artifact file without extension
+| artifact${Platform}Size           | the size (in bytes) of the artifact file
 |===
 
 Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
@@ -854,12 +858,15 @@ The following names will be calculated:
 * artifactChecksumSha256
 * artifactFileName: `${project.name}-${project.version}.zip`
 * artifactName: `${project.name}-${project.version}`
+* artifactSize
 * artifactMain: true
 * distributionUrl
+* distributionSize
 * distributionChecksummd5
 * distributionChecksumSha256
 * distributionArtifactFileName: `${project.name}-${project.version}.zip`
 * distributionArtifactName: `${project.name}-${project.version}`
+* distributionArtifactSize
 
 *Platform specific artifact*
 
@@ -868,6 +875,7 @@ The following names will be calculated:
 * artifactOsxChekcsumSha256
 * artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
 * artifactOsxName: `${project.name}-${project.version}-mac`
+* artifactOsxSize
 
 == Artifactory
 
@@ -1856,6 +1864,112 @@ jreleaser {
     jbang {
       // Key will be capitalized and prefixed
       // with `jbang`, i.e, `jbangFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Macports
+
+The following names are related to xref:configuration:packagers/macports.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                            | Description
+| macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| macportsRevision               | the port revision nomber
+| macportsCategories             | categories separated by space
+| macportsMaintainers            | formatted maintainers, one per line
+| macportsDistributionUrl        | the download URL without the artifact file name
+| macportsJavaVersion            | the Java version required by the port
+|===
+
+Additionally, every key/value from `macports.extraProperties` is mapped with `macports` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  macports:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `macports`, i.e, `macportsFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.macports]
+  # Key will be capitalized and prefixed
+  # with `macports`, i.e, `macportsFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "macports": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `macports`, i.e, `macportsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <macports>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `macports`, i.e, `macportsFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </macports>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    macports {
+      // Key will be capitalized and prefixed
+      // with `macports`, i.e, `macportsFoo`.
       extraProperties.put('foo', 'bar')
     }
   }
