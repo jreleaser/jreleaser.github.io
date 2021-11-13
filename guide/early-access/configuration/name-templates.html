@@ -1633,6 +1633,10 @@ and the capitalized key, such that</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifactName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1685,6 +1689,10 @@ are configured</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionChecksum${SHA}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the matching checksum of the artifact&#8217;s file, per configured algorithm</p></td>
 </tr>
@@ -1695,6 +1703,10 @@ are configured</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactPlatform</p></td>
@@ -1762,6 +1774,10 @@ are configured</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
 </tr>
 </tbody>
 </table>
@@ -1972,10 +1988,16 @@ distributions:
 <p>artifactName: <code>${project.name}-${project.version}</code></p>
 </li>
 <li>
+<p>artifactSize</p>
+</li>
+<li>
 <p>artifactMain: true</p>
 </li>
 <li>
 <p>distributionUrl</p>
+</li>
+<li>
+<p>distributionSize</p>
 </li>
 <li>
 <p>distributionChecksummd5</p>
@@ -1988,6 +2010,9 @@ distributions:
 </li>
 <li>
 <p>distributionArtifactName: <code>${project.name}-${project.version}</code></p>
+</li>
+<li>
+<p>distributionArtifactSize</p>
 </li>
 </ul>
 </div>
@@ -2010,6 +2035,9 @@ distributions:
 </li>
 <li>
 <p>artifactOsxName: <code>${project.name}-${project.version}-mac</code></p>
+</li>
+<li>
+<p>artifactOsxSize</p>
 </li>
 </ul>
 </div>
@@ -3282,10 +3310,55 @@ key, such that</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mail"><a class="anchor" href="#_mail"></a>Mail</h2>
+<h2 id="_macports"><a class="anchor" href="#_macports"></a>Macports</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every key/value from <code>mail.extraProperties</code> is mapped with <code>mail</code> as key prefix and the capitalized
+<p>The following names are related to <a href="packagers/macports.html" class="page">Macports</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsRepositoryRepoUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the repository URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsRepositoryRepoCloneUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the repository clone URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsRevision</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the port revision nomber</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsCategories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">categories separated by space</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsMaintainers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">formatted maintainers, one per line</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsDistributionUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the download URL without the artifact file name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsJavaVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the Java version required by the port</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Additionally, every key/value from <code>macports.extraProperties</code> is mapped with <code>macports</code> as key prefix and the capitalized
 key, such that</p>
 </div>
 <div class="tabset is-loading">
@@ -3312,6 +3385,111 @@ key, such that</p>
 <div class="tab-pane" aria-labelledby="tabset17_yaml">
 <div class="listingblock">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
+  macports:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `macports`, i.e, `macportsFoo`.
+      foo: bar</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset17_toml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[packagers.macports]
+  # Key will be capitalized and prefixed
+  # with `macports`, i.e, `macportsFoo`.
+  extraProperties.foo = "bar"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset17_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "packagers": {
+    "macports": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `macports`, i.e, `macportsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset17_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;macports&gt;
+      &lt;extraProperties&gt;
+        &lt;!--
+          Key will be capitalized and prefixed
+          with `macports`, i.e, `macportsFoo`.
+        --&gt;
+        &lt;foo&gt;bar&lt;/foo&gt;
+      &lt;/extraProperties&gt;
+    &lt;/macports&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset17_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  packagers {
+    macports {
+      // Key will be capitalized and prefixed
+      // with `macports`, i.e, `macportsFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mail"><a class="anchor" href="#_mail"></a>Mail</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every key/value from <code>mail.extraProperties</code> is mapped with <code>mail</code> as key prefix and the capitalized
+key, such that</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset18_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset18_toml"></a>TOML</p>
+</li>
+<li>
+<p><a id="tabset18_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset18_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset18_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset18_yaml">
+<div class="listingblock">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
   mail:
     extraProperties:
@@ -3321,7 +3499,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset17_toml">
+<div class="tab-pane" aria-labelledby="tabset18_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.mail]
@@ -3331,7 +3509,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset17_json">
+<div class="tab-pane" aria-labelledby="tabset18_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3348,7 +3526,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset17_maven">
+<div class="tab-pane" aria-labelledby="tabset18_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3367,7 +3545,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset17_gradle">
+<div class="tab-pane" aria-labelledby="tabset18_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3397,24 +3575,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset18_yaml"></a>YAML</p>
+<p><a id="tabset19_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset18_toml"></a>TOML</p>
+<p><a id="tabset19_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset18_json"></a>JSON</p>
+<p><a id="tabset19_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset18_maven"></a>Maven</p>
+<p><a id="tabset19_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset18_gradle"></a>Gradle</p>
+<p><a id="tabset19_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset18_yaml">
+<div class="tab-pane" aria-labelledby="tabset19_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -3426,7 +3604,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset18_toml">
+<div class="tab-pane" aria-labelledby="tabset19_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.mastodon]
@@ -3436,7 +3614,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset18_json">
+<div class="tab-pane" aria-labelledby="tabset19_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3453,7 +3631,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset18_maven">
+<div class="tab-pane" aria-labelledby="tabset19_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3472,7 +3650,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset18_gradle">
+<div class="tab-pane" aria-labelledby="tabset19_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3502,24 +3680,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset19_yaml"></a>YAML</p>
+<p><a id="tabset20_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset19_toml"></a>TOML</p>
+<p><a id="tabset20_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset19_json"></a>JSON</p>
+<p><a id="tabset20_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset19_maven"></a>Maven</p>
+<p><a id="tabset20_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset19_gradle"></a>Gradle</p>
+<p><a id="tabset20_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset19_yaml">
+<div class="tab-pane" aria-labelledby="tabset20_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -3531,7 +3709,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset19_toml">
+<div class="tab-pane" aria-labelledby="tabset20_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.mattermost]
@@ -3541,7 +3719,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset19_json">
+<div class="tab-pane" aria-labelledby="tabset20_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3558,7 +3736,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset19_maven">
+<div class="tab-pane" aria-labelledby="tabset20_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3577,7 +3755,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset19_gradle">
+<div class="tab-pane" aria-labelledby="tabset20_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3607,24 +3785,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset20_yaml"></a>YAML</p>
+<p><a id="tabset21_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset20_toml"></a>TOML</p>
+<p><a id="tabset21_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset20_json"></a>JSON</p>
+<p><a id="tabset21_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset20_maven"></a>Maven</p>
+<p><a id="tabset21_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset20_gradle"></a>Gradle</p>
+<p><a id="tabset21_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset20_yaml">
+<div class="tab-pane" aria-labelledby="tabset21_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">upload:
@@ -3637,7 +3815,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset20_toml">
+<div class="tab-pane" aria-labelledby="tabset21_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[upload.s3.app]
@@ -3647,7 +3825,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset20_json">
+<div class="tab-pane" aria-labelledby="tabset21_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3666,7 +3844,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset20_maven">
+<div class="tab-pane" aria-labelledby="tabset21_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3687,7 +3865,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset20_gradle">
+<div class="tab-pane" aria-labelledby="tabset21_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3752,24 +3930,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset21_yaml"></a>YAML</p>
+<p><a id="tabset22_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset21_toml"></a>TOML</p>
+<p><a id="tabset22_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset21_json"></a>JSON</p>
+<p><a id="tabset22_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset21_maven"></a>Maven</p>
+<p><a id="tabset22_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset21_gradle"></a>Gradle</p>
+<p><a id="tabset22_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset21_yaml">
+<div class="tab-pane" aria-labelledby="tabset22_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -3781,7 +3959,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset21_toml">
+<div class="tab-pane" aria-labelledby="tabset22_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[packagers.scoop]
@@ -3791,7 +3969,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset21_json">
+<div class="tab-pane" aria-labelledby="tabset22_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3808,7 +3986,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset21_maven">
+<div class="tab-pane" aria-labelledby="tabset22_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3827,7 +4005,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset21_gradle">
+<div class="tab-pane" aria-labelledby="tabset22_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3857,24 +4035,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset22_yaml"></a>YAML</p>
+<p><a id="tabset23_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset22_toml"></a>TOML</p>
+<p><a id="tabset23_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset22_json"></a>JSON</p>
+<p><a id="tabset23_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset22_maven"></a>Maven</p>
+<p><a id="tabset23_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset22_gradle"></a>Gradle</p>
+<p><a id="tabset23_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset22_yaml">
+<div class="tab-pane" aria-labelledby="tabset23_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -3886,7 +4064,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset22_toml">
+<div class="tab-pane" aria-labelledby="tabset23_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.sdkman]
@@ -3896,7 +4074,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset22_json">
+<div class="tab-pane" aria-labelledby="tabset23_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -3913,7 +4091,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset22_maven">
+<div class="tab-pane" aria-labelledby="tabset23_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -3932,7 +4110,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset22_gradle">
+<div class="tab-pane" aria-labelledby="tabset23_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -3962,24 +4140,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset23_yaml"></a>YAML</p>
+<p><a id="tabset24_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset23_toml"></a>TOML</p>
+<p><a id="tabset24_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset23_json"></a>JSON</p>
+<p><a id="tabset24_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset23_maven"></a>Maven</p>
+<p><a id="tabset24_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset23_gradle"></a>Gradle</p>
+<p><a id="tabset24_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset23_yaml">
+<div class="tab-pane" aria-labelledby="tabset24_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -3991,7 +4169,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset23_toml">
+<div class="tab-pane" aria-labelledby="tabset24_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.slack]
@@ -4001,7 +4179,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset23_json">
+<div class="tab-pane" aria-labelledby="tabset24_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4018,7 +4196,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset23_maven">
+<div class="tab-pane" aria-labelledby="tabset24_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4037,7 +4215,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset23_gradle">
+<div class="tab-pane" aria-labelledby="tabset24_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4202,24 +4380,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset24_yaml"></a>YAML</p>
+<p><a id="tabset25_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset24_toml"></a>TOML</p>
+<p><a id="tabset25_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset24_json"></a>JSON</p>
+<p><a id="tabset25_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset24_maven"></a>Maven</p>
+<p><a id="tabset25_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset24_gradle"></a>Gradle</p>
+<p><a id="tabset25_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset24_yaml">
+<div class="tab-pane" aria-labelledby="tabset25_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
@@ -4231,7 +4409,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset24_toml">
+<div class="tab-pane" aria-labelledby="tabset25_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[packagers.snap]
@@ -4241,7 +4419,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset24_json">
+<div class="tab-pane" aria-labelledby="tabset25_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4258,7 +4436,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset24_maven">
+<div class="tab-pane" aria-labelledby="tabset25_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4277,7 +4455,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset24_gradle">
+<div class="tab-pane" aria-labelledby="tabset25_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4307,24 +4485,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset25_yaml"></a>YAML</p>
+<p><a id="tabset26_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset25_toml"></a>TOML</p>
+<p><a id="tabset26_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset25_json"></a>JSON</p>
+<p><a id="tabset26_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset25_maven"></a>Maven</p>
+<p><a id="tabset26_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset25_gradle"></a>Gradle</p>
+<p><a id="tabset26_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset25_yaml">
+<div class="tab-pane" aria-labelledby="tabset26_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -4336,7 +4514,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset25_toml">
+<div class="tab-pane" aria-labelledby="tabset26_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.teams]
@@ -4346,7 +4524,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset25_json">
+<div class="tab-pane" aria-labelledby="tabset26_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4363,7 +4541,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset25_maven">
+<div class="tab-pane" aria-labelledby="tabset26_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4382,7 +4560,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset25_gradle">
+<div class="tab-pane" aria-labelledby="tabset26_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4412,24 +4590,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset26_yaml"></a>YAML</p>
+<p><a id="tabset27_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset26_toml"></a>TOML</p>
+<p><a id="tabset27_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset26_json"></a>JSON</p>
+<p><a id="tabset27_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset26_maven"></a>Maven</p>
+<p><a id="tabset27_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset26_gradle"></a>Gradle</p>
+<p><a id="tabset27_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset26_yaml">
+<div class="tab-pane" aria-labelledby="tabset27_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -4441,7 +4619,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset26_toml">
+<div class="tab-pane" aria-labelledby="tabset27_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.telegram]
@@ -4451,7 +4629,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset26_json">
+<div class="tab-pane" aria-labelledby="tabset27_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4468,7 +4646,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset26_maven">
+<div class="tab-pane" aria-labelledby="tabset27_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4487,7 +4665,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset26_gradle">
+<div class="tab-pane" aria-labelledby="tabset27_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4517,24 +4695,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset27_yaml"></a>YAML</p>
+<p><a id="tabset28_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset27_toml"></a>TOML</p>
+<p><a id="tabset28_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset27_json"></a>JSON</p>
+<p><a id="tabset28_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset27_maven"></a>Maven</p>
+<p><a id="tabset28_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset27_gradle"></a>Gradle</p>
+<p><a id="tabset28_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset27_yaml">
+<div class="tab-pane" aria-labelledby="tabset28_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -4546,7 +4724,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset27_toml">
+<div class="tab-pane" aria-labelledby="tabset28_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.twitter]
@@ -4556,7 +4734,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset27_json">
+<div class="tab-pane" aria-labelledby="tabset28_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4573,7 +4751,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset27_maven">
+<div class="tab-pane" aria-labelledby="tabset28_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4592,7 +4770,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset27_gradle">
+<div class="tab-pane" aria-labelledby="tabset28_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4622,24 +4800,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset28_yaml"></a>YAML</p>
+<p><a id="tabset29_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset28_toml"></a>TOML</p>
+<p><a id="tabset29_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset28_json"></a>JSON</p>
+<p><a id="tabset29_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset28_maven"></a>Maven</p>
+<p><a id="tabset29_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset28_gradle"></a>Gradle</p>
+<p><a id="tabset29_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset28_yaml">
+<div class="tab-pane" aria-labelledby="tabset29_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -4652,7 +4830,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset28_toml">
+<div class="tab-pane" aria-labelledby="tabset29_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.webhooks.myWebhook]
@@ -4662,7 +4840,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset28_json">
+<div class="tab-pane" aria-labelledby="tabset29_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4681,7 +4859,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset28_maven">
+<div class="tab-pane" aria-labelledby="tabset29_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4702,7 +4880,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset28_gradle">
+<div class="tab-pane" aria-labelledby="tabset29_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -4734,24 +4912,24 @@ key, such that</p>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset29_yaml"></a>YAML</p>
+<p><a id="tabset30_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset29_toml"></a>TOML</p>
+<p><a id="tabset30_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset29_json"></a>JSON</p>
+<p><a id="tabset30_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset29_maven"></a>Maven</p>
+<p><a id="tabset30_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset29_gradle"></a>Gradle</p>
+<p><a id="tabset30_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset29_yaml">
+<div class="tab-pane" aria-labelledby="tabset30_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">announce:
@@ -4763,7 +4941,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset29_toml">
+<div class="tab-pane" aria-labelledby="tabset30_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[announce.zulip]
@@ -4773,7 +4951,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset29_json">
+<div class="tab-pane" aria-labelledby="tabset30_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -4790,7 +4968,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset29_maven">
+<div class="tab-pane" aria-labelledby="tabset30_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -4809,7 +4987,7 @@ key, such that</p>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset29_gradle">
+<div class="tab-pane" aria-labelledby="tabset30_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
