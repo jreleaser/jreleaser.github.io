@@ -518,18 +518,9 @@ At the moment, only artifacts with <code>.zip</code> extension may be packaged w
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Local publication of packages is currently not supported. Please set <code>remoteBuild</code> to <code>true</code> and trigger a
-build on CI. Local publication will be added at a later release.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Local publication of packages requires running on Windows, have <code>powershell</code> and <code>choco</code> installed.
+If you rather package and push on CI then set <code>remoteBuild</code> to <code>true</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -665,6 +656,12 @@ packagers:
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     username: duke
 
+    # The ApiKey associated with the given account.
+    # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+    # environment variable must be defined.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    apiKey: __DO_NOT_SET_HERE__
+
     # Whether to build the package on a remote server or locally.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -748,6 +745,12 @@ packagers:
   # If left unspecified, the release owner will be used.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   username = "duke"
+
+  # The ApiKey associated with the given account.
+  # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  apiKey = "__DO_NOT_SET_HERE__"
 
   # Whether to build the package on a remote server or locally.
   # Defaults to `false`.
@@ -841,6 +844,12 @@ packagers:
       // If left unspecified, the release owner will be used.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "username": "duke",
+
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "apiKey": "__DO_NOT_SET_HERE__",
 
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
@@ -974,6 +983,14 @@ packagers:
       &lt;username&gt;duke&lt;/username&gt;
 
       &lt;!--
+        The ApiKey associated with the given account.
+        If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;apiKey&gt;__DO_NOT_SET_HERE__&lt;/apiKey&gt;
+
+      &lt;!--
         Whether to build the package on a remote server or locally.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1069,6 +1086,12 @@ packagers:
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       username = 'duke'
 
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      apiKey = '__DO_NOT_SET_HERE__'
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1116,9 +1139,9 @@ the following files which will be published to <code>duke/chocolatey-bucket/app<
     &lt;!-- optional --&gt;
     &lt;title&gt;app&lt;/title&gt;
     &lt;projectUrl&gt;https://acme.com/app&lt;/projectUrl&gt;
-    &lt;license type="expression"&gt;Apache-2.0&lt;/license&gt;
+    &lt;licenseUrl&gt;https://github.com/duke/app/blob/main/LICENSE&lt;/licenseUrl&gt;
     &lt;requireLicenseAcceptance&gt;false&lt;/requireLicenseAcceptance&gt;
-    &lt;tags&gt;&lt;/tags&gt;
+    &lt;tags&gt;app&lt;/tags&gt;
     &lt;summary&gt;Sample app&lt;/summary&gt;
     &lt;releaseNotes&gt;https://github.com/duke/app/releases/tag/v1.2.3&lt;/releaseNotes&gt;
   &lt;/metadata&gt;
@@ -1134,7 +1157,7 @@ the following files which will be published to <code>duke/chocolatey-bucket/app<
 <pre class="highlightjs highlight"><code>$tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Install-ChocolateyZipPackage `
     -PackageName 'app' `
@@ -1152,7 +1175,7 @@ Install-BinFile -Name 'app' -Path $app_bat</code></pre>
 <pre class="highlightjs highlight"><code>$tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Uninstall-BinFile -Name 'app' -Path $app_bat</code></pre>
 </div>
