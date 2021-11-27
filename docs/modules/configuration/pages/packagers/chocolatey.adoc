@@ -10,10 +10,10 @@ Publishes packages to link:https://chocolatey.org[].
 
 NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Chocolatey.
 
-WARNING: Local publication of packages is currently not supported. Please set `remoteBuild` to `true` and trigger a
-build on CI. Local publication will be added at a later release.
+Local publication of packages requires running on Windows, have `powershell` and `choco` installed.
+If you rather package and push on CI then set `remoteBuild` to `true`.
 
-WARNING: Snapshots are *not* supported.
+WARNING: Publication of snapshots is *not* allowed.
 
 include::partial$legend.adoc[]
 
@@ -38,10 +38,21 @@ include::partial$packagers/yaml/tap.adoc[]
     # icon:exclamation-triangle[]
     username: duke
 
+    # The ApiKey associated with the given account.
+    # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    apiKey: __DO_NOT_SET_HERE__
+
     # Whether to build the package on a remote server or locally.
     # Defaults to `false`.
     # icon:dot-circle[]
     remoteBuild: false
+
+    # The title of the spec.
+    # If left unspecified, will use `${project.name}`.
+    # icon:dot-circle[]
+    title: Duke
 ----
 --
 TOML::
@@ -63,10 +74,21 @@ include::partial$packagers/toml/tap.adoc[]
   # icon:exclamation-triangle[]
   username = "duke"
 
+  # The ApiKey associated with the given account.
+  # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  apiKey = "__DO_NOT_SET_HERE__"
+
   # Whether to build the package on a remote server or locally.
   # Defaults to `false`.
   # icon:dot-circle[]
   remoteBuild = false
+
+  # The title of the spec.
+  # If left unspecified, will use `${project.name}`.
+  # icon:dot-circle[]
+  title = "Duke"
 ----
 --
 JSON::
@@ -88,10 +110,21 @@ include::partial$packagers/json/tap.adoc[]
       // icon:exclamation-triangle[]
       "username": "duke",
 
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "apiKey": "__DO_NOT_SET_HERE__",
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // icon:dot-circle[]
-      "remoteBuild": false
+      "remoteBuild": false,
+
+      // The title of the spec.
+      // If left unspecified, will use `${project.name}`.
+      // icon:dot-circle[]
+      "title": "Duke"
 include::partial$packagers/json/common-footer.adoc[]
 ----
 --
@@ -117,11 +150,26 @@ include::partial$packagers/maven/tap.adoc[]
       <username>duke</username>
 
       <!--
+        The ApiKey associated with the given account.
+        If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <apiKey>__DO_NOT_SET_HERE__</apiKey>
+
+      <!--
         Whether to build the package on a remote server or locally.
         Defaults to `false`.
         icon:dot-circle[]
       -->
       <remoteBuild>false</remoteBuild>
+
+      <!--
+        The title of the spec.
+        If left unspecified, will use `${project.name}`.
+        icon:dot-circle[]
+      -->
+      <title>Duke</title>
 include::partial$packagers/maven/common-footer.adoc[]
 ----
 --
@@ -144,10 +192,21 @@ include::partial$packagers/gradle/tap.adoc[]
       // icon:exclamation-triangle[]
       username = 'duke'
 
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      apiKey = '__DO_NOT_SET_HERE__'
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // icon:dot-circle[]
       remoteBuild = false
+
+      // The title of the spec.
+      // If left unspecified, will use `${project.name}`.
+      // icon:dot-circle[]
+      title = 'Duke'
 include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
@@ -159,7 +218,7 @@ NOTE: The bucket token environment variable must match with the chosen xref:rele
 be one of [`JRELEASER_CHOCOLATEY_GITHUB_TOKEN`, `JRELEASER_CHOCOLATEY_GITLAB_TOKEN`, `JRELEASER_CHOCOLATEY_GITEA_TOKEN`].
 
 Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
-the following files in `out/jreleaser/app/prepare`, which will be published to `duke/chocolatey-bucket/app`
+the following files which will be published to `duke/chocolatey-bucket/app`
 
 [source,xml]
 [subs="verbatim"]
@@ -177,9 +236,9 @@ the following files in `out/jreleaser/app/prepare`, which will be published to `
     <!-- optional -->
     <title>app</title>
     <projectUrl>https://acme.com/app</projectUrl>
-    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://github.com/duke/app/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags></tags>
+    <tags>app</tags>
     <summary>Sample app</summary>
     <releaseNotes>https://github.com/duke/app/releases/tag/v1.2.3</releaseNotes>
   </metadata>
@@ -195,7 +254,7 @@ the following files in `out/jreleaser/app/prepare`, which will be published to `
 $tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Install-ChocolateyZipPackage `
     -PackageName 'app' `
@@ -213,8 +272,29 @@ Install-BinFile -Name 'app' -Path $app_bat
 $tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Uninstall-BinFile -Name 'app' -Path $app_bat
 ----
 
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/chocolatey`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `binary.nuspec.tpl`
+* `tools/chocolateyinstall.ps1.tpl`
+* `tools/chocolateyuninstall.ps1.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]

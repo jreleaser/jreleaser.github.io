@@ -18,20 +18,21 @@ Options:
   -V, --version     Print version information and exit.
 
 Commands:
-  init          Create a jreleaser config file.
-  config        Display current configuration.
-  template      Generate a tool/announcer template.
-  assemble      Assemble distributions.
-  changelog     Calculate the changelog.
-  checksum      Calculate checksums.
-  sign          Sign release artifacts.
-  upload        Upload all artifacts.
-  release       Create or update a release.
-  prepare       Prepare all distributions.
-  package       Package all distributions.
-  publish       Publish all distributions.
-  announce      Announce a release.
-  full-release  Perform a full release.
+  init                 Create a jreleaser config file.
+  config               Display current configuration.
+  template             Generate a packager/announcer template.
+  assemble             Assemble distributions.
+  changelog            Calculate the changelog.
+  checksum             Calculate checksums.
+  sign                 Sign release artifacts.
+  upload               Upload all artifacts.
+  release              Create or update a release.
+  prepare              Prepare all distributions.
+  package              Package all distributions.
+  publish              Publish all distributions.
+  announce             Announce a release.
+  full-release         Perform a full release.
+  generate-completion  Generate bash/zsh completion script for jreleaser.
 
 Documentation found at https://jreleaser.org
 ----
@@ -115,14 +116,14 @@ The following commands are supported:
 $ jreleaser init -h
 Create a jreleaser config file.
 
-Usage: jreleaser init [-dhioqVw] [-b=<basedir>] [-f=<format>] [-od=<outputdir>]
+Usage: jreleaser init [-ghioqVw] [-b=<basedir>] [-f=<format>] [-od=<outputdir>]
                       [-D=<key=value>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
   -f, --format=<format>     Configuration file format.
+  -g, --debug               Set log level to debug.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -146,25 +147,25 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 $ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser config [-afghiqVw] [-grs] [-scp] [-b=<basedir>]
                         [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
-                        [-p=<key=value>]... [-sp=<platform>]...
+                        [-P=<key=value>]... [-sp=<platform>]...
 
 Options:
   -a, --assembly            Display assembly configuration.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
   -f, --full                Display full configuration.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -188,17 +189,16 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser template -h
-Generate a tool/announcer template.
+Generate a packager/announcer template.
 
-Usage: jreleaser template [-dhioqsVw] [-b=<basedir>] [-od=<outputdir>]
-                          [-D=<key=value>]... ([-an=<announcerName>] |
-                          [-dn=<distributionName> -tn=<toolName>
-                          [-dt=<distributionType>]])
+Usage: jreleaser template [-ghioqsVw] [-b=<basedir>] [-od=<outputdir>]
+                          [-D=<key=value>]... ([-a=<announcer>] |
+                          [-d=<distribution> -p=<packager> [-dt=<type>]])
 
 Options:
   -b, --basedir=<basedir>   Base directory.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -208,17 +208,18 @@ Options:
   -s, --snapshot            Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
 Announcer templates
-      -an, --announcer-name=<announcerName>
+  -a, --announcer=<announcer>
                             The name of the announcer.
-Tool templates
-      -dn, --distribution-name=<distributionName>
+
+Packager templates
+  -d, --distribution=<distribution>
                             The name of the distribution.
-      -dt, --distribution-type=<distributionType>
+      -dt, --distribution-type=<type>
                             The type of the distribution.
                             Defaults to JAVA_BINARY.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
+  -p, --packager=<packager> The name of the packager.
 
 Documentation found at https://jreleaser.org
 ----
@@ -227,15 +228,15 @@ If `--basedir` is undefined then the command assumes it's the current directory.
 
 Announcer and tool settings are mutually exclusive.
 
-The value of `--announcer-name` must match any of the available xref:configuration:announce/index.adoc[announcers].
+The value of `--announcer` must match any of the available xref:configuration:announce/index.adoc[announcers].
 
-The value of `--distribution-name` must match the name of a configured
+The value of `--distribution` must match the name of a configured
 xref:configuration:distributions.adoc[distribution].
 
 The value of `--distribution-type` must match any of the available
 xref:ROOT:distributions/index.adoc[distribution types].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager` must match any of the available xref:configuration:packagers/index.adoc[].
 
 === assemble
 
@@ -244,32 +245,41 @@ The value of `--tool-name` must match any of the available xref:configuration:pa
 $ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=<assemblerName>] [-b=<basedir>]
-                          [-c=<configFile>] [-dn=<distributionName>]
+Usage: jreleaser assemble [-ghiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
                           [-od=<outputdir>] [-D=<key=value>]...
-                          [-p=<key=value>]...
+                          [-P=<key=value>]... [[[-a=<assembler>]...
+                          [-d=<distribution>]...] | [[-xa=<assembler>]...
+                          [-xd=<distribution>]...]]
 
 Options:
-      -an, --assembler-name=<assemblerName>
-                            The name of the assembler.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+  -a, --assembler=<assembler>
+                            Include an assembler. Repeatable.
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xa, --exclude-assembler=<assembler>
+                            Exclude an assembler. Repeatable.
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -279,12 +289,13 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--assembler-name` must match any of the available xref:configuration:assemble/index.adoc[assemblers].
+The value of `--assembler` and `--exclude-assembler` must match any of the available
+xref:configuration:assemble/index.adoc[assemblers].
 
-The value of `--distribution-name` must match the name of a configured found in the
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured assembler found in the
 xref:configuration:assemble/index.adoc[assemblers] section.
 
-This command must be invoked separatedly from the others as some of the assmeblers are platform specific.
+This command must be invoked separately from the others as some of the assmeblers are platform specific.
 
 === changelog
 
@@ -293,23 +304,23 @@ This command must be invoked separatedly from the others as some of the assmeble
 $ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
+Usage: jreleaser changelog [-ghiqVw] [-grs] [-b=<basedir>] [-c=<configFile>]
                            [-od=<outputdir>] [-D=<key=value>]...
-                           [-p=<key=value>]...
+                           [-P=<key=value>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
@@ -330,24 +341,26 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 $ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
-                          [-D=<key=value>]... [-p=<key=value>]...
-                          [-sp=<platform>]...
+                          [-D=<key=value>]... [-P=<key=value>]...
+                          [-sp=<platform>]... [-d=<distribution>
+                          [-d=<distribution>]... | -xd=<distribution>
+                          [-xd=<distribution>]...]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -358,6 +371,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -365,6 +384,9 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
 
 === sign
 
@@ -373,23 +395,25 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 $ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
-                      [-od=<outputdir>] [-D=<key=value>]... [-p=<key=value>]...
-                      [-sp=<platform>]...
+Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
+                      [-od=<outputdir>] [-D=<key=value>]... [-P=<key=value>]...
+                      [-sp=<platform>]... [-d=<distribution>
+                      [-d=<distribution>]... | -xd=<distribution>
+                      [-xd=<distribution>]...]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -400,6 +424,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -407,6 +437,9 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
 
 === upload
 
@@ -415,25 +448,25 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 $ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                        [-c=<configFile>] [-od=<outputdir>]
-                        [-un=<uploaderName>] [-ut=<uploaderType>]
-                        [-D=<key=value>]... [-p=<key=value>]...
-                        [-sp=<platform>]...
+Usage: jreleaser upload [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+                        [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
+                        [-P=<key=value>]... [-sp=<platform>]...
+                        [[[-u=<uploader>]... [-un=<name>]...] |
+                        [[-xu=<uploader>]... [-xun=<name>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -441,13 +474,20 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -un, --uploader-name=<uploaderName>
-                            The name of the uploader.
-      -ut, --uploader-type=<uploaderType>
-                            The type of the uploader.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -u, --uploader=<uploader> Include an uploader by type. Repeatable.
+      -un, --uploader-name=<name>
+                            Include an uploader by name. Repeatable.
+
+Exclude Filter:
+      -xu, --exclude-uploader=<uploader>
+                            Exclude an uploader by type. Repeatable.
+      -xun, --exclude-uploader-name=<name>
+                            Exclude an uploader by name. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -457,9 +497,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--uploader-type` must match the type of a configured xref:configuration:upload/index.adoc[uploader].
+The value of `--uploader` and `--exclude-uploader-type` must match the type of a configured
+xref:configuration:upload/index.adoc[uploader].
 
-The value of `--uploader-name` must match any of the available xref:configuration:upload/index.adoc[uploaders].
+The value of `--uploader-name` and `--exclude-uploader-name` must match any of the available named
+xref:configuration:upload/index.adoc[uploaders].
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
@@ -497,10 +539,11 @@ $ jreleaser upload --uploader-type artifactory --uploader-name mine
 $ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser release [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
-                         [-D=<key=value>]... [-p=<key=value>]...
-                         [-sp=<platform>]... [[--auto-config]
+                         [-D=<key=value>]... [-P=<key=value>]...
+                         [-sp=<platform>]... [[[-d=<distribution>]...] |
+                         [[-xd=<distribution>]...] | [[--auto-config]
                          [--project-name=<projectName>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
@@ -520,21 +563,21 @@ Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
                          [--commit-author-name=<commitAuthorName>]
                          [--commit-author-email=<commitAuthorEmail>]
                          [--signing-enabled] [--signing-armored]
-                         [--file=<file>]... [--glob=<glob>]...]
+                         [--file=<file>]... [--glob=<glob>]...]]
 
 Options:
   -b, --basedir=<basedir>    Base directory.
   -c, --config-file=<configFile>
                              The config file.
-  -d, --debug                Set log level to debug.
   -D=<key=value>             Sets a System property. Repeatable.
+  -g, --debug                Set log level to debug.
       -grs, --git-root-search
                              Searches for the Git root.
   -h, --help                 Show this help message and exit.
   -i, --info                 Set log level to info.
       -od, --output-directory=<outputdir>
                              Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                              Sets the value of a property. Repeatable.
   -q, --quiet                Log errors only.
       -scp, --select-current-platform
@@ -545,6 +588,14 @@ Options:
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
   -y, --dryrun               Skip remote operations.
+
+Include Filter:
+  -d, --distribution=<distribution>
+                             Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=<distribution>
+                             Exclude a distribution. Repeatable.
 
 Auto Config Options:
       --auto-config          Activate auto configuration.
@@ -615,6 +666,9 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
+in the xref:configuration:distributions.adoc[distribution] section.
+
 IMPORTANT: None of the command flags that override model properties can be used in this mode.
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -627,26 +681,26 @@ mutations should occur when this mode is activated.
 $ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-P=<key=value>]...
+                         [-sp=<platform>]... [[[-d=<distribution>]...
+                         [-p=<packager>]...] | [[-xd=<distribution>]...
+                         [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -654,10 +708,19 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+  -p, --packager=<packager> Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -667,9 +730,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -688,13 +753,13 @@ $ jreleaser prepare --distribution-name app
 Prepare all distributions with a single tool:
 [source]
 ----
-$ jreleaser prepare --tool-name brew
+$ jreleaser prepare --packager-name brew
 ----
 
 Prepare a single distribution with a single tool:
 [source]
 ----
-$ jreleaser prepare --distribution-name app --tool-name brew
+$ jreleaser prepare --distribution-name app --packager-name brew
 ----
 
 === package
@@ -704,26 +769,26 @@ $ jreleaser prepare --distribution-name app --tool-name brew
 $ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+Usage: jreleaser package [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-P=<key=value>]...
+                         [-sp=<platform>]... [[[-d=<distribution>]...
+                         [-p=<packager>]...] | [[-xd=<distribution>]...
+                         [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -731,11 +796,20 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+  -p, --packager=<packager> Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -745,9 +819,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -766,13 +842,13 @@ $ jreleaser package --distribution-name app
 Package all distributions with a single tool:
 [source]
 ----
-$ jreleaser package --tool-name brew
+$ jreleaser package --packager-name brew
 ----
 
 Package a single distribution with a single tool:
 [source]
 ----
-$ jreleaser package --distribution-name app --tool-name brew
+$ jreleaser package --distribution-name app --packager-name brew
 ----
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -785,26 +861,26 @@ mutations should occur when this mode is activated.
 $ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
-                         [-c=<configFile>] [-dn=<distributionName>]
-                         [-od=<outputdir>] [-tn=<toolName>] [-D=<key=value>]...
-                         [-p=<key=value>]... [-sp=<platform>]...
+Usage: jreleaser publish [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+                         [-c=<configFile>] [-od=<outputdir>]
+                         [-D=<key=value>]... [-P=<key=value>]...
+                         [-sp=<platform>]... [[[-d=<distribution>]...
+                         [-p=<packager>]...] | [[-xd=<distribution>]...
+                         [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
-      -dn, --distribution-name=<distributionName>
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -812,11 +888,20 @@ Options:
       -sp, --select-platform=<platform>
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=<toolName>
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+  -p, --packager=<packager> Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -826,9 +911,11 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--distribution-name` must match the name of a configured xref:configuration:distributions.adoc[distribution].
+The value of `--distribution` and `--exclude-distribution` must match the name of a configured
+xref:configuration:distributions.adoc[distribution].
 
-The value of `--tool-name` must match any of the available xref:configuration:packagers/index.adoc[].
+The value of `--packager` and `--exclude-packager` must match any of the available
+xref:configuration:packagers/index.adoc[].
 
 You may invoke this command in the following ways:
 
@@ -847,13 +934,13 @@ $ jreleaser publish --distribution-name app
 Publish all distributions with a single tool:
 [source]
 ----
-$ jreleaser publish --tool-name brew
+$ jreleaser publish --packager-name brew
 ----
 
 Publish a single distribution with a single tool:
 [source]
 ----
-$ jreleaser publish --distribution-name app --tool-name brew
+$ jreleaser publish --distribution-name app --packager-name brew
 ----
 
 NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
@@ -866,26 +953,26 @@ mutations should occur when this mode is activated.
 $ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=<announcerName>]
-                          [-b=<basedir>] [-c=<configFile>] [-od=<outputdir>]
-                          [-D=<key=value>]... [-p=<key=value>]...
-                          [-sp=<platform>]...
+Usage: jreleaser announce [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+                          [-c=<configFile>] [-od=<outputdir>]
+                          [-D=<key=value>]... [-P=<key=value>]...
+                          [-sp=<platform>]... [-a=<announcer>
+                          [-a=<announcer>]... | -xa=<announcer>
+                          [-xa=<announcer>]...]
 
 Options:
-      -an, --announcer-name=<announcerName>
-                            The name of the announcer.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -897,6 +984,12 @@ Options:
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
 
+Filter:
+  -a, --announcer=<announcer>
+                            Include an announcer. Repeatable.
+      -xa, --exclude-announcer=<announcer>
+                            Exclude an announcer. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -905,7 +998,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--announcer-name` must match any of the available xref:configuration:announce/index.adoc[announcers].
+The value of `--announcer` and `--exclude-announcer` must match any of the available
+xref:configuration:announce/index.adoc[announcers].
 
 You may invoke this command in the following ways:
 
@@ -931,24 +1025,24 @@ mutations should occur when this mode is activated.
 $ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser full-release [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
                               [-c=<configFile>] [-od=<outputdir>]
-                              [-D=<key=value>]... [-p=<key=value>]...
+                              [-D=<key=value>]... [-P=<key=value>]...
                               [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=<outputdir>
                             Output directory.
-  -p, --set-property=<key=value>
+  -P, --set-property=<key=value>
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform

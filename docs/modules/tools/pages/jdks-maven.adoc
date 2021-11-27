@@ -17,7 +17,60 @@ Downloads JDK distributions.
 
 == Configuration DSL
 
-JDKS must define the following properties:
+JDKs must be defined either using the link:https://github.com/foojayio/discoapi[Foojay Disco API] or explicitly.
+
+=== Foojay Disco API
+
+Pkgs must define the following properties
+
+ * `name`: a user defined name, must be unique.
+ * `version`: the version of the JDK.
+ * `platform`: the platform this JDK is related to.
+ * `distribution`: the distribution that provides the JDK. Defaults to `zulu`.
+ * `archiveType`: the extension file. Defaults to `zip`.
+ * `javafxBundled`: whether JavaFx should be bundled or not. Defaults to `false`.
+
+Please be as specific as you can with the value of `version` to reduce the number of matches packages and increase
+reproducibility, for example `11.0.13` is better than just `11`. The value for `distribution` are those defined by
+the Disco API, check the link:https://github.com/foojayio/discoapi[documentation] for the full list. The value for
+`archiveType` should be either `zip` or `tar.gz`.
+
+include::configuration:partial$platform.adoc[]
+
+Here's an example configuration
+
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<plugin>
+    <groupId>org.jreleaser</groupId>
+    <artifactId>jdks-maven-plugin</artifactId>
+    <version>{jreleaser-version}</version>
+    <configuration>
+        <pkgs>
+            <pkg>
+                <name>zulu11Linux</name>
+                <platform>linux-x86_64</platform>
+                <version>11.0.11</version>
+            </pkg>
+            <pkg>
+                <name>zulu11Osx</name>
+                <platform>osx-x86_64</platform>
+                <version>11.0.11</version>
+            </pkg>
+            <pkg>
+                <name>zulu11Windows</name>
+                <platform>windows-x86_64</platform>
+                <version>11.0.11</version>
+            </pkg>
+        </pkgs>
+    </configuration>
+</plugin>
+----
+
+=== Explicit
+
+JDKs must define the following properties:
 
  * `name`: a user defined name, must be unique.
  * `url`: the URL from where the JDK can be downloaded.
@@ -41,31 +94,31 @@ Here's an example configuration
 [subs="verbatim,attributes"]
 ----
 <plugin>
-  <groupId>org.jreleaser</groupId>
-  <artifactId>jdks-maven-plugin</artifactId>
-  <version>{jreleaser-version}</version>
-  <configuration>
-      <jdks>
-          <jdk>
-              <name>zulu11Linux</name>
-              <platform>linux</platform>
-              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
-              <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
-          </jdk>
-          <jdk>
-              <name>zulu11Windows</name>
-              <platform>windows</platform>
-              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
-              <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
-          </jdk>
-          <jdk>
-              <name>zulu11Osx</name>
-              <platform>osx</platform>
-              <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
-              <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
-          </jdk>
-      </jdks>
-  </configuration>
+    <groupId>org.jreleaser</groupId>
+    <artifactId>jdks-maven-plugin</artifactId>
+    <version>{jreleaser-version}</version>
+    <configuration>
+        <jdks>
+            <jdk>
+                <name>zulu11Linux</name>
+                <platform>linux</platform>
+                <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
+                <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
+            </jdk>
+            <jdk>
+                <name>zulu11Windows</name>
+                <platform>windows</platform>
+                <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
+                <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
+            </jdk>
+            <jdk>
+                <name>zulu11Osx</name>
+                <platform>osx</platform>
+                <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
+                <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
+            </jdk>
+        </jdks>
+    </configuration>
 </plugin>
 ----
 
@@ -75,11 +128,40 @@ should happen in your build.
 
 The following MOJOs are provided:
 
-=== jreleaser:list-jdks
+=== jdks:list-disco
 
-Lists all configured JDKS.
+Lists all configured JDKs using the Foojay Disco API.
 
-=== jreleaser:setup-jdks
+=== jdks:setup-disco
+
+Downloads, verifies, and unpacks JDKs using the Foojay Disco API.
+
+Available parameters:
+
+ * connectTimeout (Default: 60)+
+   Connect timeout (in seconds). +
+   Type: int +
+   User property: `"disco.setup.connect.timeout`
+
+ * outputDirectory (Default: ${project.build.directory}/jdks) +
+   Type: File +
+   User property: `jdks.output.directory`
+
+ * readTimeout (Default: 20) +
+   Read timeout (in seconds). +
+   Type: int +
+   User property: `disco.setup.read.timeout`
+
+ * skip +
+   Skip execution. +
+   Type: boolean +
+   User property: `disco.setup.skip`
+
+=== jdks:list-jdks
+
+Lists all configured JDKs.
+
+=== jdks:setup-jdks
 
 Downloads, verifies, and unpacks JDKs.
 
@@ -103,6 +185,54 @@ Available parameters:
 
 [source]
 [subs="attributes"]
+.jdks:list-disco
+----
+[INFO] --- jdks-maven-plugin:{jreleaser-version}:list-disco (default-cli) @ app ---
+[INFO] == Pkg zulu11Linux ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      linux-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] == Pkg zulu11Osx ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      osx-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] == Pkg zulu11Windows ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      windows-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+----
+
+[source]
+[subs="attributes"]
+.jdks:setup-disco
+----
+[INFO] --- jdks-maven-plugin:{jreleaser-version}:setup-disco (default-cli) @ app ---
+[INFO] Fetching [name='zulu11Linux', version='11.0.11', archiveType='zip', distribution='zulu', platform='linux-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Fetching [name='zulu11Osx', version='11.0.11', archiveType='zip', distribution='zulu', platform='osx-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Fetching [name='zulu11Windows', version='11.0.11', archiveType='zip', distribution='zulu', platform='windows-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+----
+
+[source]
+[subs="attributes"]
+.jdks:list-jdks
 ----
 [INFO] --- jdks-maven-plugin:{jreleaser-version}:list-jdks (default-cli) @ app ---
 [INFO] == JDK zulu11Linux ==
@@ -123,6 +253,7 @@ Available parameters:
 
 [source]
 [subs="attributes"]
+.jdks:setup-jdks
 ----
 [INFO] --- jdks-maven-plugin:{jreleaser-version}:setup-jdks (default-cli) @ app ---
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip

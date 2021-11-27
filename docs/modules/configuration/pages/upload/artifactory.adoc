@@ -1,6 +1,7 @@
 = Artifactory
 :uploader_id:   artifactory
 :uploader_name: Artifactory
+:upload_url:    https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}
 
 Uploads artifacts, files, and signatures to an {uploader_name} instance.
 
@@ -26,12 +27,12 @@ include::partial$upload/yaml/common-head.adoc[]
 
       # URL of the Artifactory instance + path + artifact.
       # icon:exclamation-triangle[] icon:file-alt[]
-      uploadUrl: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]
+      uploadUrl: {upload_url}
 
       # URL of the Artifactory instance + path + artifact.
       # If undefined, will use the same value as `uploadUrl`.
       # icon:exclamation-triangle[] icon:file-alt[]
-      downloadUrl: pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]
+      downloadUrl: {upload_url}
 
       # The username that can write to the repository.
       # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -64,12 +65,12 @@ include::partial$upload/toml/common-head.adoc[]
 
   # URL of the Artifactory instance + path + artifact.
   # icon:exclamation-triangle[] icon:file-alt[]
-  uploadUrl = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]"
+  uploadUrl = "{upload_url}"
 
   # URL of the Artifactory instance + path + artifact.
   # If undefined, will use the same value as `uploadUrl`.
   # icon:exclamation-triangle[] icon:file-alt[]
-  downloadUrl = "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]"
+  downloadUrl = "{upload_url}"
 
   # The username that can write to the repository.
   # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -102,12 +103,12 @@ include::partial$upload/json/common-head.adoc[]
 
         // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "uploadUrl": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]",
+        "uploadUrl": "{upload_url}",
 
         // URL of the Artifactory instance + path + artifact.
         // If undefined, will use the same value as `uploadUrl`.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "downloadUrl": "pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]",
+        "downloadUrl": "{upload_url}",
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -143,14 +144,14 @@ include::partial$upload/maven/common-head.adoc[]
           URL of the Artifactory instance + path + artifact.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <uploadUrl>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]</uploadUrl>
+        <uploadUrl>{upload_url}</uploadUrl>
 
         <!--
           URL of the Artifactory instance + path + artifact.
           If undefined, will use the same value as `uploadUrl`.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <downloadUrl>pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]</downloadUrl>
+        <downloadUrl>{upload_url}</downloadUrl>
 
         <!--
           The username that can write to the repository.
@@ -190,12 +191,12 @@ include::partial$upload/gradle/common-head.adoc[]
 
         // URL of the Artifactory instance + path + artifact.
         // icon:exclamation-triangle[] icon:file-alt[]
-        uploadUrl = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]'
+        uploadUrl = '{upload_url}'
 
         // URL of the Artifactory instance + path + artifact.
         // If undefined, will use the same value as `uploadUrl`.
         // icon:exclamation-triangle[] icon:file-alt[]
-        downloadUrl = 'pass:[https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}]'
+        downloadUrl = '{upload_url}'
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -279,4 +280,95 @@ that:
 * if the name is `foo` the resulting property key is `skipUploadArtifactoryFoo`.
 * if the name is `fooBar` the resulting property key is `skipUploadArtifactoryFooBar`.
 * if the name is `foo-bar` the resulting property key is `skipUploadArtifactoryFooBar`.
+
+== Example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+upload:
+  artifactory:
+    duke:
+      active: always
+      uploadUrl: '{upload_url}'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[upload.artifactory.duke]
+  active = "ALWAYS"
+  uploadUrl = "{upload_url}"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "jreleaser": {
+    "upload": {
+      "artifactory": {
+        "duke": {
+          "active": "ALWAYS",
+          "uploadUrl": "{upload_url}"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <artifacory>
+      <duke>
+        <active>ALWAYS</active>
+        <uploadUrl>{upload_url}</uploadUrl>
+      </duke>
+    </artifacory>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  upload {
+    artifactory {
+      duke {
+        active = 'ALWAYS'
+        uploadUrl = '{upload_url}'
+      }
+    }
+  }
+}
+----
+--
+====
+
+The following environment variables must be defined:
+
+* `JRELEASER_ARTIFACTORY_DUKE_USERNAME`
+* `JRELEASER_ARTIFACTORY_DUKE_PASSWORD`
 

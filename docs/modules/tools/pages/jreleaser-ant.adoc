@@ -118,7 +118,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -168,13 +168,13 @@ Description:: The name of the distribution.
 
 ---
 
-*toolName*
+*packagerName*
 [horizontal]
 Type:: String
 Default value:: <none>
-Property:: jreleaser.tool.name
+Property:: jreleaser.packager.name
 Required:: true
-Description:: The name of the tool.
+Description:: The name of the packager.
 
 ---
 
@@ -220,6 +220,15 @@ Description:: Skips execution of this task.
 
 Assemble all distributions.
 
+*assemblers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of assemblers to run.
+
+---
+
 *configFile*
 [horizontal]
 Type:: File
@@ -230,23 +239,30 @@ Description:: The config file.
 
 ---
 
-*distributionName*
+*distributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.distribution.name
 Required:: false
-Description:: The name of the distribution to be assembled.
+Description:: Name of the distributions to be assembled.
 
 ---
 
-*assemblerName*
+*excludedAssemblers*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.assembler.name
 Required:: false
-Description:: The name of the assembler to run.
+Description:: Names of assemblers to exclude.
+
+---
+
+*excludedDistributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of distributions to exclude.
 
 ---
 
@@ -314,6 +330,24 @@ Description:: The config file.
 
 ---
 
+*distributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the distributions to include.
+
+---
+
+*excludedDistributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of distributions to exclude.
+
+---
+
 *outputDir*
 [horizontal]
 Type:: File
@@ -336,7 +370,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -366,6 +400,24 @@ Description:: The config file.
 
 ---
 
+*distributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the distributions to include.
+
+---
+
+*excludedDistributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of distributions to exclude.
+
+---
+
 *outputDir*
 [horizontal]
 Type:: File
@@ -388,7 +440,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -419,26 +471,6 @@ Description:: The config file.
 
 ---
 
-*distributionName*
-[horizontal]
-Type:: String
-Default value:: <none>
-Property:: jreleaser.uploader.type
-Required:: false
-Description:: The type of the uploader to use.
-
----
-
-*toolName*
-[horizontal]
-Type:: String
-Default value:: <none>
-Property:: jreleaser.uploader.name
-Required:: false
-Description:: The name of the uploader to use.
-
----
-
 *dryrun*
 [horizontal]
 Type:: boolean
@@ -471,7 +503,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -487,6 +519,42 @@ Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
 
+---
+
+*uploaderNames*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of uploaders to include.
+
+---
+
+*uploaderTypes*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Types of uploaders to include.
+
+---
+
+*excludedUploaderNames*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Types of uploaders to exclude.
+
+---
+
+*excludedUploaderTypes*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Types of uploaders to exclude.
+
 === jreleaser-release
 
 Create or update a release.
@@ -498,6 +566,24 @@ Default value:: <none>
 Property:: jreleaser.config.file
 Required:: true
 Description:: The config file.
+
+---
+
+*distributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the distributions to include.
+
+---
+
+*excludedDistributions*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of distributions to exclude.
 
 ---
 
@@ -533,7 +619,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -563,23 +649,30 @@ Description:: The config file.
 
 ---
 
-*distributionName*
+*distributions*
 [horizontal]
-Type:: String
-Default value:: <none
-Property:: jreleaser.distribution.name
+Type:: List<String>
+Default value:: <none>
 Required:: false
-Description:: The name of the distribution to be prepared.
+Description:: Name of the distributions to include.
 
 ---
 
-*toolName*
+*excludedDistributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.tool.name
 Required:: false
-Description:: The name of the tool for preparing distributions.
+Description:: Names of distributions to exclude.
+
+---
+
+*excludedPackagers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of packagers to exclude.
 
 ---
 
@@ -590,6 +683,15 @@ Default value:: "build"
 Property:: jreleaser.outputdir
 Required:: false
 Description:: Overwrites existing template files.
+
+---
+
+*packagers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the packagers to include.
 
 ---
 
@@ -605,7 +707,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -635,33 +737,30 @@ Description:: The config file.
 
 ---
 
-*distributionName*
+*distributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.distribution.name
 Required:: false
-Description:: The name of the distribution to be packaged.
+Description:: Name of the distributions to include.
 
 ---
 
-*toolName*
+*excludedDistributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.tool.name
 Required:: false
-Description:: The name of the tool for packaging distributions.
+Description:: Names of distributions to exclude.
 
 ---
 
-*dryrun*
+*excludedPackagers*
 [horizontal]
-Type:: boolean
-Default value:: false
-Property:: jreleaser.dryrun
+Type:: List<String>
+Default value:: <none>
 Required:: false
-Description: Skips remote operations.
+Description:: Names of packagers to exclude.
 
 ---
 
@@ -672,6 +771,15 @@ Default value:: "build"
 Property:: jreleaser.outputdir
 Required:: false
 Description:: Overwrites existing template files.
+
+---
+
+*packagers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the packagers to include.
 
 ---
 
@@ -687,7 +795,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -717,33 +825,30 @@ Description:: The config file.
 
 ---
 
-*distributionName*
+*distributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.distribution.name
 Required:: false
-Description:: The name of the distribution to be published.
+Description:: Name of the distributions to include.
 
 ---
 
-*toolName*
+*excludedDistributions*
 [horizontal]
-Type:: String
+Type:: List<String>
 Default value:: <none>
-Property:: jreleaser.tool.name
 Required:: false
-Description:: The name of the tool for publishing distributions.
+Description:: Names of distributions to exclude.
 
 ---
 
-*dryrun*
+*excludedPackagers*
 [horizontal]
-Type:: boolean
-Default value:: false
-Property:: jreleaser.dryrun
+Type:: List<String>
+Default value:: <none>
 Required:: false
-Description: Skips remote operations.
+Description:: Names of packagers to exclude.
 
 ---
 
@@ -757,6 +862,13 @@ Description:: Overwrites existing template files.
 
 ---
 
+*packagers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the packagers to include.
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -769,7 +881,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -789,6 +901,15 @@ Description:: Skips execution of this task.
 
 Announce a release.
 
+*announcers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Name of the announcers to include.
+
+---
+
 *configFile*
 [horizontal]
 Type:: File
@@ -799,16 +920,6 @@ Description:: The config file.
 
 ---
 
-*announcerName*
-[horizontal]
-Type:: String
-Default value:: <none>
-Property:: jreleaser.announcer.name
-Required:: false
-Description:: The name of the announcer to be used.
-
----
-
 *dryrun*
 [horizontal]
 Type:: boolean
@@ -816,6 +927,15 @@ Default value:: false
 Property:: jreleaser.dryrun
 Required:: false
 Description: Skips remote operations.
+
+---
+
+*excludedAnnouncers*
+[horizontal]
+Type:: List<String>
+Default value:: <none>
+Required:: false
+Description:: Names of announcers to exclude.
 
 ---
 
@@ -841,7 +961,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false
@@ -903,7 +1023,7 @@ Description:: Activates paths matching the current platform.
 
 *selectPlatforms*
 [horizontal]
-Type:: String[]
+Type:: List<String>
 Default value:: []
 Property::
 Required:: false

@@ -1,6 +1,7 @@
 = Archive
+:assembler_id: archive
 
-Creates a binary distribution archive.
+Creates a binary distribution {assembler_id}.
 
 include::partial$legend.adoc[]
 
@@ -10,32 +11,9 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# icon:dot-circle[]
-assemble:
-  # icon:dot-circle[]
-  archive:
-    # Assemblers require a name.
-    # icon:exclamation-triangle[]
-    app:
-
-      # Enables or disables the assembler.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-      # Defaults to `NEVER`.
-      # icon:dot-circle[]
-      active: ALWAYS
-
-      # Export the assembled artifacts as a matching named distribution.
-      # Defaults to `true`.
-      # icon:dot-circle[]
-      exported: true
-
-      # Additional properties used when evaluating templates.
-      # icon:dot-circle[] icon:file-alt[]
-      extraProperties:
-        # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
-        foo: bar
+include::partial$assemble/yaml/common-head.adoc[]
 
       # Name of the archive.
       # If left undefined, will use {{distributionName}}-{{projectVersion}}.
@@ -61,49 +39,16 @@ assemble:
         - TGZ
 
       # icon:exclamation-triangle[]
-      fileSets:
-          # The input directory to copy files from.
-          # icon:exclamation-triangle[]
-        - input: path/to/input/directory
-          # The target path inside the archive.
-          # If left undefined, defaults to the root of the archive.
-          # icon:dot-circle[]
-          output: path/to/archive/entry
-          # A set of files and directory to include.
-          # icon:dot-circle[]
-          includes:
-            - 'name_or_regex'
-          # A set of files and directory to exclude.
-          # icon:dot-circle[]
-          excludes:
-            - 'name_or_regex'
+include::partial$assemble/yaml/filesets.adoc[]
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-# Assemblers require a name.
-# icon:exclamation-triangle[]
-[assemble.archive.app]
-
-  # Enables or disables the assembler.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-  # Defaults to `NEVER`.
-  # icon:dot-circle[]
-  active = "ALWAYS"
-
-  # Export the assembled artifacts as a matching named distribution.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  exported = true
-
-  # Additional properties used when evaluating templates.
-  # icon:dot-circle[] icon:file-alt[]
-  extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
+include::partial$assemble/toml/common-head.adoc[]
 
   # Name of the archive.
   # If left undefined, will use {{distributionName}}-{{projectVersion}}.
@@ -127,54 +72,16 @@ TOML::
   formats = [ "ZIP", "TGZ"]
 
   # icon:exclamation-triangle[]
-  pass:[[[assemble.archive.app.fileSets]]]
-    # The input directory to copy files from.
-    # icon:exclamation-triangle[]
-    input = "path/to/input/directory"
-    # The target path inside the archive.
-    # If left undefined, defaults to the root of the archive.
-    # icon:dot-circle[]
-    output = "path/to/archive/entry"
-    # A set of files and directory to include.
-    # icon:dot-circle[]
-    includes = ["name_or_regex"]
-    # A set of files and directory to exclude.
-    # icon:dot-circle[]
-    excludes = ["name_or_regex"]
+include::partial$assemble/toml/filesets.adoc[]
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-{
-  // icon:dot-circle[]
-  "assemble": {
-    // icon:dot-circle[]
-    "archive": {
-      // Assemblers require a name.
-      // icon:exclamation-triangle[]
-      "app": {
-
-        // Enables or disables the assembler.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        "active": "ALWAYS",
-
-        // Export the assembled artifacts as a matching named distribution.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        "exported": true,
-
-        // Additional properties used when evaluating templates.
-        // icon:dot-circle[] icon:file-alt[]
-        "extraProperties": {
-          // Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
-          "foo": "bar"
-        },
+include::partial$assemble/json/common-head.adoc[]
 
         // Name of the archive.
         // If left undefined, will use {{distributionName}}-{{projectVersion}}.
@@ -201,77 +108,17 @@ JSON::
         ],
 
         // icon:exclamation-triangle[]
-        "fileSets": [
-          {
-            // The input directory to copy files from.
-            // icon:exclamation-triangle[]
-            "input": "path/to/input/directory",
-
-            // The target path inside the archive.
-            // If left undefined, defaults to the root of the archive.
-            // icon:dot-circle[]
-            "output": "path/to/archive/entry",
-
-            // A set of files and directory to include.
-            // icon:dot-circle[]
-            "includes": ["name_or_regex"],
-
-            // A set of files and directory to exclude.
-            // icon:dot-circle[]
-            "excludes": ["name_or_regex"]
-          }
-        ]
-      }
-    }
-  }
-}
+include::partial$assemble/json/filesets.adoc[]
+include::partial$assemble/json/common-footer.adoc[]
 ----
 --
 Maven::
 +
 --
 [source,xml]
-[subs="verbatim,+macros"]
+[subs="attributes,verbatim,+macros"]
 ----
-<jreleaser>
-  <!--
-    icon:dot-circle[]
-  -->
-  <assemble>
-    <!--
-      icon:dot-circle[]
-    -->
-    <archive>
-      <!--
-        Assemblers require a name.
-        icon:exclamation-triangle[]
-      -->
-      <app>
-        <!--
-          Enables or disables the distribution.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `ALWAYS`.
-          icon:dot-circle[]
-        -->
-        <active>ALWAYS</active>
-
-        <!--
-          Export the assembled artifacts as a matching named distribution.
-          Defaults to `true`.
-          icon:dot-circle[]
-        -->
-        <exported>true</exported>
-
-        <!--
-          Additional properties used when evaluating templates.
-          icon:dot-circle[] icon:file-alt[]
-        -->
-        <extraProperties>
-          <!--
-            Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
-          -->
-          <foo>bar</foo>
-        </extraProperties>
+include::partial$assemble/maven/common-head.adoc[]
 
         <!--
           Name of the archive.
@@ -309,69 +156,17 @@ Maven::
         <!--
           icon:exclamation-triangle[]
         -->
-        <fileSets>
-          <fileSet>
-            <!--
-              The input directory to copy files from.
-              icon:exclamation-triangle[]
-            -->
-            <input>path/to/input/directory</input>
-
-            <!--
-              The target path inside the archive.
-              If left undefined, defaults to the root of the archive.
-              icon:dot-circle[]
-            -->
-            <output>path/to/archive/entry</output>
-
-            <!--
-              A set of files and directory to include.
-              icon:dot-circle[]
-            -->
-            <includes>
-              <include>name_or_regex</include>
-            </includes>
-
-            <!--
-              A set of files and directory to exclude.
-              icon:dot-circle[]
-            -->
-            <excludes>
-              <exclude>name_or_regex</exclude>
-            </excludes>
-          </fileSet>
-        </fileSets>
-      </app>
-    </archive>
-  </assemble>
-</jreleaser>
+include::partial$assemble/maven/filesets.adoc[]
+include::partial$assemble/maven/common-footer.adoc[]
 ----
 --
 Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="attributes,+macros"]
 ----
-jreleaser {
-  // icon:dot-circle[]
-  assemble {
-    // icon:dot-circle[]
-    archive {
-      // Assemblers require a name.
-      // icon:exclamation-triangle[]
-      app {
-
-        // Enables or disables the assembler.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        // Defaults to `NEVER`.
-        // icon:dot-circle[]
-        active = 'ALWAYS'
-
-        // Export the assembled artifacts as a matching named distribution.
-        // Defaults to `true`.
-        // icon:dot-circle[]
-        exported = true
+include::partial$assemble/gradle/common-head.adoc[]
 
         // Additional properties used when evaluating templates.
         // Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
@@ -404,25 +199,8 @@ jreleaser {
         ]
 
         // icon:exclamation-triangle[]
-        fileSet {
-          // The input directory to copy files from.
-          // icon:exclamation-triangle[]
-          input = 'path/to/input/directory'
-          // The target path inside the archive.
-          // If left undefined, defaults to the root of the archive.
-          // icon:dot-circle[]
-          output = 'path/to/archive/entry'
-          // A set of files and directory to include.
-          // icon:dot-circle[]
-          includes = ['name_or_regex']
-          // A set of files and directory to exclude.
-          // icon:dot-circle[]
-          excludes = ['name_or_regex']
-        }
-      }
-    }
-  }
-}
+include::partial$assemble/gradle/filesets.adoc[]
+include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
 ====

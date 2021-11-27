@@ -2,6 +2,8 @@
 
 Executes a JReleaser workflow as a Gradle plugin.
 
+NOTE: Requires Gradle 6.x.
+
 == Install
 
 [source,groovy]
@@ -74,6 +76,15 @@ The following settings may also be specified via environment variables
 |         | JRELEASER_DEFAULT_GIT_REMOTE | origin
 |===
 
+== DSL Descriptors
+
+The plugin ships with GDSL (IntelliJ) and DSLD (Eclipse) DSL descriptors that should provide code completion support for
+the `jreleaser` extension when using the Groovy DSL in Gradle scripts. These files should be picked up automatically but
+if that were not to be the case then you may download the files and register them with your IDE:
+
+* link:https://github.com/jreleaser/jreleaser/blob/main/plugins/jreleaser-gradle-plugin/src/main/resources/gdsl/jreleaser.gdsl[jreleaser.gdsl]
+* link:https://github.com/jreleaser/jreleaser/blob/main/plugins/jreleaser-gradle-plugin/src/main/resources/dsld/jreleaser.dsld[jreleaser.dsld]
+
 == Tasks
 
 The following tasks are provided:
@@ -129,9 +140,9 @@ Options
 
      --overwrite             Overwrite existing files (OPTIONAL).
 
-     --snapshot              Use snapshot template (OPTIONAL).
+     --packager-name         The name of the packager (OPTIONAL).
 
-     --tool-name             The name of the tool (OPTIONAL).
+     --snapshot              Use snapshot template (OPTIONAL).
 
 Description
      Generates templates for a specific tool/announcer
@@ -151,9 +162,13 @@ Type
      JReleaserAssembleTask (org.jreleaser.gradle.plugin.tasks.JReleaserAssembleTask)
 
 Options
-     --assembler-name        The name of the assembler (OPTIONAL).
+     --assembler             The name of the assembler (OPTIONAL).
 
-     --distribution-name     The name of the distribution (OPTIONAL).
+     --distribution          The name of the distribution (OPTIONAL).
+
+     --exclude-assembler     Exclude an assembler (OPTIONAL).
+
+     --exclude-distribution  Exclude a distribution (OPTIONAL).
 
 Description
      Assemble all distributions
@@ -190,6 +205,10 @@ Type
      JReleaserChecksumTask (org.jreleaser.gradle.plugin.tasks.JReleaserChecksumTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -212,6 +231,10 @@ Type
      JReleaserSignTask (org.jreleaser.gradle.plugin.tasks.JReleaserSignTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -234,13 +257,17 @@ Type
      JReleaserUploadTask (org.jreleaser.gradle.plugin.tasks.JReleaserUploadTask)
 
 Options
-     --select-current-platform  Activates paths matching the current platform (OPTIONAL).
+     --exclude-uploader-name     Exclude an uploader by name (OPTIONAL).
 
-     --select-platform          Activates paths matching the given platform (OPTIONAL).
+     --exclude-uploader          Exclude an uploader by type (OPTIONAL).
 
-     --uploader-name            The name of the uploader (OPTIONAL).
+     --select-current-platform   Activates paths matching the current platform (OPTIONAL).
 
-     --uploader-type            The type of the uploader (OPTIONAL).
+     --select-platform           Activates paths matching the given platform (OPTIONAL).
+
+     --uploader-name             Include an uploader by name (OPTIONAL).
+
+     --uploader                  Include an uploader by type (OPTIONAL).
 
 Description
      Uploads all artifacts
@@ -260,6 +287,10 @@ Type
      JReleaserReleaseTask (org.jreleaser.gradle.plugin.tasks.JReleaserReleaserTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -282,13 +313,17 @@ Type
      JReleaserPrepareTask (org.jreleaser.gradle.plugin.tasks.JReleaserPrepareTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Prepares all distributions
@@ -308,13 +343,17 @@ Type
      JReleaserPackageTask (org.jreleaser.gradle.plugin.tasks.JReleaserPackageTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Packages all distributions
@@ -334,13 +373,17 @@ Type
      JReleaserPublishTask (org.jreleaser.gradle.plugin.tasks.JReleaserPublishTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Publishes all distributions
@@ -360,7 +403,9 @@ Type
      JReleaserAnnounceTask (org.jreleaser.gradle.plugin.tasks.JReleaserAnnounceTask)
 
 Options
-     --announcer-name           The name of the announcer (OPTIONAL).
+     --announcer                Include an announcer (OPTIONAL).
+
+     --exclude-announcer        Exclude an announcer (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 

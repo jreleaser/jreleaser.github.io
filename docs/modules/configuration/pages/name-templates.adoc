@@ -49,7 +49,8 @@ The following names are related to the current build
 | commitShortHash     | head commit hash abbreviated to 7 characters
 | commitFullHash      | head commit hash
 | timestamp           | current timestamp with RFC3339 format
-| outputDirectory     | JReleaser's output directory
+| baseOutputDirectory | the base output directory (by default, "target" in Maven, "build" in Gradle, "out" in CLI)
+| outputDirectory     | JReleaser's output directory (always ends with "jreleaser")
 | checksumDirectory   | directory where checksums are found
 | signaturesDirectory | directory where signatures are found
 | assembleDirectory   | directory where assembled distributions are found
@@ -158,6 +159,7 @@ The following names are related to xref:configuration:project.adoc[]
 | projectLongDescription   | the project long description
 | projectWebsite           | link to the project website
 | projectLicense           | the project license, typically an SPDX identifier
+| projectLicenseUrl        | the URL ofmthe project license
 | projectCopyright         | the project copyright notice
 | projectVendor            | the project's vendor (if any)
 | projectDocsUrl           | link to the project's documentation
@@ -410,6 +412,7 @@ The following names are related to xref:configuration:release/index.adoc[]
 | repoUrl               | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | repoCloneUrl          | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 | commitsUrl            | the URL to find commits
+| srcUrl                | the URL to find a file in the repository
 | releaseNotesUrl       | the URL pointing to the release
 | latestReleaseUrl      | the URL pointing to latest release
 | issueTrackerUrl       | the URL of the issue tracker
@@ -430,20 +433,21 @@ The following names are related to xref:configuration:distributions.adoc[]
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                          | Description
-| distributionName             | the name of the distribution
-| distributionExecutable       | the name of the executable script launcher
-| distributionTagsBySpace      | space separate list of distribution tags
-| distributionTagsByComma      | comma separate list of distribution tags
-| distributionJavaGroupId      | the distribution groupId (Maven coordinates)
-| distributionJavaArtifactId   | the distribution artifactId (Maven coordinates)
-| distributionJavaVersion      | the distribution Java version (full)
-| distributionJavaVersionMajor | the distribution Java version (major)
-| distributionJavaVersionMinor | the distribution Java version (minor)
-| distributionJavaVersionPatch | the distribution Java version (patch)
-| distributionJavaVersionTag   | the distribution Java version (tag)
-| distributionJavaVersionBuild | the distribution Java version (build)
-| distributionJavaMainClass    | the main class launched by the executable script launcher
+| Key                             | Description
+| distributionName                | the name of the distribution
+| distributionExecutable          | the name of the executable script launcher
+| distributionExecutableExtension | executable extension on Windows. Defaults to `bat`.
+| distributionTagsBySpace         | space separate list of distribution tags
+| distributionTagsByComma         | comma separate list of distribution tags
+| distributionJavaGroupId         | the distribution groupId (Maven coordinates)
+| distributionJavaArtifactId      | the distribution artifactId (Maven coordinates)
+| distributionJavaVersion         | the distribution Java version (full)
+| distributionJavaVersionMajor    | the distribution Java version (major)
+| distributionJavaVersionMinor    | the distribution Java version (minor)
+| distributionJavaVersionPatch    | the distribution Java version (patch)
+| distributionJavaVersionTag      | the distribution Java version (tag)
+| distributionJavaVersionBuild    | the distribution Java version (build)
+| distributionJavaMainClass       | the main class launched by the executable script launcher
 |===
 
 Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix
@@ -644,6 +648,7 @@ The following names identify an artifact without explicit `platform`
 | artifactChecksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
 | artifactFileName       | the name of the artifact file
 | artifactName           | the name of the artifact file without extension
+| artifactSize           | the size (in bytes) of the artifact file
 |===
 
 The following names match an artifact without explicit `platform` when xref:configuration:upload/index.adoc[uploaders]
@@ -663,9 +668,11 @@ The following names match the first artifact in a distribution
 |===
 | Key                          | Description
 | distributionUrl              | the URL required to download the artifact
+| distributionSize             | the size (in bytes) of the artifact file
 | distributionChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
 | distributionArtifactFileName | the name of the artifact file
 | distributionArtifactName     | the name of the artifact file without extension
+| distributionArtifactSize     | the size (in bytes) of the artifact file
 | distributionArtifactPlatform | the artifact's platform (if any)
 |===
 
@@ -689,6 +696,7 @@ Additional names become available when the artifact defines a `platform`
 | artifact${Platform}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
 | artifact${Platform}FileName       | the name of the artifact file
 | artifact${Platform}Name           | the name of the artifact file without extension
+| artifact${Platform}Size           | the size (in bytes) of the artifact file
 |===
 
 Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
@@ -718,7 +726,7 @@ YAML::
 checksum:
   algorithms:
     - MD5
-    - SHA256
+    - SHA-256
 
 distributions:
   app:
@@ -737,7 +745,7 @@ TOML::
 [subs="+macros"]
 ----
 [checksum]
-  algorithms = ["MD5", "SHA256"]
+  algorithms = ["MD5", "SHA-256"]
 
 pass:[[[distributions.app.artifact]]]
   path: "path/to/{{distributionName}}-{{projectVersion}}.zip"
@@ -758,7 +766,7 @@ JSON::
   "checksums": {
     "algorithms": [
       "MD5",
-      "SHA256"
+      "SHA-256"
     ]
   },
 
@@ -792,7 +800,7 @@ Maven::
   <checksum>
     <algorithms>
       <algorithm>MD5</algorithm>
-      <algorithm>SHA256</algorithm>
+      <algorithm>SHA-256</algorithm>
     </algorithms>
   </checksum>
   <distributions>
@@ -823,7 +831,7 @@ Gradle::
 jreleaser {
   checksum {
     algorithm('MD5')
-    algorithm('SHA256')
+    algorithm('SHA-256')
   }
   distributions {
     app {
@@ -853,12 +861,15 @@ The following names will be calculated:
 * artifactChecksumSha256
 * artifactFileName: `${project.name}-${project.version}.zip`
 * artifactName: `${project.name}-${project.version}`
+* artifactSize
 * artifactMain: true
 * distributionUrl
+* distributionSize
 * distributionChecksummd5
 * distributionChecksumSha256
 * distributionArtifactFileName: `${project.name}-${project.version}.zip`
 * distributionArtifactName: `${project.name}-${project.version}`
+* distributionArtifactSize
 
 *Platform specific artifact*
 
@@ -867,6 +878,7 @@ The following names will be calculated:
 * artifactOsxChekcsumSha256
 * artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
 * artifactOsxName: `${project.name}-${project.version}-mac`
+* artifactOsxSize
 
 == Artifactory
 
@@ -1093,6 +1105,7 @@ The following names are related to xref:configuration:packagers/chocolatey.adoc[
 |===
 | Key                          | Description
 | chocolateyUsername           | the name of the Chocolatey username
+| chocolateyTitle              | the title to use in the spec
 | chocolateyBucketRepoUrl      | the bucket repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | chocolateyBucketRepoCloneUrl | the bucket clone repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 |===
@@ -1855,6 +1868,112 @@ jreleaser {
     jbang {
       // Key will be capitalized and prefixed
       // with `jbang`, i.e, `jbangFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Macports
+
+The following names are related to xref:configuration:packagers/macports.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                            | Description
+| macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| macportsRevision               | the port revision nomber
+| macportsCategories             | categories separated by space
+| macportsMaintainers            | formatted maintainers, one per line
+| macportsDistributionUrl        | the download URL without the artifact file name
+| macportsJavaVersion            | the Java version required by the port
+|===
+
+Additionally, every key/value from `macports.extraProperties` is mapped with `macports` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  macports:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `macports`, i.e, `macportsFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.macports]
+  # Key will be capitalized and prefixed
+  # with `macports`, i.e, `macportsFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "macports": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `macports`, i.e, `macportsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <macports>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `macports`, i.e, `macportsFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </macports>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    macports {
+      // Key will be capitalized and prefixed
+      // with `macports`, i.e, `macportsFoo`.
       extraProperties.put('foo', 'bar')
     }
   }

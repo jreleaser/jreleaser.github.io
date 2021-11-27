@@ -6,7 +6,7 @@ Artifacts are at the heart of a release; they define files that may be:
 * prepared, packaged, and published using a xref:configuration:packagers/index.adoc[packager].
 
 Artifacts refer to a specific file as they have a single `path` property. Globs on the other hand refer to a collection
-of files.
+of files. Files resolved by Artifact and Glob types do not preserve directory structure but FileSets do.
 
 == Properties
 
@@ -31,11 +31,29 @@ include::configuration:partial$platform.adoc[]
 Globs have the following properties:
 
 * `pattern`. Defines pattern used to match artifacts.
+This property is *required*.
+
+* `directory`. Defines the starting point when searching for files. Defaults to the context's basedir.
+This property is *optional*.
 
 * `extraProperties`. Defines key/value pairs of metadata that's related to the resolved artifacts.
 
 The `pattern` field accepts glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
 If no prefix is specified then `glob:` will be used.
+
+FileSets have the following properties:
+
+* `input`. Defines the input path to search for files.
+This property is *required*.
+
+* `output`. Defines the path where matching files will be copied to.
+This property is *optional*.
+
+* `includes`. A set of names or regexes to match filenames. Matches will be included in the resulting set.
+
+* `excludes`. A set of names or regexes to match filenames. Matches will be excluded from the resulting set.
+
+* `extraProperties`. Defines key/value pairs of metadata that's related to the resolved artifacts.
 
 == Examples
 
