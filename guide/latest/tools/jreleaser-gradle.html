@@ -80,16 +80,16 @@
     <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -505,6 +508,18 @@
 <div class="paragraph">
 <p>Executes a JReleaser workflow as a Gradle plugin.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Requires Gradle 6.x.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -514,7 +529,7 @@
 <div class="title">build.gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'org.jreleaser' version '0.8.0'
+    id 'org.jreleaser' version '0.9.0'
 }</code></pre>
 </div>
 </div>
@@ -703,6 +718,26 @@ plugin is applied:</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_dsl_descriptors"><a class="anchor" href="#_dsl_descriptors"></a>DSL Descriptors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The plugin ships with GDSL (IntelliJ) and DSLD (Eclipse) DSL descriptors that should provide code completion support for
+the <code>jreleaser</code> extension when using the Groovy DSL in Gradle scripts. These files should be picked up automatically but
+if that were not to be the case then you may download the files and register them with your IDE:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/jreleaser/jreleaser/blob/main/plugins/jreleaser-gradle-plugin/src/main/resources/gdsl/jreleaser.gdsl">jreleaser.gdsl</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jreleaser/jreleaser/blob/main/plugins/jreleaser-gradle-plugin/src/main/resources/dsld/jreleaser.dsld">jreleaser.dsld</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_tasks"><a class="anchor" href="#_tasks"></a>Tasks</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -760,9 +795,9 @@ Options
 
      --overwrite             Overwrite existing files (OPTIONAL).
 
-     --snapshot              Use snapshot template (OPTIONAL).
+     --packager-name         The name of the packager (OPTIONAL).
 
-     --tool-name             The name of the tool (OPTIONAL).
+     --snapshot              Use snapshot template (OPTIONAL).
 
 Description
      Generates templates for a specific tool/announcer
@@ -783,9 +818,13 @@ Type
      JReleaserAssembleTask (org.jreleaser.gradle.plugin.tasks.JReleaserAssembleTask)
 
 Options
-     --assembler-name        The name of the assembler (OPTIONAL).
+     --assembler             The name of the assembler (OPTIONAL).
 
-     --distribution-name     The name of the distribution (OPTIONAL).
+     --distribution          The name of the distribution (OPTIONAL).
+
+     --exclude-assembler     Exclude an assembler (OPTIONAL).
+
+     --exclude-distribution  Exclude a distribution (OPTIONAL).
 
 Description
      Assemble all distributions
@@ -824,6 +863,10 @@ Type
      JReleaserChecksumTask (org.jreleaser.gradle.plugin.tasks.JReleaserChecksumTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -847,6 +890,10 @@ Type
      JReleaserSignTask (org.jreleaser.gradle.plugin.tasks.JReleaserSignTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -870,13 +917,17 @@ Type
      JReleaserUploadTask (org.jreleaser.gradle.plugin.tasks.JReleaserUploadTask)
 
 Options
-     --select-current-platform  Activates paths matching the current platform (OPTIONAL).
+     --exclude-uploader-name     Exclude an uploader by name (OPTIONAL).
 
-     --select-platform          Activates paths matching the given platform (OPTIONAL).
+     --exclude-uploader          Exclude an uploader by type (OPTIONAL).
 
-     --uploader-name            The name of the uploader (OPTIONAL).
+     --select-current-platform   Activates paths matching the current platform (OPTIONAL).
 
-     --uploader-type            The type of the uploader (OPTIONAL).
+     --select-platform           Activates paths matching the given platform (OPTIONAL).
+
+     --uploader-name             Include an uploader by name (OPTIONAL).
+
+     --uploader                  Include an uploader by type (OPTIONAL).
 
 Description
      Uploads all artifacts
@@ -897,6 +948,10 @@ Type
      JReleaserReleaseTask (org.jreleaser.gradle.plugin.tasks.JReleaserReleaserTask)
 
 Options
+     --distribution             The name of the distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
@@ -920,13 +975,17 @@ Type
      JReleaserPrepareTask (org.jreleaser.gradle.plugin.tasks.JReleaserPrepareTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Prepares all distributions
@@ -947,13 +1006,17 @@ Type
      JReleaserPackageTask (org.jreleaser.gradle.plugin.tasks.JReleaserPackageTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Packages all distributions
@@ -974,13 +1037,17 @@ Type
      JReleaserPublishTask (org.jreleaser.gradle.plugin.tasks.JReleaserPublishTask)
 
 Options
-     --distribution-name        The name of the distribution (OPTIONAL).
+     --distribution             Include a distribution (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --exclude-packager         Exclude a packager (OPTIONAL).
+
+     --packager                 Include a packager (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
-
-     --tool-name                The name of the tool (OPTIONAL).
 
 Description
      Publishes all distributions
@@ -1001,7 +1068,9 @@ Type
      JReleaserAnnounceTask (org.jreleaser.gradle.plugin.tasks.JReleaserAnnounceTask)
 
 Options
-     --announcer-name           The name of the announcer (OPTIONAL).
+     --announcer                Include an announcer (OPTIONAL).
+
+     --exclude-announcer        Exclude an announcer (OPTIONAL).
 
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 

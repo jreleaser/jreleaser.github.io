@@ -80,16 +80,16 @@
     <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -521,20 +524,21 @@ Options:
   -V, --version     Print version information and exit.
 
 Commands:
-  init          Create a jreleaser config file.
-  config        Display current configuration.
-  template      Generate a tool/announcer template.
-  assemble      Assemble distributions.
-  changelog     Calculate the changelog.
-  checksum      Calculate checksums.
-  sign          Sign release artifacts.
-  upload        Upload all artifacts.
-  release       Create or update a release.
-  prepare       Prepare all distributions.
-  package       Package all distributions.
-  publish       Publish all distributions.
-  announce      Announce a release.
-  full-release  Perform a full release.
+  init                 Create a jreleaser config file.
+  config               Display current configuration.
+  template             Generate a packager/announcer template.
+  assemble             Assemble distributions.
+  changelog            Calculate the changelog.
+  checksum             Calculate checksums.
+  sign                 Sign release artifacts.
+  upload               Upload all artifacts.
+  release              Create or update a release.
+  prepare              Prepare all distributions.
+  package              Package all distributions.
+  publish              Publish all distributions.
+  announce             Announce a release.
+  full-release         Perform a full release.
+  generate-completion  Generate bash/zsh completion script for jreleaser.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -675,14 +679,14 @@ uncompress and copy to the desired location.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser init -h
 Create a jreleaser config file.
 
-Usage: jreleaser init [-dhioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;] [-od=&lt;outputdir&gt;]
+Usage: jreleaser init [-ghioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;] [-od=&lt;outputdir&gt;]
                       [-D=&lt;key=value&gt;]...
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
   -f, --format=&lt;format&gt;     Configuration file format.
+  -g, --debug               Set log level to debug.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -709,25 +713,25 @@ Documentation found at https://jreleaser.org</code></pre>
 <pre class="highlightjs highlight"><code>$ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-adfhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser config [-afghiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                        [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                        [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 
 Options:
   -a, --assembly            Display assembly configuration.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
   -f, --full                Display full configuration.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -754,17 +758,16 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code>$ jreleaser template -h
-Generate a tool/announcer template.
+Generate a packager/announcer template.
 
-Usage: jreleaser template [-dhioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... ([-an=&lt;announcerName&gt;] |
-                          [-dn=&lt;distributionName&gt; -tn=&lt;toolName&gt;
-                          [-dt=&lt;distributionType&gt;]])
+Usage: jreleaser template [-ghioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
+                          [-D=&lt;key=value&gt;]... ([-a=&lt;announcer&gt;] |
+                          [-d=&lt;distribution&gt; -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
   -o, --overwrite           Overwrite existing files.
@@ -774,17 +777,18 @@ Options:
   -s, --snapshot            Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
 Announcer templates
-      -an, --announcer-name=&lt;announcerName&gt;
+  -a, --announcer=&lt;announcer&gt;
                             The name of the announcer.
-Tool templates
-      -dn, --distribution-name=&lt;distributionName&gt;
+
+Packager templates
+  -d, --distribution=&lt;distribution&gt;
                             The name of the distribution.
-      -dt, --distribution-type=&lt;distributionType&gt;
+      -dt, --distribution-type=&lt;type&gt;
                             The type of the distribution.
                             Defaults to JAVA_BINARY.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
+  -p, --packager=&lt;packager&gt; The name of the packager.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -796,10 +800,10 @@ Documentation found at https://jreleaser.org</code></pre>
 <p>Announcer and tool settings are mutually exclusive.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--announcer-name</code> must match any of the available <a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
+<p>The value of <code>--announcer</code> must match any of the available <a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured
+<p>The value of <code>--distribution</code> must match the name of a configured
 <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
@@ -807,7 +811,7 @@ Documentation found at https://jreleaser.org</code></pre>
 <a href="../distributions/index.html" class="page">distribution types</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -817,32 +821,41 @@ Documentation found at https://jreleaser.org</code></pre>
 <pre class="highlightjs highlight"><code>$ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-dhiqVw] [-grs] [-an=&lt;assemblerName&gt;] [-b=&lt;basedir&gt;]
-                          [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
+Usage: jreleaser assemble [-ghiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                           [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                          [-p=&lt;key=value&gt;]...
+                          [-P=&lt;key=value&gt;]... [[[-a=&lt;assembler&gt;]...
+                          [-d=&lt;distribution&gt;]...] | [[-xa=&lt;assembler&gt;]...
+                          [-xd=&lt;distribution&gt;]...]]
 
 Options:
-      -an, --assembler-name=&lt;assemblerName&gt;
-                            The name of the assembler.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+  -a, --assembler=&lt;assembler&gt;
+                            Include an assembler. Repeatable.
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xa, --exclude-assembler=&lt;assembler&gt;
+                            Exclude an assembler. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -855,14 +868,15 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--assembler-name</code> must match any of the available <a href="../configuration/assemble/index.html" class="page">assemblers</a>.</p>
+<p>The value of <code>--assembler</code> and <code>--exclude-assembler</code> must match any of the available
+<a href="../configuration/assemble/index.html" class="page">assemblers</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured found in the
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured assembler found in the
 <a href="../configuration/assemble/index.html" class="page">assemblers</a> section.</p>
 </div>
 <div class="paragraph">
-<p>This command must be invoked separatedly from the others as some of the assmeblers are platform specific.</p>
+<p>This command must be invoked separately from the others as some of the assmeblers are platform specific.</p>
 </div>
 </div>
 <div class="sect2">
@@ -872,23 +886,23 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-dhiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+Usage: jreleaser changelog [-ghiqVw] [-grs] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                            [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                           [-p=&lt;key=value&gt;]...
+                           [-P=&lt;key=value&gt;]...
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
   -V, --version             Print version information and exit.
@@ -912,24 +926,26 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]...
+                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                          [-sp=&lt;platform&gt;]... [-d=&lt;distribution&gt;
+                          [-d=&lt;distribution&gt;]... | -xd=&lt;distribution&gt;
+                          [-xd=&lt;distribution&gt;]...]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -940,6 +956,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -949,6 +971,10 @@ found at the current directory.</p>
 </div>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -958,23 +984,25 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                      [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                      [-sp=&lt;platform&gt;]...
+Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                      [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                      [-sp=&lt;platform&gt;]... [-d=&lt;distribution&gt;
+                      [-d=&lt;distribution&gt;]... | -xd=&lt;distribution&gt;
+                      [-xd=&lt;distribution&gt;]...]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -985,6 +1013,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Filter:
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+
 Documentation found at https://jreleaser.org</code></pre>
 </div>
 </div>
@@ -994,6 +1028,10 @@ found at the current directory.</p>
 </div>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1003,25 +1041,25 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                        [-un=&lt;uploaderName&gt;] [-ut=&lt;uploaderType&gt;]
-                        [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                        [-sp=&lt;platform&gt;]...
+Usage: jreleaser upload [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                        [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                        [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] |
+                        [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -1029,13 +1067,20 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -un, --uploader-name=&lt;uploaderName&gt;
-                            The name of the uploader.
-      -ut, --uploader-type=&lt;uploaderType&gt;
-                            The type of the uploader.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -u, --uploader=&lt;uploader&gt; Include an uploader by type. Repeatable.
+      -un, --uploader-name=&lt;name&gt;
+                            Include an uploader by name. Repeatable.
+
+Exclude Filter:
+      -xu, --exclude-uploader=&lt;uploader&gt;
+                            Exclude an uploader by type. Repeatable.
+      -xun, --exclude-uploader-name=&lt;name&gt;
+                            Exclude an uploader by name. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1048,10 +1093,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--uploader-type</code> must match the type of a configured <a href="../configuration/upload/index.html" class="page">uploader</a>.</p>
+<p>The value of <code>--uploader</code> and <code>--exclude-uploader-type</code> must match the type of a configured
+<a href="../configuration/upload/index.html" class="page">uploader</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--uploader-name</code> must match any of the available <a href="../configuration/upload/index.html" class="page">uploaders</a>.</p>
+<p>The value of <code>--uploader-name</code> and <code>--exclude-uploader-name</code> must match any of the available named
+<a href="../configuration/upload/index.html" class="page">uploaders</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1109,10 +1156,11 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser release [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                         [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[--auto-config]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]...] | [[--auto-config]
                          [--project-name=&lt;projectName&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
@@ -1132,21 +1180,21 @@ Usage: jreleaser release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [--commit-author-name=&lt;commitAuthorName&gt;]
                          [--commit-author-email=&lt;commitAuthorEmail&gt;]
                          [--signing-enabled] [--signing-armored]
-                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]
+                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;    Base directory.
   -c, --config-file=&lt;configFile&gt;
                              The config file.
-  -d, --debug                Set log level to debug.
   -D=&lt;key=value&gt;             Sets a System property. Repeatable.
+  -g, --debug                Set log level to debug.
       -grs, --git-root-search
                              Searches for the Git root.
   -h, --help                 Show this help message and exit.
   -i, --info                 Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                              Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                              Sets the value of a property. Repeatable.
   -q, --quiet                Log errors only.
       -scp, --select-current-platform
@@ -1157,6 +1205,14 @@ Options:
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
   -y, --dryrun               Skip remote operations.
+
+Include Filter:
+  -d, --distribution=&lt;distribution&gt;
+                             Include a distribution. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                             Exclude a distribution. Repeatable.
 
 Auto Config Options:
       --auto-config          Activate auto configuration.
@@ -1242,6 +1298,10 @@ found at the current directory.</p>
 <div class="paragraph">
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
+<div class="paragraph">
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured distribution found
+in the <a href="../configuration/distributions.html" class="page">distribution</a> section.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -1275,26 +1335,26 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-dhiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
+                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
+                         [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -1302,10 +1362,19 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
+
+Include Filter:
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1318,10 +1387,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1347,7 +1418,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser prepare --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser prepare --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1355,7 +1426,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser prepare --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser prepare --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 </div>
@@ -1366,26 +1437,26 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code>$ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+Usage: jreleaser package [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
+                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
+                         [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -1393,11 +1464,20 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1410,10 +1490,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1439,7 +1521,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser package --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser package --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1447,7 +1529,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser package --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser package --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1471,26 +1553,26 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-dn=&lt;distributionName&gt;]
-                         [-od=&lt;outputdir&gt;] [-tn=&lt;toolName&gt;] [-D=&lt;key=value&gt;]...
-                         [-p=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+Usage: jreleaser publish [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
+                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
+                         [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      -dn, --distribution-name=&lt;distributionName&gt;
-                            The name of the distribution.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -1498,11 +1580,20 @@ Options:
       -sp, --select-platform=&lt;platform&gt;
                             Activates paths matching the given platform.
                               Repeatable.
-      -tn, --tool-name=&lt;toolName&gt;
-                            The name of the tool.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Include Filter:
+  -d, --distribution=&lt;distribution&gt;
+                            Include a distribution. Repeatable.
+  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-distribution=&lt;distribution&gt;
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=&lt;packager&gt;
+                            Exclude a packager. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1515,10 +1606,12 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--distribution-name</code> must match the name of a configured <a href="../configuration/distributions.html" class="page">distribution</a>.</p>
+<p>The value of <code>--distribution</code> and <code>--exclude-distribution</code> must match the name of a configured
+<a href="../configuration/distributions.html" class="page">distribution</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--tool-name</code> must match any of the available <a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
+<p>The value of <code>--packager</code> and <code>--exclude-packager</code> must match any of the available
+<a href="../configuration/packagers/index.html" class="page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1544,7 +1637,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser publish --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser publish --packager-name brew</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1552,7 +1645,7 @@ found at the current directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>$ jreleaser publish --distribution-name app --tool-name brew</code></pre>
+<pre class="highlightjs highlight"><code>$ jreleaser publish --distribution-name app --packager-name brew</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1576,26 +1669,26 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-dhiqVwy] [-grs] [-scp] [-an=&lt;announcerName&gt;]
-                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]...
+Usage: jreleaser announce [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
+                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                          [-sp=&lt;platform&gt;]... [-a=&lt;announcer&gt;
+                          [-a=&lt;announcer&gt;]... | -xa=&lt;announcer&gt;
+                          [-xa=&lt;announcer&gt;]...]
 
 Options:
-      -an, --announcer-name=&lt;announcerName&gt;
-                            The name of the announcer.
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform
@@ -1606,6 +1699,12 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
   -y, --dryrun              Skip remote operations.
+
+Filter:
+  -a, --announcer=&lt;announcer&gt;
+                            Include an announcer. Repeatable.
+      -xa, --exclude-announcer=&lt;announcer&gt;
+                            Exclude an announcer. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1618,7 +1717,8 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>--announcer-name</code> must match any of the available <a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
+<p>The value of <code>--announcer</code> and <code>--exclude-announcer</code> must match any of the available
+<a href="../configuration/announce/index.html" class="page">announcers</a>.</p>
 </div>
 <div class="paragraph">
 <p>You may invoke this command in the following ways:</p>
@@ -1660,24 +1760,24 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code>$ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-dhiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser full-release [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
                               [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                              [-D=&lt;key=value&gt;]... [-p=&lt;key=value&gt;]...
+                              [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                               [-sp=&lt;platform&gt;]...
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
-  -d, --debug               Set log level to debug.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
   -h, --help                Show this help message and exit.
   -i, --info                Set log level to info.
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
-  -p, --set-property=&lt;key=value&gt;
+  -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
       -scp, --select-current-platform

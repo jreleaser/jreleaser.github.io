@@ -80,16 +80,16 @@
     <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -514,7 +517,7 @@ is used to create both release and snapshot releases:</p>
 environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu11.48.21-ca-jdk11.0.11'
+    jdkFilePrefix: 'zulu17.30.15-ca-jdk17.0.1'
 
 # General information about this project
 project:
@@ -563,6 +566,8 @@ release:
           title: '[chore]'
         - label: 'dependencies'
           title: '[deps]'
+        - label: 'build'
+          title: '[build]'
         - label: 'feature'
           title: 'Resolves #'
           body: 'Resolves #'
@@ -595,6 +600,9 @@ release:
         - title: '⚙️  Dependencies'
           labels:
             - 'dependencies'
+        - title: '🛠  Build'
+          labels:
+            - 'build'
         - title: 'allcontributors'
           labels:
             - 'allcontributors'
@@ -614,6 +622,8 @@ release:
         - search: '\[deps\] '
         # Remove `[translation] ` from the commit message
         - search: '\[translation\] '
+        # Remove `[build] ` from the commit message
+        - search: '\[build\] '
 
 # File signing is always active
 signing:
@@ -642,29 +652,26 @@ assemble:
         mainClass: 'org.jreleaser.cli.Main'
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: 'jreleaser'
-      moduleNames:
-        - java.base
-        - java.desktop
-        - java.management
-        - java.naming
-        - java.rmi
-        - java.security.jgss
-        - java.security.sasl
-        - java.sql
-        - jdk.crypto.ec
-        - jdk.crypto.cryptoki
-        - jdk.security.auth
-        - jdk.security.jgss
-        - org.openjsse
+      jdeps:
+        multiRelease: base
+        ignoreMissingDeps: true
       targetJdks:
-        - path: '{{jdkPathPrefix}}/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home'
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu11Linux/{{jdkFilePrefix}}-linux_x64'
+        - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-aarch64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
           platform: 'linux-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu11LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
+          platform: 'linux-aarch64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
           platform: 'linux_musl-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu11Windows/{{jdkFilePrefix}}-win_x64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
+          platform: 'linux_musl-aarch64'
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
           platform: 'windows-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
+          platform: 'windows-aarch64'
       mainJar:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
@@ -677,25 +684,35 @@ distributions:
     java:
       mainClass: org.jreleaser.cli.Main
     brew:
-      # Active only on release
-      active: release
+      active: always
+      tap:
+        active: release
     scoop:
-      # Active only on release
-      active: release
+      active: always
+      bucket:
+        active: release
     snap:
-      # Active only on release
-      active: release
+      active: always
       remoteBuild: true
       base: core18
       localPlugs:
         - network
         - home
     jbang:
-      # Always active
       active: always
     sdkman:
-      # Active only on release
       active: release
+    macports:
+      active: always
+      repository:
+        active: release
+        name: jreleaser-macports
+    chocolatey:
+      active: always
+      remoteBuild: true
+      title: JReleaser
+      bucket:
+        active: release
     artifacts:
       # Transform the artifact name
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip

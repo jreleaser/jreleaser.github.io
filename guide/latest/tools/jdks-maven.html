@@ -80,16 +80,16 @@
     <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -516,7 +519,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
   &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
   &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;0.8.0&lt;/version&gt;
+  &lt;version&gt;0.9.0&lt;/version&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
@@ -526,7 +529,129 @@
 <h2 id="_configuration_dsl"><a class="anchor" href="#_configuration_dsl"></a>Configuration DSL</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>JDKS must define the following properties:</p>
+<p>JDKs must be defined either using the <a href="https://github.com/foojayio/discoapi">Foojay Disco API</a> or explicitly.</p>
+</div>
+<div class="sect2">
+<h3 id="_foojay_disco_api"><a class="anchor" href="#_foojay_disco_api"></a>Foojay Disco API</h3>
+<div class="paragraph">
+<p>Pkgs must define the following properties</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>name</code>: a user defined name, must be unique.</p>
+</li>
+<li>
+<p><code>version</code>: the version of the JDK.</p>
+</li>
+<li>
+<p><code>platform</code>: the platform this JDK is related to.</p>
+</li>
+<li>
+<p><code>distribution</code>: the distribution that provides the JDK. Defaults to <code>zulu</code>.</p>
+</li>
+<li>
+<p><code>archiveType</code>: the extension file. Defaults to <code>zip</code>.</p>
+</li>
+<li>
+<p><code>javafxBundled</code>: whether JavaFx should be bundled or not. Defaults to <code>false</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Please be as specific as you can with the value of <code>version</code> to reduce the number of matches packages and increase
+reproducibility, for example <code>11.0.13</code> is better than just <code>11</code>. The value for <code>distribution</code> are those defined by
+the Disco API, check the <a href="https://github.com/foojayio/discoapi">documentation</a> for the full list. The value for
+<code>archiveType</code> should be either <code>zip</code> or <code>tar.gz</code>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>platform</code> is dictated by the normalized values detected by
+<a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
+<code>arch</code> classifier. The following values are currently recognized:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
+<p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>linux_musl</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch64</code>, <code>mips_32</code>,
+<code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>osx</code></p>
+</li>
+<li>
+<p><code>osx-aarch64</code></p>
+</li>
+<li>
+<p><code>windows</code></p>
+</li>
+<li>
+<p><code>linux</code></p>
+</li>
+<li>
+<p><code>linux-x86_64</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use <code>linux_musl</code> for artifacts that target Alpine Linux.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example configuration</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+    &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;0.9.0&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;pkgs&gt;
+            &lt;pkg&gt;
+                &lt;name&gt;zulu11Linux&lt;/name&gt;
+                &lt;platform&gt;linux-x86_64&lt;/platform&gt;
+                &lt;version&gt;11.0.11&lt;/version&gt;
+            &lt;/pkg&gt;
+            &lt;pkg&gt;
+                &lt;name&gt;zulu11Osx&lt;/name&gt;
+                &lt;platform&gt;osx-x86_64&lt;/platform&gt;
+                &lt;version&gt;11.0.11&lt;/version&gt;
+            &lt;/pkg&gt;
+            &lt;pkg&gt;
+                &lt;name&gt;zulu11Windows&lt;/name&gt;
+                &lt;platform&gt;windows-x86_64&lt;/platform&gt;
+                &lt;version&gt;11.0.11&lt;/version&gt;
+            &lt;/pkg&gt;
+        &lt;/pkgs&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_explicit"><a class="anchor" href="#_explicit"></a>Explicit</h3>
+<div class="paragraph">
+<p>JDKs must define the following properties:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -575,7 +700,7 @@ in the Java Security Standard Algorithm Names Specification. If no value for <co
 </dd>
 <dt class="hdlist1">arch</dt>
 <dd>
-<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch64</code>, <code>mips_32</code>,
 <code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
 </dd>
 </dl>
@@ -589,7 +714,7 @@ in the Java Security Standard Algorithm Names Specification. If no value for <co
 <p><code>osx</code></p>
 </li>
 <li>
-<p><code>osx-arm</code></p>
+<p><code>osx-aarch64</code></p>
 </li>
 <li>
 <p><code>windows</code></p>
@@ -620,32 +745,33 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
-  &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
-  &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;0.8.0&lt;/version&gt;
-  &lt;configuration&gt;
-      &lt;jdks&gt;
-          &lt;jdk&gt;
-              &lt;name&gt;zulu11Linux&lt;/name&gt;
-              &lt;platform&gt;linux&lt;/platform&gt;
-              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip&lt;/url&gt;
-              &lt;checksum&gt;9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60&lt;/checksum&gt;
-          &lt;/jdk&gt;
-          &lt;jdk&gt;
-              &lt;name&gt;zulu11Windows&lt;/name&gt;
-              &lt;platform&gt;windows&lt;/platform&gt;
-              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip&lt;/url&gt;
-              &lt;checksum&gt;7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a&lt;/checksum&gt;
-          &lt;/jdk&gt;
-          &lt;jdk&gt;
-              &lt;name&gt;zulu11Osx&lt;/name&gt;
-              &lt;platform&gt;osx&lt;/platform&gt;
-              &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip&lt;/url&gt;
-              &lt;checksum&gt;abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a&lt;/checksum&gt;
-          &lt;/jdk&gt;
-      &lt;/jdks&gt;
-  &lt;/configuration&gt;
+    &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+    &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;0.9.0&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;jdks&gt;
+            &lt;jdk&gt;
+                &lt;name&gt;zulu11Linux&lt;/name&gt;
+                &lt;platform&gt;linux&lt;/platform&gt;
+                &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip&lt;/url&gt;
+                &lt;checksum&gt;9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60&lt;/checksum&gt;
+            &lt;/jdk&gt;
+            &lt;jdk&gt;
+                &lt;name&gt;zulu11Windows&lt;/name&gt;
+                &lt;platform&gt;windows&lt;/platform&gt;
+                &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip&lt;/url&gt;
+                &lt;checksum&gt;7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a&lt;/checksum&gt;
+            &lt;/jdk&gt;
+            &lt;jdk&gt;
+                &lt;name&gt;zulu11Osx&lt;/name&gt;
+                &lt;platform&gt;osx&lt;/platform&gt;
+                &lt;url&gt;https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip&lt;/url&gt;
+                &lt;checksum&gt;abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a&lt;/checksum&gt;
+            &lt;/jdk&gt;
+        &lt;/jdks&gt;
+    &lt;/configuration&gt;
 &lt;/plugin&gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -661,13 +787,55 @@ should happen in your build.</p>
 <p>The following MOJOs are provided:</p>
 </div>
 <div class="sect2">
-<h3 id="_jreleaserlist_jdks"><a class="anchor" href="#_jreleaserlist_jdks"></a>jreleaser:list-jdks</h3>
+<h3 id="_jdkslist_disco"><a class="anchor" href="#_jdkslist_disco"></a>jdks:list-disco</h3>
 <div class="paragraph">
-<p>Lists all configured JDKS.</p>
+<p>Lists all configured JDKs using the Foojay Disco API.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jreleasersetup_jdks"><a class="anchor" href="#_jreleasersetup_jdks"></a>jreleaser:setup-jdks</h3>
+<h3 id="_jdkssetup_disco"><a class="anchor" href="#_jdkssetup_disco"></a>jdks:setup-disco</h3>
+<div class="paragraph">
+<p>Downloads, verifies, and unpacks JDKs using the Foojay Disco API.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>connectTimeout (Default: 60)+
+Connect timeout (in seconds).<br>
+Type: int<br>
+User property: <code>"disco.setup.connect.timeout</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jdks)<br>
+Type: File<br>
+User property: <code>jdks.output.directory</code></p>
+</li>
+<li>
+<p>readTimeout (Default: 20)<br>
+Read timeout (in seconds).<br>
+Type: int<br>
+User property: <code>disco.setup.read.timeout</code></p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>disco.setup.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jdkslist_jdks"><a class="anchor" href="#_jdkslist_jdks"></a>jdks:list-jdks</h3>
+<div class="paragraph">
+<p>Lists all configured JDKs.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jdkssetup_jdks"><a class="anchor" href="#_jdkssetup_jdks"></a>jdks:setup-jdks</h3>
 <div class="paragraph">
 <p>Downloads, verifies, and unpacks JDKs.</p>
 </div>
@@ -702,8 +870,54 @@ User property: <code>jdks.setup.skip</code></p>
 <h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
 <div class="sectionbody">
 <div class="listingblock">
+<div class="title">jdks:list-disco</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.8.0:list-jdks (default-cli) @ app ---
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.9.0:list-disco (default-cli) @ app ---
+[INFO] == Pkg zulu11Linux ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      linux-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] == Pkg zulu11Osx ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      osx-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] == Pkg zulu11Windows ==
+[INFO] version:       11.0.11
+[INFO] archiveType:   zip
+[INFO] platform:      windows-x86_64
+[INFO] distribution:  zulu
+[INFO] javafxBundled: false
+[INFO] package(s):    1
+[INFO] filename:      zulu11.48.21-ca-jdk11.0.11-win_x64.zip</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">jdks:setup-disco</div>
+<div class="content">
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.9.0:setup-disco (default-cli) @ app ---
+[INFO] Fetching [name='zulu11Linux', version='11.0.11', archiveType='zip', distribution='zulu', platform='linux-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
+[INFO] Fetching [name='zulu11Osx', version='11.0.11', archiveType='zip', distribution='zulu', platform='osx-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
+[INFO] Fetching [name='zulu11Windows', version='11.0.11', archiveType='zip', distribution='zulu', platform='windows-x86_64', javafxBundled='false']
+[INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
+[INFO] Extracting zulu11.48.21-ca-jdk11.0.11-win_x64.zip</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">jdks:list-jdks</div>
+<div class="content">
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.9.0:list-jdks (default-cli) @ app ---
 [INFO] == JDK zulu11Linux ==
 [INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] checksum: 9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60
@@ -721,8 +935,9 @@ User property: <code>jdks.setup.skip</code></p>
 </div>
 </div>
 <div class="listingblock">
+<div class="title">jdks:setup-jdks</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.8.0:setup-jdks (default-cli) @ app ---
+<pre class="highlightjs highlight"><code>[INFO] --- jdks-maven-plugin:0.9.0:setup-jdks (default-cli) @ app ---
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] Verifying zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip

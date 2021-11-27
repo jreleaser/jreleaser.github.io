@@ -80,16 +80,16 @@
     <a class="nav-link" href="index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cli.html">Command Line</a>
+    <a class="nav-link" href="cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="maven.html">Apache Maven</a>
+    <a class="nav-link" href="maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="gradle.html">Gradle</a>
+    <a class="nav-link" href="gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="ant.html">Apache Ant</a>
+    <a class="nav-link" href="ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -482,7 +485,7 @@
   <ul>
     <li><a href="../index.html">JReleaser</a></li>
     <li><a href="index.html">Quick Start</a></li>
-    <li><a href="gradle.html">Gradle</a></li>
+    <li><a href="gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -516,7 +519,7 @@ however their use is optional. A sample project using Kordamp may look like this
     id 'java-library'
     id 'application'
     id 'org.kordamp.gradle.java-project' version '0.45.0'
-    id 'org.jreleaser' version '0.8.0'
+    id 'org.jreleaser' version '0.9.0'
 }
 
 application {
@@ -565,6 +568,13 @@ jreleaser {
         github {
             owner = 'duke'
             overwrite = true
+        }
+    }
+    distributions {
+        app {
+           artifact {
+               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
+           }
         }
     }
 }</code></pre>
@@ -617,7 +627,7 @@ copyright year, default settings.</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
     id 'java-library'
     id 'application'
-    id 'org.jreleaser' version '0.8.0'
+    id 'org.jreleaser' version '0.9.0'
 }
 
 application {
@@ -638,12 +648,15 @@ jreleaser {
             overwrite = true
         }
     }
+    distributions {
+        app {
+           artifact {
+               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
+           }
+        }
+    }
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>The JReleaser Gradle plugin detects the use of the <code>application</code> plugin and automatically configures the output files
-from the <code>assembleDist</code> task.</p>
 </div>
 <div class="paragraph">
 <p>Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking</p>
@@ -670,7 +683,7 @@ from the <code>assembleDist</code> task.</p>
 > Task :assembleDist
 
 > Task :jreleaserFullRelease
-[INFO]  JReleaser 0.8.0
+[INFO]  JReleaser 0.9.0
 [INFO]    - basedir set to /Home/duke/app
 [INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
 [INFO]  Validating configuration
@@ -678,6 +691,7 @@ from the <code>assembleDist</code> task.</p>
 [INFO]  Release is not snapshot
 [INFO]  Timestamp is 2021-03-28T12:25:16.219+02:00
 [INFO]  HEAD is at c3e39f1
+[INFO]  Platform is osx-x86_64
 [INFO]  dryrun set to false
 [INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
 [INFO]  Calculating checksums

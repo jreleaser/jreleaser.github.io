@@ -80,16 +80,16 @@
     <a class="nav-link" href="../../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
@@ -501,6 +504,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Snap</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p><a href="http://snapcraft.io">Snaps</a> are a new packaging format, that will let you publish your project directly to the
 Ubuntu store. From there it will be installable in all the <a href="https://snapcraft.io/docs/core/install">supported Linux distros</a>,
@@ -528,7 +533,7 @@ Only artifacts with <code>.tar.gz</code>, <code>.tar</code>, or <code>.jar</code
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Snapshots are <strong>not</strong> supported.
+Publication of snapshots is <strong>not</strong> allowed.
 </td>
 </tr>
 </table>
@@ -633,13 +638,19 @@ packagers:
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     snap:
+      # Enables or disables the snap.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `RELEASE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      active: ALWAYS
 
-      # The owner of the snap repository.
+
+      # The owner of the snap.
       # Defaults to the same owner as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       owner: duke
 
-      # The name of the snap repository.
+      # The name of the snap.
       # Defaults to `app-snap`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: app-snap
@@ -650,18 +661,23 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the snap repository.
+      # Username used for authoring commits. Must have write access to the snap.
       # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
-      # Password or OAuth token with write access to the snap repository.
+      # Password or OAuth token with write access to the snap.
       # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
+
+      # Message when committing to the snap.
+      # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      commitMessage: 'Releasing {{projectName}} {{tagName}}'
 
     # Exported snapcraft login credentials.
     # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -786,12 +802,19 @@ packagers:
   # Git repository to push the manifest to.
   # Defaults are shown.
 
-  # The owner of the snap repository.
+  # Enables or disables the snap.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `RELEASE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  snap.active = "ALWAYS"
+
+
+  # The owner of the snap.
   # Defaults to the same owner as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   snap.owner = "duke"
 
-  # The name of the snap repository.
+  # The name of the snap.
   # Defaults to `app-snap`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   snap.name = "app-snap"
@@ -802,18 +825,23 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the snap repository.
+  # Username used for authoring commits. Must have write access to the snap.
   # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.username = "duke"
 
-  # Password or OAuth token with write access to the snap repository.
+  # Password or OAuth token with write access to the snap.
   # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.token = "__DO_NOT_SET_HERE__"
+
+  # Message when committing to the snap.
+  # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  snap.commitMessage = "Releasing {{projectName}} {{tagName}}"
 
   # Exported snapcraft login credentials.
   # Will be sent to local snapcraft build with `snapcraft login --with ${exportedLogin}`.
@@ -939,13 +967,19 @@ packagers:
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "snap": {
+        // Enables or disables the snap.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "active": "ALWAYS",
 
-        // The owner of the snap repository.
+
+        // The owner of the snap.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "owner": "duke",
 
-        // The name of the snap repository.
+        // The name of the snap.
         // Defaults to `app-snap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "app-snap",
@@ -956,18 +990,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the snap repository.
+        // Username used for authoring commits. Must have write access to the snap.
         // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
-        // Password or OAuth token with write access to the snap repository.
+        // Password or OAuth token with write access to the snap.
         // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__"
+        "token": "__DO_NOT_SET_HERE__",
+
+        // Message when committing to the snap.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "commitMessage": "Releasing {{projectName}} {{tagName}}"
       },
 
       // Exported snapcraft login credentials.
@@ -1139,16 +1178,24 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;snap&gt;
+        &lt;!--
+          Enables or disables the snap.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `RELEASE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+
 
         &lt;!--
-          The owner of the snap repository.
+          The owner of the snap.
           Defaults to the same owner as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The name of the snap repository.
+          The name of the snap.
           Defaults to `app-snap`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -1163,7 +1210,7 @@ packagers:
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the snap repository.
+          Username used for authoring commits. Must have write access to the snap.
           If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
@@ -1172,12 +1219,19 @@ packagers:
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
-          Password or OAuth token with write access to the snap repository.
+          Password or OAuth token with write access to the snap.
           If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+        &lt;!--
+          Message when committing to the snap.
+          If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;commitMessage&gt;Releasing {{projectName}} {{tagName}}&lt;/commitMessage&gt;
       &lt;/snap&gt;
 
       &lt;!--
@@ -1344,13 +1398,19 @@ packagers:
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       snap {
+        // Enables or disables the snap.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active = 'ALWAYS'
 
-        // The owner of the snap repository.
+
+        // The owner of the snap.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         owner = 'duke'
 
-        // The name of the snap repository.
+        // The name of the snap.
         // Defaults to `app-snap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'app-snap'
@@ -1361,18 +1421,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the snap repository.
+        // Username used for authoring commits. Must have write access to the snap.
         // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
-        // Password or OAuth token with write access to the snap repository.
+        // Password or OAuth token with write access to the snap.
         // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
+
+        # Message when committing to the snap.
+        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        commitMessage = 'Releasing {{projectName}} {{tagName}}'
       }
 
       // Exported snapcraft login credentials.
@@ -1479,7 +1544,7 @@ be one of [<code>JRELEASER_SNAP_GITHUB_TOKEN</code>, <code>JRELEASER_SNAP_GITLAB
 </div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
-a <code>snapcraft.yaml</code> file <code>out/jreleaser/snap/prepare</code>, which may be published to <code>app-snap</code></p>
+a <code>snapcraft.yaml</code> file which may be published to <code>app-snap</code></p>
 </div>
 <div class="listingblock">
 <div class="title">snapcraft.yaml</div>
@@ -1515,6 +1580,48 @@ parts:
     prime:
       - -usr/lib/jvm/java/lib/security/cacerts
       - -usr/lib/jvm/java/jre/lib/security/cacerts</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/snap</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>snap/snapcraft.yaml.tpl</code></p>
+</li>
+<li>
+<p><code>.gitignore</code></p>
+</li>
+<li>
+<p><code>README.md.tpl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="page">Name Templates</a> substitution will take place.</p>
+</div>
+<div class="paragraph">
+<p>Templates may be initialized using the <code>template</code> command</p>
+</div>
+<div class="paragraph">
+<p><a href="../../tools/jreleaser-cli.html#_template" class="page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
+<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
+<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
+<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+</div>
 </div>
 </div>
 </article>

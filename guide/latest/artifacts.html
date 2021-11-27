@@ -80,16 +80,16 @@
     <a class="nav-link" href="quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="configuration/packagers/scoop.html">Scoop</a>
@@ -516,7 +519,7 @@
 </div>
 <div class="paragraph">
 <p>Artifacts refer to a specific file as they have a single <code>path</code> property. Globs on the other hand refer to a collection
-of files.</p>
+of files. Files resolved by Artifact and Glob types do not preserve directory structure but FileSets do.</p>
 </div>
 </div>
 </div>
@@ -561,7 +564,7 @@ and <a href="configuration/packagers/index.html" class="page">packagers</a> requ
 </dd>
 <dt class="hdlist1">arch</dt>
 <dd>
-<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch64</code>, <code>mips_32</code>,
 <code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
 </dd>
 </dl>
@@ -575,7 +578,7 @@ and <a href="configuration/packagers/index.html" class="page">packagers</a> requ
 <p><code>osx</code></p>
 </li>
 <li>
-<p><code>osx-arm</code></p>
+<p><code>osx-aarch64</code></p>
 </li>
 <li>
 <p><code>windows</code></p>
@@ -606,7 +609,12 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <div class="ulist">
 <ul>
 <li>
-<p><code>pattern</code>. Defines pattern used to match artifacts.</p>
+<p><code>pattern</code>. Defines pattern used to match artifacts.
+This property is <strong>required</strong>.</p>
+</li>
+<li>
+<p><code>directory</code>. Defines the starting point when searching for files. Defaults to the context&#8217;s basedir.
+This property is <strong>optional</strong>.</p>
 </li>
 <li>
 <p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the resolved artifacts.</p>
@@ -616,6 +624,30 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <div class="paragraph">
 <p>The <code>pattern</code> field accepts glob or regex patterns by using <code>glob:</code> and <code>regex:</code> prefixes accordingly.
 If no prefix is specified then <code>glob:</code> will be used.</p>
+</div>
+<div class="paragraph">
+<p>FileSets have the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>. Defines the input path to search for files.
+This property is <strong>required</strong>.</p>
+</li>
+<li>
+<p><code>output</code>. Defines the path where matching files will be copied to.
+This property is <strong>optional</strong>.</p>
+</li>
+<li>
+<p><code>includes</code>. A set of names or regexes to match filenames. Matches will be included in the resulting set.</p>
+</li>
+<li>
+<p><code>excludes</code>. A set of names or regexes to match filenames. Matches will be excluded from the resulting set.</p>
+</li>
+<li>
+<p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the resolved artifacts.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -851,16 +883,16 @@ Target JDKs are of type <code>artifact</code>.</p>
 │    ├── jreleaser
 │    │   └── build
 │    │       └── distributions
-│    │           └── jreleaser-0.8.0.zip
+│    │           └── jreleaser-0.9.0.zip
 │    └── jreleaser-tool-provider
 │        └── build
 │            └── libs
-│                └── jreleaser-tool-provider-0.8.0.jar
+│                └── jreleaser-tool-provider-0.9.0.jar
 └── plugins
     └── jreleaser-ant-tasks
         └── build
             └── distributions
-                └── jreleaser-ant-tasks-0.8.0.zip</code></pre>
+                └── jreleaser-ant-tasks-0.9.0.zip</code></pre>
 </div>
 </div>
 </div>

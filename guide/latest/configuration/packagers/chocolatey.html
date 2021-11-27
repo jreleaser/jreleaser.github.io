@@ -80,16 +80,16 @@
     <a class="nav-link" href="../../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
@@ -501,6 +504,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Chocolatey</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Publishes packages to <a href="https://chocolatey.org" class="bare">https://chocolatey.org</a>.</p>
 </div>
@@ -516,18 +521,9 @@ At the moment, only artifacts with <code>.zip</code> extension may be packaged w
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Local publication of packages is currently not supported. Please set <code>remoteBuild</code> to <code>true</code> and trigger a
-build on CI. Local publication will be added at a later release.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Local publication of packages requires running on Windows, have <code>powershell</code> and <code>choco</code> installed.
+If you rather package and push on CI then set <code>remoteBuild</code> to <code>true</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -536,7 +532,7 @@ build on CI. Local publication will be added at a later release.
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Snapshots are <strong>not</strong> supported.
+Publication of snapshots is <strong>not</strong> allowed.
 </td>
 </tr>
 </table>
@@ -628,13 +624,19 @@ packagers:
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     bucket:
+      # Enables or disables the bucket.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `RELEASE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      active: ALWAYS
 
-      # The owner of the bucket repository.
+
+      # The owner of the bucket.
       # Defaults to the same owner as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       owner: duke
 
-      # The name of the bucket repository.
+      # The name of the bucket.
       # Defaults to `chocolatey-bucket`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: chocolatey-bucket
@@ -645,28 +647,44 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the bucket repository.
+      # Username used for authoring commits. Must have write access to the bucket.
       # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
-      # Password or OAuth token with write access to the bucket repository.
+      # Password or OAuth token with write access to the bucket.
       # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
+
+      # Message when committing to the bucket.
+      # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      commitMessage: 'Releasing {{projectName}} {{tagName}}'
 
     # The username that can publish Chocolatey packages.
     # If left unspecified, the release owner will be used.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     username: duke
 
+    # The ApiKey associated with the given account.
+    # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+    # environment variable must be defined.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    apiKey: __DO_NOT_SET_HERE__
+
     # Whether to build the package on a remote server or locally.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    remoteBuild: false</code></pre>
+    remoteBuild: false
+
+    # The title of the spec.
+    # If left unspecified, will use `${project.name}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    title: Duke</code></pre>
 </div>
 </div>
 </div>
@@ -712,12 +730,19 @@ packagers:
   # Git repository to push the manifest to.
   # Defaults are shown.
 
-  # The owner of the bucket repository.
+  # Enables or disables the bucket.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `RELEASE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  bucket.active = "ALWAYS"
+
+
+  # The owner of the bucket.
   # Defaults to the same owner as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   bucket.owner = "duke"
 
-  # The name of the bucket repository.
+  # The name of the bucket.
   # Defaults to `chocolatey-bucket`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   bucket.name = "chocolatey-bucket"
@@ -728,28 +753,44 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   bucket.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the bucket repository.
+  # Username used for authoring commits. Must have write access to the bucket.
   # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   bucket.username = "duke"
 
-  # Password or OAuth token with write access to the bucket repository.
+  # Password or OAuth token with write access to the bucket.
   # If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   bucket.token = "__DO_NOT_SET_HERE__"
+
+  # Message when committing to the bucket.
+  # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  bucket.commitMessage = "Releasing {{projectName}} {{tagName}}"
 
   # The username that can publish Chocolatey packages.
   # If left unspecified, the release owner will be used.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   username = "duke"
 
+  # The ApiKey associated with the given account.
+  # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  apiKey = "__DO_NOT_SET_HERE__"
+
   # Whether to build the package on a remote server or locally.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  remoteBuild = false</code></pre>
+  remoteBuild = false
+
+  # The title of the spec.
+  # If left unspecified, will use `${project.name}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  title = "Duke"</code></pre>
 </div>
 </div>
 </div>
@@ -803,13 +844,19 @@ packagers:
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "bucket": {
+        // Enables or disables the bucket.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "active": "ALWAYS",
 
-        // The owner of the bucket repository.
+
+        // The owner of the bucket.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "owner": "duke",
 
-        // The name of the bucket repository.
+        // The name of the bucket.
         // Defaults to `chocolatey-bucket`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "chocolatey-bucket",
@@ -820,18 +867,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the bucket repository.
+        // Username used for authoring commits. Must have write access to the bucket.
         // If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
-        // Password or OAuth token with write access to the bucket repository.
+        // Password or OAuth token with write access to the bucket.
         // If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__"
+        "token": "__DO_NOT_SET_HERE__",
+
+        // Message when committing to the bucket.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "commitMessage": "Releasing {{projectName}} {{tagName}}"
       },
 
       // The username that can publish Chocolatey packages.
@@ -839,10 +891,21 @@ packagers:
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "username": "duke",
 
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "apiKey": "__DO_NOT_SET_HERE__",
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "remoteBuild": false
+      "remoteBuild": false,
+
+      // The title of the spec.
+      // If left unspecified, will use `${project.name}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "title": "Duke"
     }
   }
 }</code></pre>
@@ -922,16 +985,24 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;bucket&gt;
+        &lt;!--
+          Enables or disables the bucket.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `RELEASE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+
 
         &lt;!--
-          The owner of the bucket repository.
+          The owner of the bucket.
           Defaults to the same owner as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The name of the bucket repository.
+          The name of the bucket.
           Defaults to `chocolatey-bucket`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -946,7 +1017,7 @@ packagers:
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the bucket repository.
+          Username used for authoring commits. Must have write access to the bucket.
           If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
@@ -955,12 +1026,19 @@ packagers:
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
-          Password or OAuth token with write access to the bucket repository.
+          Password or OAuth token with write access to the bucket.
           If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+        &lt;!--
+          Message when committing to the bucket.
+          If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;commitMessage&gt;Releasing {{projectName}} {{tagName}}&lt;/commitMessage&gt;
       &lt;/bucket&gt;
 
       &lt;!--
@@ -971,11 +1049,26 @@ packagers:
       &lt;username&gt;duke&lt;/username&gt;
 
       &lt;!--
+        The ApiKey associated with the given account.
+        If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;apiKey&gt;__DO_NOT_SET_HERE__&lt;/apiKey&gt;
+
+      &lt;!--
         Whether to build the package on a remote server or locally.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;remoteBuild&gt;false&lt;/remoteBuild&gt;
+
+      &lt;!--
+        The title of the spec.
+        If left unspecified, will use `${project.name}`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;title&gt;Duke&lt;/title&gt;
     &lt;/chocolatey&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1030,13 +1123,19 @@ packagers:
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       bucket {
+        // Enables or disables the bucket.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active = 'ALWAYS'
 
-        // The owner of the bucket repository.
+
+        // The owner of the bucket.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         owner = 'duke'
 
-        // The name of the bucket repository.
+        // The name of the bucket.
         // Defaults to `chocolatey-bucket`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'chocolatey-bucket'
@@ -1047,18 +1146,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the bucket repository.
+        // Username used for authoring commits. Must have write access to the bucket.
         // If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
-        // Password or OAuth token with write access to the bucket repository.
+        // Password or OAuth token with write access to the bucket.
         // If left unspecified, the `JRELEASER_CHOCOLATEY_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
+
+        # Message when committing to the bucket.
+        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        commitMessage = 'Releasing {{projectName}} {{tagName}}'
       }
 
       // The username that can publish Chocolatey packages.
@@ -1066,10 +1170,21 @@ packagers:
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       username = 'duke'
 
+      // The ApiKey associated with the given account.
+      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      apiKey = '__DO_NOT_SET_HERE__'
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       remoteBuild = false
+
+      // The title of the spec.
+      // If left unspecified, will use `${project.name}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      title = 'Duke'
     }
   }
 }</code></pre>
@@ -1096,7 +1211,7 @@ be one of [<code>JRELEASER_CHOCOLATEY_GITHUB_TOKEN</code>, <code>JRELEASER_CHOCO
 </div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
-the following files in <code>out/jreleaser/app/prepare</code>, which will be published to <code>duke/chocolatey-bucket/app</code></p>
+the following files which will be published to <code>duke/chocolatey-bucket/app</code></p>
 </div>
 <div class="listingblock">
 <div class="title">app.nuspec</div>
@@ -1113,9 +1228,9 @@ the following files in <code>out/jreleaser/app/prepare</code>, which will be pub
     &lt;!-- optional --&gt;
     &lt;title&gt;app&lt;/title&gt;
     &lt;projectUrl&gt;https://acme.com/app&lt;/projectUrl&gt;
-    &lt;license type="expression"&gt;Apache-2.0&lt;/license&gt;
+    &lt;licenseUrl&gt;https://github.com/duke/app/blob/main/LICENSE&lt;/licenseUrl&gt;
     &lt;requireLicenseAcceptance&gt;false&lt;/requireLicenseAcceptance&gt;
-    &lt;tags&gt;&lt;/tags&gt;
+    &lt;tags&gt;app&lt;/tags&gt;
     &lt;summary&gt;Sample app&lt;/summary&gt;
     &lt;releaseNotes&gt;https://github.com/duke/app/releases/tag/v1.2.3&lt;/releaseNotes&gt;
   &lt;/metadata&gt;
@@ -1131,7 +1246,7 @@ the following files in <code>out/jreleaser/app/prepare</code>, which will be pub
 <pre class="highlightjs highlight"><code>$tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Install-ChocolateyZipPackage `
     -PackageName 'app' `
@@ -1149,9 +1264,51 @@ Install-BinFile -Name 'app' -Path $app_bat</code></pre>
 <pre class="highlightjs highlight"><code>$tools = Split-Path $MyInvocation.MyCommand.Definition
 $package = Split-Path $tools
 $app_home = Join-Path $package 'app-1.2.3'
-$app_bat = Join-Path $app_home 'bin/app.cmd'
+$app_bat = Join-Path $app_home 'bin/app.bat'
 
 Uninstall-BinFile -Name 'app' -Path $app_bat</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/chocolatey</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>binary.nuspec.tpl</code></p>
+</li>
+<li>
+<p><code>tools/chocolateyinstall.ps1.tpl</code></p>
+</li>
+<li>
+<p><code>tools/chocolateyuninstall.ps1.tpl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="page">Name Templates</a> substitution will take place.</p>
+</div>
+<div class="paragraph">
+<p>Templates may be initialized using the <code>template</code> command</p>
+</div>
+<div class="paragraph">
+<p><a href="../../tools/jreleaser-cli.html#_template" class="page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
+<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
+<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
+<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+</div>
 </div>
 </div>
 </article>

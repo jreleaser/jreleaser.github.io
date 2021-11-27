@@ -80,16 +80,16 @@
     <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
@@ -516,7 +519,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
   &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
   &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;0.8.0&lt;/version&gt;
+  &lt;version&gt;0.9.0&lt;/version&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
@@ -709,7 +712,7 @@ User property: <code>jreleaser.config.skip</code></p>
 <div class="sect2">
 <h3 id="_jreleasertemplate"><a class="anchor" href="#_jreleasertemplate"></a>jreleaser:template</h3>
 <div class="paragraph">
-<p>Generate a tool/announcer template.</p>
+<p>Generate a packager/announcer template.</p>
 </div>
 <div class="paragraph">
 <p>Available parameters:</p>
@@ -746,6 +749,12 @@ Type: boolean<br>
 User property: <code>jreleaser.template.overwrite</code></p>
 </li>
 <li>
+<p>packagerName<br>
+The name of the packager.<br>
+Type: String<br>
+User property: <code>jreleaser.template.packager.name</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -756,12 +765,6 @@ User property: <code>jreleaser.template.skip</code></p>
 Use snapshot templates.<br>
 Type: boolean<br>
 User property: <code>jreleaser.template.snapshot</code></p>
-</li>
-<li>
-<p>toolName<br>
-The name of the tool.<br>
-Type: String<br>
-User property: <code>jreleaser.template.tool.name</code></p>
 </li>
 </ul>
 </div>
@@ -777,28 +780,40 @@ User property: <code>jreleaser.template.tool.name</code></p>
 <div class="ulist">
 <ul>
 <li>
-<p>assemblerName<br>
-The name of the assembler.<br>
-Type: String<br>
-User property: <code>jreleaser.assembler.name</code></p>
-</li>
-<li>
 <p>configFile<br>
 External configuration file.<br>
 Type: File<br>
 User property: <code>jreleaser.config.file</code></p>
 </li>
 <li>
-<p>distributionName<br>
-The name of the distribution.<br>
-Type: String<br>
-User property: <code>jreleaser.distribution.name</code></p>
+<p>excludedAssemblers<br>
+Exclude an assembler.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.assemblers</p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
 </li>
 <li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedAssemblers<br>
+Include an assembler.<br>
+Type: String[]<br>
+User property: jreleaser.assemblers</p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -867,10 +882,22 @@ Type: File<br>
 User property: <code>jreleaser.config.file</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -915,10 +942,22 @@ Type: File<br>
 User property: <code>jreleaser.config.file</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -969,10 +1008,34 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedUploaderNames<br>
+Exclude an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploader.names</p>
+</li>
+<li>
+<p>excludedUploaders<br>
+Exclude an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploaders</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedUploaderNames<br>
+Include an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.uploader.names</p>
+</li>
+<li>
+<p>includedUploaders<br>
+Include an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.uploaders</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -996,18 +1059,6 @@ User property: jreleaser.select.platform</p>
 Skip execution.<br>
 Type: boolean<br>
 User property: <code>jreleaser.upload.skip</code></p>
-</li>
-<li>
-<p>uploaderName<br>
-The name of the uploader.<br>
-Type: String<br>
-User property: <code>jreleaser.uploader.name</code></p>
-</li>
-<li>
-<p>uploaderType<br>
-The type of the uploader.<br>
-Type: String<br>
-User property: <code>jreleaser.uploader.type</code></p>
 </li>
 </ul>
 </div>
@@ -1035,10 +1086,22 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -1095,10 +1158,34 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -1161,10 +1248,34 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -1227,10 +1338,34 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
@@ -1275,12 +1410,6 @@ User property: <code>jreleaser.tool.name</code></p>
 <div class="ulist">
 <ul>
 <li>
-<p>announcerName<br>
-The name of the distribution.<br>
-Type: String<br>
-User property: <code>jreleaser.announcer.name</code></p>
-</li>
-<li>
 <p>configFile<br>
 External configuration file.<br>
 Type: File<br>
@@ -1293,10 +1422,22 @@ Type: boolean<br>
 User property: <code>jreleaser.dryrun</code></p>
 </li>
 <li>
+<p>excludedAnnouncers<br>
+Exclude an announcer.<br>
+Type: String[]<br>
+User property: <code>jreleaser.excluded.announcers</code></p>
+</li>
+<li>
 <p>gitRootSearch<br>
 Searches for the Git root.<br>
 Type: boolean<br>
 User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedAnnouncers<br>
+Include an announcer.<br>
+Type: String[]<br>
+User property: <code>jreleaser.announcers</code></p>
 </li>
 <li>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>

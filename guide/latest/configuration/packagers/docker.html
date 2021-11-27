@@ -80,16 +80,16 @@
     <a class="nav-link" href="../../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
@@ -518,18 +521,6 @@ Only artifacts with <code>.zip</code>, <code>.jar</code> extension may be packag
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Snapshots are <strong>not</strong> supported.
-</td>
-</tr>
-</table>
-</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -629,14 +620,24 @@ packagers:
     # Git repository to push the Dockerfile to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    docker:
+    repository:
+      # Enables or disables the repository.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `RELEASE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      active: ALWAYS
 
-      # The owner of the docker repository.
+      # Stores files in a folder matching the image's version/tag.
+      # Defaults to `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      versionedSubfolders: true
+
+      # The owner of the repository.
       # Defaults to the same owner as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       owner: duke
 
-      # The name of the docker repository.
+      # The name of the repository.
       # Defaults to `app-docker`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: app-docker
@@ -647,18 +648,23 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the docker repository.
+      # Username used for authoring commits. Must have write access to the repository.
       # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
-      # Password or OAuth token with write access to the docker repository.
+      # Password or OAuth token with write access to the repository.
       # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
+
+      # Message when committing to the repository.
+      # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      commitMessage: 'Releasing {{projectName}} {{tagName}}'
 
     # The base Docker image to use.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -676,6 +682,12 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     buildArgs:
       - "--pull"
+
+    # Selects a Dockerfile template.
+    # If `true` (default) then the Dockerfile will use the local distribution files.
+    # If `false` then the Dockerfile expects the artifact to be downloaded from an URL.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    useLocalArtifact: true
 
     # Dockerfile commands to run before the assembly.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -770,34 +782,50 @@ packagers:
   # Git repository to push the Dockerfile to.
   # Defaults are shown.
 
-  # The owner of the docker repository.
+  # Enables or disables the repository.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `RELEASE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  repository.active = "ALWAYS"
+
+  # Stores files in a folder matching the image's version/tag.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  repository.versionedSubfolders = true
+
+  # The owner of the repository.
   # Defaults to the same owner as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  docker.owner = "duke"
+  repository.owner = "duke"
 
-  # The name of the docker repository.
+  # The name of the repository.
   # Defaults to `app-docker`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  docker.name = "app-docker"
+  repository.name = "app-docker"
 
   # The target branch to use.
   # May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  docker.branch = "HEAD"
+  repository.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the docker repository.
+  # Username used for authoring commits. Must have write access to the repository.
   # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  docker.username = "duke"
+  repository.username = "duke"
 
-  # Password or OAuth token with write access to the docker repository.
+  # Password or OAuth token with write access to the repository.
   # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  docker.token = "__DO_NOT_SET_HERE__"
+  repository.token = "__DO_NOT_SET_HERE__"
+
+  # Message when committing to the repository.
+  # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  repository.commitMessage = "Releasing {{projectName}} {{tagName}}"
 
   # The base Docker image to use.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -814,6 +842,12 @@ packagers:
   # A list of build arguments.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   buildArgs = ["--pull"]
+
+  # Selects a Dockerfile template.
+  # If `true` (default) then the Dockerfile will use the local distribution files.
+  # If `false` then the Dockerfile expects the artifact to be downloaded from an URL.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  useLocalArtifact = true
 
   # Dockerfile commands to run before the assembly.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -912,14 +946,24 @@ packagers:
       // Git repository to push the Dockerfile to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "docker": {
+      "repository": {
+        // Enables or disables the repository.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "active": "ALWAYS",
 
-        // The owner of the docker repository.
+        // Stores files in a folder matching the image's version/tag.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "versionedSubfolders": true,
+
+        // The owner of the repository.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "owner": "duke",
 
-        // The name of the docker repository.
+        // The name of the repository.
         // Defaults to `app-docker`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "app-docker",
@@ -930,18 +974,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the docker repository.
+        // Username used for authoring commits. Must have write access to the repository.
         // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
-        // Password or OAuth token with write access to the docker repository.
+        // Password or OAuth token with write access to the repository.
         // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__"
+        "token": "__DO_NOT_SET_HERE__",
+
+        // Message when committing to the repository.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "commitMessage": "Releasing {{projectName}} {{tagName}}"
       },
 
       // The base Docker image to use.
@@ -962,6 +1011,12 @@ packagers:
       "buildArgs": [
         "--pull"
       ],
+
+      // Selects a Dockerfile template.
+      // If `true` (default) then the Dockerfile will use the local distribution files.
+      // If `false` then the Dockerfile expects the artifact to be downloaded from an URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "useLocalArtifact": true,
 
       // Dockerfile commands to run before the assembly.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1095,17 +1150,31 @@ packagers:
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;docker&gt;
+      &lt;repository&gt;
+        &lt;!--
+          Enables or disables the repository.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `RELEASE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
 
         &lt;!--
-          The owner of the docker repository.
+          Stores files in a folder matching the image's version/tag.
+          Defaults to `false`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;versionedSubfolders&gt;true&lt;/versionedSubfolders&gt;
+
+        &lt;!--
+          The owner of the repository.
           Defaults to the same owner as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The name of the docker repository.
+          The name of the repository.
           Defaults to `app-docker`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -1120,7 +1189,7 @@ packagers:
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the docker repository.
+          Username used for authoring commits. Must have write access to the repository.
           If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
@@ -1129,13 +1198,20 @@ packagers:
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
-          Password or OAuth token with write access to the docker repository.
+          Password or OAuth token with write access to the repository.
           If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
-      &lt;/docker&gt;
+
+        &lt;!--
+          Message when committing to the repository.
+          If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;commitMessage&gt;Releasing {{projectName}} {{tagName}}&lt;/commitMessage&gt;
+      &lt;/repository&gt;
 
       &lt;!--
         The base Docker image to use.
@@ -1161,6 +1237,14 @@ packagers:
       &lt;buildArgs&gt;
         &lt;buildArg&gt;--pull&lt;/buildArg&gt;
       &lt;/buildArgs&gt;
+
+      &lt;!--
+        Selects a Dockerfile template.
+        If `true` (default) then the Dockerfile will use the local distribution files.
+        If `false` then the Dockerfile expects the artifact to be downloaded from an URL.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;useLocalArtifact&gt;true&lt;/useLocalArtifact&gt;
 
       &lt;!--
         Dockerfile commands to run before the assembly.
@@ -1286,14 +1370,24 @@ packagers:
       // Git repository to push the Dockerfile to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      docker {
+      repository {
+        // Enables or disables the repository.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active = 'ALWAYS'
 
-        // The owner of the docker repository.
+        // Stores files in a folder matching the image's version/tag.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        versionedSubfolders = true
+
+        // The owner of the repository.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         owner = 'duke'
 
-        // The name of the docker repository.
+        // The name of the repository.
         // Defaults to `app-docker`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'app-docker'
@@ -1304,18 +1398,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the docker repository.
+        // Username used for authoring commits. Must have write access to the repository.
         // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
-        // Password or OAuth token with write access to the docker repository.
+        // Password or OAuth token with write access to the repository.
         // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
+
+        # Message when committing to the repository.
+        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        commitMessage = 'Releasing {{projectName}} {{tagName}}'
       }
 
       // The base Docker image to use.
@@ -1332,6 +1431,12 @@ packagers:
       // A list of build arguments.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       addBuildArg('--pull')
+
+      // Selects a Dockerfile template.
+      // If `true` (default) then the Dockerfile will use the local distribution files.
+      // If `false` then the Dockerfile expects the artifact to be downloaded from an URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      useLocalArtifact = true
 
       // Dockerfile commands to run before the assembly.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1399,7 +1504,7 @@ packagers:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The respository token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
+The repository token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
 be one of [<code>JRELEASER_DOCKER_GITHUB_TOKEN</code>, <code>JRELEASER_DOCKER_GITLAB_TOKEN</code>, <code>JRELEASER_DOCKER_GITEA_TOKEN</code>].
 </td>
 </tr>
@@ -1899,6 +2004,43 @@ distributions:
 <code>jreleaser-standalone-&lt;version&gt;-linux_musl.zip</code> because of the matching platform.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/docker</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Dockerfile.tpl</code></p>
+</li>
+<li>
+<p><code>Dockerfile-remote.tpl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="page">Name Templates</a> substitution will take place.</p>
+</div>
+<div class="paragraph">
+<p>Templates may be initialized using the <code>template</code> command</p>
+</div>
+<div class="paragraph">
+<p><a href="../../tools/jreleaser-cli.html#_template" class="page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
+<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
+<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
+<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
 </div>
 </div>
 </div>

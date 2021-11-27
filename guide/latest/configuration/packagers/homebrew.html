@@ -80,16 +80,16 @@
     <a class="nav-link" href="../../quick-start/index.html">Quick Start</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/cli.html">Command Line</a>
+    <a class="nav-link" href="../../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/maven.html">Apache Maven</a>
+    <a class="nav-link" href="../../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/gradle.html">Gradle</a>
+    <a class="nav-link" href="../../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../quick-start/ant.html">Apache Ant</a>
+    <a class="nav-link" href="../../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
   </li>
 </ul>
   </li>
@@ -246,6 +246,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
@@ -540,7 +543,7 @@ Only artifacts with <code>.zip</code>, <code>.dmg</code>, <code>.pkg</code> exte
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Snapshots are <strong>not</strong> supported.
+Publication of snapshots is <strong>not</strong> allowed.
 </td>
 </tr>
 </table>
@@ -632,13 +635,19 @@ packagers:
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     tap:
+      # Enables or disables the tap.
+      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `RELEASE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      active: ALWAYS
 
-      # The owner of the tap repository.
+
+      # The owner of the tap.
       # Defaults to the same owner as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       owner: duke
 
-      # The name of the tap repository.
+      # The name of the tap.
       # Defaults to `homebrew-tap`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       name: homebrew-tap
@@ -649,18 +658,23 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the tap repository.
+      # Username used for authoring commits. Must have write access to the tap.
       # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
-      # Password or OAuth token with write access to the tap repository.
+      # Password or OAuth token with write access to the tap.
       # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
+
+      # Message when committing to the tap.
+      # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      commitMessage: 'Releasing {{projectName}} {{tagName}}'
 
     # The class name of the generated formula.
     # If left unspecified, will use `{{projectNameCapitalized}}`.
@@ -793,12 +807,19 @@ packagers:
   # Git repository to push the formula to.
   # Defaults are shown.
 
-  # The owner of the tap repository.
+  # Enables or disables the tap.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `RELEASE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  tap.active = "ALWAYS"
+
+
+  # The owner of the tap.
   # Defaults to the same owner as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   tap.owner = "duke"
 
-  # The name of the tap repository.
+  # The name of the tap.
   # Defaults to `homebrew-tap`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   tap.name = "homebrew-tap"
@@ -809,18 +830,23 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the tap repository.
+  # Username used for authoring commits. Must have write access to the tap.
   # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.username = "duke"
 
-  # Password or OAuth token with write access to the tap repository.
+  # Password or OAuth token with write access to the tap.
   # If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.token = "__DO_NOT_SET_HERE__"
+
+  # Message when committing to the tap.
+  # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  tap.commitMessage = "Releasing {{projectName}} {{tagName}}"
 
   # The class name of the generated formula.
   # If left unspecified, will use `{{projectNameCapitalized}}`.
@@ -954,13 +980,19 @@ packagers:
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "tap": {
+        // Enables or disables the tap.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "active": "ALWAYS",
 
-        // The owner of the tap repository.
+
+        // The owner of the tap.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "owner": "duke",
 
-        // The name of the tap repository.
+        // The name of the tap.
         // Defaults to `homebrew-tap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "name": "homebrew-tap",
@@ -971,18 +1003,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the tap repository.
+        // Username used for authoring commits. Must have write access to the tap.
         // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
-        // Password or OAuth token with write access to the tap repository.
+        // Password or OAuth token with write access to the tap.
         // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__"
+        "token": "__DO_NOT_SET_HERE__",
+
+        // Message when committing to the tap.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "commitMessage": "Releasing {{projectName}} {{tagName}}"
       },
 
       // The class name of the generated formula.
@@ -1157,16 +1194,24 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;tap&gt;
+        &lt;!--
+          Enables or disables the tap.
+          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `RELEASE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+
 
         &lt;!--
-          The owner of the tap repository.
+          The owner of the tap.
           Defaults to the same owner as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The name of the tap repository.
+          The name of the tap.
           Defaults to `homebrew-tap`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -1181,7 +1226,7 @@ packagers:
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the tap repository.
+          Username used for authoring commits. Must have write access to the tap.
           If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
@@ -1190,12 +1235,19 @@ packagers:
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
-          Password or OAuth token with write access to the tap repository.
+          Password or OAuth token with write access to the tap.
           If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+
+        &lt;!--
+          Message when committing to the tap.
+          If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;commitMessage&gt;Releasing {{projectName}} {{tagName}}&lt;/commitMessage&gt;
       &lt;/tap&gt;
 
       &lt;!--
@@ -1386,14 +1438,20 @@ packagers:
       // Git repository to push the formula to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      tap {
+      repoTap {
+        // Enables or disables the repoTap.
+        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `RELEASE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active = 'ALWAYS'
 
-        // The owner of the tap repository.
+
+        // The owner of the repoTap.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         owner = 'duke'
 
-        // The name of the tap repository.
+        // The name of the repoTap.
         // Defaults to `homebrew-tap`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         name = 'homebrew-tap'
@@ -1404,18 +1462,23 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the tap repository.
+        // Username used for authoring commits. Must have write access to the repoTap.
         // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
-        // Password or OAuth token with write access to the tap repository.
+        // Password or OAuth token with write access to the repoTap.
         // If left unspecified, the `JRELEASER_HOMEBREW_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
+
+        # Message when committing to the repoTap.
+        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        commitMessage = 'Releasing {{projectName}} {{tagName}}'
       }
 
       // The class name of the generated formula.
@@ -1560,8 +1623,6 @@ a <code>app.rb</code> formula in the <code>duke/homebrew-tap</code> repository:<
   sha256 "812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466"
   license "Apache-2.0"
 
-  bottle :unneeded
-
   depends_on "openjdk@8"
 
   def install
@@ -1599,6 +1660,49 @@ homebrew repositories.
 <p>Casks require a <code>.zip</code>, .dmg` or a <code>.pkg</code> artifact. Distributions that provide more than one of these files can mark which
 artifacts should be skipped from being resolved as a Cask candidate by adding a <code>skipBrew</code> extra property to the target
 artifacts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/brew</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>cask.rb.tpl</code></p>
+</li>
+<li>
+<p><code>formula.rb.tpl</code></p>
+</li>
+<li>
+<p><code>formula-multi.rb.tpl</code></p>
+</li>
+<li>
+<p><code>README.md.tpl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="page">Name Templates</a> substitution will take place.</p>
+</div>
+<div class="paragraph">
+<p>Templates may be initialized using the <code>template</code> command</p>
+</div>
+<div class="paragraph">
+<p><a href="../../tools/jreleaser-cli.html#_template" class="page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
+<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
+<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
+<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
 </div>
 </div>
 </div>
