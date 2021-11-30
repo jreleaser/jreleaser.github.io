@@ -27,7 +27,7 @@ project:
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Valid values are [`SEMVER`, `CALVER:<format>`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # icon:dot-circle[] icon:eye-slash[]
   versionPattern: SEMVER
@@ -162,7 +162,7 @@ TOML::
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Valid values are [`SEMVER`, `CALVER:<format>`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # icon:dot-circle[] icon:eye-slash[]
   versionPattern = "SEMVER"
@@ -290,7 +290,7 @@ JSON::
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Valid values are [`SEMVER`, `CALVER:<format>`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // icon:dot-circle[] icon:eye-slash[]
     "versionPattern": "SEMVER",
@@ -440,7 +440,7 @@ Maven::
     <!--
       The strategy used to parse the project version
       May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-      Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+      Valid values are [`SEMVER`, `CALVER:<format>`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
       Defaults to `SEMVER`.
       icon:dot-circle[] icon:eye-slash[]
     -->
@@ -645,7 +645,7 @@ jreleaser {
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Valid values are [`SEMVER`, `CALVER:<format>`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // icon:dot-circle[] icon:eye-slash[]
     versionPattern = 'SEMVER'
@@ -789,6 +789,58 @@ The following relaxed patterns are also supported:
  * 1.TAG
  * 1+BUILD
  * 1.TAG+BUILD
+
+=== CALVER
+
+The version number complies with the link:https://calver.org/[CalVer] syntax, resulting in the following supported formats:
+
+.Tokens
+ * for year:
+ ** YYYY: [2-9][0-9]{3}
+ ** YY: [1-9]|[1-9][0-9]|[1-9][0-9]{2}
+ ** 0Y: 0[1-9]|[1-9][0-9]|[1-9][0-9]{2}
+ * for month:
+ ** MM: [1-9]|1[0-2]
+ ** 0M: 0[1-9]|1[0-2]
+ * for day:
+ ** DD: [1-9]|[1-2][0-9]|3[0-1]
+ ** 0D: 0[1-9]|[1-2][0-9]|3[0-1]
+ * for week:
+ ** WW: [1-9]|[1-4][0-9]|5[0-2]
+ ** 0W: 0[1-9]|[1-4][0-9]|5[0-2]
+ * for MINOR: 0|[1-9]\d*
+ * for MICRO: 0|[1-9]\d*
+ * for MODIFIER: [a-zA-Z-][0-9a-zA-Z-]*
+
+.Restrictions
+
+ * Format must begin with a _year_ token.
+ * If _month_ is present so can _day_, but not _week_.
+ * If _week_ is present then neither _month_ nor _day_ are allowed.
+ * _minor_ must be present before _micro_.
+ * _modifier_ always goes at the end.
+ * separator chars may be any of `.`, `_`, `-`.
+
+.Examples
+
+[%header, cols="2*"]
+|===
+| Pattern                          | Version
+| CALVER:YYYY                      | 2021
+| CALVER:YY                        | 21
+| CALVER:0Y                        | 06
+| CALVER:YYYY.MM                   | 2021.1
+| CALVER:YYYY.0M                   | 2021.01
+| CALVER:YYYY.MM.DD                | 2021.1.1
+| CALVER:YYYY.MM.0D                | 2021.1.01
+| CALVER:YYYY.WW                   | 2021.1
+| CALVER:YYYY.0W                   | 2021.01
+| CALVER:YYYY.MINOR.MICRO          | 2021.1.2
+| CALVER:YYYY.MM.DD_MICRO          | 2021.1.2_3
+| CALVER:YYYY.MODIFIER             | 2021.ALPHA1
+| CALVER:YYYY.MINOR.MICRO.MODIFIER | 2021.1.2.ALPHA1
+| CALVER:YYYY.MODIFIER             | 2021.FOO-BAR
+|===
 
 === JAVA_RUNTIME
 
