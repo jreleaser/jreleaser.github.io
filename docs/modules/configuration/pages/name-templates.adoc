@@ -1889,7 +1889,7 @@ The following names are related to xref:configuration:packagers/macports.adoc[]
 | Key                            | Description
 | macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
-| macportsRevision               | the port revision nomber
+| macportsRevision               | the port revision number
 | macportsCategories             | categories separated by space
 | macportsMaintainers            | formatted maintainers, one per line
 | macportsDistributionUrl        | the download URL without the artifact file name
@@ -2774,6 +2774,111 @@ jreleaser {
     snap {
       // Key will be capitalized and prefixed
       // with `snap`, i.e, `snapFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== spec
+
+The following names are related to xref:configuration:packagers/spec.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                        | Description
+| specRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| specRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| specRelease                | the release number
+| specRequires               | package requires as a List
+| specDirectories            | List of directories to be created
+| specFiles                  | List of files to be installed
+|===
+
+Additionally, every key/value from `spec.extraProperties` is mapped with `spec` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  spec:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `spec`, i.e, `specFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.spec]
+  # Key will be capitalized and prefixed
+  # with `spec`, i.e, `specFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "spec": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `spec`, i.e, `specFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <spec>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `spec`, i.e, `specFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </spec>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    spec {
+      // Key will be capitalized and prefixed
+      // with `spec`, i.e, `specFoo`.
       extraProperties.put('foo', 'bar')
     }
   }
