@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Scoop :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/packagers/scoop.html">
+    <title>Spec :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/packagers/spec.html">
     <meta name="generator" content="Antora 2.3.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -250,7 +250,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="macports.html">Macports</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="scoop.html">Scoop</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -484,33 +484,32 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../index.html">JReleaser</a></li>
-    <li><a href="../index.html">Configuration</a></li>
-    <li><a href="index.html">Packagers</a></li>
-    <li><a href="scoop.html">Scoop</a></li>
+    <li><a href="spec.html">Spec</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/packagers/scoop.html">latest</a>
-    <a class="version is-current" href="scoop.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="spec.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/packagers/scoop.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/packagers/spec.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Scoop</h1>
+<h1 class="page">Spec</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>JReleaser can generate and publish a <em>Scoop App Manifest</em> into a repository that you have access to.</p>
+<p>JReleaser can generate and publish a <a href="https://rpm-packaging-guide.github.io/">RPM Spec</a> file and publish it to
+a repository that you have access to.</p>
 </div>
 <div class="paragraph">
-<p>The <code>scoop</code> section specifies how the manifest should be created.</p>
+<p>The <code>spec</code> section specifies how the Spec should be created.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -519,7 +518,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Only artifacts with <code>.zip</code>, <code>.jar</code> extension may be packaged with Scoop.
+Only artifacts with <code>.tgz</code>, <code>.tar.gz</code>, or <code>.tar</code> extension may be packaged with Spec.
 </td>
 </tr>
 </table>
@@ -582,8 +581,8 @@ Publication of snapshots is <strong>not</strong> allowed.
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  scoop:
-    # Enables or disables Scoop.
+  spec:
+    # Enables or disables Spec.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -597,14 +596,14 @@ packagers:
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
-      # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+      # Key will be capitalized and prefixed with `spec`, i.e, `specFoo`.
       foo: bar
 
-    # Directory with file templates used to prepare the Scoop distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+    # Directory with file templates used to prepare the Spec distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/spec`.
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/scoop/templates
+    templateDirectory: path/to/spec/templates
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -619,60 +618,61 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
-    # Git repository to push the manifest to.
+    # Git repository to push the spec to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    bucket:
-      # Enables or disables the bucket.
+    repository:
+      # Enables or disables the repository.
       # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `RELEASE`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active: ALWAYS
 
 
-      # The owner of the bucket.
+      # The owner of the repository.
       # Defaults to the same owner as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       owner: duke
 
-      # The name of the bucket.
-      # Defaults to `scoop-duke`.
+      # The name of the repository.
+      # Defaults to `duke-spec`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      name: scoop-duke
+      name: duke-spec
 
       # The target branch to use.
-      # May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+      # May define a `JRELEASER_SPEC_${GIT}_BRANCH` environment variable instead.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the bucket.
-      # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+      # Username used for authoring commits. Must have write access to the repository.
+      # If left unspecified, the `JRELEASER_SPEC_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
-      # Password or OAuth token with write access to the bucket.
-      # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+      # Password or OAuth token with write access to the repository.
+      # If left unspecified, the `JRELEASER_SPEC_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
 
-      # Message when committing to the bucket.
+      # Message when committing to the repository.
       # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       commitMessage: '{{distributionName}} {{tagName}}'
 
-    # URL used to check the latest version.
-    # Defaults to the releaser's `latestReleaseUrl`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    checkverUrl: https://host/path
+    # Spec release number.
+    # Defaults to `1%{?dist}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    release: '1%{?dist}'
 
-    # URL used to download a new version.
-    # Defaults to the releaser's `downloadUrl`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    autoupdateUrl: https://host/path</code></pre>
+    # List of package requirements.
+    # Defaults to `[java]`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    categories:
+      - 'java'</code></pre>
 </div>
 </div>
 </div>
@@ -680,8 +680,8 @@ packagers:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[packagers.scoop]
-  # Enables or disables Scoop.
+[packagers.spec]
+  # Enables or disables Spec.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -695,13 +695,13 @@ packagers:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+  # Key will be capitalized and prefixed with `spec`, i.e, `specFoo`.
 
-  # Directory with file templates used to prepare the Scoop distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+  # Directory with file templates used to prepare the Spec distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/spec`.
   # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/scoop/templates"
+  templateDirectory = "path/to/spec/templates"
 
   # Git author used to commit to the repository.
 
@@ -715,59 +715,59 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
-  # Git repository to push the manifest to.
+  # Git repository to push the spec to.
   # Defaults are shown.
 
-  # Enables or disables the bucket.
+  # Enables or disables the repository.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `RELEASE`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.active = "ALWAYS"
+  repository.active = "ALWAYS"
 
 
-  # The owner of the bucket.
+  # The owner of the repository.
   # Defaults to the same owner as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.owner = "duke"
+  repository.owner = "duke"
 
-  # The name of the bucket.
-  # Defaults to `scoop-duke`.
+  # The name of the repository.
+  # Defaults to `duke-spec`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  bucket.name = "scoop-duke"
+  repository.name = "duke-spec"
 
   # The target branch to use.
-  # May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+  # May define a `JRELEASER_SPEC_${GIT}_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  bucket.branch = "HEAD"
+  repository.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the bucket.
-  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+  # Username used for authoring commits. Must have write access to the repository.
+  # If left unspecified, the `JRELEASER_SPEC_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  bucket.username = "duke"
+  repository.username = "duke"
 
-  # Password or OAuth token with write access to the bucket.
-  # If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+  # Password or OAuth token with write access to the repository.
+  # If left unspecified, the `JRELEASER_SPEC_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  bucket.token = "__DO_NOT_SET_HERE__"
+  repository.token = "__DO_NOT_SET_HERE__"
 
-  # Message when committing to the bucket.
+  # Message when committing to the repository.
   # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  bucket.commitMessage = "{{distributionName}} {{tagName}}"
+  repository.commitMessage = "{{distributionName}} {{tagName}}"
 
-  # URL used to check the latest version.
-  # Defaults to the releaser's `latestReleaseUrl`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  checkverUrl = "https://host/path"
+  # Spec release number.
+  # Defaults to `1%{?dist}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  release = "1%{?dist}"
 
-  # URL used to download a new version.
-  # Defaults to the releaser's `downloadUrl`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  autoupdateUrl = "https://host/path"</code></pre>
+  # List of package requirements.
+  # Defaults to `[java]`.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  categories = ["java"]</code></pre>
 </div>
 </div>
 </div>
@@ -778,8 +778,8 @@ packagers:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "packagers": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "scoop": {
-      // Enables or disables Scoop.
+    "spec": {
+      // Enables or disables Spec.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -793,15 +793,15 @@ packagers:
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
-        // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+        // Key will be capitalized and prefixed with `spec`, i.e, `specFoo`.
         "foo": "bar"
       },
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+      // Directory with file templates used to prepare the Spec distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/spec`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/scoop/templates",
+      "templateDirectory": "path/to/spec/templates",
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -817,61 +817,61 @@ packagers:
         "email": "jreleaser@kordamp.org"
       },
 
-      // Git repository to push the manifest to.
+      // Git repository to push the spec to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "bucket": {
-        // Enables or disables the bucket.
+      "repository": {
+        // Enables or disables the repository.
         // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `RELEASE`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "active": "ALWAYS",
 
 
-        // The owner of the bucket.
+        // The owner of the repository.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "owner": "duke",
 
-        // The name of the bucket.
-        // Defaults to `scoop-duke`.
+        // The name of the repository.
+        // Defaults to `duke-spec`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "name": "scoop-duke",
+        "name": "duke-spec",
 
         // The target branch to use.
-        // May define a `JRELEASER_SCOOP_${GIT}_BRANCH` environment variable instead.
+        // May define a `JRELEASER_SPEC_${GIT}_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the bucket.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+        // Username used for authoring commits. Must have write access to the repository.
+        // If left unspecified, the `JRELEASER_SPEC_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
-        // Password or OAuth token with write access to the bucket.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+        // Password or OAuth token with write access to the repository.
+        // If left unspecified, the `JRELEASER_SPEC_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "token": "__DO_NOT_SET_HERE__",
 
-        // Message when committing to the bucket.
+        // Message when committing to the repository.
         // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "commitMessage": "{{distributionName}} {{tagName}}"
       },
 
-      // URL used to check the latest version.
-      // Defaults to the releaser's `latestReleaseUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "checkverUrl": "https://host/path",
+      // Spec release number.
+      // Defaults to `1%{?dist}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "release": "1%{?dist}",
 
-      // URL used to download a new version.
-      // Defaults to the releaser's `downloadUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "autoupdateUrl": "https://host/path"
+      // List of package requirements.
+      // Defaults to `[java]`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      "categories": ["java"],
     }
   }
 }</code></pre>
@@ -889,9 +889,9 @@ packagers:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;scoop&gt;
+    &lt;spec&gt;
       &lt;!--
-        Enables or disables Scoop.
+        Enables or disables Spec.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -911,18 +911,18 @@ packagers:
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+          Key will be capitalized and prefixed with `spec`, i.e, `specFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the Scoop distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+        Directory with file templates used to prepare the Spec distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/spec`.
         If specified, path must exist.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;templateDirectory&gt;path/to/scoop/templates&lt;/templateDirectory&gt;
+      &lt;templateDirectory&gt;path/to/spec/templates&lt;/templateDirectory&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -946,13 +946,13 @@ packagers:
       &lt;/commitAuthor&gt;
 
       &lt;!--
-        Git repository to push the manifest to.
+        Git repository to push the spec to.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;bucket&gt;
+      &lt;repository&gt;
         &lt;!--
-          Enables or disables the bucket.
+          Enables or disables the repository.
           Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `RELEASE`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -961,30 +961,30 @@ packagers:
 
 
         &lt;!--
-          The owner of the bucket.
+          The owner of the repository.
           Defaults to the same owner as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The name of the bucket.
-          Defaults to `scoop-duke`.
+          The name of the repository.
+          Defaults to `duke-spec`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;name&gt;scoop-duke&lt;/name&gt;
+        &lt;name&gt;duke-spec&lt;/name&gt;
 
         &lt;!--
           The target branch to use.
-          May define a `JRELEASER_SCOOP_${GIT}_BRANCH`` environment variable instead.
+          May define a `JRELEASER_SPEC_${GIT}_BRANCH`` environment variable instead.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the bucket.
-          If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+          Username used for authoring commits. Must have write access to the repository.
+          If left unspecified, the `JRELEASER_SPEC_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -992,35 +992,35 @@ packagers:
         &lt;username&gt;duke&lt;/username&gt;
 
         &lt;!--
-          Password or OAuth token with write access to the bucket.
-          If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+          Password or OAuth token with write access to the repository.
+          If left unspecified, the `JRELEASER_SPEC_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
 
         &lt;!--
-          Message when committing to the bucket.
+          Message when committing to the repository.
           If left unspecified, `{{distributionName}} {{tagName}}` will be used.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;commitMessage&gt;{{distributionName}} {{tagName}}&lt;/commitMessage&gt;
-      &lt;/bucket&gt;
+      &lt;/repository&gt;
 
       &lt;!--
-        URL used to check the latest version.
-        Defaults to the releaser's `latestReleaseUrl`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        Spec release number.
+        Defaults to `1%{?dist}`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;checkverUrl&gt;https://host/path&lt;/checkverUrl&gt;
+      &lt;release&gt;1%{?dist}&lt;/release&gt;
 
       &lt;!--
-        URL used to download a new version.
-        Defaults to the releaser's `downloadUrl`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        List of package requirements.
+        Defaults to `[java]`.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
-      &lt;autoupdateUrl&gt;https://host/path&lt;/autoupdateUrl&gt;
-    &lt;/scoop&gt;
+      &lt;categories&gt;java&lt;/categories&gt;
+    &lt;/spec&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1033,8 +1033,8 @@ packagers:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   packagers {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    scoop {
-      // Enables or disables Scoop.
+    spec {
+      // Enables or disables Spec.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1046,15 +1046,15 @@ packagers:
       continueOnError = true
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
+      // Key will be capitalized and prefixed with `spec`, i.e, `specFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // Directory with file templates used to prepare the Scoop distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/scoop`.
+      // Directory with file templates used to prepare the Spec distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/spec`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/scoop/templates'
+      templateDirectory = 'path/to/spec/templates'
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1070,26 +1070,26 @@ packagers:
         email = 'jreleaser@kordamp.org'
       }
 
-      // Git repository to push the manifest to.
+      // Git repository to push the spec to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      bucket {
-        // Enables or disables the bucket.
+      repository {
+        // Enables or disables the repository.
         // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `RELEASE`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         active = 'ALWAYS'
 
 
-        // The owner of the bucket.
+        // The owner of the repository.
         // Defaults to the same owner as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         owner = 'duke'
 
-        // The name of the bucket.
-        // Defaults to `scoop-duke`.
+        // The name of the repository.
+        // Defaults to `duke-spec`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        name = 'scoop-duke'
+        name = 'duke-spec'
 
         // The target branch to use.
         // May define a `JRELEASER_BRANCH` environment variable instead.
@@ -1097,34 +1097,34 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the bucket.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_USERNAME`
+        // Username used for authoring commits. Must have write access to the repository.
+        // If left unspecified, the `JRELEASER_SPEC_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
-        // Password or OAuth token with write access to the bucket.
-        // If left unspecified, the `JRELEASER_SCOOP_${GIT}_TOKEN`
+        // Password or OAuth token with write access to the repository.
+        // If left unspecified, the `JRELEASER_SPEC_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
 
-        # Message when committing to the bucket.
+        # Message when committing to the repository.
         # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         commitMessage = '{{distributionName}} {{tagName}}'
       }
 
-      // URL used to check the latest version.
-      // Defaults to the releaser's `latestReleaseUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      checkverUrl = 'https://host/path'
+      // Spec release number.
+      // Defaults to `1%{?dist}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      release = '1%{?dist}'
 
-      // URL used to download a new version.
-      // Defaults to the releaser's `downloadUrl`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      autoupdateUrl = 'https://host/path'
+      // List of package requirements.
+      // Defaults to `[java]`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      categories = ['java']
     }
   }
 }</code></pre>
@@ -1143,69 +1143,60 @@ packagers:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The bucket token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
-be one of [<code>JRELEASER_SCOOP_GITHUB_TOKEN</code>, <code>JRELEASER_SCOOP_GITLAB_TOKEN</code>, <code>JRELEASER_SCOOP_GITEA_TOKEN</code>].
+The repository token environment variable must match with the chosen <a href="../release/index.html" class="page">Release</a> service, that is, it must
+be one of [<code>JRELEASER_SPEC_GITHUB_TOKEN</code>, <code>JRELEASER_SPEC_GITLAB_TOKEN</code>, <code>JRELEASER_SPEC_GITEA_TOKEN</code>].
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
 <p>Assuming that the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
-a <code>manifest.json</code> formula in the <code>duke/scoop-duke</code> repository:</p>
+a <code>app.spec</code> file in the <code>duke/duke-spec</code> repository:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "homepage": "https://acme.com/app",
-  "description": "Sample app",
-  "version": "1.2.3",
-  "license": "Apache-2.0",
-  "url": "https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.zip",
-  "hash": "sha256:812121a64bbd3f49286f7b0be3c9209068f71fcf9541f313708979602e8de466",
-  "extract_dir": "app-1.2.3",
-  "env_add_path": "bin",
-  "suggest": {
-    "JDK": [
-      "java/oraclejdk",
-      "java/openjdk"
-    ]
-  },
-  "checkver": {
-    "url": "https://github.com/duke/app/releases/latest",
-    "re": "v([\\d.]+).zip"
-  },
-  "autoupdate": {
-    "url": "https://github.com/duke/app/releases/download/v1.2.3/app-$version.zip",
-    "extract_dir": "app-$version",
-    "hash": {
-      "url": "$url.sha256"
-    }
-  }
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-tcl hljs" data-lang="tcl">Name:      app
+Version:   1.2.3
+Release:   1%{?dist}
+Summary:   Sample App
+
+License:   Apache-2.0
+URL:       https://acme.com/app
+Source0:   https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.tar.gz
+
+BuildArch: noarch
+Requires:  java
+
+%description
+Sample app
+
+%prep
+%setup -q
+
+%install
+mkdir -p %{buildroot}%{_bindir}
+%define _appdir %{buildroot}%{_datadir}/%{name}
+mkdir -p %{_appdir}/bin
+
+cat &gt; %{buildroot}%{_bindir}/app &lt;&lt;-EOF
+#!/bin/sh
+%{_datadir}/%{name}/bin/app "$@"
+EOF
+chmod 0755 %{buildroot}%{_bindir}/app
+
+mkdir -p %{_appdir}/lib
+install -p -m 755 bin/app %{_appdir}/bin/app
+install -p -m 644 lib/app-%{version}.jar %{_appdir}/lib/app-%{version}.jar
+
+%files
+%{_bindir}/%{name}
+%{_datadir}/%{name}/bin/app
+%{_datadir}/%{name}/lib/app-%{version}.jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Your users can then install your app by doing:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>scoop bucket add duke https://github.com/duke/scoop-duke.git
-scoop install app</code></pre>
-</div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-GitLab does not yet offer an URL that resolves to a latest release. You may need to adapt the value of
-<code>checkverUrl</code> or update the tool template by removing that section.
-Keep an eye on <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/16821" class="bare">https://gitlab.com/gitlab-org/gitlab/-/issues/16821</a>.
-</td>
-</tr>
-</table>
+<p>You may configure automated builds with <a href="https://copr.fedorainfracloud.org/">Fedora COPR</a> or any other service that
+acceps spec files as inputs.</p>
 </div>
 </div>
 </div>
@@ -1216,7 +1207,7 @@ Keep an eye on <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/16821" cla
 <p>The default location for templates is:</p>
 </div>
 <div class="paragraph">
-<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/scoop</code></p>
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/spec</code></p>
 </div>
 <div class="paragraph">
 <p>The following list shows the filenames that may be used to override default templates:</p>
@@ -1224,10 +1215,7 @@ Keep an eye on <a href="https://gitlab.com/gitlab-org/gitlab/-/issues/16821" cla
 <div class="ulist">
 <ul>
 <li>
-<p><code>manifest.json.tpl</code></p>
-</li>
-<li>
-<p><code>README.md.tpl</code></p>
+<p><code>app.spec.tpl</code></p>
 </li>
 </ul>
 </div>
