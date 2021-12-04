@@ -1,0 +1,228 @@
+= Spec
+:tool_id:       spec
+:tool_name:     Spec
+:tool_env_var:  SPEC
+:tool_tap:      repository
+:tool_tap_name: duke-spec
+:tool_manifest: spec
+
+JReleaser can generate and publish a link:https://rpm-packaging-guide.github.io/[RPM Spec] file and publish it to
+a repository that you have access to.
+
+The `spec` section specifies how the Spec should be created.
+
+NOTE: Only artifacts with `.tgz`, `.tar.gz`, or `.tar` extension may be packaged with Spec.
+
+WARNING: Publication of snapshots is *not* allowed.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # Spec release number.
+    # Defaults to `1%{?dist}`.
+    # icon:dot-circle[]
+    release: '1%{?dist}'
+
+    # List of package requirements.
+    # Defaults to `[java]`.
+    # icon:exclamation-triangle[]
+    categories:
+      - 'java'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # Spec release number.
+  # Defaults to `1%{?dist}`.
+  # icon:dot-circle[]
+  release = "1%{?dist}"
+
+  # List of package requirements.
+  # Defaults to `[java]`.
+  # icon:exclamation-triangle[]
+  categories = ["java"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // Spec release number.
+      // Defaults to `1%{?dist}`.
+      // icon:dot-circle[]
+      "release": "1%{?dist}",
+
+      // List of package requirements.
+      // Defaults to `[java]`.
+      // icon:exclamation-triangle[]
+      "categories": ["java"],
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        Spec release number.
+        Defaults to `1%{?dist}`.
+        icon:dot-circle[]
+      -->
+      <release>1%{?dist}</release>
+
+      <!--
+        List of package requirements.
+        Defaults to `[java]`.
+        icon:exclamation-triangle[]
+      -->
+      <categories>java</categories>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // Spec release number.
+      // Defaults to `1%{?dist}`.
+      // icon:dot-circle[]
+      release = '1%{?dist}'
+
+      // List of package requirements.
+      // Defaults to `[java]`.
+      // icon:exclamation-triangle[]
+      categories = ['java']
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+Template files may be initialized using the `template` command.
+
+NOTE: The repository token environment variable must match with the chosen xref:release/index.adoc[] service, that is, it must
+be one of [`JRELEASER_SPEC_GITHUB_TOKEN`, `JRELEASER_SPEC_GITLAB_TOKEN`, `JRELEASER_SPEC_GITEA_TOKEN`].
+
+Assuming that the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `app.spec` file in the `duke/duke-spec` repository:
+
+[source,tcl]
+----
+Name:      app
+Version:   1.2.3
+Release:   1%{?dist}
+Summary:   Sample App
+
+License:   Apache-2.0
+URL:       https://acme.com/app
+Source0:   https://github.com/duke/app/releases/download/v1.2.3/app-1.2.3.tar.gz
+
+BuildArch: noarch
+Requires:  java
+
+%description
+Sample app
+
+%prep
+%setup -q
+
+%install
+mkdir -p %{buildroot}%{_bindir}
+%define _appdir %{buildroot}%{_datadir}/%{name}
+mkdir -p %{_appdir}/bin
+
+cat > %{buildroot}%{_bindir}/app <<-EOF
+#!/bin/sh
+%{_datadir}/%{name}/bin/app "$@"
+EOF
+chmod 0755 %{buildroot}%{_bindir}/app
+
+mkdir -p %{_appdir}/lib
+install -p -m 755 bin/app %{_appdir}/bin/app
+install -p -m 644 lib/app-%{version}.jar %{_appdir}/lib/app-%{version}.jar
+
+%files
+%{_bindir}/%{name}
+%{_datadir}/%{name}/bin/app
+%{_datadir}/%{name}/lib/app-%{version}.jar
+----
+
+You may configure automated builds with link:https://copr.fedorainfracloud.org/[Fedora COPR] or any other service that
+acceps spec files as inputs.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/spec`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `app.spec.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
+

@@ -100,6 +100,12 @@ Generates a changelog similar to
 
 image::ROOT:jreleaser-changelog-render.jpg[]
 
+== Order
+
+Both labelers and categories will be ordered based on their declared location however you may change this order by
+explicitly setting a value for their `order` property. The lower the number the higher the priority. The value of the
+`order` property must be unique.
+
 == Presets
 
 Presets define conventions applicable to:
@@ -122,18 +128,20 @@ applied:
 
 [%header]
 |===
-| Category        | Label    | Prefix
-| 🚀 Features      | feat     | feat:
-| 🐛 Fixes         | fix      | fix:
-| ♻️ ️Changes       | perf     | perf:
-| ♻️ ️Changes       | refactor | refactor:
-| ♻️ ️Changes       | revert   | revert:
-| ♻️ ️Changes       | style    | style:
-| 🧰 Tasks         | chore    | chore:
-| 🛠 Build         | test     | test:
-| 🛠 Build         | build    | build:
-| 🛠 Build         | ci       | ci:
-| 📝 Documentation | docs     | docs:
+| Category        | Order | Label    | Prefix       | Order
+| 🔀 Merge         | 0     | merge    | Merge pull   | 0
+| 🔀 Merge         | 0     | merge    | Merge branch | 5
+| 🚀 Features      | 10     | feat     | feat:       | 50
+| 🐛 Fixes         | 20     | fix      | fix:        | 60
+| ♻️ ️Changes     | 30       | perf     | perf:       | 70
+| ♻️ ️Changes     | 30       | refactor | refactor:   | 80
+| ♻️ ️Changes     | 30       | revert   | revert:     | 90
+| ♻️ ️Changes     | 30       | style    | style:      | 100
+| 🧰 Tasks         | 40     | chore    | chore:      | 20
+| 🛠 Build         | 50     | test     | test:       | 110
+| 🛠 Build         | 50     | build    | build:      | 10
+| 🛠 Build         | 50     | ci       | ci:         | 30
+| 📝 Documentation | 60     | docs     | docs:       | 40
 |===
 
 You may define an optional scope as part of the prefix, such as `fix(core)` or `feat(plugins)`. A `!` in the prefix will
@@ -222,76 +230,76 @@ categorized. The following table shows mappings that you may use when this prese
 
 [%header, cols="<,<,^,<2"]
 |===
-| Category      | Label            | Emoji | Keyword
-| Merge         | merge            | 🔀    | :twisted_rightwards_arrows:
-| Added         | added            | ✨    | :sparkles:
-| Added         | added            | 🎉    | :tada:
-| Added         | added            | ✅    | :white_check_mark:
-| Added         | added            | 👷    | :construction_worker:
-| Added         | added            | 📈    | :chart_with_upwards_trend:
-| Added         | added            | ➕    | :heavy_plus_sign:
-| Added         | added            | 🔊    | :loud_sound:
-| Changed       | changed          | 🎨    | :art:
-| Changed       | changed          | ⚡️    | :zap:
-| Changed       | changed          | 💄    | :lipstick:
-| Changed       | changed          | 🚨    | :rotating_light:
-| Changed       | changed          | 📌    | :pushpin:
-| Changed       | changed          | ♻️    | :recycle:
-| Changed       | changed          | 🔧    | :wrench:
-| Changed       | changed          | 🔨    | :hammer:
-| Changed       | changed          | ⏪    | :rewind:
-| Changed       | changed          | 👽    | :alien:
-| Changed       | changed          | 🚚    | :truck:
-| Changed       | changed          | 🍱    | :bento:
-| Changed       | changed          | ♿️    | :wheelchair:
-| Changed       | changed          | 💬    | :speech_balloon:
-| Changed       | changed          | 🗃    | :card_file_box:
-| Changed       | changed          | 🚸    | :children_crossing:
-| Changed       | changed          | 🏗    | :building_construction:
-| Changed       | changed          | 📱    | :iphone:
-| Changed       | changed          | 📦    | :package:
-| Breaking      | breaking_changes | 💥    | :boom:
-| Deprecated    | deprecated       | 🗑    | :wastebasket:
-| Removed       | Removed          | ➖    | :heavy_minus_sign:
-| Removed       | Removed          | 🔥    | :fire:
-| Removed       | Removed          | 🔇    | :mute:
-| Removed       | Removed          | ⚰️    | :coffin:
-| Fixed         | fixed            | 🐛    | :bug:
-| Fixed         | fixed            | 🚑    | :ambulance:
-| Fixed         | fixed            | 🍎    | :apple:
-| Fixed         | fixed            | 🍏    | :green_apple:
-| Fixed         | fixed            | 🐧    | :penguin:
-| Fixed         | fixed            | 🏁    | :checkered_flag:
-| Fixed         | fixed            | 🤖    | :robot:
-| Fixed         | fixed            | 💚    | :green_heart:
-| Fixed         | fixed            | ✏️    | :pencil2:
-| Fixed         | fixed            | 🩹️    | :adhesive_bandage:
-| Security      | security         | 🔒️    | :lock:
-| Security      | security         | 🛂    | :passport_control:
-| Documentation | documentation    | 📝    | :pencil:
-| Documentation | documentation    | 📝    | :memo:
-| Documentation | documentation    | 🌐    | :globe_with_meridians:
-| Documentation | documentation    | 📄    | :page_facing_up:
-| Documentation | documentation    | 💡    | :bulb:
-| Dependencies  | dependencies     | ⬆️    | :arrow_up:
-| Dependencies  | dependencies     | ⬇️    | :arrow_down:
-| Miscellaneous | misc             | 💩    | :poop:
-| Miscellaneous | misc             | 🚧    | :construction:
-| Miscellaneous | misc             | 🍻    | :beers:
-| Miscellaneous | misc             | 👥    | :busts_in_silhouette:
-| Miscellaneous | misc             | 🤡    | :clown_face:
-| Miscellaneous | misc             | 🥚    | :egg:
-| Miscellaneous | misc             | 🙈    | :see_no_evil:
-| Miscellaneous | misc             | 📸    | :camera_flash:
-| Miscellaneous | misc             | ⚗️    | :alembic:
-| Miscellaneous | misc             | 🔍    | :mag:
-| Miscellaneous | misc             | 🥅    | :goal_net:
-| Miscellaneous | misc             | 🧐    | :monocle_face:
-| Miscellaneous | misc             | 🧪    | :test_tube:
-| Miscellaneous | misc             | 👔    | :necktie:
-| Miscellaneous | misc             | 👌    | :ok_hand:
-| Release       | release          | 🚀    | :rocket:
-| Release       | release          | 🔖    | :bookmark:
+| Category      | Order | Label            | Emoji | Keyword
+| Merge         | 0     | merge            | 🔀    | :twisted_rightwards_arrows:
+| Added         | 10    | added            | ✨    | :sparkles:
+| Added         | 10    | added            | 🎉    | :tada:
+| Added         | 10    | added            | ✅    | :white_check_mark:
+| Added         | 10    | added            | 👷    | :construction_worker:
+| Added         | 10    | added            | 📈    | :chart_with_upwards_trend:
+| Added         | 10    | added            | ➕    | :heavy_plus_sign:
+| Added         | 10    | added            | 🔊    | :loud_sound:
+| Changed       | 20    | changed          | 🎨    | :art:
+| Changed       | 20    | changed          | ⚡️    | :zap:
+| Changed       | 20    | changed          | 💄    | :lipstick:
+| Changed       | 20    | changed          | 🚨    | :rotating_light:
+| Changed       | 20    | changed          | 📌    | :pushpin:
+| Changed       | 20    | changed          | ♻️    | :recycle:
+| Changed       | 20    | changed          | 🔧    | :wrench:
+| Changed       | 20    | changed          | 🔨    | :hammer:
+| Changed       | 20    | changed          | ⏪    | :rewind:
+| Changed       | 20    | changed          | 👽    | :alien:
+| Changed       | 20    | changed          | 🚚    | :truck:
+| Changed       | 20    | changed          | 🍱    | :bento:
+| Changed       | 20    | changed          | ♿️    | :wheelchair:
+| Changed       | 20    | changed          | 💬    | :speech_balloon:
+| Changed       | 20    | changed          | 🗃    | :card_file_box:
+| Changed       | 20    | changed          | 🚸    | :children_crossing:
+| Changed       | 20    | changed          | 🏗    | :building_construction:
+| Changed       | 20    | changed          | 📱    | :iphone:
+| Changed       | 20    | changed          | 📦    | :package:
+| Breaking      | 30    | breaking_changes | 💥    | :boom:
+| Deprecated    | 40    | deprecated       | 🗑    | :wastebasket:
+| Removed       | 50    | Removed          | ➖    | :heavy_minus_sign:
+| Removed       | 50    | Removed          | 🔥    | :fire:
+| Removed       | 50    | Removed          | 🔇    | :mute:
+| Removed       | 50    | Removed          | ⚰️    | :coffin:
+| Fixed         | 60    | fixed            | 🐛    | :bug:
+| Fixed         | 60    | fixed            | 🚑    | :ambulance:
+| Fixed         | 60    | fixed            | 🍎    | :apple:
+| Fixed         | 60    | fixed            | 🍏    | :green_apple:
+| Fixed         | 60    | fixed            | 🐧    | :penguin:
+| Fixed         | 60    | fixed            | 🏁    | :checkered_flag:
+| Fixed         | 60    | fixed            | 🤖    | :robot:
+| Fixed         | 60    | fixed            | 💚    | :green_heart:
+| Fixed         | 60    | fixed            | ✏️    | :pencil2:
+| Fixed         | 60    | fixed            | 🩹️    | :adhesive_bandage:
+| Security      | 70    | security         | 🔒️    | :lock:
+| Security      | 70    | security         | 🛂    | :passport_control:
+| Documentation | 80    | documentation    | 📝    | :pencil:
+| Documentation | 80    | documentation    | 📝    | :memo:
+| Documentation | 80    | documentation    | 🌐    | :globe_with_meridians:
+| Documentation | 80    | documentation    | 📄    | :page_facing_up:
+| Documentation | 80    | documentation    | 💡    | :bulb:
+| Dependencies  | 90    | dependencies     | ⬆️    | :arrow_up:
+| Dependencies  | 90    | dependencies     | ⬇️    | :arrow_down:
+| Miscellaneous | 100   | misc             | 💩    | :poop:
+| Miscellaneous | 100   | misc             | 🚧    | :construction:
+| Miscellaneous | 100   | misc             | 🍻    | :beers:
+| Miscellaneous | 100   | misc             | 👥    | :busts_in_silhouette:
+| Miscellaneous | 100   | misc             | 🤡    | :clown_face:
+| Miscellaneous | 100   | misc             | 🥚    | :egg:
+| Miscellaneous | 100   | misc             | 🙈    | :see_no_evil:
+| Miscellaneous | 100   | misc             | 📸    | :camera_flash:
+| Miscellaneous | 100   | misc             | ⚗️    | :alembic:
+| Miscellaneous | 100   | misc             | 🔍    | :mag:
+| Miscellaneous | 100   | misc             | 🥅    | :goal_net:
+| Miscellaneous | 100   | misc             | 🧐    | :monocle_face:
+| Miscellaneous | 100   | misc             | 🧪    | :test_tube:
+| Miscellaneous | 100   | misc             | 👔    | :necktie:
+| Miscellaneous | 100   | misc             | 👌    | :ok_hand:
+| Release       | 110   | release          | 🚀    | :rocket:
+| Release       | 110   | release          | 🔖    | :bookmark:
 |===
 
 The following commit messages are equivalent:

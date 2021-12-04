@@ -148,13 +148,19 @@ The following names are related to xref:configuration:project.adoc[]
 | projectVersion           | the project version
 | projectEffectiveVersion  | the project effective version
 | projectVersionMajor      | the major number of the project's version (semver)
-| projectVersionMinor      | the minor number (if any) of the project's version (semver)
+| projectVersionMinor      | the minor number (if any) of the project's version (semver, calver)
 | projectVersionPatch      | the patch number (if any) of the project's version (semver)
 | projectVersionTag        | the tag (if any) of the project's version (semver)
 | projectVersionNumber     | the version number (no build, no tag) of the project's version (semver, java_runtime, java_module)
 | projectVersionOptional   | the optional part (if any) of the project's version (java_runtime)
 | projectVersionPrerelease | the prerelease part (if any) of the project's version (java_runtime, java_module)
 | projectVersionBuild      | the build part (if any) of the project's version (semver, java_runtime, java_module)
+| projectVersionYear       | the year part of the project's version (calver)
+| projectVersionMonth      | the month part (if any) of the project's version (calver)
+| projectVersionDay        | the day part (if any) of the project's version (calver)
+| projectVersionWeek       | the week part (if any) of the project's version (calver)
+| projectVersionMicro      | the micro part (if any) of the project's version (calver)
+| projectVersionModifier   | the modifier part of the project's version (calver)
 | projectDescription       | the project description
 | projectLongDescription   | the project long description
 | projectWebsite           | link to the project website
@@ -1883,7 +1889,7 @@ The following names are related to xref:configuration:packagers/macports.adoc[]
 | Key                            | Description
 | macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
-| macportsRevision               | the port revision nomber
+| macportsRevision               | the port revision number
 | macportsCategories             | categories separated by space
 | macportsMaintainers            | formatted maintainers, one per line
 | macportsDistributionUrl        | the download URL without the artifact file name
@@ -2768,6 +2774,111 @@ jreleaser {
     snap {
       // Key will be capitalized and prefixed
       // with `snap`, i.e, `snapFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== spec
+
+The following names are related to xref:configuration:packagers/spec.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                        | Description
+| specRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| specRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| specRelease                | the release number
+| specRequires               | package requires as a List
+| specDirectories            | List of directories to be created
+| specFiles                  | List of files to be installed
+|===
+
+Additionally, every key/value from `spec.extraProperties` is mapped with `spec` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  spec:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `spec`, i.e, `specFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.spec]
+  # Key will be capitalized and prefixed
+  # with `spec`, i.e, `specFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "spec": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `spec`, i.e, `specFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <spec>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `spec`, i.e, `specFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </spec>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    spec {
+      // Key will be capitalized and prefixed
+      // with `spec`, i.e, `specFoo`.
       extraProperties.put('foo', 'bar')
     }
   }
