@@ -566,7 +566,7 @@ project:
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   versionPattern: SEMVER
@@ -699,7 +699,7 @@ project:
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   versionPattern = "SEMVER"
@@ -825,7 +825,7 @@ project:
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "versionPattern": "SEMVER",
@@ -973,7 +973,7 @@ project:
     &lt;!--
       The strategy used to parse the project version
       May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-      Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+      Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
       Defaults to `SEMVER`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
@@ -1176,7 +1176,7 @@ project:
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     versionPattern = 'SEMVER'
@@ -1356,6 +1356,175 @@ impose a version format and lets you decide among the following options:</p>
 </div>
 </div>
 <div class="sect2">
+<h3 id="_calver"><a class="anchor" href="#_calver"></a>CALVER</h3>
+<div class="paragraph">
+<p>The version number complies with the <a href="https://calver.org/">CalVer</a> syntax, resulting in the following supported formats:</p>
+</div>
+<div class="ulist">
+<div class="title">Tokens</div>
+<ul>
+<li>
+<p>for year:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>YYYY: [2-9][0-9]{3}</p>
+</li>
+<li>
+<p>YY: [1-9]|[1-9][0-9]|[1-9][0-9]{2}</p>
+</li>
+<li>
+<p>0Y: 0[1-9]|[1-9][0-9]|[1-9][0-9]{2}</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for month:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>MM: [1-9]|1[0-2]</p>
+</li>
+<li>
+<p>0M: 0[1-9]|1[0-2]</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for day:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DD: [1-9]|[1-2][0-9]|3[0-1]</p>
+</li>
+<li>
+<p>0D: 0[1-9]|[1-2][0-9]|3[0-1]</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for week:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>WW: [1-9]|[1-4][0-9]|5[0-2]</p>
+</li>
+<li>
+<p>0W: 0[1-9]|[1-4][0-9]|5[0-2]</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for MINOR: 0|[1-9]\d*</p>
+</li>
+<li>
+<p>for MICRO: 0|[1-9]\d*</p>
+</li>
+<li>
+<p>for MODIFIER: [a-zA-Z-][0-9a-zA-Z-]*</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Restrictions</div>
+<ul>
+<li>
+<p>Format must begin with a <em>year</em> token.</p>
+</li>
+<li>
+<p>If <em>month</em> is present so can <em>day</em>, but not <em>week</em>.</p>
+</li>
+<li>
+<p>If <em>week</em> is present then neither <em>month</em> nor <em>day</em> are allowed.</p>
+</li>
+<li>
+<p><em>minor</em> must be present before <em>micro</em>.</p>
+</li>
+<li>
+<p><em>modifier</em> always goes at the end.</p>
+</li>
+<li>
+<p>separator chars may be any of <code>.</code>, <code>_</code>, <code>-</code>.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Examples</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pattern</th>
+<th class="tableblock halign-left valign-top">Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:0Y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">06</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.0M</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MM.DD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MM.0D</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1.01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.WW</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.0W</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MINOR.MICRO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MM.DD_MICRO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1.2_3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MODIFIER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.ALPHA1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MINOR.MICRO.MODIFIER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.1.2.ALPHA1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CALVER:YYYY.MODIFIER</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2021.FOO-BAR</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="_java_runtime"><a class="anchor" href="#_java_runtime"></a>JAVA_RUNTIME</h3>
 <div class="paragraph">
 <p>The version number complies with the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runtime.Version.html">Java Runtime Version</a>
@@ -1379,10 +1548,10 @@ syntax, resulting in the following supported formats:</p>
 <p>1.2.3+123-OPT</p>
 </li>
 <li>
-<p>1.2.3-PRE+132</p>
+<p>1.2.3-PRE+456</p>
 </li>
 <li>
-<p>1.2.3-PRE+132-OPT</p>
+<p>1.2.3-PRE+456-OPT</p>
 </li>
 <li>
 <p>1.2.3+-OPT</p>
@@ -1408,7 +1577,7 @@ syntax, resulting in the following supported formats:</p>
 <p>1.2.3+123</p>
 </li>
 <li>
-<p>1.2.3-PRE+132</p>
+<p>1.2.3-PRE+456</p>
 </li>
 </ul>
 </div>
