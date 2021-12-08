@@ -1,0 +1,159 @@
+= Platform
+
+You can define rules to replace platform values in filenames.
+
+NOTE: Define rules from the most specific to the least.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+platform:
+
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # icon:dot-circle[]
+  replacements:
+    osx-x86_64: mac
+    aarch_64: aarch64
+    x86_64: amd64
+    linux_musl: alpine
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# Key value pairs.
+# Keys match a full platform or an os.name, os.arch.
+# icon:dot-circle[]
+[platform.replacements]
+ osx-x86_64 = "mac"
+ aarch_64 = "aarch64"
+ x86_64 = "amd64"
+ linux_musl = "alpine"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "platform": {
+
+    // Key value pairs.
+    // Keys match a full platform or an os.name, os.arch.
+    // icon:dot-circle[]
+    "replacements": {
+      "osx-x86_64": "mac",
+      "aarch_64": "aarch64",
+      "x86_64": "amd64",
+      "linux_musl": "alpine"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <platform>
+
+    <!--
+      Key value pairs.
+      Keys match a full platform or an os.name, os.arch.
+      icon:dot-circle[]
+    -->
+    <replacements>
+      <osx-x86_64>mac</osx-x86_64>
+      <aarch_64>aarch64</aarch_64>
+      <x86_64>amd64</x86_64>
+      <linux_musl>alpine</linux_musl>
+    </replacements>
+  </platform>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  platform {
+
+    // Key value pairs.
+    // Keys match a full platform or an os.name, os.arch.
+    // icon:dot-circle[]
+    replacements = [
+      'osx-x86_64': 'mac',
+      aarch_64: 'aarch64',
+      x86_64: 'amd64',
+      linux_musl: 'alpine'
+    ]
+  }
+}
+----
+--
+====
+
+== Example
+
+Given the previous platform replacement configuration and a xref:assemble/jlink.adoc[] assembler configured with the
+following JDKs
+
+[source,yaml]
+----
+assemble:
+  jlink:
+    app:
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
+          platform: 'linux-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
+          platform: 'linux_musl-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
+          platform: 'windows-aarch_64'
+----
+
+Will generate the following artifacts:
+
+ * app-1.0.0-mac.zip
+ * app-1.0.0-osx-aarch64.zip
+ * app-1.0.0-linux-amd64.zip
+ * app-1.0.0-linux-aarch64.zip
+ * app-1.0.0-alpine-amd64.zip
+ * app-1.0.0-alpine-aarch64.zip
+ * app-1.0.0-windows-amd64.zip
+ * app-1.0.0-windows-aarch64.zip

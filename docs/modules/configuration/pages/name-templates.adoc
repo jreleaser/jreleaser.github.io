@@ -392,11 +392,12 @@ The following names are related to detected OS/Platform settings
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key        | Description
-| osName     | normalized value of System.getProperty("os.name")
-| osArch     | normalized value of System.getProperty("os.arch")
-| osPlatform | combination of `${osName}-${osArch}`
-| osVersion  | value of System.getProperty("os.version")
+| Key                | Description
+| osName             | normalized value of System.getProperty("os.name")
+| osArch             | normalized value of System.getProperty("os.arch")
+| osVersion          | value of System.getProperty("os.version")
+| osPlatform         | combination of `${osName}-${osArch}`
+| osPlatformReplaced | `osPlatform` after xref:platform.adoc[platform] replacements have been applied
 |===
 
 == Release
@@ -672,14 +673,15 @@ The following names match the first artifact in a distribution
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                          | Description
-| distributionUrl              | the URL required to download the artifact
-| distributionSize             | the size (in bytes) of the artifact file
-| distributionChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
-| distributionArtifactFileName | the name of the artifact file
-| distributionArtifactName     | the name of the artifact file without extension
-| distributionArtifactSize     | the size (in bytes) of the artifact file
-| distributionArtifactPlatform | the artifact's platform (if any)
+| Key                                  | Description
+| distributionUrl                      | the URL required to download the artifact
+| distributionSize                     | the size (in bytes) of the artifact file
+| distributionChecksum${SHA}           | the matching checksum of the artifact's file, per configured algorithm
+| distributionArtifactFileName         | the name of the artifact file
+| distributionArtifactName             | the name of the artifact file without extension
+| distributionArtifactSize             | the size (in bytes) of the artifact file
+| distributionArtifactPlatform         | the artifact's platform (if any)
+| distributionArtifactPlatformReplaced | the artifact's replaced platform (if any)
 |===
 
 The following names match the first artifact in a distribution when xref:configuration:upload/index.adoc[uploaders]
@@ -697,12 +699,17 @@ Additional names become available when the artifact defines a `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                               | Description
-| artifact${Platform}Url            | the URL required to download the artifact
-| artifact${Platform}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
-| artifact${Platform}FileName       | the name of the artifact file
-| artifact${Platform}Name           | the name of the artifact file without extension
-| artifact${Platform}Size           | the size (in bytes) of the artifact file
+| Key                                       | Description
+| artifact${Platform}Url                    | the URL required to download the artifact
+| artifact${Platform}Checksum${SHA}         | the matching checksum of the artifact's file, per configured algorithm
+| artifact${Platform}FileName               | the name of the artifact file
+| artifact${Platform}Name                   | the name of the artifact file without extension
+| artifact${Platform}Size                   | the size (in bytes) of the artifact file
+| artifact${PlatformReplaced}Url            | the URL required to download the artifact
+| artifact${PlatformReplaced}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
+| artifact${PlatformReplaced}FileName       | the name of the artifact file
+| artifact${PlatformReplaced}Name           | the name of the artifact file without extension
+| artifact${PlatformReplaced}Size           | the size (in bytes) of the artifact file
 |===
 
 Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
@@ -710,14 +717,17 @@ are configured
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                                          | Description
-| artifact${Platform}DownloadUrl               | the URL required to download the artifact
-| artifact${Platform}Download${Type}Url        | the URL required to download the artifact, matching the typed uploader
-| artifact${Platform}Download${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+| Key                                                  | Description
+| artifact${Platform}DownloadUrl                       | the URL required to download the artifact
+| artifact${Platform}Download${Type}Url                | the URL required to download the artifact, matching the typed uploader
+| artifact${Platform}Download${Type}${Name}Url         | the URL required to download the artifact, matching the typed and named uploader
+| artifact${PlatformReplaced}DownloadUrl               | the URL required to download the artifact
+| artifact${PlatformReplaced}Download${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifact${PlatformReplaced}Download${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
 |===
 
 Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
-artifact, and `artifact{{Platform}}` for all artifacts, and the capitalized key.
+artifact, `artifact{{Platform}}`, and `artifact{{PlatformReplaced}}` for all artifacts, and the capitalized key.
 
 Thus, for artifacts defined as
 
