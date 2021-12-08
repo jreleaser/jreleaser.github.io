@@ -711,10 +711,40 @@ include::partial$assemble/gradle/common-footer.adoc[]
 --
 ====
 
+== Archive Format
+
+By default all archive use the Zip format, however you may change this by setting and extra property named `archiveFormat`
+on a given `targetJdk`. the Jlink assembler will use it as a hint to select the appropriate archiving format, for example
+here's how the format may be changed for archives that target Linux platforms:
+
+[source,yaml]
+----
+assemble:
+  jlink:
+    app:
+      active: always
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'
+----
+
+Valid values for the `archiveFormat` property are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`, `TAR_BZ2`], with `ZIP` being the
+default if left unspecified.
+
 == JDKs
 
-You may specify a value for both `jdk` and `targetJdks`, either, or none. The following rules apply to resolve which JDKs
-will be used to generate custom Java runtimes:
+You may specify a value for both `jdk` and `targetJdks`, either, or none. The following rules apply when resolving which
+JDKs will be used to generate custom Java runtimes:
 
 . If both `jdk` and `targetJdks` are specified then they _must_ match the same major version.
 . If only `jdk` is specified then the `targetJdks` will contain a single entry matching the given `jdk`.
