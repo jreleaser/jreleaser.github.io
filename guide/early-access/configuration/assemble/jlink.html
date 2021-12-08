@@ -1784,11 +1784,46 @@ assemble:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_archive_format"><a class="anchor" href="#_archive_format"></a>Archive Format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default all archive use the Zip format, however you may change this by setting and extra property named <code>archiveFormat</code>
+on a given <code>targetJdk</code>. the Jlink assembler will use it as a hint to select the appropriate archiving format, for example
+here&#8217;s how the format may be changed for archives that target Linux platforms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">assemble:
+  jlink:
+    app:
+      active: always
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Valid values for the <code>archiveFormat</code> property are [<code>ZIP</code>, <code>TAR</code>, <code>TGZ</code>, <code>TAR_GZ</code>, <code>TAR_BZ2</code>], with <code>ZIP</code> being the
+default if left unspecified.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_jdks"><a class="anchor" href="#_jdks"></a>JDKs</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may specify a value for both <code>jdk</code> and <code>targetJdks</code>, either, or none. The following rules apply to resolve which JDKs
-will be used to generate custom Java runtimes:</p>
+<p>You may specify a value for both <code>jdk</code> and <code>targetJdks</code>, either, or none. The following rules apply when resolving which
+JDKs will be used to generate custom Java runtimes:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
