@@ -25,14 +25,9 @@ YAML::
 ----
 include::partial$upload/yaml/common-head.adoc[]
 
-      # URL of the Artifactory instance + path + artifact.
+      # URL of the Artifactory host.
       # icon:exclamation-triangle[] icon:file-alt[]
-      uploadUrl: {upload_url}
-
-      # URL of the Artifactory instance + path + artifact.
-      # If undefined, will use the same value as `uploadUrl`.
-      # icon:exclamation-triangle[] icon:file-alt[]
-      downloadUrl: {upload_url}
+      host: https://host.com/artifactory
 
       # The username that can write to the repository.
       # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -53,6 +48,26 @@ include::partial$upload/yaml/common-head.adoc[]
       # Defaults to `BEARER`.
       # icon:dot-circle[]
       authorization: BASIC
+      
+      # List of repositories where artifacts will be uploaded.
+      # icon:exclamation-triangle[]
+      repositories:
+
+          # Path where the artifact will be uploaded to.
+          # icon:exclamation-triangle[] icon:eye-slash[]
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          # Enables or disables the repository.
+          # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          # Defaults to the active setting of the containing artifactory.
+          # icon:dot-circle[]
+          active: ALWAYS
+
+          # Set of supported file types.
+          # icon:dot-circle[]
+          fileTypes:
+            - ZIP
+            - TGZ
 ----
 --
 TOML::
@@ -63,14 +78,9 @@ TOML::
 ----
 include::partial$upload/toml/common-head.adoc[]
 
-  # URL of the Artifactory instance + path + artifact.
+  # URL of the Artifactory host.
   # icon:exclamation-triangle[] icon:file-alt[]
-  uploadUrl = "{upload_url}"
-
-  # URL of the Artifactory instance + path + artifact.
-  # If undefined, will use the same value as `uploadUrl`.
-  # icon:exclamation-triangle[] icon:file-alt[]
-  downloadUrl = "{upload_url}"
+  host = "https://host.com/artifactory"
 
   # The username that can write to the repository.
   # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -91,6 +101,24 @@ include::partial$upload/toml/common-head.adoc[]
   # Defaults to `BEARER`.
   # icon:dot-circle[]
   authorization = "BASIC"
+
+  # List of repositories where artifacts will be uploaded.
+  # icon:exclamation-triangle[]
+  pass:[[[upload.artifactory.app.repositories]]]
+
+    # Path where the artifact will be uploaded to.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+
+   # Enables or disables the uploader.
+   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+   # Defaults to the active setting of the containing artifactory.
+   # icon:dot-circle[]
+   active = "ALWAYS"
+
+    # Set of supported file types.
+    # icon:dot-circle[]
+    fileTypes = ["ZIP", "TGZ"]
 ----
 --
 JSON::
@@ -101,14 +129,9 @@ JSON::
 ----
 include::partial$upload/json/common-head.adoc[]
 
-        // URL of the Artifactory instance + path + artifact.
+        // URL of the Artifactory host.
         // icon:exclamation-triangle[] icon:file-alt[]
-        "uploadUrl": "{upload_url}",
-
-        // URL of the Artifactory instance + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        "downloadUrl": "{upload_url}",
+        "host": "https://host.com/artifactory",
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -128,7 +151,30 @@ include::partial$upload/json/common-head.adoc[]
         // `BEARER` requires a token (set as password).
         // Defaults to `BEARER`.
         // icon:dot-circle[]
-        "authorization": "BEARER"
+        "authorization": "BEARER",
+
+        // List of repositories where artifacts will be uploaded.
+        // icon:exclamation-triangle[]
+        "repositories": [
+          {
+            // Path where the artifact will be uploaded to.
+            // icon:exclamation-triangle[] icon:eye-slash[]
+            "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}",
+
+            // Enables or disables the uploader.
+            // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to the active setting of the containing artifactory.
+            // icon:dot-circle[]
+            "active": "ALWAYS",
+
+            // Set of supported file types.
+            // icon:dot-circle[]
+            "fileTypes": [
+              "ZIP",
+              "TGZ"
+             ]
+          }
+        ]
 include::partial$upload/json/common-footer.adoc[]
 ----
 --
@@ -141,17 +187,10 @@ Maven::
 include::partial$upload/maven/common-head.adoc[]
 
         <!--
-          URL of the Artifactory instance + path + artifact.
+          URL of the Artifactory host.
           icon:exclamation-triangle[] icon:file-alt[]
         -->
-        <uploadUrl>{upload_url}</uploadUrl>
-
-        <!--
-          URL of the Artifactory instance + path + artifact.
-          If undefined, will use the same value as `uploadUrl`.
-          icon:exclamation-triangle[] icon:file-alt[]
-        -->
-        <downloadUrl>{upload_url}</downloadUrl>
+        <host>https://host.com/artifactory</host>
 
         <!--
           The username that can write to the repository.
@@ -178,6 +217,35 @@ include::partial$upload/maven/common-head.adoc[]
           icon:dot-circle[]
         -->
         <authorization>BEARER</authorization>
+
+        <!--
+          List of repositories where artifacts will be uploaded.
+          icon:exclamation-triangle[]
+        -->
+        <repositories>
+          <repository>
+
+          <!--
+            Path where the artifact will be uploaded to.
+            icon:exclamation-triangle[] icon:eye-slash[]
+          -->
+          <path>binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}</path>
+
+          <!--
+            Enables or disables the distribution.
+            Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to the active setting of the containing artifactory.
+            icon:dot-circle[]
+          -->
+          <active>ALWAYS</active>
+
+          <!--
+            Set of supported file types.
+            icon:dot-circle[]
+          -->
+          <fileTypes>ZIP,TGZ</fileTypes>
+          </repository>
+        </repositories>
 include::partial$upload/maven/common-footer.adoc[]
 ----
 --
@@ -189,14 +257,9 @@ Gradle::
 ----
 include::partial$upload/gradle/common-head.adoc[]
 
-        // URL of the Artifactory instance + path + artifact.
+        // URL of the Artifactory host.
         // icon:exclamation-triangle[] icon:file-alt[]
-        uploadUrl = '{upload_url}'
-
-        // URL of the Artifactory instance + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        downloadUrl = '{upload_url}'
+        host = 'https://host.com/artifactory'
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -217,30 +280,58 @@ include::partial$upload/gradle/common-head.adoc[]
         // Defaults to `BEARER`.
         // icon:dot-circle[]
         authorization = 'BEARER'
+
+        // List of repositories where artifacts will be uploaded.
+        // icon:exclamation-triangle[]
+        repository {
+          // Path where the artifact will be uploaded to.
+          // icon:exclamation-triangle[] icon:eye-slash[]
+          path = 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          // Enables or disables the uploader.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to the active setting of the containing artifactory.
+          // icon:dot-circle[]
+          active = 'ALWAYS'
+
+          // Set of supported file types.
+          // icon:dot-circle[]
+          fileType = 'ZIP'
+          fileType = 'TGZ'
 include::partial$upload/gradle/common-footer.adoc[]
 ----
 --
 ====
 
-== UploadUrl
+== File Types
 
-The uploadUrl is the URL to upload the artifacts to.
+Supported files types are:
 
-An example configuration may look like
-`uploadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'`.
+ * `DEB`
+ * `DMG`
+ * `EXE`
+ * `JAR`
+ * `MSI`
+ * `NUGET`
+ * `PKG`
+ * `RPM`
+ * `TAR`
+ * `TAR_BZ2`
+ * `TAR_GZ`
+ * `TGZ`
+ * `ZIP`
 
-And will result in a final deployment like
-`pass:[https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip]`.
+If a repository does not define any file types then it means it accepts all.
 
-== DownloadUrl
+== Host
 
-The downloadUrl is the URL used to download artifacts from.
+You can have the host set in the configuration as shown above or you can have it read from an environment variable.
+The configured name of the Artifactory instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
 
-An example configuration may look like
-`downloadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'`.
-
-And will result in a final deployment like
-`pass:[https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip]`.
+The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_HOST`. If your instance is named `production`,
+you can store the host in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_HOST`. The name will be
+transformed to uppercase.
 
 == Username
 
@@ -295,7 +386,9 @@ upload:
   artifactory:
     duke:
       active: always
-      uploadUrl: '{upload_url}'
+      host: 'https://host.com/artifactory'
+      repository:
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
 ----
 --
 TOML::
@@ -306,7 +399,9 @@ TOML::
 ----
 [upload.artifactory.duke]
   active = "ALWAYS"
-  uploadUrl = "{upload_url}"
+  host = "https://host.com/artifactory"
+  pass:[[[upload.artifactory.duke.repositories]]]
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
 ----
 --
 JSON::
@@ -321,7 +416,12 @@ JSON::
       "artifactory": {
         "duke": {
           "active": "ALWAYS",
-          "uploadUrl": "{upload_url}"
+          "host": "https://host.com/artifactory",
+          "repositories": [
+            {
+              "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+            }
+          ]
         }
       }
     }
@@ -340,7 +440,12 @@ Maven::
     <artifacory>
       <duke>
         <active>ALWAYS</active>
-        <uploadUrl>{upload_url}</uploadUrl>
+        <host>https://host.com/artifactory</host>
+        <repositories>
+          <repository>
+            <path>binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}</path>
+          </repository>
+        </repositories>
       </duke>
     </artifacory>
   </upload>
@@ -358,7 +463,10 @@ jreleaser {
     artifactory {
       duke {
         active = 'ALWAYS'
-        uploadUrl = '{upload_url}'
+        host = 'https://host.com/artifactory'
+        repository {
+          path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+        }
       }
     }
   }
