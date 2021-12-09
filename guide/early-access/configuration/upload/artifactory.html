@@ -629,14 +629,9 @@ upload:
         # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
         foo: bar
 
-      # URL of the Artifactory instance + path + artifact.
+      # URL of the Artifactory host.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      uploadUrl: <a href="https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}" class="bare">https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}</a>
-
-      # URL of the Artifactory instance + path + artifact.
-      # If undefined, will use the same value as `uploadUrl`.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      downloadUrl: <a href="https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}" class="bare">https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}</a>
+      host: <a href="https://host.com/artifactory" class="bare">https://host.com/artifactory</a>
 
       # The username that can write to the repository.
       # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -656,7 +651,27 @@ upload:
       # `BEARER` requires a token (set as password).
       # Defaults to `BEARER`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      authorization: BASIC</code></pre>
+      authorization: BASIC
+
+      # List of repositories where artifacts will be uploaded.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      repositories:
+
+          # Path where the artifact will be uploaded to.
+          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          # Enables or disables the repository.
+          # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          # Defaults to the active setting of the containing artifactory.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          active: ALWAYS
+
+          # Set of supported file types.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          fileTypes:
+            - ZIP
+            - TGZ</code></pre>
 </div>
 </div>
 </div>
@@ -703,14 +718,9 @@ upload:
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `artifactory`, i.e, `artifactoryFoo`.
 
-  # URL of the Artifactory instance + path + artifact.
+  # URL of the Artifactory host.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  uploadUrl = "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}"
-
-  # URL of the Artifactory instance + path + artifact.
-  # If undefined, will use the same value as `uploadUrl`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  downloadUrl = "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}"
+  host = "https://host.com/artifactory"
 
   # The username that can write to the repository.
   # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -730,7 +740,25 @@ upload:
   # `BEARER` requires a token (set as password).
   # Defaults to `BEARER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BASIC"</code></pre>
+  authorization = "BASIC"
+
+  # List of repositories where artifacts will be uploaded.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  [[upload.artifactory.app.repositories]]
+
+    # Path where the artifact will be uploaded to.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+
+   # Enables or disables the uploader.
+   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+   # Defaults to the active setting of the containing artifactory.
+   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+   active = "ALWAYS"
+
+    # Set of supported file types.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    fileTypes = ["ZIP", "TGZ"]</code></pre>
 </div>
 </div>
 </div>
@@ -784,14 +812,9 @@ upload:
           "foo": "bar"
         },
 
-        // URL of the Artifactory instance + path + artifact.
+        // URL of the Artifactory host.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "uploadUrl": "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}",
-
-        // URL of the Artifactory instance + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "downloadUrl": "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}",
+        "host": "https://host.com/artifactory",
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -811,7 +834,30 @@ upload:
         // `BEARER` requires a token (set as password).
         // Defaults to `BEARER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "authorization": "BEARER"
+        "authorization": "BEARER",
+
+        // List of repositories where artifacts will be uploaded.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "repositories": [
+          {
+            // Path where the artifact will be uploaded to.
+            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+            "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}",
+
+            // Enables or disables the uploader.
+            // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to the active setting of the containing artifactory.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "active": "ALWAYS",
+
+            // Set of supported file types.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "fileTypes": [
+              "ZIP",
+              "TGZ"
+             ]
+          }
+        ]
       }
     }
   }
@@ -839,7 +885,7 @@ upload:
         &lt;!--
           Enables or disables the distribution.
           Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          Defaults to `ALWAYS`.
+          Defaults to `NEVER`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
@@ -891,17 +937,10 @@ upload:
         &lt;/extraProperties&gt;
 
         &lt;!--
-          URL of the Artifactory instance + path + artifact.
+          URL of the Artifactory host.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
-        &lt;uploadUrl&gt;<a href="https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/uploadUrl&gt" class="bare">https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/uploadUrl&gt</a>;
-
-        &lt;!--
-          URL of the Artifactory instance + path + artifact.
-          If undefined, will use the same value as `uploadUrl`.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;downloadUrl&gt;<a href="https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/downloadUrl&gt" class="bare">https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/downloadUrl&gt</a>;
+        &lt;host&gt;<a href="https://host.com/artifactory&lt;/host&gt" class="bare">https://host.com/artifactory&lt;/host&gt</a>;
 
         &lt;!--
           The username that can write to the repository.
@@ -928,6 +967,35 @@ upload:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;authorization&gt;BEARER&lt;/authorization&gt;
+
+        &lt;!--
+          List of repositories where artifacts will be uploaded.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        --&gt;
+        &lt;repositories&gt;
+          &lt;repository&gt;
+
+          &lt;!--
+            Path where the artifact will be uploaded to.
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          --&gt;
+          &lt;path&gt;binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}&lt;/path&gt;
+
+          &lt;!--
+            Enables or disables the distribution.
+            Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to the active setting of the containing artifactory.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;active&gt;ALWAYS&lt;/active&gt;
+
+          &lt;!--
+            Set of supported file types.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;fileTypes&gt;ZIP,TGZ&lt;/fileTypes&gt;
+          &lt;/repository&gt;
+        &lt;/repositories&gt;
       &lt;/app&gt;
     &lt;/artifactory&gt;
   &lt;/upload&gt;
@@ -983,14 +1051,9 @@ upload:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
-        // URL of the Artifactory instance + path + artifact.
+        // URL of the Artifactory host.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        uploadUrl = 'https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'
-
-        // URL of the Artifactory instance + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        downloadUrl = 'https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'
+        host = 'https://host.com/artifactory'
 
         // The username that can write to the repository.
         // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
@@ -1011,6 +1074,24 @@ upload:
         // Defaults to `BEARER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         authorization = 'BEARER'
+
+        // List of repositories where artifacts will be uploaded.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        repository {
+          // Path where the artifact will be uploaded to.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          path = 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          // Enables or disables the uploader.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to the active setting of the containing artifactory.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          active = 'ALWAYS'
+
+          // Set of supported file types.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          fileType = 'ZIP'
+          fileType = 'TGZ'
       }
     }
   }
@@ -1023,34 +1104,71 @@ upload:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_uploadurl"><a class="anchor" href="#_uploadurl"></a>UploadUrl</h2>
+<h2 id="_file_types"><a class="anchor" href="#_file_types"></a>File Types</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The uploadUrl is the URL to upload the artifacts to.</p>
+<p>Supported files types are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DEB</code></p>
+</li>
+<li>
+<p><code>DMG</code></p>
+</li>
+<li>
+<p><code>EXE</code></p>
+</li>
+<li>
+<p><code>JAR</code></p>
+</li>
+<li>
+<p><code>MSI</code></p>
+</li>
+<li>
+<p><code>NUGET</code></p>
+</li>
+<li>
+<p><code>PKG</code></p>
+</li>
+<li>
+<p><code>RPM</code></p>
+</li>
+<li>
+<p><code>TAR</code></p>
+</li>
+<li>
+<p><code>TAR_BZ2</code></p>
+</li>
+<li>
+<p><code>TAR_GZ</code></p>
+</li>
+<li>
+<p><code>TGZ</code></p>
+</li>
+<li>
+<p><code>ZIP</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>An example configuration may look like
-<code>uploadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'</code>.</p>
-</div>
-<div class="paragraph">
-<p>And will result in a final deployment like
-<code>https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip</code>.</p>
+<p>If a repository does not define any file types then it means it accepts all.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_downloadurl"><a class="anchor" href="#_downloadurl"></a>DownloadUrl</h2>
+<h2 id="_host"><a class="anchor" href="#_host"></a>Host</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The downloadUrl is the URL used to download artifacts from.</p>
+<p>You can have the host set in the configuration as shown above or you can have it read from an environment variable.
+The configured name of the Artifactory instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>An example configuration may look like
-<code>downloadUrl: 'https://artifacts.company.com:8081/artifactory/example-repo-local/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'</code>.</p>
-</div>
-<div class="paragraph">
-<p>And will result in a final deployment like
-<code>https://artifacts.company.com:8081/artifactory/example-repo-local/app/1.0.0/app-1.0.0.zip</code>.</p>
+<p>The name of the environment variable will be <code>JRELEASER_ARTIFACTORY_NAME_HOST</code>. If your instance is named <code>production</code>,
+you can store the host in the environment variable <code>JRELEASER_ARTIFACTORY_PRODUCTION_HOST</code>. The name will be
+transformed to uppercase.</p>
 </div>
 </div>
 </div>
@@ -1159,7 +1277,9 @@ that:</p>
   artifactory:
     duke:
       active: always
-      uploadUrl: 'https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'</code></pre>
+      host: 'https://host.com/artifactory'
+      repository:
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'</code></pre>
 </div>
 </div>
 </div>
@@ -1168,7 +1288,9 @@ that:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[upload.artifactory.duke]
   active = "ALWAYS"
-  uploadUrl = "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}"</code></pre>
+  host = "https://host.com/artifactory"
+  [[upload.artifactory.duke.repositories]]
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"</code></pre>
 </div>
 </div>
 </div>
@@ -1181,7 +1303,12 @@ that:</p>
       "artifactory": {
         "duke": {
           "active": "ALWAYS",
-          "uploadUrl": "https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}"
+          "host": "https://host.com/artifactory",
+          "repositories": [
+            {
+              "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+            }
+          ]
         }
       }
     }
@@ -1198,7 +1325,12 @@ that:</p>
     &lt;artifacory&gt;
       &lt;duke&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
-        &lt;uploadUrl&gt;<a href="https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/uploadUrl&gt" class="bare">https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}&lt;/uploadUrl&gt</a>;
+        &lt;host&gt;<a href="https://host.com/artifactory&lt;/host&gt" class="bare">https://host.com/artifactory&lt;/host&gt</a>;
+        &lt;repositories&gt;
+          &lt;repository&gt;
+            &lt;path&gt;binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}&lt;/path&gt;
+          &lt;/repository&gt;
+        &lt;/repositories&gt;
       &lt;/duke&gt;
     &lt;/artifacory&gt;
   &lt;/upload&gt;
@@ -1214,7 +1346,10 @@ that:</p>
     artifactory {
       duke {
         active = 'ALWAYS'
-        uploadUrl = 'https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFileName}}'
+        host = 'https://host.com/artifactory'
+        repository {
+          path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+        }
       }
     }
   }
