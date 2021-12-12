@@ -650,13 +650,20 @@ The following names identify an artifact without explicit `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                    | Description
-| artifactUrl            | the URL required to download the artifact
-| artifactChecksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
-| artifactFileName       | the name of the artifact file
-| artifactName           | the name of the artifact file without extension
-| artifactSize           | the size (in bytes) of the artifact file
-| artifactArchiveFormat  | the extension of the artifact's file
+| Key                      | Description
+| artifactUrl              | the URL required to download the artifact
+| artifactChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
+| artifactFile             | the name of the artifact file
+| artifactFileName         | the name of the artifact file without extension
+| artifactExtension        | the extension of the artifact's file
+| artifactFileType         | the extension without the leading dot
+| artifactSize             | the size (in bytes) of the artifact file
+| artifactName             | matches artifactId (GAV coordinates)
+| artifactVersion          | matches version (GAV coordinates)
+| artifactPlatform         | the artifact's platform (if any)
+| artifactPlatformReplaced | the artifact's replaced platform (if any)
+| artifactOs               | the os component of the artifact's platform (if any)
+| artifactArch             | the arch component of the artifact's platform (if any)
 |===
 
 The following names match an artifact without explicit `platform` when xref:configuration:upload/index.adoc[uploaders]
@@ -678,12 +685,17 @@ The following names match the first artifact in a distribution
 | distributionUrl                      | the URL required to download the artifact
 | distributionSize                     | the size (in bytes) of the artifact file
 | distributionChecksum${SHA}           | the matching checksum of the artifact's file, per configured algorithm
-| distributionArtifactFileName         | the name of the artifact file
-| distributionArtifactName             | the name of the artifact file without extension
+| distributionArtifactFile             | the name of the artifact file
+| distributionArtifactFileName         | the name of the artifact file without extension
+| distributionArtifactExtension        | the extension of the artifact's file
+| distributionArtifactFileType         | the extension without the leading dot
 | distributionArtifactSize             | the size (in bytes) of the artifact file
-| distributionArtifactArchiveFormat    | the extension of the artifact's file
+| distributionArtifactName             | matches artifactId (GAV coordinates)
+| distributionArtifactVersion          | matches version (GAV coordinates)
 | distributionArtifactPlatform         | the artifact's platform (if any)
 | distributionArtifactPlatformReplaced | the artifact's replaced platform (if any)
+| distributionArtifactOs               | the os component of the artifact's platform (if any)
+| distributionArtifactArch             | the arch component of the artifact's platform (if any)
 |===
 
 The following names match the first artifact in a distribution when xref:configuration:upload/index.adoc[uploaders]
@@ -701,19 +713,33 @@ Additional names become available when the artifact defines a `platform`
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                                       | Description
-| artifact${Platform}Url                    | the URL required to download the artifact
-| artifact${Platform}Checksum${SHA}         | the matching checksum of the artifact's file, per configured algorithm
-| artifact${Platform}FileName               | the name of the artifact file
-| artifact${Platform}Name                   | the name of the artifact file without extension
-| artifact${Platform}Size                   | the size (in bytes) of the artifact file
-| artifact${Platform}ArchiveFormat          | the extension of the artifact's file
-| artifact${PlatformReplaced}Url            | the URL required to download the artifact
-| artifact${PlatformReplaced}Checksum${SHA} | the matching checksum of the artifact's file, per configured algorithm
-| artifact${PlatformReplaced}FileName       | the name of the artifact file
-| artifact${PlatformReplaced}Name           | the name of the artifact file without extension
-| artifact${PlatformReplaced}Size           | the size (in bytes) of the artifact file
-| artifact${PlatformReplaced}ArchiveFormat  | the extension of the artifact's file
+| Key                                         | Description
+| artifact${Platform}Url                      | the URL required to download the artifact
+| artifact${Platform}Checksum${SHA}           | the matching checksum of the artifact's file, per configured algorithm
+| artifact${Platform}File                     | the name of the artifact file
+| artifact${Platform}FileName                 | the name of the artifact file without extension
+| artifact${Platform}Extension                | the extension of the artifact's file
+| artifact${Platform}FileType                 | the extension without the leading dot
+| artifact${Platform}Size                     | the size (in bytes) of the artifact file
+| artifact${Platform}Name                     | matches artifactId (GAV coordinates)
+| artifact${Platform}Version                  | matches version (GAV coordinates)
+| artifact${Platform}Platform                 | the artifact's platform (if any)
+| artifact${Platform}PlatformReplaced         | the artifact's replaced platform (if any)
+| artifact${Platform}Os                       | the os component of the artifact's platform (if any)
+| artifact${Platform}Arch                     | the arch component of the artifact's platform (if any)
+| artifact${PlatformReplaced}Url              | the URL required to download the artifact
+| artifact${PlatformReplaced}Checksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
+| artifact${PlatformReplaced}File             | the name of the artifact file
+| artifact${PlatformReplaced}FileName         | the name of the artifact file without extension
+| artifact${PlatformReplaced}Extension        | the extension of the artifact's file
+| artifact${PlatformReplaced}FileType         | the extension without the leading dot
+| artifact${PlatformReplaced}Size             | the size (in bytes) of the artifact file
+| artifact${PlatformReplaced}Name             | matches artifactId (GAV coordinates)
+| artifact${PlatformReplaced}Version          | matches version (GAV coordinates)
+| artifact${PlatformReplaced}Platform         | the artifact's platform (if any)
+| artifact${PlatformReplaced}PlatformReplaced | the artifact's replaced platform (if any)
+| artifact${PlatformReplaced}Os               | the os component of the artifact's platform (if any)
+| artifact${PlatformReplaced}Arch             | the arch component of the artifact's platform (if any)
 |===
 
 Additional names become available when the artifact defines a `platform` and xref:configuration:upload/index.adoc[uploaders]
@@ -755,7 +781,7 @@ distributions:
         extraProperties:
           main: true
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
-        platform: osx
+        platform: osx-aarch_64
 ----
 --
 TOML::
@@ -773,7 +799,7 @@ pass:[[[distributions.app.artifact]]]
 
 pass:[[[distributions.app.artifact]]]
   path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
-  platform = "osx"
+  platform = "osx-aarch_64"
 ----
 --
 JSON::
@@ -802,7 +828,7 @@ JSON::
         },
         {
           "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
-          "platform": "osx"
+          "platform": "osx-aarch_64"
         }
       ],
     }
@@ -834,7 +860,7 @@ Maven::
         </artifact>
         <artifact>
           <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
-          <platform>osx</platform>
+          <platform>osx-aarch_64</platform>
         </artifact>
       </artifacts>
     </app>
@@ -861,7 +887,7 @@ jreleaser {
       }
       artifact {
         path = "path/to/${project.name}-${project.version}-mac.zip"
-        platform = 'osx'
+        platform = 'osx-aarch_64'
       }
     }
   }
@@ -877,29 +903,41 @@ The following names will be calculated:
 * artifactUrl
 * artifactChecksumMd5
 * artifactChecksumSha256
-* artifactFileName: `${project.name}-${project.version}.zip`
-* artifactName: `${project.name}-${project.version}`
+* artifactFile: `${project.name}-${project.version}.zip`
+* artifactFileName: `${project.name}-${project.version}`
+* artifactFileExtension: `.zip`
+* artifactFileType: `zip`
+* artifactName: `${project.name}`
+* artifactVersion: `${project.version}`
 * artifactSize
-* artifactArchiveFormat: `zip`
 * artifactMain: true
 * distributionUrl
 * distributionSize
 * distributionChecksumMd5
 * distributionChecksumSha256
-* distributionArtifactFileName: `${project.name}-${project.version}.zip`
-* distributionArtifactName: `${project.name}-${project.version}`
+* distributionArtifactFile: `${project.name}-${project.version}.zip`
+* distributionArtifactFileName: `${project.name}-${project.version}`
+* distributionArtifactFileExtension: `.zip`
+* distributionArtifactFileType: `zip`
+* distributionArtifactName: `${project.name}`
+* distributionArtifactVersion: `${project.version}`
 * distributionArtifactSize
-* distributionArchiveFormat: `zip`
 
 *Platform specific artifact*
 
-* artifactOsxUrl
-* artifactOsxChecksumMd5
-* artifactOsxChecksumSha256
-* artifactOsxFileName: `${project.name}-${project.version}-mac.zip`
-* artifactOsxName: `${project.name}-${project.version}-mac`
-* artifactOsxSize
-* artifactOsxArchiveFormat: `zip`
+* artifactOsxAarch64Url
+* artifactOsxAarch64ChecksumMd5
+* artifactOsxAarch64ChecksumSha256
+* artifactOsxAarch64File: `${project.name}-${project.version}.zip`
+* artifactOsxAarch64FileName: `${project.name}-${project.version}`
+* artifactOsxAarch64FileExtension: `.zip`
+* artifactOsxAarch64FileType: `zip`
+* artifactOsxAarch64Name: `${project.name}`
+* artifactOsxAarch64Version: `${project.version}`
+* artifactOsxAarch64Platform: `osx-aarch_64`
+* artifactOsxAarch64Os: `osx`
+* artifactOsxAarch64Arch: `aarch_64`
+* artifactOsxAarch64Size
 
 == Artifactory
 
