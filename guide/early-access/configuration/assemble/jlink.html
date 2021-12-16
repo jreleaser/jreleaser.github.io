@@ -212,6 +212,9 @@
     <a class="nav-link" href="jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="native-image.html">Native Image</a>
   </li>
 </ul>
@@ -535,8 +538,8 @@ same matching major version.
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-You have to install additional JDKs to enable cross-platform images. JReleaser will <strong>not</strong> install these JDKS
-for you. You may configure the <a href="../../tools/jdks-maven.html" class="page">JDKs Maven Plugin</a> or the <a href="../../tools/jdks-gradle.html" class="page">JDKs Gradle Plugin</a> to downloads JDKS.
+You have to install additional JDKs to enable cross-platform images. JReleaser will <strong>not</strong> install these JDKs
+for you. You may configure the <a href="../../tools/jdks-maven.html" class="page">JDKs Maven Plugin</a> or the <a href="../../tools/jdks-gradle.html" class="page">JDKs Gradle Plugin</a> to downloads JDKs.
 </td>
 </tr>
 </table>
@@ -633,7 +636,7 @@ assemble:
 
       # Name of the generated image.
       # If left undefined, will use
-      # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+      # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
       # Generated artifacts always have the platform as suffix.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       imageName: 'app-{{projectVersion}}'
@@ -700,6 +703,11 @@ assemble:
         - "--compress=2"
         - "--strip-debug"
 
+      # Copy main and input JARs into archive.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      copyJars: true
+
       # The executable JAR that contains the application.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       mainJar:
@@ -712,11 +720,6 @@ assemble:
           # May use glob or regex pattern syntax.
           # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         - pattern: path/to/**/*.jar
-
-      # Copy main and input JARs into archive.
-      # Defaults to `true`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      copyJars: true
 
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       java:
@@ -837,7 +840,7 @@ assemble:
 
   # Name of the generated image.
   # If left undefined, will use
-  # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+  # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
   # Generated artifacts always have the platform as suffix.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   imageName = "app-{{projectVersion}}"
@@ -899,6 +902,11 @@ assemble:
     "--compress=2",
     "--strip-debug"]
 
+  # Copy main and input JARs into archive.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  copyJars = true
+
   # The executable JAR that contains the application.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   mainJar = { path = "path/to/app.jar" }
@@ -910,11 +918,6 @@ assemble:
     # May use glob or regex pattern syntax.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     pattern = "path/to/**/*.jar"
-
-  # Copy main and input JARs into archive.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  copyJars = true
 
   # Maven coordinates: groupId.
   # If left undefined, will use ${project.java.groupId}.
@@ -1040,7 +1043,7 @@ assemble:
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "imageName": "app-{{projectVersion}}",
@@ -1117,6 +1120,11 @@ assemble:
           "--strip-debug"
         ],
 
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "copyJars": true,
+
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "mainJar": {
@@ -1133,11 +1141,6 @@ assemble:
             "pattern": "path/to/**/*.jar"
           }
         ],
-
-        // Copy main and input JARs into archive.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "copyJars": true,
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "java": {
@@ -1303,7 +1306,7 @@ assemble:
         &lt;!--
           Name of the generated image.
           If left undefined, will use
-          ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+          ${project.java.groupId}.${project.java.artifactId}-${project.version}.
           Generated artifacts always have the platform as suffix.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
@@ -1348,14 +1351,14 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;targetJdks&gt;
-        &lt;targetJdk&gt;
-          &lt;path&gt;path/to/jdk&lt;/path&gt;
-          &lt;platform&gt;osx&lt;/platform&gt;
-        &lt;/targetJdk&gt;
-        &lt;targetJdk&gt;
-          &lt;path&gt;path/to/jdk&lt;/path&gt;
-          &lt;platform&gt;linux&lt;/platform&gt;
-        &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;osx&lt;/platform&gt;
+          &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;linux&lt;/platform&gt;
+          &lt;/targetJdk&gt;
         &lt;/targetJdks&gt;
 
         &lt;!--
@@ -1390,14 +1393,6 @@ assemble:
         &lt;/jdeps&gt;
 
         &lt;!--
-          The executable JAR that contains the application.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;path/to/app.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-
-        &lt;!--
           A list of build arguments.
           Defaults are shown.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1408,6 +1403,21 @@ assemble:
           &lt;arg&gt;--compress=2&lt;/arg&gt;
           &lt;arg&gt;--strip-debug&lt;/arg&gt;
         &lt;/args&gt;
+
+        &lt;!--
+          Copy main and input JARs into archive.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;copyJars&gt;true&lt;/copyJars&gt;
+
+        &lt;!--
+          The executable JAR that contains the application.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;mainJar&gt;
+          &lt;path&gt;path/to/app.jar&lt;/path&gt;
+        &lt;/mainJar&gt;
 
         &lt;!--
           Defines a list of additional JARs as globs.
@@ -1423,13 +1433,6 @@ assemble:
             &lt;pattern&gt;path/to/**/*.jar&lt;/pattern&gt;
           &lt;/jar&gt;
         &lt;/jars&gt;
-
-        &lt;!--
-          Copy main and input JARs into archive.
-          Defaults to `true`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;copyJars&gt;true&lt;/copyJars&gt;
 
         &lt;!--
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1609,7 +1612,7 @@ assemble:
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         imageName = 'app-{{projectVersion}}'
@@ -1643,11 +1646,11 @@ assemble:
         // List of JDKs for generating cross-platform images.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'osx'
         }
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'linux'
         }
 
@@ -1683,6 +1686,11 @@ assemble:
         addArg('--compress=2')
         addArg('--strip-debug')
 
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        copyJars = true
+
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         mainJar {
@@ -1697,11 +1705,6 @@ assemble:
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           pattern = 'path/to/**/*.jar'
         }
-
-        // Copy main and input JARs into archive.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        copyJars = true
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         java {
