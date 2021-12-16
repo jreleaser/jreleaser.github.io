@@ -1,13 +1,14 @@
 = Jlink
 :assembler_id: jlink
+:archive!:
 
 Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[{assembler_id}].
 
 TIP: Cross platform Java runtime images may be created however you must ensure that all configured JDKs have the 
 same matching major version.
 
-IMPORTANT: You have to install additional JDKs to enable cross-platform images. JReleaser will *not* install these JDKS
-for you. You may configure the xref:tools:jdks-maven.adoc[] or the xref:tools:jdks-gradle.adoc[] to downloads JDKS.
+IMPORTANT: You have to install additional JDKs to enable cross-platform images. JReleaser will *not* install these JDKs
+for you. You may configure the xref:tools:jdks-maven.adoc[] or the xref:tools:jdks-gradle.adoc[] to downloads JDKs.
 
 include::partial$legend.adoc[]
 
@@ -34,7 +35,7 @@ include::partial$assemble/yaml/common-head.adoc[]
 
       # Name of the generated image.
       # If left undefined, will use 
-      # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+      # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
       # Generated artifacts always have the platform as suffix.
       # icon:dot-circle[] icon:file-alt[]
       imageName: 'app-{{projectVersion}}'
@@ -101,39 +102,12 @@ include::partial$assemble/yaml/common-head.adoc[]
         - "--compress=2"
         - "--strip-debug"
 
-      # The executable JAR that contains the application.
-      # icon:exclamation-triangle[] icon:file-alt[]
-      mainJar:
-        path: path/to/app.jar
-
-      # Defines a list of additional JARs as globs.
-      # icon:dot-circle[]
-      jars:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # icon:exclamation-triangle[] icon:file-alt[]
-        - pattern: path/to/**/*.jar
-
       # Copy main and input JARs into archive.
       # Defaults to `true`.
       # icon:dot-circle[]
       copyJars: true
 
-include::partial$assemble/yaml/java.adoc[]
-
-      # Defines a list of additional files as globs.
-      # These files will be added to the assembled Zip file.
-      # icon:dot-circle[]
-      files:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # icon:exclamation-triangle[] icon:file-alt[]
-        - pattern: path/to/**/*.txt
-
-      # Defines a list of additional files as filesets.
-      # These files will be added to the assembled Zip file.
-      # icon:dot-circle[]
-include::partial$assemble/yaml/filesets.adoc[]
+include::partial$assemble/yaml/common-java.adoc[]
 ----
 --
 TOML::
@@ -157,7 +131,7 @@ include::partial$assemble/toml/common-head.adoc[]
 
   # Name of the generated image.
   # If left undefined, will use
-  # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+  # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
   # Generated artifacts always have the platform as suffix.
   # icon:dot-circle[] icon:file-alt[]
   imageName = "app-{{projectVersion}}"
@@ -219,38 +193,12 @@ include::partial$assemble/toml/common-head.adoc[]
     "--compress=2",
     "--strip-debug"]
 
-  # The executable JAR that contains the application.
-  # icon:exclamation-triangle[] icon:file-alt[]
-  mainJar = { path = "path/to/app.jar" }
-
-  # Defines a list of additional JARs as globs.
-  # icon:dot-circle[]
-  pass:[[[assemble.jlink.app.jars]]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # icon:exclamation-triangle[] icon:file-alt[]
-    pattern = "path/to/**/*.jar"
-
   # Copy main and input JARs into archive.
   # Defaults to `true`.
   # icon:dot-circle[]
   copyJars = true
 
-include::partial$assemble/toml/java.adoc[]
-
-  # Defines a list of additional files as globs.
-  # These files will be added to the assembled Zip file.
-  # icon:dot-circle[]
-  pass:[[[assemble.jlink.app.files]]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # icon:exclamation-triangle[] icon:file-alt[]
-    pattern = "path/to/**/*.txt"
-
-  # Defines a list of additional files as filesets.
-  # These files will be added to the assembled Zip file.
-  # icon:dot-circle[]
-include::partial$assemble/toml/filesets.adoc[]
+include::partial$assemble/toml/common-java.adoc[]
 ----
 --
 JSON::
@@ -274,7 +222,7 @@ include::partial$assemble/json/common-head.adoc[]
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // icon:dot-circle[] icon:file-alt[]
         "imageName": "app-{{projectVersion}}",
@@ -351,46 +299,12 @@ include::partial$assemble/json/common-head.adoc[]
           "--strip-debug"
         ],
 
-        // The executable JAR that contains the application.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        "mainJar": {
-          "path": "path/to/app.jar"
-        },
-
-        // Defines a list of additional JARs as globs.
-        // icon:dot-circle[]
-        "jars": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // icon:exclamation-triangle[] icon:file-alt[]
-            "pattern": "path/to/**/*.jar"
-          }
-        ],
-
         // Copy main and input JARs into archive.
         // Defaults to `true`.
         // icon:dot-circle[]
         "copyJars": true,
 
-include::partial$assemble/json/java.adoc[]
-
-        // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
-        // icon:dot-circle[]
-        "files": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // icon:exclamation-triangle[] icon:file-alt[]
-            "pattern": "path/to/**/*.txt"
-          }
-        ],
-
-        // Defines a list of additional files as filesets.
-        // These files will be added to the assembled Zip file.
-        // icon:dot-circle[]
-include::partial$assemble/json/filesets.adoc[]
+include::partial$assemble/json/common-java.adoc[]
 include::partial$assemble/json/common-footer.adoc[]
 ----
 --
@@ -420,7 +334,7 @@ include::partial$assemble/maven/common-head.adoc[]
         <!--
           Name of the generated image.
           If left undefined, will use
-          ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+          ${project.java.groupId}.${project.java.artifactId}-${project.version}.
           Generated artifacts always have the platform as suffix.
           icon:dot-circle[] icon:file-alt[]
         -->
@@ -465,14 +379,14 @@ include::partial$assemble/maven/common-head.adoc[]
           icon:dot-circle[] icon:file-alt[]
         -->
         <targetJdks>
-        <targetJdk>
-          <path>path/to/jdk</path>
-          <platform>osx</platform>
-        </targetJdk>
-        <targetJdk>
-          <path>path/to/jdk</path>
-          <platform>linux</platform>
-        </targetJdk>
+          <targetJdk>
+            <path>path/to/jdk</path>
+            <platform>osx</platform>
+          </targetJdk>
+          <targetJdk>
+            <path>path/to/jdk</path>
+            <platform>linux</platform>
+          </targetJdk>
         </targetJdks>
 
         <!--
@@ -507,14 +421,6 @@ include::partial$assemble/maven/common-head.adoc[]
         </jdeps>
 
         <!--
-          The executable JAR that contains the application.
-          icon:exclamation-triangle[] icon:file-alt[]
-        -->
-        <mainJar>
-          <path>path/to/app.jar</path>
-        </mainJar>
-
-        <!--
           A list of build arguments.
           Defaults are shown.
           icon:dot-circle[]
@@ -527,51 +433,13 @@ include::partial$assemble/maven/common-head.adoc[]
         </args>
 
         <!--
-          Defines a list of additional JARs as globs.
-          icon:dot-circle[]
-        -->
-        <jars>
-          <jar>
-            <!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              icon:exclamation-triangle[] icon:file-alt[]
-            -->
-            <pattern>path/to/**/*.jar</pattern>
-          </jar>
-        </jars>
-
-        <!--
           Copy main and input JARs into archive.
           Defaults to `true`.
           icon:dot-circle[]
         -->
         <copyJars>true</copyJars>
 
-include::partial$assemble/maven/java.adoc[]
-
-        <!--
-          Defines a list of additional files as globs.
-          These files will be added to the assembled Zip file.
-          icon:dot-circle[]
-        -->
-        <files>
-          <file>
-            <!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              icon:exclamation-triangle[] icon:file-alt[]
-            -->
-            <pattern>path/to/**/*.txt</pattern>
-          </file>
-        </files>
-
-        <!--
-          Defines a list of additional files as filesets.
-          These files will be added to the assembled Zip file.
-          icon:dot-circle[]
-        -->
-include::partial$assemble/maven/filesets.adoc[]
+include::partial$assemble/maven/common-java.adoc[]
 include::partial$assemble/maven/common-footer.adoc[]
 ----
 --
@@ -596,7 +464,7 @@ include::partial$assemble/gradle/common-head.adoc[]
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // icon:dot-circle[] icon:file-alt[]
         imageName = 'app-{{projectVersion}}'
@@ -630,11 +498,11 @@ include::partial$assemble/gradle/common-head.adoc[]
         // List of JDKs for generating cross-platform images.
         // icon:dot-circle[] icon:file-alt[]
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'osx'
         }
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'linux'
         }
 
@@ -670,42 +538,12 @@ include::partial$assemble/gradle/common-head.adoc[]
         addArg('--compress=2')
         addArg('--strip-debug')
 
-        // The executable JAR that contains the application.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        mainJar {
-          path = 'path/to/app.jar'
-        }
-
-        // Defines a list of additional JARs as globs.
-        // icon:dot-circle[]
-        jars {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // icon:exclamation-triangle[] icon:file-alt[]
-          pattern = 'path/to/**/*.jar'
-        }
-
         // Copy main and input JARs into archive.
         // Defaults to `true`.
         // icon:dot-circle[]
         copyJars = true
 
-include::partial$assemble/gradle/java.adoc[]
-
-        // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
-        // icon:dot-circle[]
-        files {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // icon:exclamation-triangle[] icon:file-alt[]
-          pattern = 'path/to/**/*.txt'
-        }
-
-        // Defines a list of additional files as filesets.
-        // These files will be added to the assembled Zip file.
-        // icon:dot-circle[]
-include::partial$assemble/gradle/filesets.adoc[]
+include::partial$assemble/gradle/common-java.adoc[]
 include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
