@@ -667,9 +667,9 @@ assemble:
       active: always
       java:
         version: 11
-        mainClass: 'org.jreleaser.cli.Main'
+        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
-      executable: 'jreleaser'
+      executable: jreleaser
       jdeps:
         multiRelease: base
         ignoreMissingDeps: true
@@ -701,14 +701,11 @@ distributions:
   jreleaser:
     java:
       mainClass: org.jreleaser.cli.Main
-    brew:
-      active: always
-      tap:
-        active: release
     chocolatey:
       active: always
       remoteBuild: true
       title: JReleaser
+      iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
         active: release
     jbang:
@@ -745,6 +742,8 @@ distributions:
       # Transform the artifact name
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+        extraProperties:
+          skipSpec: true
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
 
@@ -766,6 +765,12 @@ distributions:
   # Distribution 4 is of type JLINK
   # Name matches the assembled Jlink distribution
   jreleaser-standalone:
+    brew:
+      active: always
+      formulaName: jreleaser
+      multiPlatform: true
+      tap:
+        active: release
     docker:
       # inherited by specs
       active: always
@@ -800,6 +805,10 @@ distributions:
             platform: 'linux_musl-x86_64'
           preCommands:
             - 'RUN apk add unzip'
+    gofish:
+      active: always
+      repository:
+        active: release
 
 files:
   artifacts:
@@ -876,6 +885,9 @@ jreleaser-standalone-0.10.0-SNAPSHOT-windows-x86_64.zip.asc</code></pre>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/jreleaser-docker" class="bare">https://github.com/jreleaser/jreleaser-docker</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jreleaser/jreleaser-fish-food" class="bare">https://github.com/jreleaser/jreleaser-fish-food</a></p>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/jreleaser-macports" class="bare">https://github.com/jreleaser/jreleaser-macports</a></p>
