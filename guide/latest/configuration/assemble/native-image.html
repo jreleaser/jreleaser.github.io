@@ -211,6 +211,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jlink.html">Jlink</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jpackage.html">Jpackage</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="native-image.html">Native Image</a>
   </li>
@@ -242,6 +245,9 @@
     <a class="nav-link" href="../packagers/docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -263,6 +269,9 @@
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../platform.html">Platform</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../project.html">Project</a>
@@ -594,6 +603,17 @@ assemble:
         # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
         foo: bar
 
+      platform:
+        # Key value pairs.
+        # Keys match a full platform or an os.name, os.arch.
+        # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacements:
+          osx-x86_64: mac
+          aarch_64: aarch64
+          x86_64: amd64
+          linux_musl: alpine
+
       # Name of the executable launcher.
       # If left undefined, will use ${assembler.name}.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -616,6 +636,12 @@ assemble:
       # Transformed artifacts always have the platform as suffix.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       imageNameTransform: 'app-{{projectEffectiveVersion}}'
+
+      # Archive format to use.
+      # Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+      # Defaults to `ZIP`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      archiveFormat: TGZ
 
       # The GraalVM JDK to use.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -738,6 +764,16 @@ assemble:
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `nativeImage`, i.e, `nativeImageFoo`.
 
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [assemble.nativeImage.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
+
   # Name of the executable launcher.
   # If left undefined, will use ${assembler.name}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -761,6 +797,12 @@ assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   imageNameTransform = "app-{{projectEffectiveVersion}}"
 
+  # Archive format to use.
+  # Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+  # Defaults to `ZIP`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  archiveFormat = "TGZ"
+
   # The GraalVM JDK to use.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   graal = { path = "path/to/graalvm" }
@@ -777,7 +819,7 @@ assemble:
 
   # Defines a list of additional JARs as globs.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.nativeImage.app.jars]]
+  [[assemble.jlink.app.jars]]
     # The pattern to use.
     # May use glob or regex pattern syntax.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -881,6 +923,19 @@ assemble:
           "foo": "bar"
         },
 
+        platform: {
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "replacements": {
+            "osx-x86_64": "mac",
+            "aarch_64": "aarch64",
+            "x86_64": "amd64",
+            "linux_musl": "alpine"
+          }
+        },
+
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -903,6 +958,12 @@ assemble:
         // Transformed artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "imageNameTransform": "app-{{projectEffectiveVersion}}",
+
+        // Archive format to use.
+        // Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+        // Defaults to `ZIP`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "archiveFormat": "TGZ",
 
         // The GraalVM JDK to use.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1063,6 +1124,25 @@ assemble:
         &lt;/extraProperties&gt;
 
         &lt;!--
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;platform&gt;
+
+          &lt;!--
+            Key value pairs.
+            Keys match a full platform or an os.name, os.arch.
+            Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;replacements&gt;
+            &lt;osx-x86_64&gt;mac&lt;/osx-x86_64&gt;
+            &lt;aarch_64&gt;aarch64&lt;/aarch_64&gt;
+            &lt;x86_64&gt;amd64&lt;/x86_64&gt;
+            &lt;linux_musl&gt;alpine&lt;/linux_musl&gt;
+          &lt;/replacements&gt;
+        &lt;/platform&gt;
+
+        &lt;!--
           Name of the executable launcher.
           If left undefined, will use ${distribution.name}.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1094,20 +1174,20 @@ assemble:
         &lt;imageNameTransform&gt;app&lt;/imageNameTransform&gt;
 
         &lt;!--
+          Archive format to use.
+          Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+          Defaults to `ZIP`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;archiveFormat&gt;TGZ&lt;/archiveFormat&gt;
+
+        &lt;!--
           The GraalVM JDK to use.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;graal&gt;
           &lt;path&gt;path/to/graalvm&lt;/path&gt;
         &lt;/graal&gt;
-
-        &lt;!--
-          The executable JAR that contains the application.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;path/to/app.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
 
         &lt;!--
           A list of build arguments.
@@ -1118,6 +1198,14 @@ assemble:
         &lt;args&gt;
           &lt;arg&gt;--install-exit-handlers&lt;/arg&gt;
         &lt;/args&gt;
+
+        &lt;!--
+          The executable JAR that contains the application.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;mainJar&gt;
+          &lt;path&gt;path/to/app.jar&lt;/path&gt;
+        &lt;/mainJar&gt;
 
         &lt;!--
           Defines a list of additional JARs as globs.
@@ -1284,6 +1372,21 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         extraProperties.put('foo', 'bar')
 
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        platform {
+
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          replacements = [
+            'osx-x86_64': 'mac',
+            aarch_64: 'aarch64',
+            x86_64: 'amd64',
+            linux_musl: 'alpine'
+          ]
+        }
+
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1306,6 +1409,12 @@ assemble:
         // Transformed artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         imageNameTransform = 'app-{{projectEffectiveVersion}}'
+
+        // Archive format to use.
+        // Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+        // Defaults to `ZIP`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        archiveFormat = 'TGZ'
 
         // The GraalVM JDK to use.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>

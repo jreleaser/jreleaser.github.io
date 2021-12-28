@@ -212,6 +212,9 @@
     <a class="nav-link" href="jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="native-image.html">Native Image</a>
   </li>
 </ul>
@@ -242,6 +245,9 @@
     <a class="nav-link" href="../packagers/docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -263,6 +269,9 @@
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../platform.html">Platform</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../project.html">Project</a>
@@ -532,8 +541,8 @@ same matching major version.
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-You have to install additional JDKs to enable cross-platform images. JReleaser will <strong>not</strong> install these JDKS
-for you. You may configure the <a href="../../tools/jdks-maven.html" class="page">JDKs Maven Plugin</a> or the <a href="../../tools/jdks-gradle.html" class="page">JDKs Gradle Plugin</a> to downloads JDKS.
+You have to install additional JDKs to enable cross-platform images. JReleaser will <strong>not</strong> install these JDKs
+for you. You may configure the <a href="../../tools/jdks-maven.html" class="page">JDKs Maven Plugin</a> or the <a href="../../tools/jdks-gradle.html" class="page">JDKs Gradle Plugin</a> to downloads JDKs.
 </td>
 </tr>
 </table>
@@ -606,6 +615,17 @@ assemble:
         # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
         foo: bar
 
+      platform:
+        # Key value pairs.
+        # Keys match a full platform or an os.name, os.arch.
+        # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacements:
+          osx-x86_64: mac
+          aarch_64: aarch64
+          x86_64: amd64
+          linux_musl: alpine
+
       # Name of the executable launcher.
       # If left undefined, will use ${assembler.name}.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -619,7 +639,7 @@ assemble:
 
       # Name of the generated image.
       # If left undefined, will use
-      # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+      # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
       # Generated artifacts always have the platform as suffix.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       imageName: 'app-{{projectVersion}}'
@@ -686,6 +706,11 @@ assemble:
         - "--compress=2"
         - "--strip-debug"
 
+      # Copy main and input JARs into archive.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      copyJars: true
+
       # The executable JAR that contains the application.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       mainJar:
@@ -698,11 +723,6 @@ assemble:
           # May use glob or regex pattern syntax.
           # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         - pattern: path/to/**/*.jar
-
-      # Copy main and input JARs into archive.
-      # Defaults to `true`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      copyJars: true
 
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       java:
@@ -800,6 +820,16 @@ assemble:
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `jlink`, i.e, `jlinkFoo`.
 
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [assemble.jlink.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
+
   # Name of the executable launcher.
   # If left undefined, will use ${assembler.name}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -813,7 +843,7 @@ assemble:
 
   # Name of the generated image.
   # If left undefined, will use
-  # ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+  # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
   # Generated artifacts always have the platform as suffix.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   imageName = "app-{{projectVersion}}"
@@ -875,6 +905,11 @@ assemble:
     "--compress=2",
     "--strip-debug"]
 
+  # Copy main and input JARs into archive.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  copyJars = true
+
   # The executable JAR that contains the application.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   mainJar = { path = "path/to/app.jar" }
@@ -886,11 +921,6 @@ assemble:
     # May use glob or regex pattern syntax.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     pattern = "path/to/**/*.jar"
-
-  # Copy main and input JARs into archive.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  copyJars = true
 
   # Maven coordinates: groupId.
   # If left undefined, will use ${project.java.groupId}.
@@ -990,6 +1020,19 @@ assemble:
           "foo": "bar"
         },
 
+        platform: {
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "replacements": {
+            "osx-x86_64": "mac",
+            "aarch_64": "aarch64",
+            "x86_64": "amd64",
+            "linux_musl": "alpine"
+          }
+        },
+
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1003,7 +1046,7 @@ assemble:
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "imageName": "app-{{projectVersion}}",
@@ -1080,6 +1123,11 @@ assemble:
           "--strip-debug"
         ],
 
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "copyJars": true,
+
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "mainJar": {
@@ -1096,11 +1144,6 @@ assemble:
             "pattern": "path/to/**/*.jar"
           }
         ],
-
-        // Copy main and input JARs into archive.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "copyJars": true,
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "java": {
@@ -1230,6 +1273,25 @@ assemble:
         &lt;/extraProperties&gt;
 
         &lt;!--
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;platform&gt;
+
+          &lt;!--
+            Key value pairs.
+            Keys match a full platform or an os.name, os.arch.
+            Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;replacements&gt;
+            &lt;osx-x86_64&gt;mac&lt;/osx-x86_64&gt;
+            &lt;aarch_64&gt;aarch64&lt;/aarch_64&gt;
+            &lt;x86_64&gt;amd64&lt;/x86_64&gt;
+            &lt;linux_musl&gt;alpine&lt;/linux_musl&gt;
+          &lt;/replacements&gt;
+        &lt;/platform&gt;
+
+        &lt;!--
           Name of the executable launcher.
           If left undefined, will use ${distribution.name}.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1247,7 +1309,7 @@ assemble:
         &lt;!--
           Name of the generated image.
           If left undefined, will use
-          ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+          ${project.java.groupId}.${project.java.artifactId}-${project.version}.
           Generated artifacts always have the platform as suffix.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
@@ -1292,14 +1354,14 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;targetJdks&gt;
-        &lt;targetJdk&gt;
-          &lt;path&gt;path/to/jdk&lt;/path&gt;
-          &lt;platform&gt;osx&lt;/platform&gt;
-        &lt;/targetJdk&gt;
-        &lt;targetJdk&gt;
-          &lt;path&gt;path/to/jdk&lt;/path&gt;
-          &lt;platform&gt;linux&lt;/platform&gt;
-        &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;osx&lt;/platform&gt;
+          &lt;/targetJdk&gt;
+          &lt;targetJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;linux&lt;/platform&gt;
+          &lt;/targetJdk&gt;
         &lt;/targetJdks&gt;
 
         &lt;!--
@@ -1334,14 +1396,6 @@ assemble:
         &lt;/jdeps&gt;
 
         &lt;!--
-          The executable JAR that contains the application.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;path/to/app.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-
-        &lt;!--
           A list of build arguments.
           Defaults are shown.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1352,6 +1406,21 @@ assemble:
           &lt;arg&gt;--compress=2&lt;/arg&gt;
           &lt;arg&gt;--strip-debug&lt;/arg&gt;
         &lt;/args&gt;
+
+        &lt;!--
+          Copy main and input JARs into archive.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;copyJars&gt;true&lt;/copyJars&gt;
+
+        &lt;!--
+          The executable JAR that contains the application.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;mainJar&gt;
+          &lt;path&gt;path/to/app.jar&lt;/path&gt;
+        &lt;/mainJar&gt;
 
         &lt;!--
           Defines a list of additional JARs as globs.
@@ -1367,13 +1436,6 @@ assemble:
             &lt;pattern&gt;path/to/**/*.jar&lt;/pattern&gt;
           &lt;/jar&gt;
         &lt;/jars&gt;
-
-        &lt;!--
-          Copy main and input JARs into archive.
-          Defaults to `true`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;copyJars&gt;true&lt;/copyJars&gt;
 
         &lt;!--
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1525,6 +1587,21 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         extraProperties.put('foo', 'bar')
 
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        platform {
+
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          replacements = [
+            'osx-x86_64': 'mac',
+            aarch_64: 'aarch64',
+            x86_64: 'amd64',
+            linux_musl: 'alpine'
+          ]
+        }
+
         // Name of the executable launcher.
         // If left undefined, will use ${assembler.name}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1538,7 +1615,7 @@ assemble:
 
         // Name of the generated image.
         // If left undefined, will use
-        // ${project.java.groupId}.${project.java.artifactId}.${project.version}.
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
         // Generated artifacts always have the platform as suffix.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         imageName = 'app-{{projectVersion}}'
@@ -1572,11 +1649,11 @@ assemble:
         // List of JDKs for generating cross-platform images.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'osx'
         }
         targetJdk {
-          pat = 'path/to/jdk'
+          path = 'path/to/jdk'
           platform = 'linux'
         }
 
@@ -1612,6 +1689,11 @@ assemble:
         addArg('--compress=2')
         addArg('--strip-debug')
 
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        copyJars = true
+
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         mainJar {
@@ -1626,11 +1708,6 @@ assemble:
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           pattern = 'path/to/**/*.jar'
         }
-
-        // Copy main and input JARs into archive.
-        // Defaults to `true`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        copyJars = true
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         java {
@@ -1713,11 +1790,46 @@ assemble:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_archive_format"><a class="anchor" href="#_archive_format"></a>Archive Format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default all archive use the Zip format, however you may change this by setting and extra property named <code>archiveFormat</code>
+on a given <code>targetJdk</code>. the Jlink assembler will use it as a hint to select the appropriate archiving format, for example
+here&#8217;s how the format may be changed for archives that target Linux platforms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">assemble:
+  jlink:
+    app:
+      active: always
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Valid values for the <code>archiveFormat</code> property are [<code>ZIP</code>, <code>TAR</code>, <code>TAR_BZ2</code>, <code>TAR_GZ</code>, <code>TAR_XZ</code>, <code>TBZ2</code>, <code>TGZ</code>, <code>TXZ</code>], with <code>ZIP</code> being the
+default if left unspecified.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_jdks"><a class="anchor" href="#_jdks"></a>JDKs</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may specify a value for both <code>jdk</code> and <code>targetJdks</code>, either, or none. The following rules apply to resolve which JDKs
-will be used to generate custom Java runtimes:</p>
+<p>You may specify a value for both <code>jdk</code> and <code>targetJdks</code>, either, or none. The following rules apply when resolving which
+JDKs will be used to generate custom Java runtimes:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">

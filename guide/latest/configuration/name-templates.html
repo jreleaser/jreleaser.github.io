@@ -212,6 +212,9 @@
     <a class="nav-link" href="assemble/jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="assemble/jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="assemble/native-image.html">Native Image</a>
   </li>
 </ul>
@@ -242,6 +245,9 @@
     <a class="nav-link" href="packagers/docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -263,6 +269,9 @@
     <a class="nav-link" href="packagers/spec.html">Spec</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="platform.html">Platform</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="project.html">Project</a>
@@ -1230,12 +1239,16 @@ key, such that</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">normalized value of System.getProperty("os.arch")</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">osVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value of System.getProperty("os.version")</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">osPlatform</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">combination of <code>${osName}-${osArch}</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">osVersion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value of System.getProperty("os.version")</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">osPlatformReplaced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>osPlatform</code> after <a href="platform.html" class="page">platform</a> replacements have been applied</p></td>
 </tr>
 </tbody>
 </table>
@@ -1668,16 +1681,48 @@ and the capitalized key, such that</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the matching checksum of the artifact&#8217;s file, per configured algorithm</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifactFileName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactFile</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifactName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactFileName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactExtension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension of the artifact&#8217;s file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactFileType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension without the leading dot</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifactSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches artifactId (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches version (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactPlatform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactPlatformReplaced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s replaced platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactOs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the os component of the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifactArch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the arch component of the artifact&#8217;s platform (if any)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1739,20 +1784,48 @@ are configured</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the matching checksum of the artifact&#8217;s file, per configured algorithm</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactFileName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactFile</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactFileName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactExtension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension of the artifact&#8217;s file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactFileType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension without the leading dot</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches artifactId (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches version (GAV coordinates)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactPlatform</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactPlatformReplaced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s replaced platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactOs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the os component of the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributionArtifactArch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the arch component of the artifact&#8217;s platform (if any)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1810,16 +1883,100 @@ are configured</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the matching checksum of the artifact&#8217;s file, per configured algorithm</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}FileName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}File</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}FileName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Extension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension of the artifact&#8217;s file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}FileType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension without the leading dot</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches artifactId (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches version (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Platform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}PlatformReplaced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s replaced platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Os</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the os component of the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Arch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the arch component of the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Checksum${SHA}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the matching checksum of the artifact&#8217;s file, per configured algorithm</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}FileName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the artifact file without extension</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Extension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension of the artifact&#8217;s file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}FileType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension without the leading dot</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the size (in bytes) of the artifact file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches artifactId (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">matches version (GAV coordinates)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Platform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}PlatformReplaced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact&#8217;s replaced platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Os</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the os component of the artifact&#8217;s platform (if any)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Arch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the arch component of the artifact&#8217;s platform (if any)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1851,11 +2008,23 @@ are configured</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artifact${Platform}Download${Type}${Name}Url</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact, matching the typed and named uploader</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}DownloadUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Download${Type}Url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact, matching the typed uploader</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifact${PlatformReplaced}Download${Type}${Name}Url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the URL required to download the artifact, matching the typed and named uploader</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>Additionally, every key/value from <code>artifact.extraProperties</code> is mapped with <code>artifact</code> as key prefix for the first
-artifact, and <code>artifact{{Platform}}</code> for all artifacts, and the capitalized key.</p>
+artifact, <code>artifact{{Platform}}</code>, and <code>artifact{{PlatformReplaced}}</code> for all artifacts, and the capitalized key.</p>
 </div>
 <div class="paragraph">
 <p>Thus, for artifacts defined as</p>
@@ -1896,7 +2065,7 @@ distributions:
         extraProperties:
           main: true
       - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
-        platform: osx</code></pre>
+        platform: osx-aarch_64</code></pre>
 </div>
 </div>
 </div>
@@ -1912,7 +2081,7 @@ distributions:
 
 [[distributions.app.artifact]]
   path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
-  platform = "osx"</code></pre>
+  platform = "osx-aarch_64"</code></pre>
 </div>
 </div>
 </div>
@@ -1939,7 +2108,7 @@ distributions:
         },
         {
           "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
-          "platform": "osx"
+          "platform": "osx-aarch_64"
         }
       ],
     }
@@ -1969,7 +2138,7 @@ distributions:
         &lt;/artifact&gt;
         &lt;artifact&gt;
           &lt;path&gt;path/to/${project.artifactId}-${project.version}-mac.zip&lt;/path&gt;
-          &lt;platform&gt;osx&lt;/platform&gt;
+          &lt;platform&gt;osx-aarch_64&lt;/platform&gt;
         &lt;/artifact&gt;
       &lt;/artifacts&gt;
     &lt;/app&gt;
@@ -1994,7 +2163,7 @@ distributions:
       }
       artifact {
         path = "path/to/${project.name}-${project.version}-mac.zip"
-        platform = 'osx'
+        platform = 'osx-aarch_64'
       }
     }
   }
@@ -2022,10 +2191,22 @@ distributions:
 <p>artifactChecksumSha256</p>
 </li>
 <li>
-<p>artifactFileName: <code>${project.name}-${project.version}.zip</code></p>
+<p>artifactFile: <code>${project.name}-${project.version}.zip</code></p>
 </li>
 <li>
-<p>artifactName: <code>${project.name}-${project.version}</code></p>
+<p>artifactFileName: <code>${project.name}-${project.version}</code></p>
+</li>
+<li>
+<p>artifactFileExtension: <code>.zip</code></p>
+</li>
+<li>
+<p>artifactFileType: <code>zip</code></p>
+</li>
+<li>
+<p>artifactName: <code>${project.name}</code></p>
+</li>
+<li>
+<p>artifactVersion: <code>${project.version}</code></p>
 </li>
 <li>
 <p>artifactSize</p>
@@ -2040,16 +2221,28 @@ distributions:
 <p>distributionSize</p>
 </li>
 <li>
-<p>distributionChecksummd5</p>
+<p>distributionChecksumMd5</p>
 </li>
 <li>
 <p>distributionChecksumSha256</p>
 </li>
 <li>
-<p>distributionArtifactFileName: <code>${project.name}-${project.version}.zip</code></p>
+<p>distributionArtifactFile: <code>${project.name}-${project.version}.zip</code></p>
 </li>
 <li>
-<p>distributionArtifactName: <code>${project.name}-${project.version}</code></p>
+<p>distributionArtifactFileName: <code>${project.name}-${project.version}</code></p>
+</li>
+<li>
+<p>distributionArtifactFileExtension: <code>.zip</code></p>
+</li>
+<li>
+<p>distributionArtifactFileType: <code>zip</code></p>
+</li>
+<li>
+<p>distributionArtifactName: <code>${project.name}</code></p>
+</li>
+<li>
+<p>distributionArtifactVersion: <code>${project.version}</code></p>
 </li>
 <li>
 <p>distributionArtifactSize</p>
@@ -2062,22 +2255,43 @@ distributions:
 <div class="ulist">
 <ul>
 <li>
-<p>artifactOsxUrl</p>
+<p>artifactOsxAarch64Url</p>
 </li>
 <li>
-<p>artifactOsxChekcsumMd5</p>
+<p>artifactOsxAarch64ChecksumMd5</p>
 </li>
 <li>
-<p>artifactOsxChekcsumSha256</p>
+<p>artifactOsxAarch64ChecksumSha256</p>
 </li>
 <li>
-<p>artifactOsxFileName: <code>${project.name}-${project.version}-mac.zip</code></p>
+<p>artifactOsxAarch64File: <code>${project.name}-${project.version}.zip</code></p>
 </li>
 <li>
-<p>artifactOsxName: <code>${project.name}-${project.version}-mac</code></p>
+<p>artifactOsxAarch64FileName: <code>${project.name}-${project.version}</code></p>
 </li>
 <li>
-<p>artifactOsxSize</p>
+<p>artifactOsxAarch64FileExtension: <code>.zip</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64FileType: <code>zip</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Name: <code>${project.name}</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Version: <code>${project.version}</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Platform: <code>osx-aarch_64</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Os: <code>osx</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Arch: <code>aarch_64</code></p>
+</li>
+<li>
+<p>artifactOsxAarch64Size</p>
 </li>
 </ul>
 </div>
@@ -2412,12 +2626,20 @@ key, such that</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chocolateyPackageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Chocolatey package. Defaults to <code>${distribution.name}</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chocolateyUsername</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Chocolatey username</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chocolateyTitle</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the title to use in the spec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">chocolateyIconUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the icon URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">chocolateyBucketRepoUrl</p></td>
@@ -3372,6 +3594,10 @@ key, such that</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsPackageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Macports package. Defaults to <code>${distribution.name}</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">macportsRepositoryRepoUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the repository URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}</code></p></td>
 </tr>
@@ -3394,6 +3620,10 @@ key, such that</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">macportsDistributionUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the download URL without the artifact file name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macportsDistname</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the artifact file name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">macportsJavaVersion</p></td>
@@ -3949,6 +4179,10 @@ key, such that</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scoopPackageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Scoop package. Defaults to <code>${distribution.executable}</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scoopBucketRepoUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the bucket repository URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}</code></p></td>
 </tr>
@@ -3963,6 +4197,10 @@ key, such that</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scoopAutoupdateUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the URL pattern used to update the package</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scoopAutoupdateExtractDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name of the extraction dir used by autoupdate</p></td>
 </tr>
 </tbody>
 </table>
@@ -4297,6 +4535,10 @@ key, such that</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snapPackageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Snap package. Defaults to <code>${distribution.name}</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">snapRepoUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the snap repository URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}</code></p></td>
 </tr>
@@ -4342,11 +4584,19 @@ key, such that</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">snapHasLocalSlots</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the snap defines  slot names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the snap defines slot names</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">snapLocalSlots</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">a list of slot names</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snapHasArchitectures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the snap defines architectures</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snapArchitectures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of architectures</p></td>
 </tr>
 </tbody>
 </table>
@@ -4413,6 +4663,39 @@ key, such that</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hasWrites</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the slot defines writes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>An <code>Architecture</code> defines the following fields</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buildOn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of archs for build-on</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runOn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of archs for run-on</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hasRunOn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the architecture defines runOn</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IgnoreError</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a boolean, when the architecture ignores build errors</p></td>
 </tr>
 </tbody>
 </table>
@@ -4519,7 +4802,7 @@ key, such that</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_spec"><a class="anchor" href="#_spec"></a>spec</h2>
+<h2 id="_spec"><a class="anchor" href="#_spec"></a>Spec</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following names are related to <a href="packagers/spec.html" class="page">Spec</a></p>
@@ -4536,6 +4819,10 @@ key, such that</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">specPackageName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the name of the Spec. Defaults to <code>${distribution.name}</code></p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">specRepositoryRepoUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the repository URL, <code>https://{{repoHost}}/{{repoOwner}}/{{repoName}}</code></p></td>
@@ -4555,6 +4842,10 @@ key, such that</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">specDirectories</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of directories to be created</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">specBinaries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of binary files to be installed</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">specFiles</p></td>

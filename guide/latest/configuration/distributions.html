@@ -212,6 +212,9 @@
     <a class="nav-link" href="assemble/jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="assemble/jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="assemble/native-image.html">Native Image</a>
   </li>
 </ul>
@@ -242,6 +245,9 @@
     <a class="nav-link" href="packagers/docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -263,6 +269,9 @@
     <a class="nav-link" href="packagers/spec.html">Spec</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="platform.html">Platform</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="project.html">Project</a>
@@ -575,7 +584,7 @@ distributions:
 
     # The distribution type.
     # Used to determine packager templates.
-    # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+    # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     type: JAVA_BINARY
 
@@ -600,6 +609,17 @@ distributions:
     extraProperties:
       # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       foo: bar
+
+    platform:
+      # Key value pairs.
+      # Keys match a full platform or an os.name, os.arch.
+      # Same rules apply as in <a href="platform.html" class="page">Platform</a>.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      replacements:
+        osx-x86_64: mac
+        aarch_64: aarch64
+        x86_64: amd64
+        linux_musl: alpine
 
     # A list of artifacts.
     # At least on entry must be present.
@@ -661,7 +681,7 @@ distributions:
 
   # The distribution type.
   # Used to determine packager templates.
-  # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+  # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   type = "JAVA_BINARY"
 
@@ -683,6 +703,16 @@ distributions:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in <a href="platform.html" class="page">Platform</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [distributions.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
 
   # A list of artifacts.
   # At least on entry must be present.
@@ -743,7 +773,7 @@ distributions:
 
       // The distribution type.
       // Used to determine packager templates.
-      // Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+      // Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "type": "JAVA_BINARY",
 
@@ -769,6 +799,19 @@ distributions:
       "extraProperties": {
         // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         "foo": "bar"
+      },
+
+      "platform": {
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in <a href="platform.html" class="page">Platform</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "replacements": {
+          "osx-x86_64": "mac",
+          "aarch_64": "aarch64",
+          "x86_64": "amd64",
+          "linux_musl": "alpine"
+        }
       },
 
       // A list of artifacts.
@@ -853,7 +896,7 @@ distributions:
       &lt;!--
         The distribution type.
         Used to determine packager templates.
-        Supported values are&gt;[JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+        Supported values are&gt;[`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
       &lt;type&gt;JAVA_BINARY&lt;/type&gt;
@@ -891,6 +934,24 @@ distributions:
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
+
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;platform&gt;
+        &lt;!--
+          Key value pairs.
+          Keys match a full platform or an os.name, os.arch.
+          Same rules apply as in <a href="platform.html" class="page">Platform</a>.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;replacements&gt;
+          &lt;osx-x86_64&gt;mac&lt;/osx-x86_64&gt;
+          &lt;aarch_64&gt;aarch64&lt;/aarch_64&gt;
+          &lt;x86_64&gt;amd64&lt;/x86_64&gt;
+          &lt;linux_musl&gt;alpine&lt;/linux_musl&gt;
+        &lt;/replacements&gt;
+      &lt;/platform&gt;
 
       &lt;!--
         A list of artifacts.
@@ -985,7 +1046,7 @@ distributions:
 
       // The distribution type.
       // Used to determine packager templates.
-      // Supported values are = [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+      // Supported values are = [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       distributionType = 'JAVA_BINARY'
 
@@ -1007,6 +1068,21 @@ distributions:
       // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
+
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      platform {
+
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in <a href="platform.html" class="page">Platform</a>.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacements = [
+          'osx-x86_64': 'mac',
+          aarch_64: 'aarch64',
+          x86_64: 'amd64',
+          linux_musl: 'alpine'
+        ]
+      }
 
       // A list of artifacts.
       // At least on entry must be present.
@@ -1079,7 +1155,7 @@ distributions:
 </dd>
 <dt class="hdlist1">arch</dt>
 <dd>
-<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch64</code>, <code>mips_32</code>,
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
 <code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
 </dd>
 </dl>
@@ -1093,7 +1169,7 @@ distributions:
 <p><code>osx</code></p>
 </li>
 <li>
-<p><code>osx-aarch64</code></p>
+<p><code>osx-aarch_64</code></p>
 </li>
 <li>
 <p><code>windows</code></p>

@@ -212,6 +212,9 @@
     <a class="nav-link" href="jlink.html">Jlink</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="native-image.html">Native Image</a>
   </li>
 </ul>
@@ -242,6 +245,9 @@
     <a class="nav-link" href="../packagers/docker.html">Docker</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/homebrew.html">Homebrew</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -263,6 +269,9 @@
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../platform.html">Platform</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../project.html">Project</a>
@@ -580,6 +589,17 @@ assemble:
         # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
         foo: bar
 
+      platform:
+        # Key value pairs.
+        # Keys match a full platform or an os.name, os.arch.
+        # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacements:
+          osx-x86_64: mac
+          aarch_64: aarch64
+          x86_64: amd64
+          linux_musl: alpine
+
       # Name of the archive.
       # If left undefined, will use {{distributionName}}-{{projectVersion}}.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -590,14 +610,14 @@ assemble:
       # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
       # Defaults to `BINARY`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      type: JAVA_BINARY
+      distributionType: JAVA_BINARY
 
       # Attach the current platform to the archiveName.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       attachPlatform: true
 
       # Set of archive formats to use.
-      # Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+      # Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       formats:
         - ZIP
@@ -655,6 +675,16 @@ assemble:
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
 
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [assemble.archive.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
+
   # Name of the archive.
   # If left undefined, will use {{distributionName}}-{{projectVersion}}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -672,7 +702,7 @@ assemble:
   attachPlatform = true
 
   # Set of archive formats to use.
-  # Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+  # Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   formats = [ "ZIP", "TGZ"]
 
@@ -733,6 +763,19 @@ assemble:
           "foo": "bar"
         },
 
+        platform: {
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "replacements": {
+            "osx-x86_64": "mac",
+            "aarch_64": "aarch64",
+            "x86_64": "amd64",
+            "linux_musl": "alpine"
+          }
+        },
+
         // Name of the archive.
         // If left undefined, will use {{distributionName}}-{{projectVersion}}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -750,7 +793,7 @@ assemble:
         "attachPlatform": true,
 
         // Set of archive formats to use.
-        // Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+        // Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "formats": [
            "ZIP",
@@ -836,6 +879,25 @@ assemble:
         &lt;/extraProperties&gt;
 
         &lt;!--
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;platform&gt;
+
+          &lt;!--
+            Key value pairs.
+            Keys match a full platform or an os.name, os.arch.
+            Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;replacements&gt;
+            &lt;osx-x86_64&gt;mac&lt;/osx-x86_64&gt;
+            &lt;aarch_64&gt;aarch64&lt;/aarch_64&gt;
+            &lt;x86_64&gt;amd64&lt;/x86_64&gt;
+            &lt;linux_musl&gt;alpine&lt;/linux_musl&gt;
+          &lt;/replacements&gt;
+        &lt;/platform&gt;
+
+        &lt;!--
           Name of the archive.
           If left undefined, will use {{distributionName}}-{{projectVersion}}.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -860,7 +922,7 @@ assemble:
 
         &lt;!--
           Set of archive formats to use.
-          Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+          Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;formats&gt;
@@ -949,6 +1011,21 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         extraProperties.put('foo', 'bar')
 
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        platform {
+
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          replacements = [
+            'osx-x86_64': 'mac',
+            aarch_64: 'aarch64',
+            x86_64: 'amd64',
+            linux_musl: 'alpine'
+          ]
+        }
+
         // Additional properties used when evaluating templates.
         // Key will be capitalized and prefixed with `archive`, i.e, `archiveFoo`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -972,7 +1049,7 @@ assemble:
         attachPlatform = true
 
         // Set of archive formats to use.
-        // Valid values are [`ZIP`, `TAR`, `TGZ`, `TAR_GZ`].
+        // Valid values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         formats = [
             'ZIP',
