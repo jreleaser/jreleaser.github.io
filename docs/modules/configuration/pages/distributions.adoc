@@ -32,7 +32,7 @@ distributions:
 
     # The distribution type.
     # Used to determine packager templates.
-    # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+    # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
     # icon:exclamation-triangle[]
     type: JAVA_BINARY
 
@@ -57,6 +57,17 @@ distributions:
     extraProperties:
       # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       foo: bar
+
+    platform:
+      # Key value pairs.
+      # Keys match a full platform or an os.name, os.arch.
+      # Same rules apply as in xref:platform.adoc[].
+      # icon:dot-circle[]
+      replacements:
+        osx-x86_64: mac
+        aarch_64: aarch64
+        x86_64: amd64
+        linux_musl: alpine
 
     # A list of artifacts.
     # At least on entry must be present.
@@ -120,7 +131,7 @@ TOML::
 
   # The distribution type.
   # Used to determine packager templates.
-  # Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+  # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
   # icon:exclamation-triangle[]
   type = "JAVA_BINARY"
 
@@ -142,6 +153,16 @@ TOML::
   # icon:dot-circle[] icon:file-alt[]
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in xref:platform.adoc[].
+  # icon:dot-circle[]
+  [distributions.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
 
   # A list of artifacts.
   # At least on entry must be present.
@@ -204,7 +225,7 @@ JSON::
 
       // The distribution type.
       // Used to determine packager templates.
-      // Supported values are: [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+      // Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // icon:exclamation-triangle[]
       "type": "JAVA_BINARY",
 
@@ -230,6 +251,19 @@ JSON::
       "extraProperties": {
         // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
         "foo": "bar"
+      },
+
+      "platform": {
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in xref:platform.adoc[].
+        // icon:dot-circle[]
+        "replacements": {
+          "osx-x86_64": "mac",
+          "aarch_64": "aarch64",
+          "x86_64": "amd64",
+          "linux_musl": "alpine"
+        }
       },
 
       // A list of artifacts.
@@ -316,7 +350,7 @@ Maven::
       <!--
         The distribution type.
         Used to determine packager templates.
-        Supported values are>[JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+        Supported values are>[`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
         icon:exclamation-triangle[]
       -->
       <type>JAVA_BINARY</type>
@@ -354,6 +388,24 @@ Maven::
         -->
         <foo>bar</foo>
       </extraProperties>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <platform>
+        <!--
+          Key value pairs.
+          Keys match a full platform or an os.name, os.arch.
+          Same rules apply as in xref:platform.adoc[].
+          icon:dot-circle[]
+        -->
+        <replacements>
+          <osx-x86_64>mac</osx-x86_64>
+          <aarch_64>aarch64</aarch_64>
+          <x86_64>amd64</x86_64>
+          <linux_musl>alpine</linux_musl>
+        </replacements>
+      </platform>
 
       <!--
         A list of artifacts.
@@ -450,7 +502,7 @@ jreleaser {
 
       // The distribution type.
       // Used to determine packager templates.
-      // Supported values are = [JAVA_BINARY, SINGLE_JAR, JLINK, NATIVE_IMAGE, NATIVE_PACKAGE, BINARY].
+      // Supported values are = [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // icon:exclamation-triangle[]
       distributionType = 'JAVA_BINARY'
 
@@ -472,6 +524,21 @@ jreleaser {
       // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
       // icon:dot-circle[] icon:file-alt[]
       extraProperties.put('foo', 'bar')
+
+      // icon:dot-circle[]
+      platform {
+
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in xref:platform.adoc[].
+        // icon:dot-circle[]
+        replacements = [
+          'osx-x86_64': 'mac',
+          aarch_64: 'aarch64',
+          x86_64: 'amd64',
+          linux_musl: 'alpine'
+        ]
+      }
 
       // A list of artifacts.
       // At least on entry must be present.

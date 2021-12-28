@@ -41,6 +41,11 @@ project:
   extraProperties:
     inceptionYear: 2020
 
+platform:
+  replacements:
+    # Replace matching platforms in filenames of assembled artifacts
+    aarch_64: aarch64
+
 release:
   github:
     overwrite: true
@@ -146,9 +151,9 @@ assemble:
       active: always
       java:
         version: 11
-        mainClass: 'org.jreleaser.cli.Main'
+        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
-      executable: 'jreleaser'
+      executable: jreleaser
       jdeps:
         multiRelease: base
         ignoreMissingDeps: true
@@ -156,19 +161,19 @@ assemble:
         - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
           platform: 'osx-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
-          platform: 'osx-aarch64'
+          platform: 'osx-aarch_64'
         - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
           platform: 'linux-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
-          platform: 'linux-aarch64'
+          platform: 'linux-aarch_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
           platform: 'linux_musl-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
-          platform: 'linux_musl-aarch64'
+          platform: 'linux_musl-aarch_64'
         - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
           platform: 'windows-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
-          platform: 'windows-aarch64'
+          platform: 'windows-aarch_64'
       mainJar:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
@@ -180,14 +185,11 @@ distributions:
   jreleaser:
     java:
       mainClass: org.jreleaser.cli.Main
-    brew:
-      active: always
-      tap:
-        active: release
     chocolatey:
       active: always
       remoteBuild: true
       title: JReleaser
+      iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
         active: release
     jbang:
@@ -224,6 +226,8 @@ distributions:
       # Transform the artifact name
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
+        extraProperties:
+          skipSpec: true
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
 
@@ -245,6 +249,12 @@ distributions:
   # Distribution 4 is of type JLINK
   # Name matches the assembled Jlink distribution
   jreleaser-standalone:
+    brew:
+      active: always
+      formulaName: jreleaser
+      multiPlatform: true
+      tap:
+        active: release
     docker:
       # inherited by specs
       active: always
@@ -279,6 +289,10 @@ distributions:
             platform: 'linux_musl-x86_64'
           preCommands:
             - 'RUN apk add unzip'
+    gofish:
+      active: always
+      repository:
+        active: release
 
 files:
   artifacts:
@@ -342,6 +356,7 @@ Additionally, the following repositories will be updated with new packagers:
  * https://github.com/jreleaser/jbang-catalog
  * https://github.com/jreleaser/jreleaser-copr
  * https://github.com/jreleaser/jreleaser-docker
+ * https://github.com/jreleaser/jreleaser-fish-food
  * https://github.com/jreleaser/jreleaser-macports
  * https://github.com/jreleaser/jreleaser-snap
  * https://github.com/jreleaser/scoop-jreleaser

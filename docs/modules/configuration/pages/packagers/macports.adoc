@@ -5,13 +5,16 @@
 :tool_tap:      repository
 :tool_tap_name: macports
 :tool_manifest: portfile
+:tool_package:  ${distribution.name}
 
 JReleaser can generate and publish a link:https://www.macports.org/[Macports] Portfile into a repository that you have
 access to.
 
 The `macports` section specifies how the Portfile should be created.
 
-NOTE: Only artifacts with `.zip` extension may be packaged with Macports.
+The following artifact extensions are supported by this packager:
+
+* `.zip`
 
 WARNING: Publication of snapshots is *not* allowed.
 
@@ -32,6 +35,8 @@ include::partial$packagers/yaml/template-directory.adoc[]
 include::partial$packagers/yaml/commitauthor.adoc[]
 
 include::partial$packagers/yaml/tap.adoc[]
+
+include::partial$packagers/yaml/package-name.adoc[]
 
     # URL used to check the latest version.
     # Defaults to `0`.
@@ -66,6 +71,8 @@ include::partial$packagers/toml/commitauthor.adoc[]
 
 include::partial$packagers/toml/tap.adoc[]
 
+include::partial$packagers/toml/package-name.adoc[]
+
   # URL used to check the latest version.
   # Defaults to `0`.
   # icon:dot-circle[]
@@ -96,6 +103,8 @@ include::partial$packagers/json/template-directory.adoc[]
 include::partial$packagers/json/commitauthor.adoc[]
 
 include::partial$packagers/json/tap.adoc[]
+
+include::partial$packagers/json/package-name.adoc[]
 
       // URL used to check the latest version.
       // Defaults to `0`.
@@ -128,6 +137,8 @@ include::partial$packagers/maven/template-directory.adoc[]
 include::partial$packagers/maven/commitauthor.adoc[]
 
 include::partial$packagers/maven/tap.adoc[]
+
+include::partial$packagers/maven/package-name.adoc[]
 
       <!--
         URL used to check the latest version.
@@ -166,6 +177,8 @@ include::partial$packagers/gradle/template-directory.adoc[]
 include::partial$packagers/gradle/commitauthor.adoc[]
 
 include::partial$packagers/gradle/tap.adoc[]
+
+include::partial$packagers/gradle/package-name.adoc[]
 
       // URL used to check the latest version.
       // Defaults to `0`.
@@ -255,6 +268,11 @@ You are then responsible for submitting a ticket to MacPorts for updating an exi
 JReleaser *does not* create a ticker nor a pull request for you.
 
 Please consult the link:https://guide.macports.org/[MacPorts guide] to know more.
+
+== Skip Artifacts
+
+If there is more than on matching artifact in a given distribution you may add a `skipMacports` extra property to the target
+artifact to mark it as skipped for packaging with Macports.
 
 == Templates
 

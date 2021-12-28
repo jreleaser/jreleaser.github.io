@@ -5,10 +5,13 @@
 :tool_tap:      bucket
 :tool_tap_name: chocolatey-bucket
 :tool_manifest: manifest
+:tool_package:  ${distribution.name}
 
 Publishes packages to link:https://chocolatey.org[].
 
-NOTE: At the moment, only artifacts with `.zip` extension may be packaged with Chocolatey.
+The following artifact extensions are supported by this packager:
+
+* `.zip`
 
 Local publication of packages requires running on Windows, have `powershell` and `choco` installed.
 If you rather package and push on CI then set `remoteBuild` to `true`.
@@ -33,6 +36,8 @@ include::partial$packagers/yaml/commitauthor.adoc[]
 
 include::partial$packagers/yaml/tap.adoc[]
 
+include::partial$packagers/yaml/package-name.adoc[]
+
     # The username that can publish Chocolatey packages.
     # If left unspecified, the release owner will be used.
     # icon:exclamation-triangle[]
@@ -53,6 +58,11 @@ include::partial$packagers/yaml/tap.adoc[]
     # If left unspecified, will use `${project.name}`.
     # icon:dot-circle[]
     title: Duke
+
+    # The icon's Url.
+    # Refer to link:https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines[]
+    # icon:dot-circle[] icon:file-alt[]
+    iconUrl: https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png
 ----
 --
 TOML::
@@ -68,6 +78,8 @@ include::partial$packagers/toml/template-directory.adoc[]
 include::partial$packagers/toml/commitauthor.adoc[]
 
 include::partial$packagers/toml/tap.adoc[]
+
+include::partial$packagers/toml/package-name.adoc[]
 
   # The username that can publish Chocolatey packages.
   # If left unspecified, the release owner will be used.
@@ -89,6 +101,11 @@ include::partial$packagers/toml/tap.adoc[]
   # If left unspecified, will use `${project.name}`.
   # icon:dot-circle[]
   title = "Duke"
+
+  # The icon's Url.
+  # Refer to link:https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines[]
+  # icon:dot-circle[] icon:file-alt[]
+  iconUrl = "https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png"
 ----
 --
 JSON::
@@ -104,6 +121,8 @@ include::partial$packagers/json/template-directory.adoc[]
 include::partial$packagers/json/commitauthor.adoc[]
 
 include::partial$packagers/json/tap.adoc[]
+
+include::partial$packagers/json/package-name.adoc[]
 
       // The username that can publish Chocolatey packages.
       // If left unspecified, the release owner will be used.
@@ -124,7 +143,12 @@ include::partial$packagers/json/tap.adoc[]
       // The title of the spec.
       // If left unspecified, will use `${project.name}`.
       // icon:dot-circle[]
-      "title": "Duke"
+      "title": "Duke",
+
+      // The icon's Url.
+      // Refer to link:https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines[]
+      // icon:dot-circle[] icon:file-alt[]
+      "iconUrl": "https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png"
 include::partial$packagers/json/common-footer.adoc[]
 ----
 --
@@ -141,6 +165,8 @@ include::partial$packagers/maven/template-directory.adoc[]
 include::partial$packagers/maven/commitauthor.adoc[]
 
 include::partial$packagers/maven/tap.adoc[]
+
+include::partial$packagers/maven/package-name.adoc[]
 
       <!--
         The username that can publish Chocolatey packages.
@@ -170,6 +196,13 @@ include::partial$packagers/maven/tap.adoc[]
         icon:dot-circle[]
       -->
       <title>Duke</title>
+
+      <!--
+        The icon's Url.
+        Refer to link:https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines[]
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <iconUrl>https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png</iconUrl>
 include::partial$packagers/maven/common-footer.adoc[]
 ----
 --
@@ -186,6 +219,8 @@ include::partial$packagers/gradle/template-directory.adoc[]
 include::partial$packagers/gradle/commitauthor.adoc[]
 
 include::partial$packagers/gradle/tap.adoc[]
+
+include::partial$packagers/gradle/package-name.adoc[]
 
       // The username that can publish Chocolatey packages.
       // If left unspecified, the release owner will be used.
@@ -207,6 +242,11 @@ include::partial$packagers/gradle/tap.adoc[]
       // If left unspecified, will use `${project.name}`.
       // icon:dot-circle[]
       title = 'Duke'
+
+      // The icon's Url.
+      // Refer to link:https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines[]
+      // icon:dot-circle[] icon:file-alt[]
+      iconUrl = 'https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png'
 include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
@@ -235,10 +275,16 @@ the following files which will be published to `duke/chocolatey-bucket/app`
     <!-- optional -->
     <title>app</title>
     <projectUrl>https://acme.com/app</projectUrl>
+    <copyright>2021 Duke</copyright>
     <licenseUrl>https://github.com/duke/app/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>app</tags>
     <summary>Sample app</summary>
+    <projectSourceUrl>https://github.com/duke/app</projectSourceUrl>
+    <packageSourceUrl>https://github.com/duke/chocolatey-bucket</packageSourceUrl>
+    <docsUrl>https://acme.com/app</docsUrl>
+    <bugTrackerUrl>https://github.com/duke/app/issues</bugTrackerUrl>
+    <iconUrl>https://rawcdn.githack.com/duke/app/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/icon.png</iconUrl>
     <releaseNotes>https://github.com/duke/app/releases/tag/v1.2.3</releaseNotes>
   </metadata>
   <files>
@@ -275,6 +321,11 @@ $app_bat = Join-Path $app_home 'bin/app.bat'
 
 Uninstall-BinFile -Name 'app' -Path $app_bat
 ----
+
+== Skip Artifacts
+
+If there is more than on matching artifact in a given distribution you may add a `skipChocolatey` extra property to the target
+artifact to mark it as skipped for packaging with Chocolatey.
 
 == Templates
 

@@ -5,13 +5,23 @@
 :tool_tap:      repository
 :tool_tap_name: duke-spec
 :tool_manifest: spec
+:tool_package:  ${distribution.name}
 
 JReleaser can generate and publish a link:https://rpm-packaging-guide.github.io/[RPM Spec] file and publish it to
 a repository that you have access to.
 
 The `spec` section specifies how the Spec should be created.
 
-NOTE: Only artifacts with `.tgz`, `.tar.gz`, or `.tar` extension may be packaged with Spec.
+The following artifact extensions are supported by this packager:
+
+* `.tbz2`
+* `.tgz`
+* `.txz`
+* `.tar.gz`
+* `.tar.xz`
+* `tar.bz2`
+* `.tar`
+* `.zip`
 
 WARNING: Publication of snapshots is *not* allowed.
 
@@ -32,6 +42,8 @@ include::partial$packagers/yaml/template-directory.adoc[]
 include::partial$packagers/yaml/commitauthor.adoc[]
 
 include::partial$packagers/yaml/tap.adoc[]
+
+include::partial$packagers/yaml/package-name.adoc[]
 
     # Spec release number.
     # Defaults to `1%{?dist}`.
@@ -59,6 +71,8 @@ include::partial$packagers/toml/commitauthor.adoc[]
 
 include::partial$packagers/toml/tap.adoc[]
 
+include::partial$packagers/toml/package-name.adoc[]
+
   # Spec release number.
   # Defaults to `1%{?dist}`.
   # icon:dot-circle[]
@@ -83,6 +97,8 @@ include::partial$packagers/json/template-directory.adoc[]
 include::partial$packagers/json/commitauthor.adoc[]
 
 include::partial$packagers/json/tap.adoc[]
+
+include::partial$packagers/json/package-name.adoc[]
 
       // Spec release number.
       // Defaults to `1%{?dist}`.
@@ -109,6 +125,8 @@ include::partial$packagers/maven/template-directory.adoc[]
 include::partial$packagers/maven/commitauthor.adoc[]
 
 include::partial$packagers/maven/tap.adoc[]
+
+include::partial$packagers/maven/package-name.adoc[]
 
       <!--
         Spec release number.
@@ -139,6 +157,8 @@ include::partial$packagers/gradle/template-directory.adoc[]
 include::partial$packagers/gradle/commitauthor.adoc[]
 
 include::partial$packagers/gradle/tap.adoc[]
+
+include::partial$packagers/gradle/package-name.adoc[]
 
       // Spec release number.
       // Defaults to `1%{?dist}`.
@@ -203,7 +223,12 @@ install -p -m 644 lib/app-%{version}.jar %{_appdir}/lib/app-%{version}.jar
 ----
 
 You may configure automated builds with link:https://copr.fedorainfracloud.org/[Fedora COPR] or any other service that
-acceps spec files as inputs.
+accepts spec files as inputs.
+
+== Skip Artifacts
+
+If there is more than on matching artifact in a given distribution you may add a `skipSpec` extra property to the target
+artifact to mark it as skipped for packaging with Spec.
 
 == Templates
 
