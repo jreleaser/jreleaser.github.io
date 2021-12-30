@@ -327,6 +327,15 @@ Uninstall-BinFile -Name 'app' -Path $app_bat
 If there is more than on matching artifact in a given distribution you may add a `skipChocolatey` extra property to the target
 artifact to mark it as skipped for packaging with Chocolatey.
 
+== Remote Build
+
+It's expected that you take care of creating a nuget package and publish it to the desired location if `remoteBuild` is
+set to `true`. Templates for GitHub Actions will be available when the chosen releaser is xref:configuration:release/github.adoc[].
+
+The `Push` workflow triggers whenever a new tag is pushed to the bucket repository. +
+The `Trigger` workflow is triggered manually, use for the first publication or if the automatic workflow fails for some
+reason.
+
 == Templates
 
 The default location for templates is:
@@ -338,6 +347,8 @@ The following list shows the filenames that may be used to override default temp
 * `binary.nuspec.tpl`
 * `tools/chocolateyinstall.ps1.tpl`
 * `tools/chocolateyuninstall.ps1.tpl`
+* `.github/workflows/push.yml.tpl`
+* `.github/workflows/trigger.yml.tpl`
 
 Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
 which case xref:name-templates.adoc[] substitution will take place.
