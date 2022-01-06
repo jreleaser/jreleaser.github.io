@@ -61,7 +61,25 @@ include::partial$assemble/yaml/common-head.adoc[]
       # value of $executable.
       # icon:dot-circle[]
       args:
-        - "--install-exit-handlers"
+        - '--install-exit-handlers'
+
+      # Compress the resulting executable with UPX.
+      # icon:dot-circle[]
+      upx:
+        # Enables or disables UPX.
+        # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        # Defaults to `NEVER`.
+        # icon:dot-circle[]
+        active: ALWAYS
+
+        # Tool version.
+        # icon:dot-circle[]
+        version: '3.96'
+
+        # A list of arguments.
+        # icon:dot-circle[]
+        args:
+          - '-f'
 
 include::partial$assemble/yaml/common-java.adoc[]
 ----
@@ -114,6 +132,23 @@ include::partial$assemble/toml/common-head.adoc[]
   # value of $executable.
   # icon:dot-circle[]
   args = ["--install-exit-handlers"]
+
+  # Compress the resulting executable with UPX.
+  # icon:dot-circle[]
+  [assemble.{assembler_id}.app.upx]
+    # Enables or disables UPX.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[]
+    active = "ALWAYS"
+
+    # Tool version.
+    # icon:dot-circle[]
+    version = "3.96"
+
+    # A list of arguments.
+    # icon:dot-circle[]
+    args = ["-f]
 
 include::partial$assemble/toml/common-java.adoc[]
 ----
@@ -175,6 +210,24 @@ include::partial$assemble/json/common-head.adoc[]
         "args": [
           "--install-exit-handlers"
         ],
+        
+        // Compress the resulting executable with UPX.
+        // icon:dot-circle[]
+        "upx": {
+          // Enables or disables UPX.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // icon:dot-circle[]
+          "active": "ALWAYS",
+
+          // Tool version.
+          // icon:dot-circle[]
+          "version": "3.96",
+
+          // A list of arguments.
+          // icon:dot-circle[]
+          "args": ["-f]
+        },
 
 include::partial$assemble/json/common-java.adoc[]
 include::partial$assemble/json/common-footer.adoc[]
@@ -252,6 +305,34 @@ include::partial$assemble/maven/common-head.adoc[]
           <arg>--install-exit-handlers</arg>
         </args>
 
+        <!--
+          Compress the resulting executable with UPX.
+          icon:dot-circle[]
+        --->  
+        <upx>
+          <!--
+            Enables or disables UPX.
+            Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to `NEVER`.
+            icon:dot-circle[]
+          -->
+          <active>ALWAYS</active>
+
+          <!--
+            Tool version.
+            icon:dot-circle[]
+          -->
+          <version>3.96</version>
+
+          <!--
+            A list of arguments.
+            icon:dot-circle[]
+          -->
+          <args>
+            <arg>-f</arg>
+          </args>
+        </upx>
+            
 include::partial$assemble/maven/common-java.adoc[]
 include::partial$assemble/maven/common-footer.adoc[]
 ----
@@ -310,6 +391,24 @@ include::partial$assemble/gradle/common-head.adoc[]
         // icon:dot-circle[]
         addArg('--install-exit-handlers')
 
+        // Compress the resulting executable with UPX.
+        // icon:dot-circle[]
+        upx {
+          // Enables or disables UPX.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // icon:dot-circle[]
+          active = 'ALWAYS'
+
+          // Tool version.
+          // icon:dot-circle[]
+          version = '3.96'
+
+          // A list of arguments.
+          // icon:dot-circle[]
+          addArg('-f')
+        }
+            
 include::partial$assemble/gradle/common-java.adoc[]
 include::partial$assemble/gradle/common-footer.adoc[]
 ----
@@ -326,6 +425,12 @@ The following rules apply when resolving which Graal JDK will be used to generat
 Paths for `graalJdks` must exist in the file system. You may use the
 xref:tools:jdks-maven.adoc#_configuration_dsl[{icon_maven_s} jdks-maven-plugin] or
 xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download required JDKs.
+
+== UPX
+
+Executables may optionally be compressed with link:https://upx.github.io/[UPX]. You must define a version.
+JReleaser will check if a matching binary exists in the system or download a binary that matches the current
+platform.
 
 == Templates
 
