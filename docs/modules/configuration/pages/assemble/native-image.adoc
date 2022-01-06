@@ -48,10 +48,13 @@ include::partial$assemble/yaml/common-head.adoc[]
       # icon:dot-circle[]
       archiveFormat: TGZ
 
-      # The GraalVM JDK to use.
-      # icon:exclamation-triangle[] icon:file-alt[]
-      graal:
-        path: path/to/graalvm
+      # List of Graal JDKs.
+      # icon:dot-circle[] icon:file-alt[]
+      targetJdks:
+        - path: path/to/jdk
+          platform: osx-x86_64
+        - path: path/to/jdk
+          platform: linux-x86_64
 
       # A list of build arguments.
       # The `-H:Name` argument will always be replaced with the
@@ -100,9 +103,11 @@ include::partial$assemble/toml/common-head.adoc[]
   # icon:dot-circle[]
   archiveFormat = "TGZ"
 
-  # The GraalVM JDK to use.
-  # icon:exclamation-triangle[] icon:file-alt[]
-  graal = { path = "path/to/graalvm" }
+  # List of Graal JDKs.
+  # icon:dot-circle[] icon:file-alt[]
+  targetJdks = [
+    { path = "path/to/jdk", platform = "osx-x86_64" },
+    { path = "path/to/jdk", platform = "linux-x86_64" }]
 
   # A list of build arguments.
   # The `-H:Name` argument will always be replaced with the
@@ -150,11 +155,18 @@ include::partial$assemble/json/common-head.adoc[]
         // icon:dot-circle[]
         "archiveFormat": "TGZ",
 
-        // The GraalVM JDK to use.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        "graal": {
-          "path": "path/to/graalvm"
-        },
+        // List of Graal JDKs.
+        // icon:dot-circle[] icon:file-alt[]
+        "targetJdks": [
+          {
+            "path": "path/to/jdk",
+            "platform": "osx-x86_64"
+          },
+          {
+            "path": "path/to/jdk",
+            "platform": "linux-x86_64"
+          }
+        ],
 
         // A list of build arguments.
         // The `-H:Name` argument will always be replaced with the
@@ -216,12 +228,19 @@ include::partial$assemble/maven/common-head.adoc[]
         <archiveFormat>TGZ</archiveFormat>
 
         <!--
-          The GraalVM JDK to use.
-          icon:exclamation-triangle[] icon:file-alt[]
+          List of Graal JDKs.
+          icon:dot-circle[] icon:file-alt[]
         -->
-        <graal>
-          <path>path/to/graalvm</path>
-        </graal>
+        <targetJdks>
+          <graalJdk>
+            <path>path/to/jdk</path>
+            <platform>osx-x86_64</platform>
+          </graalJdk>
+          <graalJdk>
+            <path>path/to/jdk</path>
+            <platform>linux-x86_64</platform>
+          </graalJdk>
+        </targetJdks>
 
         <!--
           A list of build arguments.
@@ -274,10 +293,15 @@ include::partial$assemble/gradle/common-head.adoc[]
         // icon:dot-circle[]
         archiveFormat = 'TGZ'
 
-        // The GraalVM JDK to use.
-        // icon:exclamation-triangle[] icon:file-alt[]
-        graal {
-          path = 'path/to/graalvm'
+        // List of Graal JDKs.
+        // icon:dot-circle[] icon:file-alt[]
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'osx-x86_64'
+        }
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'linux-x86_64'
         }
 
         // A list of build arguments.
@@ -292,11 +316,16 @@ include::partial$assemble/gradle/common-footer.adoc[]
 --
 ====
 
-== Graal
+== Graal JDKs
 
-The path for `graal` must exist in the file system. You may use the
+The following rules apply when resolving which Graal JDK will be used to generate native image executables:
+
+. A matching JDK (by platform) will be searched in `graalJdks`.
+. If no match is found then the currently executing JDK will be used.
+
+Paths for `graalJdks` must exist in the file system. You may use the
 xref:tools:jdks-maven.adoc#_configuration_dsl[{icon_maven_s} jdks-maven-plugin] or
-xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download a Graal distribution.
+xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download required JDKs.
 
 == Templates
 
