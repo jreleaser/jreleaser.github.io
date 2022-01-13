@@ -526,7 +526,7 @@ generated signature with your public signing key.</p>
 </div>
 <div class="paragraph">
 <p>JReleaser can sign all files, including distribution archives and any extra files attached to the project. This section
-must be configured if you intent to sign commits as well.</p>
+must be configured if you intend to sign commits as well.</p>
 </div>
 <div class="paragraph">
 <p>Use the following options to customize how files may be signed:</p>
@@ -588,7 +588,7 @@ signing:
   armored: true
 
   # How should GPG keys be handled.
-  # Valid values are [`MEMORY`, `FILE`, `COMMAND`].
+  # Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
   # Defaults to `MEMORY`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   mode: MEMORY
@@ -602,14 +602,14 @@ signing:
   # The public GPG (ascii armored) used to sign files and commits.
   # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
   # environment variable must be defined.
-  # Required when mode = `MEMORY` || `File`.
+  # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   publicKey: __DO_NOT_SET_HERE__
 
   # The private GPG (ascii armored) used to sign files and commits.
   # If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
   # environment variable must be defined.
-  # Required when mode = `MEMORY` || `File`.
+  # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   secretKey: __DO_NOT_SET_HERE__
 
@@ -673,7 +673,26 @@ signing:
     # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     args:
-      - '--no-random-seed-file'</code></pre>
+      - '--no-random-seed-file'
+
+  # Settings used when mode = `COSIGN`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  cosign:
+    # Tool version.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    version: 1.4.1
+
+    # The private cosign key.
+    # If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+    # environment variable must be defined.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    privateKeyFile: __DO_NOT_SET_HERE__
+
+    # The public cosign key.
+    # If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+    # environment variable must be defined.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    publicKeyFile: __DO_NOT_SET_HERE__</code></pre>
 </div>
 </div>
 </div>
@@ -694,7 +713,7 @@ signing:
   armored = true
 
   # How should GPG keys be handled.
-  # Valid values are [`MEMORY`, `FILE`, `COMMAND`].
+  # Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
   # Defaults to `MEMORY`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   mode = 'MEMORY'
@@ -708,14 +727,14 @@ signing:
   # The public GPG (ascii armored) used to sign files and commits.
   # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
   # environment variable must be defined.
-  # Required when mode = `MEMORY` || `File`.
+  # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   publicKey = "__DO_NOT_SET_HERE__"
 
   # The private GPG (ascii armored) used to sign files and commits.
   # If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
   # environment variable must be defined.
-  # Required when mode = `MEMORY` || `File`.
+  # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   secretKey = "__DO_NOT_SET_HERE__"
 
@@ -778,7 +797,26 @@ signing:
   # Sets the arguments to be passed to gpg.
   # When mode = `COMMAND`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  command.args = ["--no-random-seed-file"]</code></pre>
+  command.args = ["--no-random-seed-file"]
+
+  # Settings used when mode = `COSIGN`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+
+  # Tool version.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  cosign.version = "1.4.1"
+
+  # The private cosign key.
+  # If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  cosign.privateKeyFile = "__DO_NOT_SET_HERE__"
+
+  # The public cosign key.
+  # If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  cosign.publicKeyFile = "__DO_NOT_SET_HERE__"</code></pre>
 </div>
 </div>
 </div>
@@ -800,7 +838,7 @@ signing:
     "armored": true,
 
     // How should GPG keys be handled.
-    // Valid values are [`MEMORY`, `FILE`, `COMMAND`].
+    // Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
     // Defaults to `MEMORY`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "mode": "MEMORY",
@@ -814,14 +852,14 @@ signing:
     // The public GPG (ascii armored) used to sign files and commits.
     // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
     // environment variable must be defined.
-    // Required when mode = `MEMORY` || `File`.
+    // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "publicKey": "__DO_NOT_SET_HERE__",
 
     // The private GPG (ascii armored) used to sign files and commits.
     // If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
     // environment variable must be defined.
-    // Required when mode = `MEMORY` || `File`.
+    // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "secretKey": "__DO_NOT_SET_HERE__",
 
@@ -888,6 +926,26 @@ signing:
       "args": [
         "--no-random-seed-file"
       ]
+    },
+
+    // Settings used when mode = `COSIGN`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "cosign": {
+      // Tool version.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      "version": "1.4.1",
+
+      // The private cosign key.
+      // If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "privateKeyFile": "__DO_NOT_SET_HERE__",
+
+      // The public cosign key.
+      // If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "publicKeyFile": "__DO_NOT_SET_HERE__"
     }
   }
 }</code></pre>
@@ -920,7 +978,7 @@ signing:
 
     &lt;!--
       How should GPG keys be handled.
-      Valid values are [`MEMORY`, `FILE`, `COMMAND`].
+      Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
       Defaults to `MEMORY`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
@@ -930,7 +988,7 @@ signing:
       The passphrase required to read secret keys.
       If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
       environment variable must be defined.
-      Required when mode = `MEMORY` || `File`.
+      Required when mode = `MEMORY` || `FILE`.
       <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
     &lt;passphrase&gt;__DO_NOT_SET_HERE__&lt;/passphrase&gt;
@@ -939,7 +997,7 @@ signing:
       The public GPG (ascii armored) used to sign files and commits.
       If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
       environment variable must be defined.
-      Required when mode = `MEMORY` || `File`.
+      Required when mode = `MEMORY` || `FILE`.
       <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
     &lt;publicKey&gt;__DO_NOT_SET_HERE__&lt;/publicKey&gt;
@@ -1035,6 +1093,34 @@ signing:
         &lt;arg&gt;--no-random-seed-file&lt;/arg&gt;
       &lt;/args&gt;
     &lt;/command&gt;
+
+    &lt;!--
+      Settings used when mode = `COSIGN`.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;cosign&gt;
+      &lt;!--
+        Tool version.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      --&gt;
+      &lt;version&gt;1.4.1&lt;/version&gt;
+
+      &lt;!--
+        The private cosign key.
+        If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;privateKeyFile&gt;__DO_NOT_SET_HERE__&lt;/privateKeyFile&gt;
+
+      &lt;!--
+        The public cosign key.
+        If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+        environment variable must be defined.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;publicKeyFile&gt;__DO_NOT_SET_HERE__&lt;/publicKeyFile&gt;
+    &lt;/cosign&gt;
   &lt;/signing&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1058,7 +1144,7 @@ signing:
     armored = true
 
     // How should GPG keys be handled.
-    // Valid values are [`MEMORY`, `FILE`, `COMMAND`].
+    // Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
     // Defaults to `MEMORY`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     mode = 'MEMORY'
@@ -1072,14 +1158,14 @@ signing:
     // The public GPG (ascii armored) used to sign files and commits.
     // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
     // environment variable must be defined.
-    // Required when mode = `MEMORY` || `File`.
+    // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     publicKey = '__DO_NOT_SET_HERE__'
 
     // The private GPG (ascii armored) used to sign files and commits.
     // If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
     // environment variable must be defined.
-    // Required when mode = `MEMORY` || `File`.
+    // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     secretKey = '__DO_NOT_SET_HERE__'
 
@@ -1100,7 +1186,6 @@ signing:
 
     // Settings used when mode = `COMMAND`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-
     command {
       // The executable used for signing.
       // If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
@@ -1145,6 +1230,26 @@ signing:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       args = ['--no-random-seed-file']
     }
+
+    // Settings used when mode = `COSIGN`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    cosign {
+      // Tool version.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      version = '1.4.1'
+
+      // The private cosign key.
+      // If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      privateKeyFile = '__DO_NOT_SET_HERE__'
+
+      // The public cosign key.
+      // If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+      // environment variable must be defined.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      publicKeyFile = '__DO_NOT_SET_HERE__'
+    }
   }
 }</code></pre>
 </div>
@@ -1180,6 +1285,26 @@ Prefer the use of <a href="environment.html" class="xref page">Environment</a> i
 <div class="paragraph">
 <p>When the mode is set to <code>COMMAND</code> then JReleaser expects appropriate command settings to be configured, such as the
 signing executable (<code>gpg</code> by default). Signing and verification will be invoked in non-interactive mode.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cosign"><a class="anchor" href="#_cosign"></a>Cosign</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may sign artifacts, files, and checksums using Sigstore&#8217;s <a href="https://github.com/sigstore/cosign">cosign</a> however
+you <strong>can not</strong> sign commits nor tags when <code>COSIGN</code> mode is active.</p>
+</div>
+<div class="paragraph">
+<p>You may use <code>JRELEASER_COSIGN_PASSWORD</code> instead of <code>JRELEASER_GPG_PASSPHRASE</code> to define the password required by cosign.</p>
+</div>
+<div class="paragraph">
+<p>You must define a value for the version property. JReleaser will check if a matching binary exists in the system or
+download a binary  that matches the current platform. If you do not have existing private/public keys then JReleaser
+will generate a key pair for you and store them in <code>$JRELEASER_USER_HOME</code> which matches <code>~/.jreleaser</code> by default.</p>
+</div>
+<div class="paragraph">
+<p>The public cosing key file will automatically be uploaded as a release asset.</p>
 </div>
 </div>
 </div>
