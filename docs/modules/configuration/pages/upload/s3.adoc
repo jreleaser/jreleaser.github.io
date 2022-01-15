@@ -366,6 +366,28 @@ And will result in a final URL like
 
 If a custom endpoint is defined then this property must be set as well.
 
+Artifacts may define an extra property following the `<uploaderType><capitalizedUploaderName>Path` format to override
+the default path within the bucket. This **does not** work for custom endpoints. For example
+
+```
+upload:
+  s3:
+    app:
+      active: always
+
+distributions:
+  app:
+    artifacts:
+    - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.zip
+      extraProperties:
+        s3AppPath: 'releases/{{artifactFile}}'
+    - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.tar.gz
+```
+
+These settings will upload `app-1.0.0.zip` and `app-1.0.0.zip.asc` to `releases/app-1.0.0.zip` and `releases/app-1.0.0.zip.asc`
+respectively while `app-1.0.0.tar.gz` and `app-1.0.0.tar.gz.asc` will be uploaded to their default paths, those being
+`app/v1.0.0/app-1.0.0.tar.gz` and `app/v1.0.0/app-1.0.0.tar.gz.asc` respectively.
+
 == Credentials
 
 JReleaser uses the link:http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html[DefaultAWSCredentialsProviderChain]
