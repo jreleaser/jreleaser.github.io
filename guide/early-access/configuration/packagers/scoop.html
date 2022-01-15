@@ -610,6 +610,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     continueOnError: true
 
+    # Custom download URL.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    downloadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
@@ -718,6 +722,10 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   continueOnError = true
 
+  # Custom download URL.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  downloadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
@@ -825,6 +833,10 @@ packagers:
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "continueOnError": true,
+
+      // Custom download URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "downloadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -950,6 +962,12 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;continueOnError&gt;true&lt;/continueOnError&gt;
+
+      &lt;!--
+        Custom download URL.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;downloadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -1104,6 +1122,10 @@ packagers:
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       continueOnError = true
+
+      // Custom download URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `scoop`, i.e, `scoopFoo`.
@@ -1268,6 +1290,47 @@ running the workflow. You must configure a <a href="https://docs.github.com/en/a
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downloadurl"><a class="anchor" href="#_downloadurl"></a>DownloadURL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser follows these rules to find the download URL to use for a given artifact:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>if <code>artifact.extraProperties.scoopDownloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>artifact.extraProperties.downloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if explicit <code>downloadUrl</code> is set on <code>scoop</code>, use it.</p>
+</li>
+<li>
+<p>if <code>distribution.extraProperties.scoopDownloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>distribution.extraProperties.downloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>releaser.${git}.skipRelease</code> is <code>false</code> then use the releaser&#8217;s <code>downloadUrl</code>.</p>
+</li>
+<li>
+<p>if <code>releaser.${git}.skipRelease</code> is <code>true</code> then look for a matching uploader given an extraProperty named
+<code>downloadFromUploader</code> on <code>artifact</code>, <code>distribution, `scoop</code> (in that order). The value must be
+<code>&lt;uploaderType&gt;:&lt;uploaderName&gt;</code> such as "artifactory:app" or "s3:uploads".</p>
+</li>
+<li>
+<p>fail if no suitable URL is found.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>With no extra configuration from your side rule 6. will be chosen which is the suitable default that most projects need.</p>
 </div>
 </div>
 </div>

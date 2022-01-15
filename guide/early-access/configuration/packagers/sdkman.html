@@ -617,6 +617,10 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     continueOnError: true
 
+    # Custom download URL.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    downloadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
@@ -678,6 +682,10 @@ packagers:
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   continueOnError = true
+
+  # Custom download URL.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  downloadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -742,6 +750,10 @@ packagers:
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "continueOnError": true,
+
+      // Custom download URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "downloadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
 
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -819,6 +831,12 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;continueOnError&gt;true&lt;/continueOnError&gt;
+
+      &lt;!--
+        Custom download URL.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;downloadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt;
 
       &lt;!--
         Additional properties used when evaluating templates.
@@ -907,6 +925,10 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       continueOnError = true
 
+      // Custom download URL.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `sdkman`, i.e, `sdkmanFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -968,6 +990,47 @@ Candidate names must be unique!
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downloadurl"><a class="anchor" href="#_downloadurl"></a>DownloadURL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser follows these rules to find the download URL to use for a given artifact:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>if <code>artifact.extraProperties.sdkmanDownloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>artifact.extraProperties.downloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if explicit <code>downloadUrl</code> is set on <code>sdkman</code>, use it.</p>
+</li>
+<li>
+<p>if <code>distribution.extraProperties.sdkmanDownloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>distribution.extraProperties.downloadUrl</code> exists, use it.</p>
+</li>
+<li>
+<p>if <code>releaser.${git}.skipRelease</code> is <code>false</code> then use the releaser&#8217;s <code>downloadUrl</code>.</p>
+</li>
+<li>
+<p>if <code>releaser.${git}.skipRelease</code> is <code>true</code> then look for a matching uploader given an extraProperty named
+<code>downloadFromUploader</code> on <code>artifact</code>, <code>distribution, `sdkman</code> (in that order). The value must be
+<code>&lt;uploaderType&gt;:&lt;uploaderName&gt;</code> such as "artifactory:app" or "s3:uploads".</p>
+</li>
+<li>
+<p>fail if no suitable URL is found.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>With no extra configuration from your side rule 6. will be chosen which is the suitable default that most projects need.</p>
 </div>
 </div>
 </div>
