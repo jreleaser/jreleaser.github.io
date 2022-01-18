@@ -776,7 +776,7 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template -h
 Generate a packager/announcer template.
 
-Usage: jreleaser template [-ghioqsVw] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
+Usage: jreleaser template [-ghioqVw] [-sn] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... ([-a=&lt;announcer&gt;] |
                           [-d=&lt;distribution&gt; -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
 
@@ -790,7 +790,7 @@ Options:
       -od, --output-directory=&lt;outputdir&gt;
                             Output directory.
   -q, --quiet               Log errors only.
-  -s, --snapshot            Use snapshot templates.
+      -sn, --snapshot       Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
@@ -840,8 +840,8 @@ Assemble distributions.
 Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]... [[[-a=&lt;assembler&gt;]...
-                          [-d=&lt;distribution&gt;]...] | [[-xa=&lt;assembler&gt;]...
+                          [-sp=&lt;platform&gt;]... [[[-s=&lt;assembler&gt;]...
+                          [-d=&lt;distribution&gt;]...] | [[-xs=&lt;assembler&gt;]...
                           [-xd=&lt;distribution&gt;]...]]
 
 Options:
@@ -868,16 +868,16 @@ Options:
   -w, --warn                Set log level to warn.
 
 Include Filter:
-  -a, --assembler=&lt;assembler&gt;
-                            Include an assembler. Repeatable.
   -d, --distribution=&lt;distribution&gt;
                             Include a distribution. Repeatable.
+  -s, --assembler=&lt;assembler&gt;
+                            Include an assembler. Repeatable.
 
 Exclude Filter:
-      -xa, --exclude-assembler=&lt;assembler&gt;
-                            Exclude an assembler. Repeatable.
       -xd, --exclude-distribution=&lt;distribution&gt;
                             Exclude a distribution. Repeatable.
+      -xs, --exclude-assembler=&lt;assembler&gt;
+                            Exclude an assembler. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1063,7 +1063,7 @@ in the <a href="../configuration/distributions.html" class="xref page">distribut
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
                         [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
                         [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
@@ -1075,6 +1075,7 @@ Options:
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1092,7 +1093,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;
@@ -1134,7 +1134,7 @@ found at the current directory.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
@@ -1183,7 +1183,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] |
@@ -1214,6 +1214,7 @@ Options:
   -c, --config-file=&lt;configFile&gt;
                              The config file.
   -D=&lt;key=value&gt;             Sets a System property. Repeatable.
+      --dry-run              Skip remote operations.
   -g, --debug                Set log level to debug.
       -grs, --git-root-search
                              Searches for the Git root.
@@ -1231,7 +1232,6 @@ Options:
                                Repeatable.
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
-  -y, --dryrun               Skip remote operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;
@@ -1348,7 +1348,7 @@ None of the command flags that override model properties can be used in this mod
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
@@ -1464,7 +1464,7 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
@@ -1476,6 +1476,7 @@ Options:
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1493,7 +1494,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;
@@ -1566,7 +1566,7 @@ found at the current directory.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
@@ -1580,7 +1580,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
@@ -1592,6 +1592,7 @@ Options:
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1609,7 +1610,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;
@@ -1682,7 +1682,7 @@ found at the current directory.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
@@ -1696,7 +1696,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                           [-sp=&lt;platform&gt;]... [-a=&lt;announcer&gt;
@@ -1708,6 +1708,7 @@ Options:
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1725,7 +1726,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Filter:
   -a, --announcer=&lt;announcer&gt;
@@ -1773,7 +1773,7 @@ found at the current directory.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
@@ -1787,16 +1787,17 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVwy] [-grs] [-scp] [-b=&lt;basedir&gt;]
-                              [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                              [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                              [-sp=&lt;platform&gt;]...
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp]
+                              [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                              [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                              [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
   -c, --config-file=&lt;configFile&gt;
                             The config file.
   -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1814,7 +1815,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1833,7 +1833,7 @@ found at the current directory.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <code>-y</code> or <code>--dryrun</code> during development to verify your configuration settings. No network uploads nor repository
+Use <code>-y</code> or <code>--dry-run</code> during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 </td>
 </tr>
