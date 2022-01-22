@@ -36,13 +36,14 @@ include::partial$upload/yaml/common-head.adoc[]
       # If left unspecified, the `JRELEASER_S3_${name}_PATH`
       # environment variable may be defined.
       # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-      path: '{{projectName}}/{{tagName}}/{{artifactFileName}}'
+      path: '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       # Custom download URL.
       # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
       # environment variable may be defined.
+      # Required if a custom endpoint is defined.
       # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-      downloadUrl: 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+      downloadUrl: 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]'
 
       # The accessKeyId required for authorization.
       # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
@@ -99,13 +100,14 @@ include::partial$upload/toml/common-head.adoc[]
   # If left unspecified, the `JRELEASER_S3_${name}_PATH`
   # environment variable may be defined.
   # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-  path = "{{projectName}}/{{tagName}}/{{artifactFileName}}"
+  path = "{{projectName}}/{{tagName}}/{{artifactFile}}"
 
   # Custom download URL.
   # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
   # environment variable may be defined.
+  # Required if a custom endpoint is defined.
   # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-  downloadUrl = "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]"
+  downloadUrl = "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]"
 
   # The accessKeyId required for authorization.
   # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
@@ -161,13 +163,14 @@ include::partial$upload/json/common-head.adoc[]
         // If left unspecified, the `JRELEASER_S3_${name}_PATH`
         // environment variable may be defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-        "path": "{{projectName}}/{{tagName}}/{{artifactFileName}}",
+        "path": "{{projectName}}/{{tagName}}/{{artifactFile}}",
 
         // Custom download URL.
         // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
         // environment variable may be defined.
+        // Required if a custom endpoint is defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-        "downloadUrl": "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]",
+        "downloadUrl": "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]",
 
         // The accessKeyId required for authorization.
         // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
@@ -231,15 +234,16 @@ include::partial$upload/maven/common-head.adoc[]
           environment variable may be defined.
           icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         -->
-        <path>{{projectName}}/{{tagName}}/{{artifactFileName}}</path>
+        <path>{{projectName}}/{{tagName}}/{{artifactFile}}</path>
 
         <!--
           Custom download URL.
           If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
           environment variable may be defined.
+          Required if a custom endpoint is defined.
           icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         -->
-        <downloadUrl>pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]</downloadUrl>
+        <downloadUrl>pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]</downloadUrl>
 
         <!--
           The accessKeyId required for authorization.
@@ -308,13 +312,14 @@ include::partial$upload/gradle/common-head.adoc[]
         // If left unspecified, the `JRELEASER_S3_${name}_PATH`
         // environment variable may be defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-        path = '{{projectName}}/{{tagName}}/{{artifactFileName}}'
+        path = '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
         // Custom download URL.
         // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
         // environment variable may be defined.
+        // Required if a custom endpoint is defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
-        downloadUrl = 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFileName}}]'
+        downloadUrl = 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]'
 
         // The accessKeyId required for authorization.
         // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
@@ -354,10 +359,34 @@ include::partial$upload/gradle/common-footer.adoc[]
 The downloadUrl is the URL used to download artifacts from.
 
 An example configuration may look like
-`downloadUrl: 'pass:[https://s3.amazonaws.com/{{projectName}}/downloads/{{projectVersion}}/{{artifactFileName}}]'`.
+`downloadUrl: 'pass:[https://s3.amazonaws.com/{{projectName}}/downloads/{{projectVersion}}/{{artifactFile}}]'`.
 
 And will result in a final URL like
 `pass:[https://s3.amazonaws.com/app/downloads/1.0.0/app-1.0.0.zip]`.
+
+If a custom endpoint is defined then this property must be set as well.
+
+Artifacts may define an extra property following the `<uploaderType><capitalizedUploaderName>Path` format to override
+the default path within the bucket. This **does not** work for custom endpoints. For example
+
+```
+upload:
+  s3:
+    app:
+      active: always
+
+distributions:
+  app:
+    artifacts:
+    - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.zip
+      extraProperties:
+        s3AppPath: 'releases/{{artifactFile}}'
+    - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.tar.gz
+```
+
+These settings will upload `app-1.0.0.zip` and `app-1.0.0.zip.asc` to `releases/app-1.0.0.zip` and `releases/app-1.0.0.zip.asc`
+respectively while `app-1.0.0.tar.gz` and `app-1.0.0.tar.gz.asc` will be uploaded to their default paths, those being
+`app/v1.0.0/app-1.0.0.tar.gz` and `app/v1.0.0/app-1.0.0.tar.gz.asc` respectively.
 
 == Credentials
 

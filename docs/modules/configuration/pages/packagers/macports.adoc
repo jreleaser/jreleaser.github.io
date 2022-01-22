@@ -15,6 +15,7 @@ The `macports` section specifies how the Portfile should be created.
 The following artifact extensions are supported by this packager:
 
 * `.zip`
+* `.dmg`
 
 WARNING: Publication of snapshots is *not* allowed.
 
@@ -202,6 +203,8 @@ include::partial$packagers/gradle/common-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 
+include::partial$packagers/downloadUrl.adoc[]
+
 == Example
 
 Assuming the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
@@ -269,9 +272,15 @@ JReleaser *does not* create a ticker nor a pull request for you.
 
 Please consult the link:https://guide.macports.org/[MacPorts guide] to know more.
 
+== AppName
+
+JReleaser calculates the value of the containing app directory when packaging a xref:ROOT:distributions/native-package.adoc[]
+distribution for macOs and a `.dmg` file. The default value matches `{{distributionName}}.app`. If a different value were
+to be needed then set the `appName` extra property on the `macports` packager. This property accepts xref:name-templates.adoc[].
+
 == Skip Artifacts
 
-If there is more than on matching artifact in a given distribution you may add a `skipMacports` extra property to the target
+If there is more than one matching artifact in a given distribution you may add a `skipMacports` extra property to the target
 artifact to mark it as skipped for packaging with Macports.
 
 == Templates

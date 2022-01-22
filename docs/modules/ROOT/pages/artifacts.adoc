@@ -1,4 +1,4 @@
-= Artifacts & Globs
+= Artifacts, Globs, FileSets
 
 Artifacts are at the heart of a release; they define files that may be:
 
@@ -8,7 +8,7 @@ Artifacts are at the heart of a release; they define files that may be:
 Artifacts refer to a specific file as they have a single `path` property. Globs on the other hand refer to a collection
 of files. Files resolved by Artifact and Glob types do not preserve directory structure but FileSets do.
 
-== Properties
+== Artifacts
 
 Artifacts have the following properties:
 
@@ -28,6 +28,8 @@ and xref:configuration:packagers/index.adoc[packagers] require that artifacts de
 
 include::configuration:partial$platform.adoc[]
 
+== Globs
+
 Globs have the following properties:
 
 * `pattern`. Defines pattern used to match artifacts.
@@ -44,25 +46,31 @@ This property is *optional*.
 The `pattern` field accepts glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
 If no prefix is specified then `glob:` will be used.
 
+== FileSets
+
 FileSets have the following properties:
 
-* `input`. Defines the input path to search for files.
-This property is *required*.
+* `input`. Defines the input path to search for files. 
+  Its value may use xref:configuration:name-templates.adoc[].
+  This property is *required*.
 
 * `output`. Defines the path where matching files will be copied to.
-This property is *optional*.
+  Its value may use xref:configuration:name-templates.adoc[].
+  This property is *optional*.
 
-* `includes`. A set of names or regexes to match filenames. Matches will be included in the resulting set.
+* `includes`. A set of names or globs to match filenames. Matches will be included in the resulting set.
+  Values may use xref:configuration:name-templates.adoc[].
 
-* `excludes`. A set of names or regexes to match filenames. Matches will be excluded from the resulting set.
+* `excludes`. A set of names or globs to match filenames. Matches will be excluded from the resulting set.
+  Values may use xref:configuration:name-templates.adoc[].
 
-* `extraProperties`. Defines key/value pairs of metadata that's related to the resolved artifacts.
+* `extraProperties`. Defines key/value pairs of metadata that's related to the resolved paths.
 
 == Examples
 
 *Platform*
 
-Generating cross-platform JLink images require that each target JDK define a value for its corresponding platform.
+Generating cross-platform Jlink images require that each target JDK define a value for its corresponding platform.
 Target JDKs are of type `artifact`.
 
 [tabs]

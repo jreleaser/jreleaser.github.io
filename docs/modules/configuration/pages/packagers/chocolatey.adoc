@@ -49,6 +49,11 @@ include::partial$packagers/yaml/package-name.adoc[]
     # icon:exclamation-triangle[] icon:eye-slash[]
     apiKey: __DO_NOT_SET_HERE__
 
+    # The source to push the package to.
+    # If left unspecified, will use `https://push.chocolatey.org/`.
+    # icon:dot-circle[]
+    source: https://push.chocolatey.org/
+
     # Whether to build the package on a remote server or locally.
     # Defaults to `false`.
     # icon:dot-circle[]
@@ -92,6 +97,11 @@ include::partial$packagers/toml/package-name.adoc[]
   # icon:exclamation-triangle[] icon:eye-slash[]
   apiKey = "__DO_NOT_SET_HERE__"
 
+  # The source to push the package to.
+  # If left unspecified, will use `https://push.chocolatey.org/`.
+  # icon:dot-circle[]
+  source = "https://push.chocolatey.org/"
+
   # Whether to build the package on a remote server or locally.
   # Defaults to `false`.
   # icon:dot-circle[]
@@ -134,6 +144,11 @@ include::partial$packagers/json/package-name.adoc[]
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "apiKey": "__DO_NOT_SET_HERE__",
+
+      // The source to push the package to.
+      // If left unspecified, will use `https://push.chocolatey.org/`.
+      // icon:dot-circle[]
+      "source": "https://push.chocolatey.org/",
 
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
@@ -182,6 +197,13 @@ include::partial$packagers/maven/package-name.adoc[]
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <apiKey>__DO_NOT_SET_HERE__</apiKey>
+
+      <!--
+        The source to push the package to.
+        If left unspecified, will use `https://push.chocolatey.org/`.
+        icon:dot-circle[]
+      -->
+      <source>https://push.chocolatey.org/</source>
 
       <!--
         Whether to build the package on a remote server or locally.
@@ -233,6 +255,11 @@ include::partial$packagers/gradle/package-name.adoc[]
       // icon:exclamation-triangle[] icon:eye-slash[]
       apiKey = '__DO_NOT_SET_HERE__'
 
+      // The source to push the package to.
+      // If left unspecified, will use `https://push.chocolatey.org/`.
+      // icon:dot-circle[]
+      source = 'https://push.chocolatey.org/'
+
       // Whether to build the package on a remote server or locally.
       // Defaults to `false`.
       // icon:dot-circle[]
@@ -253,6 +280,8 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ====
 
 include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
 
 == Example
 
@@ -324,8 +353,17 @@ Uninstall-BinFile -Name 'app' -Path $app_bat
 
 == Skip Artifacts
 
-If there is more than on matching artifact in a given distribution you may add a `skipChocolatey` extra property to the target
+If there is more than one matching artifact in a given distribution you may add a `skipChocolatey` extra property to the target
 artifact to mark it as skipped for packaging with Chocolatey.
+
+== Remote Build
+
+It's expected that you take care of creating a nuget package and publish it to the desired location if `remoteBuild` is
+set to `true`. Templates for GitHub Actions will be available when the chosen releaser is xref:configuration:release/github.adoc[].
+
+The `Push` workflow triggers whenever a new tag is pushed to the bucket repository. +
+The `Trigger` workflow is triggered manually, use for the first publication or if the automatic workflow fails for some
+reason.
 
 == Templates
 
@@ -338,6 +376,8 @@ The following list shows the filenames that may be used to override default temp
 * `binary.nuspec.tpl`
 * `tools/chocolateyinstall.ps1.tpl`
 * `tools/chocolateyuninstall.ps1.tpl`
+* `.github/workflows/push.yml.tpl`
+* `.github/workflows/trigger.yml.tpl`
 
 Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
 which case xref:name-templates.adoc[] substitution will take place.

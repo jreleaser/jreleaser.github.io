@@ -1,0 +1,33 @@
+= Checklist
+
+Review the following items before making your first release:
+
+* Sources must be inside a Git repository with at least one remote (default name `origin`). You can change the default
+remote name to something else by setting a `JRELEASER_DEFAULT_GIT_REMOTE` environment variable.
+* The default branch name is `main`. If you use a different name then you may set it explicitly in the configuration of
+the chosen releaser or set a `JRELEASER_BRANCH` environment variable. This variable may also be set in the
+xref:configuration:environment.adoc[] configuration file.
+* JReleaser expects to be configured at the root of the Git project. If you configure it at some other location within the
+project structure then you may have to instruct JReleaser to search for the Git root:
+  ** xref:tools:jreleaser-cli.adoc[{icon_cli_s} CLI] use `-grs` or `--git-root-search` command flags.
+  ** xref:tools:jreleaser-maven.adoc[{icon_maven_s} Maven] set the `jreleaser.git.root.search` property or use `<gitRootSearch>`
+     in the plugin's configuration.
+  ** xref:tools:jreleaser-gradle.adoc[{icon_gradle_s} Gradle] set the `gitRootSearch` property on the `jreleaser` extension
+     or use the `--git-root-search` command flag.
+  ** xref:tools:jreleaser-ant.adoc[{icon_ant_s} Ant] set the `gitRootSearch` task property.
+* The default project versioning scheme is xref:configuration:project.adoc#_semver[Semantic Versioning].
+* The default tag format is `v{{projectVersion}}`.
+* JReleaser will tag the release by default. If you do not want this then set the `skipTag` property to `false` on the
+  chosen releaser.
+* The default distribution type is `xref:distributions/java-binary.adoc[JAVA_BINARY]`.
+* You are encouraged to try your first releases locally (if all configured artifacts/files are available) running in
+  dryrun mode:
+  ** xref:tools:jreleaser-cli.adoc#_release[{icon_cli_s} CLI] use `--dry-run` command flag.
+  ** xref:tools:jreleaser-maven.adoc#_jreleaserrelease[{icon_maven_s} Maven] set the `jreleaser.dry.run` property.
+  ** xref:tools:jreleaser-gradle.adoc#_jreleaserrelease[{icon_gradle_s} Gradle] set the `dryrun` property on the `jreleaser` extension
+     or use the `--dry-run` command flag.
+  ** xref:tools:jreleaser-ant.adoc#_jreleaser_release[{icon_ant_s} Ant] set the `dryrun` task property.
+* JReleaser generates 2 files after most commands are run. These are `output.properties` and `trace.log`. The first
+  contains a set of calculated values such as the project version, tag, timestamp, and more. The second contains the
+  full execution log plus any stacktraces in case of errors. You'll find these files inside the corresponding output
+  directory: `[out | target | build]/jreleaser`.

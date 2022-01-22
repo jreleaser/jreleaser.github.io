@@ -192,7 +192,7 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 $ jreleaser template -h
 Generate a packager/announcer template.
 
-Usage: jreleaser template [-ghioqsVw] [-b=<basedir>] [-od=<outputdir>]
+Usage: jreleaser template [-ghioqVw] [-sn] [-b=<basedir>] [-od=<outputdir>]
                           [-D=<key=value>]... ([-a=<announcer>] |
                           [-d=<distribution> -p=<packager> [-dt=<type>]])
 
@@ -206,7 +206,7 @@ Options:
       -od, --output-directory=<outputdir>
                             Output directory.
   -q, --quiet               Log errors only.
-  -s, --snapshot            Use snapshot templates.
+      -sn, --snapshot       Use snapshot templates.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
@@ -249,8 +249,8 @@ Assemble distributions.
 Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-P=<key=value>]...
-                          [-sp=<platform>]... [[[-a=<assembler>]...
-                          [-d=<distribution>]...] | [[-xa=<assembler>]...
+                          [-sp=<platform>]... [[[-s=<assembler>]...
+                          [-d=<distribution>]...] | [[-xs=<assembler>]...
                           [-xd=<distribution>]...]]
 
 Options:
@@ -277,16 +277,16 @@ Options:
   -w, --warn                Set log level to warn.
 
 Include Filter:
-  -a, --assembler=<assembler>
-                            Include an assembler. Repeatable.
   -d, --distribution=<distribution>
                             Include a distribution. Repeatable.
+  -s, --assembler=<assembler>
+                            Include an assembler. Repeatable.
 
 Exclude Filter:
-      -xa, --exclude-assembler=<assembler>
-                            Exclude an assembler. Repeatable.
       -xd, --exclude-distribution=<distribution>
                             Exclude a distribution. Repeatable.
+      -xs, --exclude-assembler=<assembler>
+                            Exclude an assembler. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----
@@ -455,17 +455,19 @@ in the xref:configuration:distributions.adoc[distribution] section.
 $ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                         [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
                         [-P=<key=value>]... [-sp=<platform>]...
-                        [[[-u=<uploader>]... [-un=<name>]...] |
-                        [[-xu=<uploader>]... [-xun=<name>]...]]
+                        [[[-u=<uploader>]... [-un=<name>]...
+                        [-d=<distribution>]...] | [[-xu=<uploader>]...
+                        [-xun=<name>]... [-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -483,14 +485,17 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
   -u, --uploader=<uploader> Include an uploader by type. Repeatable.
       -un, --uploader-name=<name>
                             Include an uploader by name. Repeatable.
 
 Exclude Filter:
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
       -xu, --exclude-uploader=<uploader>
                             Exclude an uploader by type. Repeatable.
       -xun, --exclude-uploader-name=<name>
@@ -510,7 +515,7 @@ xref:configuration:upload/index.adoc[uploader].
 The value of `--uploader-name` and `--exclude-uploader-name` must match any of the available named
 xref:configuration:upload/index.adoc[uploaders].
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 You may invoke this command in the following ways:
@@ -546,7 +551,7 @@ $ jreleaser upload --uploader-type artifactory --uploader-name mine
 $ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-P=<key=value>]...
                          [-sp=<platform>]... [[[-d=<distribution>]...] |
@@ -577,6 +582,7 @@ Options:
   -c, --config-file=<configFile>
                              The config file.
   -D=<key=value>             Sets a System property. Repeatable.
+      --dry-run              Skip remote operations.
   -g, --debug                Set log level to debug.
       -grs, --git-root-search
                              Searches for the Git root.
@@ -594,7 +600,6 @@ Options:
                                Repeatable.
   -V, --version              Print version information and exit.
   -w, --warn                 Set log level to warn.
-  -y, --dryrun               Skip remote operations.
 
 Include Filter:
   -d, --distribution=<distribution>
@@ -678,7 +683,7 @@ in the xref:configuration:distributions.adoc[distribution] section.
 
 IMPORTANT: None of the command flags that override model properties can be used in this mode.
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === prepare
@@ -776,7 +781,7 @@ $ jreleaser prepare --distribution-name app --packager-name brew
 $ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-P=<key=value>]...
                          [-sp=<platform>]... [[[-d=<distribution>]...
@@ -788,6 +793,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -805,7 +811,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
   -d, --distribution=<distribution>
@@ -858,7 +863,7 @@ Package a single distribution with a single tool:
 $ jreleaser package --distribution-name app --packager-name brew
 ----
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === publish
@@ -868,7 +873,7 @@ mutations should occur when this mode is activated.
 $ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-P=<key=value>]...
                          [-sp=<platform>]... [[[-d=<distribution>]...
@@ -880,6 +885,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -897,7 +903,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Include Filter:
   -d, --distribution=<distribution>
@@ -950,7 +955,7 @@ Publish a single distribution with a single tool:
 $ jreleaser publish --distribution-name app --packager-name brew
 ----
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === announce
@@ -960,7 +965,7 @@ mutations should occur when this mode is activated.
 $ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-P=<key=value>]...
                           [-sp=<platform>]... [-a=<announcer>
@@ -972,6 +977,7 @@ Options:
   -c, --config-file=<configFile>
                             The config file.
   -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -989,7 +995,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Filter:
   -a, --announcer=<announcer>
@@ -1022,7 +1027,7 @@ Announce with a single announcer:
 $ jreleaser announce --announcer-name brew
 ----
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === full-release
@@ -1032,16 +1037,17 @@ mutations should occur when this mode is activated.
 $ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVwy] [-grs] [-scp] [-b=<basedir>]
-                              [-c=<configFile>] [-od=<outputdir>]
-                              [-D=<key=value>]... [-P=<key=value>]...
-                              [-sp=<platform>]...
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp]
+                              [-b=<basedir>] [-c=<configFile>]
+                              [-od=<outputdir>] [-D=<key=value>]...
+                              [-P=<key=value>]... [-sp=<platform>]...
 
 Options:
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
   -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
   -g, --debug               Set log level to debug.
       -grs, --git-root-search
                             Searches for the Git root.
@@ -1059,7 +1065,6 @@ Options:
                               Repeatable.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
-  -y, --dryrun              Skip remote operations.
 
 Documentation found at https://jreleaser.org
 ----
@@ -1069,7 +1074,7 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-NOTE: Use `-y` or `--dryrun` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === generate-completion

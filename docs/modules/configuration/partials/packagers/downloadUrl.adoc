@@ -1,0 +1,16 @@
+== DownloadURL
+
+JReleaser follows these rules to find the download URL to use for a given artifact:
+
+ 1. if `artifact.extraProperties.{tool_id}DownloadUrl` exists, use it.
+ 2. if `artifact.extraProperties.downloadUrl` exists, use it.
+ 3. if explicit `downloadUrl` is set on `{tool_id}`, use it.
+ 4. if `distribution.extraProperties.{tool_id}DownloadUrl` exists, use it.
+ 5. if `distribution.extraProperties.downloadUrl` exists, use it.
+ 6. if `releaser.${git}.skipRelease` is `false` then use the releaser's `downloadUrl`.
+ 7. if `releaser.${git}.skipRelease` is `true` then look for a matching uploader given an extraProperty named
+   `downloadUrlFrom` on `artifact`, `distribution, `{tool_id}` (in that order). The value must be
+   `<uploaderType>:<uploaderName>` such as "artifactory:app" or "s3:uploads".
+ 8. fail if no suitable URL is found.
+
+With no extra configuration from your side rule 6. will be chosen which is the suitable default that most projects need.
