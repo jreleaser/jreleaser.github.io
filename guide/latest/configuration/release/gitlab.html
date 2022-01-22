@@ -133,7 +133,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../artifacts.html">Artifacts &amp; Globs</a>
+    <a class="nav-link" href="../../artifacts.html">Artifacts, Globs, FileSets</a>
   </li>
 </ul>
   </li>
@@ -454,6 +454,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../checklist.html">Checklist</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -634,11 +637,11 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     tagName: v1.0.0
 
-  # The tag to compare against the release tag. Is used to fetch all commits between those tags.
-  # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
-  # If left unspecified, will use the previous logical tag of `tagName`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  previousTagName = "v0.9.0"
+    # The tag to compare against the release tag. Is used to fetch all commits between those tags.
+    # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
+    # If left unspecified, will use the previous logical tag of `tagName`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    previousTagName = "v0.9.0"
 
     # The name of the release.
     # If left unspecified, will use `Release {{tagName}}`.
@@ -692,6 +695,12 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     branch: main
 
+    # Enables or disables asset upload.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+    # Defaults to `ALWAYS`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    uploadAssets: ALWAYS
+
     # Release files.
     # Defaults to `true`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -717,6 +726,12 @@ release:
     # necessary if the token-owner sees multiple same-named repositories.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     identifier: 123
+
+    # Adds links from uploads
+    # Key/values follow `<uploaderType>: <uploaderName>`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    uploadLinks:
+      artifactory: app
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -809,11 +824,11 @@ release:
         uncategorized: true
 
         # Hide matching categories.
-        # Entries must exactly match category titles defined below.
+        # Entries must exactly match category keys defined below.
         # Defaults to empty.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         categories:
-          - 'Merge'
+          - 'merge'
 
         # Hide matching contributor names.
         # Value may be plain text or regex.
@@ -923,7 +938,7 @@ release:
     srcUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/blob/{{repoBranch}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/blob/{{repoBranch}}</a>]
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    downloadUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}</a>]
+    downloadUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}</a>]
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     releaseNotesUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}</a>]
@@ -1052,6 +1067,12 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   branch = "main"
 
+  # Enables or disables asset upload.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+  # Defaults to `ALWAYS`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  uploadAssets = "ALWAYS"
+
   # Release files.
   # Defaults to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1077,6 +1098,12 @@ release:
   # necessary if the token-owner sees multiple same-named repositories.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   identifier = "123"
+
+  # Adds links from uploads
+  # Key/values follow `<uploaderType>: <uploaderName>`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [release.gitlab.uploadLinks]
+    artifactory = "app"
 
   # Git author used to commit to the repository.
 
@@ -1167,10 +1194,10 @@ release:
     uncategorized = true
 
     # Hide matching categories.
-    # Entries must exactly match category titles defined below.
+    # Entries must exactly match category keys defined below.
     # Defaults to empty.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    categories = ["Merge"]
+    categories = ["merge"]
 
     # Hide matching contributor names.
     # Value may be plain text or regex.
@@ -1276,7 +1303,7 @@ release:
   srcUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/blob/{{repoBranch}}"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  downloadUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}"
+  downloadUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   releaseNotesUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}"
@@ -1407,6 +1434,12 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "branch": "main",
 
+      // Enables or disables asset upload.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Defaults to `ALWAYS`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "uploadAssets": "ALWAYS",
+
       // Release files.
       // Defaults to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1432,6 +1465,13 @@ release:
       // necessary if the token-owner sees multiple same-named repositories.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "identifier": "123",
+
+      // Adds links from uploads
+      // Key/values follow `<uploaderType>: <uploaderName>`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "uploadLinks": {
+        "artifactory": "app"
+      },
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1522,11 +1562,11 @@ release:
           "uncategorized": true,
 
           // Hide matching categories.
-          // Entries must exactly match category titles defined below.
+          // Entries must exactly match category keys defined below.
           // Defaults to empty.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "categories": [
-            "Merge"
+            "merge"
           ],
 
           // Hide matching contributor names.
@@ -1658,7 +1698,7 @@ release:
       "srcUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/blob/{{repoBranch}}",
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "downloadUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}",
+      "downloadUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}",
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "releaseNotesUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}",
@@ -1838,6 +1878,14 @@ release:
       &lt;branch&gt;main&lt;/branch&gt;
 
       &lt;!--
+        Enables or disables asset upload.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+        Defaults to `ALWAYS`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;uploadAssets&gt;ALWAYS&lt;/uploadAssets&gt;
+
+      &lt;!--
         Release files.
         Defaults to `true`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1872,6 +1920,15 @@ release:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
      &lt;identifier&gt;123&lt;/identifier&gt;
+
+      &lt;!--
+        Adds links from uploads
+        Key/values follow `&lt;uploaderType&gt;: &lt;uploaderName&gt;`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;uploadLinks&gt;
+        &lt;artifactory&gt;app&lt;/artifactory&gt;
+      &lt;/uploadLinks&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -2006,12 +2063,12 @@ release:
 
           &lt;!--
             Hide matching categories.
-            Entries must exactly match category titles defined below.
+            Entries must exactly match category keys defined below.
             Defaults to empty.
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
           &lt;categories&gt;
-            &lt;category&gt;Merge&lt;/category&gt;
+            &lt;category&gt;merge&lt;/category&gt;
           &lt;/categories&gt;
 
           &lt;!--
@@ -2177,7 +2234,7 @@ release:
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
-      &lt;downloadUrl&gt;<a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}&lt;/downloadUrl&gt" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}&lt;/downloadUrl&gt</a>;
+      &lt;downloadUrl&gt;<a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}&lt;/downloadUrl&gt" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}&lt;/downloadUrl&gt</a>;
 
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2317,6 +2374,12 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>v
       branch = 'main'
 
+      // Enables or disables asset upload.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Defaults to `ALWAYS`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      uploadAssets = "ALWAYS"
+
       // Release files.
       // Defaults to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2342,6 +2405,13 @@ release:
       // necessary if the token-owner sees multiple same-named repositories.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       identifier = '123'
+
+      // Adds links from uploads
+      // Key/values follow `<uploaderType>: <uploaderName>`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      uploadLinks = [
+        artifactory: 'app'
+      ]
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2432,10 +2502,10 @@ release:
           uncategorized = true
 
           // Hide matching categories.
-          // Entries must exactly match category titles defined below.
+          // Entries must exactly match category keys defined below.
           // Defaults to empty.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          categories = ['Merge']
+          categories = ['merge']
 
           // Hide matching contributor names.
           // Value may be plain text or regex.
@@ -2558,7 +2628,7 @@ release:
       srcUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/blob/{{repoBranch}}'
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      downloadUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFileName}}'
+      downloadUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}/downloads/{{artifactFile}}'
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       releaseNotesUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/-/releases/{{tagName}}'
@@ -2628,6 +2698,17 @@ You <strong>must</strong> use an environment variable, can not use external prop
 signature file may be skipped as well by defining <code>skipReleaseSignatures</code> as an extra property on the artifact. You may
 also define either of this two properties on the owning <code>distribution</code> in which case the settings apply to all artifacts
 found in the distribution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upload_links"><a class="anchor" href="#_upload_links"></a>Upload Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GitLab offers the option to link assets that may have been uploaded via any of the available
+<a href="../upload/index.html" class="xref page">uploaders</a>. All matching files/artifacts will be linked.
+You may add an extra property <code>skipGitlabLinks</code> to any given artifact to avoid linking to it
+in a release.</p>
 </div>
 </div>
 </div>

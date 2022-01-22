@@ -133,7 +133,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../artifacts.html">Artifacts &amp; Globs</a>
+    <a class="nav-link" href="../../artifacts.html">Artifacts, Globs, FileSets</a>
   </li>
 </ul>
   </li>
@@ -454,6 +454,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../checklist.html">Checklist</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -643,17 +646,38 @@ assemble:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       archiveFormat: TGZ
 
-      # The GraalVM JDK to use.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      graal:
-        path: path/to/graalvm
+      # List of Graal JDKs.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      targetJdks:
+        - path: path/to/jdk
+          platform: osx-x86_64
+        - path: path/to/jdk
+          platform: linux-x86_64
 
       # A list of build arguments.
       # The `-H:Name` argument will always be replaced with the
       # value of $executable.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       args:
-        - "--install-exit-handlers"
+        - '--install-exit-handlers'
+
+      # Compress the resulting executable with UPX.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      upx:
+        # Enables or disables UPX.
+        # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        # Defaults to `NEVER`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active: ALWAYS
+
+        # Tool version.
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        version: '3.96'
+
+        # A list of arguments.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        args:
+          - '-f'
 
       # The executable JAR that contains the application.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -803,15 +827,34 @@ assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   archiveFormat = "TGZ"
 
-  # The GraalVM JDK to use.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  graal = { path = "path/to/graalvm" }
+  # List of Graal JDKs.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  targetJdks = [
+    { path = "path/to/jdk", platform = "osx-x86_64" },
+    { path = "path/to/jdk", platform = "linux-x86_64" }]
 
   # A list of build arguments.
   # The `-H:Name` argument will always be replaced with the
   # value of $executable.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   args = ["--install-exit-handlers"]
+
+  # Compress the resulting executable with UPX.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [assemble.nativeImage.app.upx]
+    # Enables or disables UPX.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    active = "ALWAYS"
+
+    # Tool version.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    version = "3.96"
+
+    # A list of arguments.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    args = ["-f]
 
   # The executable JAR that contains the application.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -965,11 +1008,18 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "archiveFormat": "TGZ",
 
-        // The GraalVM JDK to use.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "graal": {
-          "path": "path/to/graalvm"
-        },
+        // List of Graal JDKs.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "targetJdks": [
+          {
+            "path": "path/to/jdk",
+            "platform": "osx-x86_64"
+          },
+          {
+            "path": "path/to/jdk",
+            "platform": "linux-x86_64"
+          }
+        ],
 
         // A list of build arguments.
         // The `-H:Name` argument will always be replaced with the
@@ -978,6 +1028,24 @@ assemble:
         "args": [
           "--install-exit-handlers"
         ],
+
+        // Compress the resulting executable with UPX.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "upx": {
+          // Enables or disables UPX.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "active": "ALWAYS",
+
+          // Tool version.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          "version": "3.96",
+
+          // A list of arguments.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "args": ["-f]
+        },
 
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1182,12 +1250,19 @@ assemble:
         &lt;archiveFormat&gt;TGZ&lt;/archiveFormat&gt;
 
         &lt;!--
-          The GraalVM JDK to use.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          List of Graal JDKs.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
-        &lt;graal&gt;
-          &lt;path&gt;path/to/graalvm&lt;/path&gt;
-        &lt;/graal&gt;
+        &lt;targetJdks&gt;
+          &lt;graalJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;osx-x86_64&lt;/platform&gt;
+          &lt;/graalJdk&gt;
+          &lt;graalJdk&gt;
+            &lt;path&gt;path/to/jdk&lt;/path&gt;
+            &lt;platform&gt;linux-x86_64&lt;/platform&gt;
+          &lt;/graalJdk&gt;
+        &lt;/targetJdks&gt;
 
         &lt;!--
           A list of build arguments.
@@ -1198,6 +1273,34 @@ assemble:
         &lt;args&gt;
           &lt;arg&gt;--install-exit-handlers&lt;/arg&gt;
         &lt;/args&gt;
+
+        &lt;!--
+          Compress the resulting executable with UPX.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        ---&gt;
+        &lt;upx&gt;
+          &lt;!--
+            Enables or disables UPX.
+            Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to `NEVER`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;active&gt;ALWAYS&lt;/active&gt;
+
+          &lt;!--
+            Tool version.
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          --&gt;
+          &lt;version&gt;3.96&lt;/version&gt;
+
+          &lt;!--
+            A list of arguments.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;args&gt;
+            &lt;arg&gt;-f&lt;/arg&gt;
+          &lt;/args&gt;
+        &lt;/upx&gt;
 
         &lt;!--
           The executable JAR that contains the application.
@@ -1416,10 +1519,15 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         archiveFormat = 'TGZ'
 
-        // The GraalVM JDK to use.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        graal {
-          path = 'path/to/graalvm'
+        // List of Graal JDKs.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'osx-x86_64'
+        }
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'linux-x86_64'
         }
 
         // A list of build arguments.
@@ -1427,6 +1535,24 @@ assemble:
         // value of $executable.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         addArg('--install-exit-handlers')
+
+        // Compress the resulting executable with UPX.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        upx {
+          // Enables or disables UPX.
+          // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          active = 'ALWAYS'
+
+          // Tool version.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          version = '3.96'
+
+          // A list of arguments.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          addArg('-f')
+        }
 
         // The executable JAR that contains the application.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1524,12 +1650,35 @@ assemble:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_graal"><a class="anchor" href="#_graal"></a>Graal</h2>
+<h2 id="_graal_jdks"><a class="anchor" href="#_graal_jdks"></a>Graal JDKs</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The path for <code>graal</code> must exist in the file system. You may use the
+<p>The following rules apply when resolving which Graal JDK will be used to generate native image executables:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A matching JDK (by platform) will be searched in <code>graalJdks</code>.</p>
+</li>
+<li>
+<p>If no match is found then the currently executing JDK will be used.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Paths for <code>graalJdks</code> must exist in the file system. You may use the
 <a href="../../tools/jdks-maven.html#_configuration_dsl" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jdks-maven-plugin</a> or
-<a href="../../tools/jdks-gradle.html#_configuration_dsl" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jdks-gradle-plugin</a> to download a Graal distribution.</p>
+<a href="../../tools/jdks-gradle.html#_configuration_dsl" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jdks-gradle-plugin</a> to download required JDKs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upx"><a class="anchor" href="#_upx"></a>UPX</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executables may optionally be compressed with <a href="https://upx.github.io/">UPX</a>. You must define a version.
+JReleaser will check if a matching binary exists in the system or download a binary that matches the current
+platform.</p>
 </div>
 </div>
 </div>

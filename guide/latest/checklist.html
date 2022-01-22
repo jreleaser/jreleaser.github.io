@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>JReleaser :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/index.html">
+    <title>Checklist :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/checklist.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/site-extra.css">
@@ -453,7 +453,7 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -495,153 +495,105 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">JReleaser</a></li>
+    <li><a href="checklist.html">Checklist</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">latest</button>
   <div class="version-menu">
-    <a class="version is-current" href="index.html">latest</a>
-    <a class="version" href="../early-access/index.html">early-access</a>
+    <a class="version is-current" href="checklist.html">latest</a>
+    <a class="version" href="../early-access/checklist.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/ROOT/pages/checklist.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">JReleaser</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Checklist</h1>
 <div class="paragraph">
-<p>JReleaser is a release automation tool. Its goal is to simplify creating releases and publishing artifacts
-to multiple package managers while providing customizable options. However you may use it with projects that do
-not require publishing binary assets.</p>
+<p>Review the following items before making your first release:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Sources must be inside a Git repository with at least one remote (default name <code>origin</code>). You can change the default
+remote name to something else by setting a <code>JRELEASER_DEFAULT_GIT_REMOTE</code> environment variable.</p>
+</li>
+<li>
+<p>The default branch name is <code>main</code>. If you use a different name then you may set it explicitly in the configuration of
+the chosen releaser or set a <code>JRELEASER_BRANCH</code> environment variable. This variable may also be set in the
+<a href="configuration/environment.html" class="xref page">Environment</a> configuration file.</p>
+</li>
+<li>
+<p>JReleaser expects to be configured at the root of the Git project. If you configure it at some other location within the
+project structure then you may have to instruct JReleaser to search for the Git root:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="tools/jreleaser-cli.html" class="xref page"><span class="image"><img src="_images/cli.svg" alt="cli" width="20" height="20"></span> CLI</a> use <code>-grs</code> or <code>--git-root-search</code> command flags.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-maven.html" class="xref page"><span class="image"><img src="_images/maven.svg" alt="maven" width="24" height="24"></span> Maven</a> set the <code>jreleaser.git.root.search</code> property or use <code>&lt;gitRootSearch&gt;</code>
+in the plugin&#8217;s configuration.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-gradle.html" class="xref page"><span class="image"><img src="_images/gradle.svg" alt="gradle" width="24" height="24"></span> Gradle</a> set the <code>gitRootSearch</code> property on the <code>jreleaser</code> extension
+or use the <code>--git-root-search</code> command flag.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-ant.html" class="xref page"><span class="image"><img src="_images/ant.svg" alt="ant" width="24" height="24"></span> Ant</a> set the <code>gitRootSearch</code> task property.</p>
+</li>
+</ul>
 </div>
+</li>
+<li>
+<p>The default project versioning scheme is <a href="configuration/project.html#_semver" class="xref page">Semantic Versioning</a>.</p>
+</li>
+<li>
+<p>The default tag format is <code>v{{projectVersion}}</code>.</p>
+</li>
+<li>
+<p>JReleaser will tag the release by default. If you do not want this then set the <code>skipTag</code> property to <code>false</code> on the
+chosen releaser.</p>
+</li>
+<li>
+<p>The default distribution type is <code><a href="distributions/java-binary.html" class="xref page">JAVA_BINARY</a></code>.</p>
+</li>
+<li>
+<p>You are encouraged to try your first releases locally (if all configured artifacts/files are available) running in
+dryrun mode:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="tools/jreleaser-cli.html#_release" class="xref page"><span class="image"><img src="_images/cli.svg" alt="cli" width="20" height="20"></span> CLI</a> use <code>--dry-run</code> command flag.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-maven.html#_jreleaserrelease" class="xref page"><span class="image"><img src="_images/maven.svg" alt="maven" width="24" height="24"></span> Maven</a> set the <code>jreleaser.dry.run</code> property.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-gradle.html#_jreleaserrelease" class="xref page"><span class="image"><img src="_images/gradle.svg" alt="gradle" width="24" height="24"></span> Gradle</a> set the <code>dryrun</code> property on the <code>jreleaser</code> extension
+or use the <code>--dry-run</code> command flag.</p>
+</li>
+<li>
+<p><a href="tools/jreleaser-ant.html#_jreleaser_release" class="xref page"><span class="image"><img src="_images/ant.svg" alt="ant" width="24" height="24"></span> Ant</a> set the <code>dryrun</code> task property.</p>
+</li>
+</ul>
 </div>
-<div class="sect1">
-<h2 id="_what_it_does"><a class="anchor" href="#_what_it_does"></a>What it does</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>JReleaser takes inputs from popular builds tools (Apache Ant, Apache Maven, Gradle) such as JAR files, binary distributions
-(<code>.zip</code>, <code>.tar</code>), JLink images, or any other file that you&#8217;d like to publish as a Git release on popular Git services
-such as GitHub, GitLab, or Gitea. Distribution files can additionally be published to be consumed by popular package managers
-as Homebrew, Snapcraft, Scoop, or get ready to be launched via JBang. Releases may be announced in a variety of channels such
-as Twitter, Zulip, Sdkman, and others. Have a look at the listed <a href="integrations.html" class="xref page">integrations</a>.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/jreleaser-tools.png" alt="jreleaser tools">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_how_does_it_work"><a class="anchor" href="#_how_does_it_work"></a>How does it work</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A release process can be customized with a <code>jreleaser.[yml|toml|json]</code> file if using the
-<span class="image"><img src="_images/cli.svg" alt="cli" width="20" height="20"></span> <a href="tools/jreleaser-cli.html" class="xref page">CLI</a> or <span class="image"><img src="_images/ant.svg" alt="ant" width="24" height="24"></span> <a href="tools/jreleaser-ant.html" class="xref page">Apache Ant</a> options, or
-direct DSL configuration inside a <code>pom.xml</code> (<span class="image"><img src="_images/maven.svg" alt="maven" width="24" height="24"></span> <a href="tools/jreleaser-maven.html" class="xref page">Apache Maven</a>) or
-<code>build.gradle</code> (<span class="image"><img src="_images/gradle.svg" alt="gradle" width="24" height="24"></span> <a href="tools/jreleaser-gradle.html" class="xref page">Gradle</a>) file.</p>
-</div>
-<div class="paragraph">
-<p>Once setup, you can create a new release by invoking the <code>full-release</code> command or any other commands described in the
-<a href="workflow.html" class="xref page">Workflow</a>.</p>
-</div>
-<div class="paragraph">
-<p>Every step of the release process is configurable. Inputs may be parameterized externally; several input files may be
-provided as templates.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_where_does_it_run"><a class="anchor" href="#_where_does_it_run"></a>Where does it run</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You can run JReleaser at your local development machine or at any of the supported
-<a href="continuous-integration/index.html" class="xref page">CI/CD</a> services.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_how_it_looks"><a class="anchor" href="#_how_it_looks"></a>How it looks</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A (moving) picture is worth a thousand words</p>
-</div>
-<script id="asciicast-409271" src="https://asciinema.org/a/409271.js" async></script>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_who_is_using_it"><a class="anchor" href="#_who_is_using_it"></a>Who is using it</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A non exhaustive list of projects that use JReleaser</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><a href="https://github.com/helpermethod/connor">ConnOR</a></dt>
-<dd>
-<p>A commandline tool for resetting Kafka Connect source connector offsets.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/griffon/griffon">Griffon</a></dt>
-<dd>
-<p>Next generation desktop application development platform for the JVM.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/kordamp/ikonli">Ikonli</a></dt>
-<dd>
-<p>Icon packs for Java applications.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/jbangdev/jbang">JBang</a></dt>
-<dd>
-<p>Unleash the power of Java - JBang Lets Students, Educators and Professional
-Developers create, edit and run self-contained source-only Java programs with unprecedented ease.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/moditect/jfrunit/">JfrUnit</a></dt>
-<dd>
-<p>A JUnit extension for asserting JDK Flight Recorder events.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/kcctl/kcctl">kcctl</a></dt>
-<dd>
-<p>A modern and intuitive command line client for Kafka Connect.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/mthmulders/mcs">mcs</a></dt>
-<dd>
-<p>Search the Maven Central Repository from your command line!</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/michael-simons/neo4j-migrations">Neo4j-Migrations</a></dt>
-<dd>
-<p>Automated script runner aka "Migrations" for
-Neo4j. Inspired by Flyway.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/quarkusio/quarkus">Quarkus</a></dt>
-<dd>
-<p>Supersonic Subatomic Java.</p>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/sdkman/sdkman-cli">SDKMAN!</a></dt>
-<dd>
-<p>The SDKMAN! Command Line Interface.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_acknowledgments"><a class="anchor" href="#_acknowledgments"></a>Acknowledgments</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>JReleaser is heavily inspired by <a href="https://goreleaser.com">GoReleaser</a>, it also builds on top of the lessons learned
-from <a href="https://github.com/jbangdev/jbang">JBang</a>'s original build setup. Since July 2021 JBang&#8217;s releases are now
-posted via JReleaser.</p>
-</div>
-</div>
+</li>
+<li>
+<p>JReleaser generates 2 files after most commands are run. These are <code>output.properties</code> and <code>trace.log</code>. The first
+contains a set of calculated values such as the project version, tag, timestamp, and more. The second contains the
+full execution log plus any stacktraces in case of errors. You&#8217;ll find these files inside the corresponding output
+directory: <code>[out | target | build]/jreleaser</code>.</p>
+</li>
+</ul>
 </div>
 </article>
   </div>

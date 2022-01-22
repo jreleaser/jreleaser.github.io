@@ -133,7 +133,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../artifacts.html">Artifacts &amp; Globs</a>
+    <a class="nav-link" href="../../artifacts.html">Artifacts, Globs, FileSets</a>
   </li>
 </ul>
   </li>
@@ -454,6 +454,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../checklist.html">Checklist</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -634,11 +637,11 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     tagName: v1.0.0
 
-  # The tag to compare against the release tag. Is used to fetch all commits between those tags.
-  # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
-  # If left unspecified, will use the previous logical tag of `tagName`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  previousTagName = "v0.9.0"
+    # The tag to compare against the release tag. Is used to fetch all commits between those tags.
+    # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
+    # If left unspecified, will use the previous logical tag of `tagName`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    previousTagName = "v0.9.0"
 
     # The name of the release.
     # If left unspecified, will use `Release {{tagName}}`.
@@ -691,6 +694,12 @@ release:
     # Defaults to the branch pointed by HEAD.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     branch: main
+
+    # Enables or disables asset upload.
+    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+    # Defaults to `ALWAYS`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    uploadAssets: ALWAYS
 
     # Release files.
     # Defaults to `true`.
@@ -828,11 +837,11 @@ release:
         uncategorized: true
 
         # Hide matching categories.
-        # Entries must exactly match category titles defined below.
+        # Entries must exactly match category keys defined below.
         # Defaults to empty.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         categories:
-          - 'Merge'
+          - 'merge'
 
         # Hide matching contributor names.
         # Value may be plain text or regex.
@@ -942,7 +951,7 @@ release:
     srcUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/blob/{{repoBranch}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/blob/{{repoBranch}}</a>
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    downloadUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}</a>
+    downloadUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}</a>
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     releaseNotesUrl: <a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}</a>
@@ -1070,6 +1079,12 @@ release:
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   branch = "main"
+
+  # Enables or disables asset upload.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+  # Defaults to `ALWAYS`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  uploadAssets = "ALWAYS"
 
   # Release files.
   # Defaults to `true`.
@@ -1203,10 +1218,10 @@ release:
     uncategorized = true
 
     # Hide matching categories.
-    # Entries must exactly match category titles defined below.
+    # Entries must exactly match category keys defined below.
     # Defaults to empty.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    categories = ["Merge"]
+    categories = ["merge"]
 
     # Hide matching contributor names.
     # Value may be plain text or regex.
@@ -1312,7 +1327,7 @@ release:
   srcUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/blob/{{repoBranch}}"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  downloadUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}"
+  downloadUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   releaseNotesUrl = "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}"
@@ -1442,6 +1457,12 @@ release:
       // Defaults to the branch pointed by HEAD.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "branch": "main",
+
+      // Enables or disables asset upload.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Defaults to `ALWAYS`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "uploadAssets": "ALWAYS",
 
       // Release files.
       // Defaults to `true`.
@@ -1578,11 +1599,11 @@ release:
           "uncategorized": true,
 
           // Hide matching categories.
-          // Entries must exactly match category titles defined below.
+          // Entries must exactly match category keys defined below.
           // Defaults to empty.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "categories": [
-            "Merge"
+            "merge"
           ],
 
           // Hide matching contributor names.
@@ -1714,7 +1735,7 @@ release:
       "srcUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/blob/{{repoBranch}}",
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      "downloadUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}",
+      "downloadUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}",
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "releaseNotesUrl": "https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}",
@@ -1892,6 +1913,14 @@ release:
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;branch&gt;main&lt;/branch&gt;
+
+      &lt;!--
+        Enables or disables asset upload.
+        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+        Defaults to `ALWAYS`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;uploadAssets&gt;ALWAYS&lt;/uploadAssets&gt;
 
       &lt;!--
         Release files.
@@ -2090,12 +2119,12 @@ release:
 
           &lt;!--
             Hide matching categories.
-            Entries must exactly match category titles defined below.
+            Entries must exactly match category keys defined below.
             Defaults to empty.
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
           &lt;categories&gt;
-            &lt;category&gt;Merge&lt;/category&gt;
+            &lt;category&gt;merge&lt;/category&gt;
           &lt;/categories&gt;
 
           &lt;!--
@@ -2261,7 +2290,7 @@ release:
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
-      &lt;downloadUrl&gt;<a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}&lt;/downloadUrl&gt" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}&lt;/downloadUrl&gt</a>;
+      &lt;downloadUrl&gt;<a href="https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt" class="bare">https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt</a>;
 
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2401,6 +2430,12 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>v
       branch = 'main'
 
+      // Enables or disables asset upload.
+      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Defaults to `ALWAYS`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      uploadAssets = "ALWAYS"
+
       // Release files.
       // Defaults to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2536,10 +2571,10 @@ release:
           uncategorized = true
 
           // Hide matching categories.
-          // Entries must exactly match category titles defined below.
+          // Entries must exactly match category keys defined below.
           // Defaults to empty.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          categories = ['Merge']
+          categories = ['merge']
 
           // Hide matching contributor names.
           // Value may be plain text or regex.
@@ -2662,7 +2697,7 @@ release:
       srcUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/blob/{{repoBranch}}'
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      downloadUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFileName}}'
+      downloadUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/download/{{tagName}}/{{artifactFile}}'
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       releaseNotesUrl = 'https://{{repoHost}}/{{repoOwner}}/{{repoName}}/releases/tag/{{tagName}}'
