@@ -118,15 +118,20 @@ include::partial$packagers/yaml/package-name.adoc[]
     plugs:
       some_plug_name:
         key: value
+        reads:
+        - $HOME/.foo
+        writes:
+        - $HOME/.foo
+        - $HOME/.foobar
 
     # Allows slots to be configured.
     # icon:dot-circle[]
     slots:
       some_slot_name:
         key: value
-        read:
+        reads:
         - $HOME/.foo
-        write:
+        writes:
         - $HOME/.foo
         - $HOME/.foobar
 
@@ -223,13 +228,15 @@ include::partial$packagers/toml/package-name.adoc[]
   # icon:dot-circle[]
   [packagers.snap.plugs]
     some_plug_name.key = "value"
+    some_plug_name.reads = ["$HOME/.foo"]
+    some_plug_name.writes = ["$HOME/.foo", "$HOME/.foobar"]
 
   # Allows slots to be configured.
   # icon:dot-circle[]
   [packagers.snap.slots]
     some_slot_name.key = "value"
-    some_slot_name.read = ["$HOME/.foo"]
-    some_slot_name.write = ["$HOME/.foo", "$HOME/.foobar"]
+    some_slot_name.reads = ["$HOME/.foo"]
+    some_slot_name.writes = ["$HOME/.foo", "$HOME/.foobar"]
 
   # Configures build/run architectures
   # More details can be found at link:https://snapcraft.io/docs/architectures[]
@@ -329,7 +336,14 @@ include::partial$packagers/json/package-name.adoc[]
       "plugs": [
         {
           "some_plug_name": {
-            "key": "value"
+            "key": "value",
+            "reads": [
+              "$HOME/.foo"
+            ],
+            "writes": [
+              "$HOME/.foo",
+              "$HOME/.foobar"
+            ]
           }
         }
       ],
@@ -340,10 +354,10 @@ include::partial$packagers/json/package-name.adoc[]
         {
           "some_slot_name": {
             "key": "value",
-            "read": [
+            "reads": [
               "$HOME/.foo"
             ],
-            "write": [
+            "writes": [
               "$HOME/.foo",
               "$HOME/.foobar"
             ]
@@ -472,6 +486,13 @@ include::partial$packagers/maven/package-name.adoc[]
           <attributes>
             <key>value</key>
           </attributes>
+          <reads>
+            <read>$HOME/.foo</read>
+          </reads>
+          <writes>
+            <write>$HOME/.foo</write>
+            <write>$HOME/.foobar</write>
+          </writes>
         </plug>
       </plugs>
 
@@ -601,6 +622,9 @@ include::partial$packagers/gradle/package-name.adoc[]
       plugs {
         some_plug_name {
           addAttribute('key', 'value')
+          addRead('$HOME/.foo')
+          addWrite('$HOME/.foo')
+          addWrite('$HOME/.foobar')
         }
       }
 
