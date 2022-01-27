@@ -803,15 +803,20 @@ packagers:
     plugs:
       some_plug_name:
         key: value
+        reads:
+        - $HOME/.foo
+        writes:
+        - $HOME/.foo
+        - $HOME/.foobar
 
     # Allows slots to be configured.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     slots:
       some_slot_name:
         key: value
-        read:
+        reads:
         - $HOME/.foo
-        write:
+        writes:
         - $HOME/.foo
         - $HOME/.foobar
 
@@ -990,13 +995,15 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [packagers.snap.plugs]
     some_plug_name.key = "value"
+    some_plug_name.reads = ["$HOME/.foo"]
+    some_plug_name.writes = ["$HOME/.foo", "$HOME/.foobar"]
 
   # Allows slots to be configured.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [packagers.snap.slots]
     some_slot_name.key = "value"
-    some_slot_name.read = ["$HOME/.foo"]
-    some_slot_name.write = ["$HOME/.foo", "$HOME/.foobar"]
+    some_slot_name.reads = ["$HOME/.foo"]
+    some_slot_name.writes = ["$HOME/.foo", "$HOME/.foobar"]
 
   # Configures build/run architectures
   # More details can be found at <a href="https://snapcraft.io/docs/architectures" class="bare">https://snapcraft.io/docs/architectures</a>
@@ -1187,7 +1194,14 @@ packagers:
       "plugs": [
         {
           "some_plug_name": {
-            "key": "value"
+            "key": "value",
+            "reads": [
+              "$HOME/.foo"
+            ],
+            "writes": [
+              "$HOME/.foo",
+              "$HOME/.foobar"
+            ]
           }
         }
       ],
@@ -1198,10 +1212,10 @@ packagers:
         {
           "some_slot_name": {
             "key": "value",
-            "read": [
+            "reads": [
               "$HOME/.foo"
             ],
-            "write": [
+            "writes": [
               "$HOME/.foo",
               "$HOME/.foobar"
             ]
@@ -1466,6 +1480,13 @@ packagers:
           &lt;attributes&gt;
             &lt;key&gt;value&lt;/key&gt;
           &lt;/attributes&gt;
+          &lt;reads&gt;
+            &lt;read&gt;$HOME/.foo&lt;/read&gt;
+          &lt;/reads&gt;
+          &lt;writes&gt;
+            &lt;write&gt;$HOME/.foo&lt;/write&gt;
+            &lt;write&gt;$HOME/.foobar&lt;/write&gt;
+          &lt;/writes&gt;
         &lt;/plug&gt;
       &lt;/plugs&gt;
 
@@ -1686,6 +1707,9 @@ packagers:
       plugs {
         some_plug_name {
           addAttribute('key', 'value')
+          addRead('$HOME/.foo')
+          addWrite('$HOME/.foo')
+          addWrite('$HOME/.foobar')
         }
       }
 
