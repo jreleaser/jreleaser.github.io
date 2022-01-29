@@ -589,7 +589,7 @@ Publication of snapshots is <strong>not</strong> allowed.
 </td>
 <td class="content">
 Building local snaps requires <code>snapcraft</code> to be pre-installed. JReleaser will not install it nor its
-dependencies.
+dependencies. If you rather package and push on CI then set <code>remoteBuild</code> to <code>true</code>.
 </td>
 </tr>
 </table>
@@ -667,6 +667,12 @@ packagers:
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     templateDirectory: path/to/snap/templates
+
+    # List of template files to be skipped.
+    # Value may be an exact match or a regex.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    skipTemplates:
+      - README.md.tpl
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -865,6 +871,11 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/snap/templates"
 
+  # List of template files to be skipped.
+  # Value may be an exact match or a regex.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipTemplates = [ "README.md.tpl" ]
+
   # Git author used to commit to the repository.
 
   # Name used when authoring commits.
@@ -1054,6 +1065,13 @@ packagers:
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "templateDirectory": "path/to/snap/templates",
+
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "skipTemplates": [
+        "README.md.tpl"
+      ],
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1294,6 +1312,15 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;templateDirectory&gt;path/to/snap/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        List of template files to be skipped.
+        Value may be an exact match or a regex.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;skipTemplates&gt;
+        &lt;skipTemplate&gt;README.md.tpl&lt;/skipTemplate&gt;
+      &lt;/skipTemplates&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -1571,6 +1598,11 @@ packagers:
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       templateDirectory = 'path/to/snap/templates'
+
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipTemplate('README.md.tpl')
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1944,6 +1976,28 @@ which case <a href="../name-templates.html" class="xref page">Name Templates</a>
 <a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
 <a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
 <a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_templates"><a class="anchor" href="#_skip_templates"></a>Skip Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may skip any template files by defining a set of skip rules in the <code>skipTemplates</code> property. For example you may use
+any of these expressions to skip a template named <code>README.md.tpl</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>README.md.tpl</code>: matches the full template name</p>
+</li>
+<li>
+<p><code>README.md</code>: matches the transformed template name</p>
+</li>
+<li>
+<p><code>README.*</code>: matches using a regex</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
