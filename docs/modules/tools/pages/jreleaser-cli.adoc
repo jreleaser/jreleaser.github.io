@@ -351,9 +351,8 @@ Calculate checksums.
 Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-P=<key=value>]...
-                          [-sp=<platform>]... [-d=<distribution>
-                          [-d=<distribution>]... | -xd=<distribution>
-                          [-xd=<distribution>]...]
+                          [-sp=<platform>]... [[[-d=<distribution>]...] |
+                          [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -378,9 +377,11 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
-Filter:
+Include Filter:
   -d, --distribution=<distribution>
                             Include a distribution. Repeatable.
+
+Exclude Filter:
       -xd, --exclude-distribution=<distribution>
                             Exclude a distribution. Repeatable.
 
@@ -404,9 +405,8 @@ Sign release artifacts.
 
 Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [-b=<basedir>] [-c=<configFile>]
                       [-od=<outputdir>] [-D=<key=value>]... [-P=<key=value>]...
-                      [-sp=<platform>]... [-d=<distribution>
-                      [-d=<distribution>]... | -xd=<distribution>
-                      [-xd=<distribution>]...]
+                      [-sp=<platform>]... [[[-d=<distribution>]...] |
+                      [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -431,9 +431,11 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
-Filter:
+Include Filter:
   -d, --distribution=<distribution>
                             Include a distribution. Repeatable.
+
+Exclude Filter:
       -xd, --exclude-distribution=<distribution>
                             Exclude a distribution. Repeatable.
 
@@ -515,7 +517,7 @@ xref:configuration:upload/index.adoc[uploader].
 The value of `--uploader-name` and `--exclude-uploader-name` must match any of the available named
 xref:configuration:upload/index.adoc[uploaders].
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 You may invoke this command in the following ways:
@@ -554,8 +556,10 @@ Create or update a release.
 Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-P=<key=value>]...
-                         [-sp=<platform>]... [[[-d=<distribution>]...] |
-                         [[-xd=<distribution>]...] | [[--auto-config]
+                         [-sp=<platform>]... [[[-d=<distribution>]...
+                         [-u=<uploader>]... [-un=<name>]...] |
+                         [[-xd=<distribution>]... [-xu=<uploader>]...
+                         [-xun=<name>]...] | [[--auto-config]
                          [--project-name=<projectName>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
@@ -604,10 +608,17 @@ Options:
 Include Filter:
   -d, --distribution=<distribution>
                              Include a distribution. Repeatable.
+  -u, --uploader=<uploader>  Include an uploader by type. Repeatable.
+      -un, --uploader-name=<name>
+                             Include an uploader by name. Repeatable.
 
 Exclude Filter:
       -xd, --exclude-distribution=<distribution>
                              Exclude a distribution. Repeatable.
+      -xu, --exclude-uploader=<uploader>
+                             Exclude an uploader by type. Repeatable.
+      -xun, --exclude-uploader-name=<name>
+                             Exclude an uploader by name. Repeatable.
 
 Auto Config Options:
       --auto-config          Activate auto configuration.
@@ -683,7 +694,7 @@ in the xref:configuration:distributions.adoc[distribution] section.
 
 IMPORTANT: None of the command flags that override model properties can be used in this mode.
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === prepare
@@ -863,7 +874,7 @@ Package a single distribution with a single tool:
 $ jreleaser package --distribution-name app --packager-name brew
 ----
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === publish
@@ -955,7 +966,7 @@ Publish a single distribution with a single tool:
 $ jreleaser publish --distribution-name app --packager-name brew
 ----
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === announce
@@ -968,9 +979,8 @@ Announce a release.
 Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                           [-c=<configFile>] [-od=<outputdir>]
                           [-D=<key=value>]... [-P=<key=value>]...
-                          [-sp=<platform>]... [-a=<announcer>
-                          [-a=<announcer>]... | -xa=<announcer>
-                          [-xa=<announcer>]...]
+                          [-sp=<platform>]... [[[-a=<announcer>]...] |
+                          [[-xa=<announcer>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -996,9 +1006,11 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
-Filter:
+Include Filter:
   -a, --announcer=<announcer>
                             Include an announcer. Repeatable.
+
+Exclude Filter:
       -xa, --exclude-announcer=<announcer>
                             Exclude an announcer. Repeatable.
 
@@ -1027,7 +1039,7 @@ Announce with a single announcer:
 $ jreleaser announce --announcer-name brew
 ----
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === full-release
@@ -1041,6 +1053,11 @@ Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp]
                               [-b=<basedir>] [-c=<configFile>]
                               [-od=<outputdir>] [-D=<key=value>]...
                               [-P=<key=value>]... [-sp=<platform>]...
+                              [[[-u=<uploader>]... [-un=<name>]...
+                              [-d=<distribution>]... [-p=<packager>]...
+                              [-a=<announcer>]...] | [[-xu=<uploader>]...
+                              [-xun=<name>]... [-xd=<distribution>]...
+                              [-xp=<packager>]... [-xa=<announcer>]...]]
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -1066,6 +1083,28 @@ Options:
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
 
+Include Filter:
+  -a, --announcer=<announcer>
+                            Include an announcer. Repeatable.
+  -d, --distribution=<distribution>
+                            Include a distribution. Repeatable.
+  -p, --packager=<packager> Include a packager. Repeatable.
+  -u, --uploader=<uploader> Include an uploader by type. Repeatable.
+      -un, --uploader-name=<name>
+                            Include an uploader by name. Repeatable.
+
+Exclude Filter:
+      -xa, --exclude-announcer=<announcer>
+                            Exclude an announcer. Repeatable.
+      -xd, --exclude-distribution=<distribution>
+                            Exclude a distribution. Repeatable.
+      -xp, --exclude-packager=<packager>
+                            Exclude a packager. Repeatable.
+      -xu, --exclude-uploader=<uploader>
+                            Exclude an uploader by type. Repeatable.
+      -xun, --exclude-uploader-name=<name>
+                            Exclude an uploader by name. Repeatable.
+
 Documentation found at https://jreleaser.org
 ----
 
@@ -1074,7 +1113,7 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-NOTE: Use `-y` or `--dry-run` during development to verify your configuration settings. No network uploads nor repository
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
 
 === generate-completion

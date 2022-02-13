@@ -430,12 +430,12 @@ include::partial$packagers/gradle/tap.adoc[]
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
       // will be created.
       // icon:dot-circle[] icon:file-alt[]
-      addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
-      addImageName('duke/app:latest')
+      imageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
+      imageName('duke/app:latest')
 
       // A list of build arguments.
       // icon:dot-circle[] icon:file-alt[]
-      addBuildArg('--pull')
+      buildArg('--pull')
 
       // Selects a Dockerfile template.
       // If `true` (default) then the Dockerfile will use the local distribution files.
@@ -445,17 +445,17 @@ include::partial$packagers/gradle/tap.adoc[]
 
       // Dockerfile commands to run before the assembly.
       // icon:dot-circle[] icon:file-alt[]
-      addPreCommand('RUN apt-get update -y')
-      addPreCommand('RUN apt-get install unzip')
+      preCommand('RUN apt-get update -y')
+      preCommand('RUN apt-get install unzip')
 
       // Dockerfile commands to run after the assembly, before ENTRYPOINT.
       // icon:dot-circle[] icon:file-alt[]
-      addPostCommand('VOLUME /workspace')
+      postCommand('VOLUME /workspace')
 
       // A map of Docker labels.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
       // icon:dot-circle[]
-      addLabel('foo', 'bar')
+      label('foo', 'bar')
 
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
@@ -638,7 +638,7 @@ jreleaser {
   packagers {
     docker {
       active = 'ALWAYS'
-      addImageName('myuser/{{projectName}}')
+      imageName('myuser/{{projectName}}')
     }
   }
 }
@@ -761,10 +761,10 @@ jreleaser {
   packagers {
     docker {
       active = 'ALWAYS'
-      addImageName('myuser/myimage:{{tagName}}')
-      addImageName('myuser/myimage:v{{projectVersionMajor}}')
-      addImageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
-      addImageName('myuser/myimage:latest')
+      imageName('myuser/myimage:{{tagName}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
+      imageName('myuser/myimage:latest')
     }
   }
 }
@@ -922,3 +922,11 @@ xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:temp
 xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
 xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
 
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex

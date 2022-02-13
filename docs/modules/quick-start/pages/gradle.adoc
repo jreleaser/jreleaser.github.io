@@ -3,9 +3,9 @@
 Your project should be able to produce binary distributions, a feat typically achieved by configuring
 the `link:https://docs.gradle.org/current/userguide/application_plugin.html[application]` plugin.
 
-You also have to configure the xref:tools:jreleaser-gradle.adoc[jreleaser-gradle-plugin]. We recommend using the
-link:https://kordamp.org/kordamp-gradle-plugins/[Kordamp plugins] as they provide additional benefits,
-however their use is optional. A sample project using Kordamp may look like this:
+You also have to configure the xref:tools:jreleaser-gradle.adoc[jreleaser-gradle-plugin].
+
+A straight forward project configuration could look like this:
 
 [source,groovy]
 [subs="attributes"]
@@ -14,7 +14,48 @@ however their use is optional. A sample project using Kordamp may look like this
 plugins {
     id 'java-library'
     id 'application'
-    id 'org.kordamp.gradle.java-project' version '0.45.0'
+    id 'org.jreleaser' version '{jreleaser-version}'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+jreleaser {
+    project {
+        website = 'https://acme.com/app'
+        authors = ['Duke']
+        license = 'Apache-2.0'
+        extraProperties.put('inceptionYear', '2021')
+    }
+
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+    distributions {
+        app {
+           artifact {
+               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
+           }
+        }
+    }
+}
+----
+
+You could also use the link:https://kordamp.org/kordamp-gradle-plugins/[Kordamp plugins] to setup the project as they
+provide additional benefits, however their use is optional. A sample project using Kordamp may look like this:
+
+[source,groovy]
+[subs="attributes"]
+.build.gradle
+----
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.kordamp.gradle.java-project' version '0.47.0'
     id 'org.jreleaser' version '{jreleaser-version}'
 }
 
@@ -90,47 +131,8 @@ This setup configures the project with the following
 * Generate a source stats task.
 * Generate a task to collect pretty-printed sources.
 
-Whereas a plain project would look like this:
-
-[source,groovy]
-[subs="attributes"]
-.build.gradle
-----
-plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.jreleaser' version '{jreleaser-version}'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-jreleaser {
-    project {
-        website = 'https://acme.com/app'
-        authors = ['Duke']
-        license = 'Apache-2.0'
-        extraProperties.put('inceptionYear', '2021')
-    }
-
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
-    distributions {
-        app {
-           artifact {
-               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
-           }
-        }
-    }
-}
-----
-
-Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking
+Which ever option you choose to get started, make sure to edit the file to suite your needs. Once you have edited the
+file you may verify its configuration by invoking
 
 [source]
 ----

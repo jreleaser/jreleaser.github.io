@@ -93,6 +93,18 @@ include::partial$assemble/yaml/common-head.adoc[]
         # icon:dot-circle[]
         ignoreMissingDeps: true
 
+        # Use wildcard expression in classpath.
+        # Defaults to `true`
+        # icon:dot-circle[]
+        useWildcardInPath: false
+
+        # JARs or classes used to limit the module search
+        # Must be defined as paths.
+        # Defaults to empty.
+        # icon:dot-circle[]  icon:file-alt[]
+        targets:
+          - out/classes/com/acme/Main.class
+
       # A list of build arguments.
       # Defaults are shown.
       # icon:dot-circle[]
@@ -184,6 +196,17 @@ include::partial$assemble/toml/common-head.adoc[]
   # Defaults to `false`
   # icon:dot-circle[]
   jdeps.ignoreMissingDeps = true
+
+  # Use wildcard expression in classpath.
+  # Defaults to `true`
+  # icon:dot-circle[]
+  jdeps.useWildcardInPath = false
+
+  # JARs or classes used to limit the module search
+  # Must be defined as paths.
+  # Defaults to empty.
+  # icon:dot-circle[]  icon:file-alt[]
+  jdeps.targets = [ "out/classes/com/acme/Main.class" ]
 
   # A list of build arguments.
   # Defaults are shown
@@ -286,7 +309,20 @@ include::partial$assemble/json/common-head.adoc[]
           // Ignore missing dependences.
           // Defaults to `false`
           // icon:dot-circle[]
-          "ignoreMissingDeps": true
+          "ignoreMissingDeps": true,
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          "useWildcardInPath": false,
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // icon:dot-circle[]  icon:file-alt[]
+          "targets": [
+            "out/classes/com/acme/Main.class"
+          ]
         },
 
         // A list of build arguments.
@@ -418,6 +454,23 @@ include::partial$assemble/maven/common-head.adoc[]
             icon:dot-circle[]
           -->
           <ignoreMissingDeps>true</ignoreMissingDeps>
+
+          <!--
+            Use wildcard expression in classpath.
+            Defaults to `true`
+            icon:dot-circle[]
+          -->
+          <useWildcardInPath>false</useWildcardInPath>
+
+          <!--
+            JARs or classes used to limit the module search
+            Must be defined as paths.
+            Defaults to empty.
+            icon:dot-circle[]  icon:file-alt[]
+          -->
+          <targets>
+            <target>${project.build.directory}/classes/com/acme/Main.class</target>
+          </target>
         </jdeps>
 
         <!--
@@ -527,16 +580,27 @@ include::partial$assemble/gradle/common-head.adoc[]
           // Defaults to `false`
           // icon:dot-circle[]
           ignoreMissingDeps = true
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          useWildcardInPath = false
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // icon:dot-circle[]  icon:file-alt[]
+          targets = [ 'build/classes/com/acme/Main.class' ]
         }
 
         // A list of build arguments.
         // Defaults are shown.
         // icon:dot-circle[]
-        addArg('--install-exit-handlers')
-        addArg('--no-header-files')
-        addArg('--no-man-pages')
-        addArg('--compress=2')
-        addArg('--strip-debug')
+        arg('--install-exit-handlers')
+        arg('--no-header-files')
+        arg('--no-man-pages')
+        arg('--compress=2')
+        arg('--strip-debug')
 
         // Copy main and input JARs into archive.
         // Defaults to `true`.
