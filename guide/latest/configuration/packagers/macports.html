@@ -457,6 +457,9 @@
     <a class="nav-link" href="../../checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../faq.html">FAQ</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -523,7 +526,10 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>JReleaser can generate and publish a <a href="https://www.macports.org/">Macports</a> Portfile into a repository that you have
-access to.</p>
+access to. This packager generates port file and publishes it to a repository of your choice, however it&#8217;s your
+responsibility to update the official <a href="https://github.com/macports/macports-ports/" class="bare">https://github.com/macports/macports-ports/</a> with a PR of your own. As
+a reference JReleaser publishes its release using a <a href="https://github.com/jreleaser/jreleaser-macports/blob/main/.github/workflows/update.yml">GitHub workflow</a>
+triggered on every push to the <code>main</code> branch of <a href="https://github.com/jreleaser/jreleaser-macports">jreleaser/jreleaser-macports</a>.</p>
 </div>
 <div class="paragraph">
 <p>The <code>macports</code> section specifies how the Portfile should be created.</p>
@@ -626,6 +632,12 @@ packagers:
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     templateDirectory: path/to/macports/templates
+
+    # List of template files to be skipped.
+    # Value may be an exact match or a regex.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    skipTemplates:
+      - README.md.tpl
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -746,6 +758,11 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/macports/templates"
 
+  # List of template files to be skipped.
+  # Value may be an exact match or a regex.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipTemplates = [ "README.md.tpl" ]
+
   # Git author used to commit to the repository.
 
   # Name used when authoring commits.
@@ -865,6 +882,13 @@ packagers:
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "templateDirectory": "path/to/macports/templates",
+
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "skipTemplates": [
+        "README.md.tpl"
+      ],
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1008,6 +1032,15 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;templateDirectory&gt;path/to/macports/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        List of template files to be skipped.
+        Value may be an exact match or a regex.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;skipTemplates&gt;
+        &lt;skipTemplate&gt;README.md.tpl&lt;/skipTemplate&gt;
+      &lt;/skipTemplates&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -1166,6 +1199,11 @@ packagers:
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       templateDirectory = 'path/to/macports/templates'
+
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipTemplate('README.md.tpl')
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1492,6 +1530,28 @@ which case <a href="../name-templates.html" class="xref page">Name Templates</a>
 <a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
 <a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
 <a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_templates"><a class="anchor" href="#_skip_templates"></a>Skip Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may skip any template files by defining a set of skip rules in the <code>skipTemplates</code> property. For example you may use
+any of these expressions to skip a template named <code>README.md.tpl</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>README.md.tpl</code>: matches the full template name</p>
+</li>
+<li>
+<p><code>README.md</code>: matches the transformed template name</p>
+</li>
+<li>
+<p><code>README.*</code>: matches using a regex</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

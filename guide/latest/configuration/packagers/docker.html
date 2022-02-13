@@ -457,6 +457,9 @@
     <a class="nav-link" href="../../checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../faq.html">FAQ</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -623,6 +626,12 @@ packagers:
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     templateDirectory: path/to/docker/templates
+
+    # List of template files to be skipped.
+    # Value may be an exact match or a regex.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    skipTemplates:
+      - README.md.tpl
 
     # Git author used to commit to the repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -796,6 +805,11 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   templateDirectory = "path/to/docker/templates"
 
+  # List of template files to be skipped.
+  # Value may be an exact match or a regex.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipTemplates = [ "README.md.tpl" ]
+
   # Git author used to commit to the repository.
 
   # Name used when authoring commits.
@@ -966,6 +980,13 @@ packagers:
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "templateDirectory": "path/to/docker/templates",
+
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "skipTemplates": [
+        "README.md.tpl"
+      ],
 
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1172,6 +1193,15 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;templateDirectory&gt;path/to/docker/templates&lt;/templateDirectory&gt;
+
+      &lt;!--
+        List of template files to be skipped.
+        Value may be an exact match or a regex.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;skipTemplates&gt;
+        &lt;skipTemplate&gt;README.md.tpl&lt;/skipTemplate&gt;
+      &lt;/skipTemplates&gt;
 
       &lt;!--
         Git author used to commit to the repository.
@@ -1413,6 +1443,11 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       templateDirectory = 'path/to/docker/templates'
 
+      // List of template files to be skipped.
+      // Value may be an exact match or a regex.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipTemplate('README.md.tpl')
+
       // Git author used to commit to the repository.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       commitAuthor {
@@ -1490,12 +1525,12 @@ packagers:
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
       // will be created.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      addImageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
-      addImageName('duke/app:latest')
+      imageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
+      imageName('duke/app:latest')
 
       // A list of build arguments.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      addBuildArg('--pull')
+      buildArg('--pull')
 
       // Selects a Dockerfile template.
       // If `true` (default) then the Dockerfile will use the local distribution files.
@@ -1505,17 +1540,17 @@ packagers:
 
       // Dockerfile commands to run before the assembly.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      addPreCommand('RUN apt-get update -y')
-      addPreCommand('RUN apt-get install unzip')
+      preCommand('RUN apt-get update -y')
+      preCommand('RUN apt-get install unzip')
 
       // Dockerfile commands to run after the assembly, before ENTRYPOINT.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      addPostCommand('VOLUME /workspace')
+      postCommand('VOLUME /workspace')
 
       // A map of Docker labels.
       // The key `openjdk@${java.version}` will be added automatically if not defined.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      addLabel('foo', 'bar')
+      label('foo', 'bar')
 
       // A list of docker registries where images will be published.
       // Image publication will be disabled if no registries are configured.
@@ -1855,7 +1890,7 @@ jreleaser {
   packagers {
     docker {
       active = 'ALWAYS'
-      addImageName('myuser/{{projectName}}')
+      imageName('myuser/{{projectName}}')
     }
   }
 }</code></pre>
@@ -2003,10 +2038,10 @@ jreleaser {
   packagers {
     docker {
       active = 'ALWAYS'
-      addImageName('myuser/myimage:{{tagName}}')
-      addImageName('myuser/myimage:v{{projectVersionMajor}}')
-      addImageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
-      addImageName('myuser/myimage:latest')
+      imageName('myuser/myimage:{{tagName}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
+      imageName('myuser/myimage:latest')
     }
   }
 }</code></pre>
@@ -2223,6 +2258,28 @@ which case <a href="../name-templates.html" class="xref page">Name Templates</a>
 <a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
 <a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
 <a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_templates"><a class="anchor" href="#_skip_templates"></a>Skip Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may skip any template files by defining a set of skip rules in the <code>skipTemplates</code> property. For example you may use
+any of these expressions to skip a template named <code>README.md.tpl</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>README.md.tpl</code>: matches the full template name</p>
+</li>
+<li>
+<p><code>README.md</code>: matches the transformed template name</p>
+</li>
+<li>
+<p><code>README.*</code>: matches using a regex</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

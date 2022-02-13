@@ -457,6 +457,9 @@
     <a class="nav-link" href="../checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../faq.html">FAQ</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -523,9 +526,10 @@
 the <code><a href="https://docs.gradle.org/current/userguide/application_plugin.html">application</a></code> plugin.</p>
 </div>
 <div class="paragraph">
-<p>You also have to configure the <a href="../tools/jreleaser-gradle.html" class="xref page">jreleaser-gradle-plugin</a>. We recommend using the
-<a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp plugins</a> as they provide additional benefits,
-however their use is optional. A sample project using Kordamp may look like this:</p>
+<p>You also have to configure the <a href="../tools/jreleaser-gradle.html" class="xref page">jreleaser-gradle-plugin</a>.</p>
+</div>
+<div class="paragraph">
+<p>A straight forward project configuration could look like this:</p>
 </div>
 <div class="listingblock">
 <div class="title">build.gradle</div>
@@ -533,8 +537,49 @@ however their use is optional. A sample project using Kordamp may look like this
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
     id 'java-library'
     id 'application'
-    id 'org.kordamp.gradle.java-project' version '0.45.0'
-    id 'org.jreleaser' version '1.0.0-M1'
+    id 'org.jreleaser' version '1.0.0-M2'
+}
+
+application {
+    mainClass = 'com.acme.Main'
+}
+
+jreleaser {
+    project {
+        website = 'https://acme.com/app'
+        authors = ['Duke']
+        license = 'Apache-2.0'
+        extraProperties.put('inceptionYear', '2021')
+    }
+
+    release {
+        github {
+            owner = 'duke'
+            overwrite = true
+        }
+    }
+    distributions {
+        app {
+           artifact {
+               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
+           }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You could also use the <a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp plugins</a> to setup the project as they
+provide additional benefits, however their use is optional. A sample project using Kordamp may look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'java-library'
+    id 'application'
+    id 'org.kordamp.gradle.java-project' version '0.47.0'
+    id 'org.jreleaser' version '1.0.0-M2'
 }
 
 application {
@@ -634,47 +679,8 @@ copyright year, default settings.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Whereas a plain project would look like this:</p>
-</div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'java-library'
-    id 'application'
-    id 'org.jreleaser' version '1.0.0-M1'
-}
-
-application {
-    mainClass = 'com.acme.Main'
-}
-
-jreleaser {
-    project {
-        website = 'https://acme.com/app'
-        authors = ['Duke']
-        license = 'Apache-2.0'
-        extraProperties.put('inceptionYear', '2021')
-    }
-
-    release {
-        github {
-            owner = 'duke'
-            overwrite = true
-        }
-    }
-    distributions {
-        app {
-           artifact {
-               path = 'build/distributions/{{distributionName}}-{{projectVersion}}.zip'
-           }
-        }
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Edit the file to suite your needs. Once you have edited the file you may verify its configuration by invoking</p>
+<p>Which ever option you choose to get started, make sure to edit the file to suite your needs. Once you have edited the
+file you may verify its configuration by invoking</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -698,7 +704,7 @@ jreleaser {
 > Task :assembleDist
 
 > Task :jreleaserFullRelease
-[INFO]  JReleaser 1.0.0-M1
+[INFO]  JReleaser 1.0.0-M2
 [INFO]    - basedir set to /Home/duke/app
 [INFO]  Loading properties from /Home/duke/.jreleaser/config.properties
 [INFO]  Validating configuration

@@ -457,6 +457,9 @@
     <a class="nav-link" href="../../checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../faq.html">FAQ</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../../sponsors.html">Sponsors</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -700,6 +703,18 @@ assemble:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         ignoreMissingDeps: true
 
+        # Use wildcard expression in classpath.
+        # Defaults to `true`
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        useWildcardInPath: false
+
+        # JARs or classes used to limit the module search
+        # Must be defined as paths.
+        # Defaults to empty.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+        targets:
+          - out/classes/com/acme/Main.class
+
       # A list of build arguments.
       # Defaults are shown.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -781,6 +796,11 @@ assemble:
           # If left undefined, defaults to the root of the archive.
           # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           output: path/to/archive/entry
+
+          # Fail if the given `input` does not exist.
+          # Defaults to `true`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          failOnMissingInput: false
 
           # A set of files and directory to include.
           # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -900,6 +920,17 @@ assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   jdeps.ignoreMissingDeps = true
 
+  # Use wildcard expression in classpath.
+  # Defaults to `true`
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  jdeps.useWildcardInPath = false
+
+  # JARs or classes used to limit the module search
+  # Must be defined as paths.
+  # Defaults to empty.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+  jdeps.targets = [ "out/classes/com/acme/Main.class" ]
+
   # A list of build arguments.
   # Defaults are shown
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -976,6 +1007,11 @@ assemble:
     # If left undefined, defaults to the root of the archive.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     output = "path/to/archive/entry"
+
+    # Fail if the given `input` does not exist.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    failOnMissingInput = false
 
     # A set of files and directory to include.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1113,7 +1149,20 @@ assemble:
           // Ignore missing dependences.
           // Defaults to `false`
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "ignoreMissingDeps": true
+          "ignoreMissingDeps": true,
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "useWildcardInPath": false,
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "targets": [
+            "out/classes/com/acme/Main.class"
+          ]
         },
 
         // A list of build arguments.
@@ -1208,6 +1257,11 @@ assemble:
             // If left undefined, defaults to the root of the archive.
             // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             "output": "path/to/archive/entry",
+
+            // Fail if the given `input` does not exist.
+            // Defaults to `true`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "failOnMissingInput": false,
 
             // A set of files and directory to include.
             // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1396,6 +1450,23 @@ assemble:
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
           &lt;ignoreMissingDeps&gt;true&lt;/ignoreMissingDeps&gt;
+
+          &lt;!--
+            Use wildcard expression in classpath.
+            Defaults to `true`
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;useWildcardInPath&gt;false&lt;/useWildcardInPath&gt;
+
+          &lt;!--
+            JARs or classes used to limit the module search
+            Must be defined as paths.
+            Defaults to empty.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;targets&gt;
+            &lt;target&gt;${project.build.directory}/classes/com/acme/Main.class&lt;/target&gt;
+          &lt;/target&gt;
         &lt;/jdeps&gt;
 
         &lt;!--
@@ -1526,6 +1597,13 @@ assemble:
               <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
             --&gt;
             &lt;output&gt;path/to/archive/entry&lt;/output&gt;
+
+            &lt;!--
+              Fail if the given `input` does not exist.
+              Defaults to `true`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;failOnMissingInput&gt;false&lt;/failOnMissingInput&gt;
 
             &lt;!--
               A set of files and directory to include.
@@ -1681,16 +1759,27 @@ assemble:
           // Defaults to `false`
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           ignoreMissingDeps = true
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          useWildcardInPath = false
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+          targets = [ 'build/classes/com/acme/Main.class' ]
         }
 
         // A list of build arguments.
         // Defaults are shown.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        addArg('--install-exit-handlers')
-        addArg('--no-header-files')
-        addArg('--no-man-pages')
-        addArg('--compress=2')
-        addArg('--strip-debug')
+        arg('--install-exit-handlers')
+        arg('--no-header-files')
+        arg('--no-man-pages')
+        arg('--compress=2')
+        arg('--strip-debug')
 
         // Copy main and input JARs into archive.
         // Defaults to `true`.
@@ -1717,7 +1806,7 @@ assemble:
           // Maven coordinates = groupId.
           // If left undefined, will use ${project.java.groupId}.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          groupI = 'com.acme'
+          groupId = 'com.acme'
 
           // Maven coordinates = artifactId.
           // If left undefined, will use ${project.java.artifactId}.
@@ -1767,6 +1856,11 @@ assemble:
           // If left undefined, defaults to the root of the archive.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           output = 'path/to/archive/entry'
+
+          // Fail if the given `input` does not exist.
+          // Defaults to `true`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          failOnMissingInput = false
 
           // A set of files and directory to include.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
