@@ -12,16 +12,20 @@ The following functions may be used to modify text:
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key                 | Description
-| f_now               | formats the current timestamp
-| f_underscores       | transforms `.` and `-` into `_`
-| f_dash              | transforms `.` and `_` into `-`
-| f_slash             | transforms `.` and `-` into `/`
-| f_upper             | invokes `toUpperCase()`
-| f_lower             | invokes `toLowerCase()`
-| f_capitalize        | invokes `capitalize()`
-| f_uncapitalize      | invokes `uncapitalize()`
+| Key                    | Description
+| f_now                  | formats the current timestamp
+| f_underscores          | transforms `.` and `-` into `_`
+| f_dash                 | transforms `.` and `_` into `-`
+| f_slash                | transforms `.` and `-` into `/`
+| f_upper                | invokes `toUpperCase()`
+| f_lower                | invokes `toLowerCase()`
+| f_capitalize           | invokes `capitalize()`
+| f_uncapitalize         | invokes `uncapitalize()`
+| f_release_download_url | formats its input as a link to a release asset
 |===
+
+The `f_release_download_url` function expects the name of a release asset and creates a link to said asset. The default
+format is Markdown. Use a prefix such as `md:`, `adoc:`, or `html:` to indicate a different format.
 
 Example:
 
@@ -29,14 +33,23 @@ Example:
 ----
 {{#f_now}}YYYY-MM-dd{{/f_now}}
 {{#f_dash}}1.2.3{{/f_dash}}
+{{#f_release_download_url}}jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}md:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}adoc:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}html:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
 ----
 
 Results in
 
 [source]
+[subs="attributes,-macros"]
 ----
 2021-07-26
 1-2-3
+[jreleaser-{jreleaser-version}.zip](https://github.com/jreleaser/jreleaser/releases/download/v{jreleaser-version}/jreleaser-{jreleaser-version}.zip)
+[jreleaser-{jreleaser-version}.zip](https://github.com/jreleaser/jreleaser/releases/download/v{jreleaser-version}/jreleaser-{jreleaser-version}.zip)
+link:https://github.com/jreleaser/jreleaser/releases/download/v{jreleaser-version}/jreleaser-{jreleaser-version}.zip[jreleaser-{jreleaser-version}.zip]
+&lt;a href="https://github.com/jreleaser/jreleaser/releases/download/v{jreleaser-version}/jreleaser-{jreleaser-version}.zip"&gt;jreleaser-{jreleaser-version}.zip&lt;/a&gt;
 ----
 
 == Build
@@ -165,7 +178,7 @@ The following names are related to xref:configuration:project.adoc[]
 | projectLongDescription   | the project long description
 | projectWebsite           | link to the project website
 | projectLicense           | the project license, typically an SPDX identifier
-| projectLicenseUrl        | the URL ofmthe project license
+| projectLicenseUrl        | the URL of the project license
 | projectCopyright         | the project copyright notice
 | projectVendor            | the project's vendor (if any)
 | projectDocsUrl           | link to the project's documentation
@@ -941,6 +954,12 @@ The following names will be calculated:
 * artifactOsxAarch64Size
 
 == Artifactory
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named Artifactory instance
+|===
 
 Every key/value from `artifactory.extraProperties` is mapped with `artifactory` as key prefix and the capitalized
 key, such that
@@ -1734,6 +1753,12 @@ jreleaser {
 
 == Http
 
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named Http instance
+|===
+
 Every key/value from `http.extraProperties` is mapped with `http` as key prefix and the capitalized
 key, such that
 
@@ -2323,6 +2348,12 @@ jreleaser {
 ====
 
 == S3
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named S3 instance
+|===
 
 Every key/value from `s3.extraProperties` is mapped with `s3` as key prefix and the capitalized
 key, such that
