@@ -583,15 +583,27 @@ also support templates. A template name can be used as <code>{{name}}</code></p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">f_uncapitalize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">invokes <code>uncapitalize()</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">f_release_download_url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">formats its input as a link to a release asset</p></td>
+</tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The <code>f_release_download_url</code> function expects the name of a release asset and creates a link to said asset. The default
+format is Markdown. Use a prefix such as <code>md:</code>, <code>adoc:</code>, or <code>html:</code> to indicate a different format.</p>
+</div>
 <div class="paragraph">
 <p>Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">{{#f_now}}YYYY-MM-dd{{/f_now}}
-{{#f_dash}}1.2.3{{/f_dash}}</code></pre>
+{{#f_dash}}1.2.3{{/f_dash}}
+{{#f_release_download_url}}jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}md:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}adoc:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}html:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -600,7 +612,11 @@ also support templates. A template name can be used as <code>{{name}}</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">2021-07-26
-1-2-3</code></pre>
+1-2-3
+[jreleaser-1.0.0-M3.zip](https://github.com/jreleaser/jreleaser/releases/download/v1.0.0-M3/jreleaser-1.0.0-M3.zip)
+[jreleaser-1.0.0-M3.zip](https://github.com/jreleaser/jreleaser/releases/download/v1.0.0-M3/jreleaser-1.0.0-M3.zip)
+link:https://github.com/jreleaser/jreleaser/releases/download/v1.0.0-M3/jreleaser-1.0.0-M3.zip[jreleaser-1.0.0-M3.zip]
+&lt;a href="https://github.com/jreleaser/jreleaser/releases/download/v1.0.0-M3/jreleaser-1.0.0-M3.zip"&gt;jreleaser-1.0.0-M3.zip&lt;/a&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -871,7 +887,7 @@ becomes <code>{{Env.JAVA_OPTS}}</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">projectLicenseUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the URL ofmthe project license</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the URL of the project license</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">projectCopyright</p></td>
@@ -2310,6 +2326,24 @@ distributions:
 <div class="sect1">
 <h2 id="_artifactory"><a class="anchor" href="#_artifactory"></a>Artifactory</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uploaderName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resolves to the named Artifactory instance</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Every key/value from <code>artifactory.extraProperties</code> is mapped with <code>artifactory</code> as key prefix and the capitalized
 key, such that</p>
@@ -3320,6 +3354,24 @@ key, such that</p>
 <div class="sect1">
 <h2 id="_http"><a class="anchor" href="#_http"></a>Http</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uploaderName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resolves to the named Http instance</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Every key/value from <code>http.extraProperties</code> is mapped with <code>http</code> as key prefix and the capitalized
 key, such that</p>
@@ -4061,6 +4113,24 @@ key, such that</p>
 <div class="sect1">
 <h2 id="_s3"><a class="anchor" href="#_s3"></a>S3</h2>
 <div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uploaderName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resolves to the named S3 instance</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Every key/value from <code>s3.extraProperties</code> is mapped with <code>s3</code> as key prefix and the capitalized
 key, such that</p>
