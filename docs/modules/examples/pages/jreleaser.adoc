@@ -13,9 +13,12 @@ is used to create both release and snapshot releases:
 environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu17.30.15-ca-jdk17.0.1'
+    jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
+    graalFilePrefix: 'graalvm-ce-java17-22.0.0.2'
+    nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     skipJpackageResolver: true
+    skipNativeImageResolver: true
 
 # General information about this project
 project:
@@ -61,79 +64,51 @@ release:
     discussionCategoryName: Announcements
     changelog:
       formatted: ALWAYS
+      preset: conventional-commits
       format: '- {{commitShortHash}} {{commitTitle}}'
       contributors:
         format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
-      # Label commits by matching their first line
+      contentTemplate: 'src/jreleaser/changelog.tpl'
       labelers:
-        - label: 'merge_pull'
-          title: 'Merge pull'
-        - label: 'merge_branch'
-          title: 'Merge branch'
-        - label: 'translation'
-          title: '[translation]'
-        - label: 'task'
-          title: '[chore]'
+        - label: 'i18n'
+          title: 'regex:^(?:i18n(?:\(.*\))?!?):\s.*'
+          order: 120
         - label: 'dependencies'
-          title: '[deps]'
-        - label: 'build'
-          title: '[build]'
-        - label: 'feature'
-          title: 'Resolves #'
-          body: 'Resolves #'
-        - label: 'issue'
-          title: 'Fixes #'
-          body: 'Fixes #'
-        - label: 'issue'
-          title: 'Relates to #'
-          body: 'Relates to #'
-        - label: 'allcontributors'
-          title: 'docs: update'
-      # Categorize commits by labels
+          title: 'regex:^(?:deps(?:\(.*\))?!?):\s.*'
+          order: 130
+        - label: 'allcontributors1'
+          title: 'regex:^docs: update .all-contributorsrc.*'
+          order: -1
+        - label: 'allcontributors2'
+          title: 'regex:^docs: update CONTRIBUTORS.md.*'
+          order: -2
       categories:
         - title: 'Merge'
           labels:
             - 'merge_pull'
             - 'merge_branch'
-        - title: '🚀 Features'
-          labels:
-            - 'feature'
-        - title: '✅ Issues'
-          labels:
-            - 'issue'
-        - title: '🧰 Tasks'
-          labels:
-            - 'task'
         - title: '🌐 Translation'
+          key: 'i18n'
+          order: 70
           labels:
-            - 'translation'
+            - 'i18n'
         - title: '⚙️  Dependencies'
+          key: 'dependencies'
+          order: 80
           labels:
             - 'dependencies'
-        - title: '🛠  Build'
-          labels:
-            - 'build'
         - title: 'allcontributors'
+          order: 59
           labels:
-            - 'allcontributors'
+            - 'allcontributors1'
+            - 'allcontributors2'
       hide:
-        # hide Merge commits
         categories:
           - 'Merge'
           - 'allcontributors'
-        # hide contributions from GitHub bots
         contributors:
           - 'GitHub'
           - 'allcontributors'
-      replacers:
-        # Remove `[chore] ` from the commit message
-        - search: '\[chore\] '
-        # Remove `[deps] ` from the commit message
-        - search: '\[deps\] '
-        # Remove `[translation] ` from the commit message
-        - search: '\[translation\] '
-        # Remove `[build] ` from the commit message
-        - search: '\[build\] '
 
 # File signing is always active
 signing:
@@ -224,7 +199,34 @@ assemble:
         icon: 'src/media/jreleaser.ico'
         resourceDir: 'src/jpackage/windows'
 
-# Configure 5 distributions
+  # Configure native executables
+  nativeImage:
+    jreleaser-native:
+      active: always
+      java:
+        version: 17
+        mainClass: org.jreleaser.cli.Main
+      imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
+      executable: jreleaser
+      mainJar:
+        path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+      jars:
+        - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
+      graalJdks:
+        - path: '{{jdkPathPrefix}}/graal17Osx/{{graalFilePrefix}}/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/graal17Linux/{{graalFilePrefix}}'
+          platform: 'linux-x86_64'
+      upx:
+        active: always
+        version: '3.96'
+      args:
+        - '-Duser.language=en'
+        - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
+        - '-H:Optimize=2'
+        - '-H:+RemoveUnusedSymbols'
+        -
+# Configure 6 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
   jreleaser:
@@ -374,6 +376,17 @@ distributions:
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.msi'
         platform: 'windows-x86_64'
 
+  # Distribution 4 is of type NATIVE_IMAGE
+  jreleaser-native:
+    type: NATIVE_IMAGE
+    executable:
+      windowsExtension: exe
+    artifacts:
+      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip'
+        platform: 'osx-x86_64'
+      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip'
+        platform: 'linux-x86_64'
+
 files:
   artifacts:
     - path: VERSION
@@ -409,6 +422,10 @@ jreleaser-installer-{jreleaser-version}-1_amd64.deb
 jreleaser-installer-{jreleaser-version}-1.x86_64.rpm
 jreleaser-installer-{jreleaser-version}-windows-x86_64.msi
 
+# binaries created by the NativeImage assembler
+jreleaser-native-{jreleaser-version}-osx-x86_64.zip
+jreleaser-native-{jreleaser-version}-linux-x86_64.zip
+
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
@@ -434,6 +451,8 @@ jreleaser-installer-{jreleaser-version}-osx-x86_64.pkg.asc
 jreleaser-installer-{jreleaser-version}-1_amd64.deb.asc
 jreleaser-installer-{jreleaser-version}-1.x86_64.rpm.asc
 jreleaser-installer-{jreleaser-version}-windows-x86_64.msi.asc
+jreleaser-native-{jreleaser-version}-osx-x86_64.zip.asc
+jreleaser-native-{jreleaser-version}-linux-x86_64.zip.asc
 
 # additional files
 VERSION
