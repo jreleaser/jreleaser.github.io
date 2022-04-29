@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Http :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/upload/http.html">
+    <title>Scp :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/upload/scp.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -313,13 +313,13 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="ftp.html">Ftp</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="s3.html">AWS S3</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="scp.html">Scp</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -513,39 +513,28 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Upload</a></li>
-    <li><a href="http.html">Http</a></li>
+    <li><a href="scp.html">Scp</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/upload/http.html">latest</a>
-    <a class="version is-current" href="http.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="scp.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/upload/http.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/upload/scp.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Http</h1>
+<h1 class="page">Scp</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Uploads artifacts, files, and signatures to an HTTP/HTTPS server.</p>
-</div>
-<div class="ulist">
-<div class="title">Prerequisites:</div>
-<ul>
-<li>
-<p>A HTTP/HTTPS server that accepts POST/PUT requests.</p>
-</li>
-<li>
-<p>Username + Password/Token if authorization is required.</p>
-</li>
-</ul>
+<p>Uploads artifacts, files, and signatures to a SCP server.</p>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -593,7 +582,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 upload:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  http:
+  scp:
     # Uploaders require a name.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     app:
@@ -637,49 +626,65 @@ upload:
       # Additional properties used when evaluating templates.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       extraProperties:
-        # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        # Key will be capitalized and prefixed with `scp`, i.e, `scpFoo`.
         foo: bar
 
-      # URL of the HTTP/HTTPS server + path + artifact.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      uploadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+      # Host where the SCP service is enabled.
+      # If left unspecified, the `JRELEASER_SCP_${name}_HOST`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      host: uploads.acme.com
 
-      # URL of the HTTP/HTTPS server + path + artifact.
-      # If undefined, will use the same value as `uploadUrl`.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      downloadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+      # Port number of SCP service.
+      # If left unspecified, the `JRELEASER_SCP_${name}_PORT`
+      # environment variable must be defined.
+      # Defaults to `22`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      port: 22
 
       # The username required for authorization.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+      # If left unspecified, the `JRELEASER_SCP_${name}_USERNAME`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: __DO_NOT_SET_HERE__
 
-      # Password for login into the repository.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+      # Password for login into the SCP service.
+      # If left unspecified, the `JRELEASER_SCP_${name}_PASSWORD`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       password: __DO_NOT_SET_HERE__
 
-      # The authorization method to use.
-      # Valid values are [`NONE`, `BASIC`, `BEARER`].
-      # `Basic` requires both username & password.
-      # `BEARER` requires a token (set as password).
-      # Defaults to `NONE`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      authorization: BASIC
+      # The public SSH key.
+      # If left unspecified, the `JRELEASER_SCP_${name}_PUBLIC_KEY`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      publicKey: __DO_NOT_SET_HERE__
 
-      # The method to use for uploading artifacts.
-      # Valid values are [`POST`, `PUT`].
-      # Defaults to `PUT`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      method: POST
+      # The private SSH key.
+      # If left unspecified, the `JRELEASER_SCP_${name}_PRIVATE_KEY`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      privateKey: __DO_NOT_SET_HERE__
 
-      # Additional headers to be sent to the server.
-      # Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
+      # The passphrase required to read private keys.
+      # If left unspecified, the `JRELEASER_SCP_${name}_PASSPHRASE`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      passphrase: __DO_NOT_SET_HERE__
+
+      # The remote server's SSH fingerprint.
+      # If left unspecified, the `JRELEASER_SCP_${name}_FINGERPRINT`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      fingerprint: __DO_NOT_SET_HERE__
+
+      # Path where artifacts will be uploaded.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+      # An HTTP/HTTPS URL from where artifacts may be downloaded.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      headers:
-        'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'</code></pre>
+      downloadUrl: 'https://download.acme.com/{{projectName}}/{{tagName}}/{{artifactFile}}'</code></pre>
 </div>
 </div>
 </div>
@@ -688,7 +693,7 @@ upload:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Uploaders require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[upload.http.app]
+[upload.scp.app]
 
   # Enables or disables the uploader.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -729,47 +734,64 @@ upload:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+  # Key will be capitalized and prefixed with `scp`, i.e, `scpFoo`.
 
-  # URL of the HTTP/HTTPS server + path + artifact.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  uploadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+  # Host where the SCP service is enabled.
+  # If left unspecified, the `JRELEASER_SCP_${name}_HOST`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  host = "uploads.acme.com"
 
-  # URL of the HTTP/HTTPS server + path + artifact.
-  # If undefined, will use the same value as `uploadUrl`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  downloadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+  # Port number of SCP service.
+  # If left unspecified, the `JRELEASER_SCP_${name}_PORT`
+  # environment variable must be defined.
+  # Defaults to `port`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  port = 22
 
   # The username required for authorization.
-  # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+  # If left unspecified, the `JRELEASER_SCP_${name}_USERNAME`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "__DO_NOT_SET_HERE__"
 
-  # Password for login into the repository..
-  # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+  # Password for login into the SCP service..
+  # If left unspecified, the `JRELEASER_SCP_${name}_PASSWORD`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   password = "__DO_NOT_SET_HERE__"
 
-  # The authorization method to use.
-  # Valid values are [`NONE`, `BASIC`, `BEARER`].
-  # `Basic` requires both username & password.
-  # `BEARER` requires a token (set as password).
-  # Defaults to `NONE`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BASIC"
+  # The public SSH key.
+  # If left unspecified, the `JRELEASER_SCP_${name}_PUBLIC_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  publicKey = "__DO_NOT_SET_HERE__"
 
-  # The method to use for uploading artifacts.
-  # Valid values are [`POST`, `PUT`].
-  # Defaults to `PUT`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  method = "POST"
+  # The private SSH key.
+  # If left unspecified, the `JRELEASER_SCP_${name}_PRIVATE_KEY`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  privateKey = "__DO_NOT_SET_HERE__"
 
-  # Additional headers to be sent to the server.
-  # Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
+  # The passphrase required to read private keys.
+  # If left unspecified, the `JRELEASER_SCP_${name}_PASSPHRASE`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  passphrase = "__DO_NOT_SET_HERE__"
+
+  # The remote server's SSH fingerprint.
+  # If left unspecified, the `JRELEASER_SCP_${name}_FINGERPRINT`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  fingerprint = "__DO_NOT_SET_HERE__"
+
+  # Path where artifacts will be uploaded.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  path = "/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
+  # An HTTP/HTTPS URL from where artifacts may be downloaded.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"</code></pre>
+  downloadUrl = "https://download.acme.com/{{projectName}}/{{tagName}}/{{artifactFile}}"</code></pre>
 </div>
 </div>
 </div>
@@ -780,7 +802,7 @@ upload:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "upload": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "http": {
+    "scp": {
       // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "app": {
@@ -824,51 +846,66 @@ upload:
         // Additional properties used when evaluating templates.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "extraProperties": {
-          // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+          // Key will be capitalized and prefixed with `scp`, i.e, `scpFoo`.
           "foo": "bar"
         },
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "uploadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
+        // Host where the SCP service is enabled.
+        // If left unspecified, the `JRELEASER_SCP_${name}_HOST`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "host": "uploads.acme.com",
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "downloadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
+        // Port number of SCP service.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PORT`
+        // environment variable must be defined.
+        // Defaults to `22`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "port": 22,
 
         // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // If left unspecified, the `JRELEASER_SCP_${name}_USERNAME`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "__DO_NOT_SET_HERE__",
 
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+        // Password for login into the SCP service.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PASSWORD`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "password": "__DO_NOT_SET_HERE__",
 
-        // The authorization method to use.
-        // Valid values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "authorization": "BASIC",
+        // The public SSH key.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PUBLIC_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "publicKey": "__DO_NOT_SET_HERE__",
 
-        // The method to use for uploading artifacts.
-        // Valid values are [`POST`, `PUT`].
-        // Defaults to `PUT`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "method": "POST",
+        // The private SSH key.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PRIVATE_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "privateKey": "__DO_NOT_SET_HERE__",
 
-        // Additional headers to be sent to the server.
-        // Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
+        // The passphrase required to read private keys.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PASSPHRASE`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "passphrase": "__DO_NOT_SET_HERE__",
+
+        // The remote server's SSH fingerprint.
+        // If left unspecified, the `JRELEASER_SCP_${name}_FINGERPRINT`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "fingerprint": "__DO_NOT_SET_HERE__",
+
+        // Path where artifacts will be uploaded.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "path": "/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}",
+
+        // An HTTP/HTTPS URL from where artifacts may be downloaded.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "headers": {
-          "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
-        }
+        "downloadUrl": "https://download.acme.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
       }
     }
   }
@@ -887,7 +924,7 @@ upload:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;http&gt;
+    &lt;scp&gt;
       &lt;!--
         Uploaders require a name.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -949,68 +986,89 @@ upload:
         --&gt;
         &lt;extraProperties&gt;
           &lt;!--
-            Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+            Key will be capitalized and prefixed with `scp`, i.e, `scpFoo`.
           --&gt;
           &lt;foo&gt;bar&lt;/foo&gt;
         &lt;/extraProperties&gt;
 
         &lt;!--
-          URL of the HTTP/HTTPS server + path + artifact.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          Host where the SCP service is enabled.
+          If left unspecified, the `JRELEASER_SCP_${name}_HOST`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;uploadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/uploadUrl&gt;
+        &lt;host&gt;uploads.acme.com&lt;/host&gt;
 
         &lt;!--
-          URL of the HTTP/HTTPS server + path + artifact.
-          If undefined, will use the same value as `uploadUrl`.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          Port number of SCP service.
+          If left unspecified, the `JRELEASER_SCP_${name}_PORT`
+          environment variable must be defined.
+          Defaults to `22`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;downloadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt;
+        &lt;port&gt;22&lt;/port&gt;
 
         &lt;!--
           The username required for authorization.
-          If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+          If left unspecified, the `JRELEASER_SCP_${name}_USERNAME`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;username&gt;__DO_NOT_SET_HERE__&lt;/username&gt;
 
         &lt;!--
-          Password for login into the repository.
-          If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+          Password for login into the SCP service.
+          If left unspecified, the `JRELEASER_SCP_${name}_PASSWORD`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
 
         &lt;!--
-          The authorization method to use.
-          Valid values are [`NONE`, `BASIC`, `BEARER`].
-          `Basic` requires both username &amp; password.
-          `BEARER` requires a token (set as password).
-          Defaults to `NONE`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          The public SSH key.
+          If left unspecified, the `JRELEASER_SCP_${name}_PUBLIC_KEY`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;authorization&gt;BASIC&lt;/authorization&gt;
+        &lt;publicKey&gt;__DO_NOT_SET_HERE__&lt;/publicKey&gt;
 
         &lt;!--
-          The method to use for uploading artifacts.
-          Valid values are [`POST`, `PUT`].
-          Defaults to `PUT`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          The private SSH key.
+          If left unspecified, the `JRELEASER_SCP_${name}_PRIVATE_KEY`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;method&gt;POST&lt;/method&gt;
+        &lt;privateKey&gt;__DO_NOT_SET_HERE__&lt;/privateKey&gt;
 
         &lt;!--
-          Additional headers to be sent to the server.
-          Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
+          The passphrase required to read private keys.
+          If left unspecified, the `JRELEASER_SCP_${name}_PASSPHRASE`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;passphrase&gt;__DO_NOT_SET_HERE__&lt;/passphrase&gt;
+
+        &lt;!--
+          The remote server's SSH fingerprint.
+          If left unspecified, the `JRELEASER_SCP_${name}_FINGERPRINT`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;fingerprint&gt;__DO_NOT_SET_HERE__&lt;/fingerprint&gt;
+
+        &lt;!--
+          Path where artifacts will be uploaded.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;path&gt;/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/path&gt;
+
+        &lt;!--
+          An HTTP/HTTPS URL from where artifacts may be downloaded.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
-        &lt;headers&gt;
-          &lt;X-ARTIFACT-PLATFORM&gt;{{artifactPlatform}}&lt;/X-ARTIFACT-PLATFORM&gt;
-        &lt;/headers&gt;
+        &lt;downloadUrl&gt;https://download.acme.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt;
       &lt;/app&gt;
-    &lt;/http&gt;
+    &lt;/scp&gt;
   &lt;/upload&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1023,7 +1081,7 @@ upload:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   upload {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    http {
+    scp {
       // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app {
@@ -1065,49 +1123,66 @@ upload:
         signatures = true
 
         // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        // Key will be capitalized and prefixed with `scp`, i.e, `scpFoo`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        uploadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+        // Host where the SCP service is enabled.
+        // If left unspecified, the `JRELEASER_SCP_${name}_HOST`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        host = 'uploads.acme.com'
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+        // Port number of SCP service.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PORT`
+        // environment variable must be defined.
+        // Defaults to `22`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        port = 22
 
         // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // If left unspecified, the `JRELEASER_SCP_${name}_USERNAME`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = '__DO_NOT_SET_HERE__'
 
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+        // Password for login into the SCP service.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PASSWORD`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         password = '__DO_NOT_SET_HERE__'
 
-        // The authorization method to use.
-        // Valid values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        authorization = 'BASIC'
+        // The public SSH key.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PUBLIC_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        publicKey = '__DO_NOT_SET_HERE__'
 
-        // The method to use for uploading artifacts.
-        // Valid values are [`POST`, `PUT`].
-        // Defaults to `PUT`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        method = 'POST'
+        // The private SSH key.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PRIVATE_KEY`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        privateKey = '__DO_NOT_SET_HERE__'
 
-        // Additional headers to be sent to the server.
-        // Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
+        // The passphrase required to read private keys.
+        // If left unspecified, the `JRELEASER_SCP_${name}_PASSPHRASE`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        passphrase = '__DO_NOT_SET_HERE__'
+
+        // The remote server's SSH fingerprint.
+        // If left unspecified, the `JRELEASER_SCP_${name}_FINGERPRINT`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        fingerprint = '__DO_NOT_SET_HERE__'
+
+        // Path where artifacts will be uploaded.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+        // An HTTP/HTTPS URL from where artifacts may be downloaded.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
+        downloadUrl: 'https://download.acme.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
       }
     }
   }
@@ -1120,34 +1195,70 @@ upload:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_uploadurl"><a class="anchor" href="#_uploadurl"></a>UploadUrl</h2>
+<h2 id="_host"><a class="anchor" href="#_host"></a>Host</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The uploadUrl is the URL to upload the artifacts to.</p>
+<p>You can have the host set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the SCP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>An example configuration may look like
-<code>uploadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_HOST</code>. If your instance is named <code>production</code>,
+you can store the host in the environment variable <code>JRELEASER_SCP_PRODUCTION_HOST</code>. The name will be
+transformed to uppercase.</p>
 </div>
 <div class="paragraph">
-<p>And will result in a final deployment like
-<code>https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip</code>.</p>
+<p>If a configured host is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_HOST</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_HOST</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_HOST</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_HOST</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_downloadurl"><a class="anchor" href="#_downloadurl"></a>DownloadUrl</h2>
+<h2 id="_port"><a class="anchor" href="#_port"></a>Port</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The downloadUrl is the URL used to download artifacts from.</p>
+<p>You can have the port set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the SCP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>An example configuration may look like
-<code>downloadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_PORT</code>. If your instance is named <code>production</code>,
+you can store the port in the environment variable <code>JRELEASER_SCP_PRODUCTION_PORT</code>. The name will be
+transformed to uppercase.</p>
 </div>
 <div class="paragraph">
-<p>And will result in a final URL like
-<code>https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip</code>.</p>
+<p>If a configured port is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_PORT</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_PORT</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_PORT</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_PORT</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1156,16 +1267,32 @@ upload:
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can have the username set in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the HTTP server will be used to build the environment variable name.
+The configured name of the SCP server will be used to build the environment variable name.
 This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_USERNAME</code>. If your instance is named <code>production</code>,
-you can store the username in the environment variable <code>JRELEASER_HTTP_PRODUCTION_USERNAME</code>. The name will be
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_USERNAME</code>. If your instance is named <code>production</code>,
+you can store the username in the environment variable <code>JRELEASER_SCP_PRODUCTION_USERNAME</code>. The name will be
 transformed to uppercase.</p>
 </div>
 <div class="paragraph">
 <p>If a configured username is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_USERNAME</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_USERNAME</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_USERNAME</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_USERNAME</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1173,52 +1300,182 @@ transformed to uppercase.</p>
 <h2 id="_password"><a class="anchor" href="#_password"></a>Password</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The password will be stored in an environment variable. The configured name of the HTTP server will
+<p>The password will be stored in an environment variable. The configured name of the SCP server will
 be used. This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_PASSWORD</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_HTTP_PRODUCTION_PASSWORD</code>. The name will be
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_PASSWORD</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_SCP_PRODUCTION_PASSWORD</code>. The name will be
 transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_PASSWORD</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_PASSWORD</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_PASSWORD</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_PASSWORD</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_skip_upload"><a class="anchor" href="#_skip_upload"></a>Skip Upload</h2>
+<h2 id="_public_key"><a class="anchor" href="#_public_key"></a>Public Key</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
-conform to the following rules:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>skipUpload</code>: skipped from all uploaders.</p>
-</li>
-<li>
-<p><code>skipUpload&lt;type&gt;</code>: skipped from the typed uploader.</p>
-</li>
-<li>
-<p><code>skipUpload&lt;type&gt;&lt;name&gt;</code>: skipped from the typed and named uploader.</p>
-</li>
-</ul>
+<p>The public key will be stored in an environment variable. The configured name of the SCP server will
+be used. This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>Where <code>&lt;type&gt;</code> resolves to <code>Http</code> and <code>&lt;name&gt;</code> resolves to the capitalized name of the http instance, such
-that:</p>
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_PUBLIC_KEY</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_SCP_PRODUCTION_PUBLIC_KEY</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_PUBLIC_KEY</code> are (in order):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>if the name is <code>foo</code> the resulting property key is <code>skipUploadHttpFoo</code>.</p>
+<p><code>JRELEASER_SSH_NAME_PUBLIC_KEY</code></p>
 </li>
 <li>
-<p>if the name is <code>fooBar</code> the resulting property key is <code>skipUploadHttpFooBar</code>.</p>
+<p><code>JRELEASER_SCP_PUBLIC_KEY</code></p>
 </li>
 <li>
-<p>if the name is <code>foo-bar</code> the resulting property key is <code>skipUploadHttpFooBar</code>.</p>
+<p><code>JRELEASER_SSH_PUBLIC_KEY</code></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_private_key"><a class="anchor" href="#_private_key"></a>Private Key</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The private key will be stored in an environment variable. The configured name of the SCP server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_PRIVATE_KEY</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_SCP_PRODUCTION_PRIVATE_KEY</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_PRIVATE_KEY</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_PRIVATE_KEY</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_PRIVATE_KEY</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_PRIVATE_KEY</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_passphrase"><a class="anchor" href="#_passphrase"></a>Passphrase</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The passphrase will be stored in an environment variable. The configured name of the SCP server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_PASSPHRASE</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_SCP_PRODUCTION_PASSPHRASE</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_PASSPHRASE</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_PASSPHRASE</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_PASSPHRASE</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_PASSPHRASE</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fingerprint"><a class="anchor" href="#_fingerprint"></a>Fingerprint</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fingerprint will be stored in an environment variable. The configured name of the SCP server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_SCP_NAME_FINGERPRINT</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_SCP_PRODUCTION_FINGERPRINT</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_SCP_NAME_FINGERPRINT</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_SSH_NAME_FINGERPRINT</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SCP_FINGERPRINT</code></p>
+</li>
+<li>
+<p><code>JRELEASER_SSH_FINGERPRINT</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_path"><a class="anchor" href="#_path"></a>Path</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The path where artifacts will be uploaded to.</p>
+</div>
+<div class="paragraph">
+<p>An example configuration may look like
+<code>path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+</div>
+<div class="paragraph">
+<p>And will result in a final deployment like
+<code>/uploads/app/v1.0.0/app-1.0.0.zip</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downloadurl"><a class="anchor" href="#_downloadurl"></a>DownloadUrl</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The downloadUrl is the URL used to download artifacts from. This property is optional but should be set if artifacts
+are available for download.</p>
+</div>
+<div class="paragraph">
+<p>An example configuration may look like
+<code>downloadUrl: 'https://artifacts.acme.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+</div>
+<div class="paragraph">
+<p>And will result in a final URL like
+<code>https://artifacts.acme.com:8081/upload/app/v1.0.0/app-1.0.0.zip</code>.</p>
 </div>
 </div>
 </div>
