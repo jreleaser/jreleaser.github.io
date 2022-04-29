@@ -1,0 +1,187 @@
+= Ftp
+:uploader_id:   ftp
+:uploader_name: FTP
+:prefix:        {uploader_name}
+:default-host:  uploads.acme.com
+:default-port:  21
+
+Uploads artifacts, files, and signatures to a {uploader_name} server.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+include::partial$upload/yaml/hpup.adoc[]
+
+      # Path where artifacts will be uploaded.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/yaml/download-url.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+include::partial$upload/toml/hpup.adoc[]
+
+  # Path where artifacts will be uploaded.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  path = "uploads/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
+include::partial$upload/toml/download-url.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+include::partial$upload/json/hpup.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "path": "uploads/{{projectName}}/{{tagName}}/{{artifactFile}}",
+
+include::partial$upload/json/download-url.adoc[]
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+include::partial$upload/maven/hpup.adoc[]
+
+        <!--
+          Path where artifacts will be uploaded.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <path>uploads/{{projectName}}/{{tagName}}/{{artifactFile}}</path>
+
+include::partial$upload/maven/download-url.adoc[]
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+include::partial$upload/gradle/hpup.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/gradle/download-url.adoc[]
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Host
+
+You can have the host set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the FTP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_FTP_NAME_HOST`. If your instance is named `production`,
+you can store the host in the environment variable `JRELEASER_FTP_PRODUCTION_HOST`. The name will be
+transformed to uppercase.
+
+If a configured host is found in the configuration file, then the environment variable is not used at all.
+
+== Port
+
+You can have the port set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the FTP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_FTP_NAME_PORT`. If your instance is named `production`,
+you can store the port in the environment variable `JRELEASER_FTP_PRODUCTION_PORT`. The name will be
+transformed to uppercase.
+
+If a configured port is found in the configuration file, then the environment variable is not used at all.
+
+== Username
+
+You can have the username set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the FTP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_FTP_NAME_USERNAME`. If your instance is named `production`,
+you can store the username in the environment variable `JRELEASER_FTP_PRODUCTION_USERNAME`. The name will be
+transformed to uppercase.
+
+If a configured username is found in the configuration file, then the environment variable is not used at all.
+
+== Password
+
+The password will be stored in an environment variable. The configured name of the FTP server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_FTP_NAME_PASSWORD`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_FTP_PRODUCTION_PASSWORD`. The name will be
+transformed to uppercase.
+
+== Path
+
+The path (relative to the authenticated or anonymous user) where artifacts will be uploaded to.
+
+An example configuration may look like
+`path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final deployment like
+`pass:[ftp://<host>:<port>/uploads/app/v1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from. This property is optional but should be set if artifacts
+are available for download.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.acme.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final URL like
+`pass:[https://artifacts.acme.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Ftp` and `<name>` resolves to the capitalized name of the ftp instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadFtpFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadFtpFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadFtpFooBar`.
+

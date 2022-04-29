@@ -1,0 +1,151 @@
+= Sftp
+:uploader_id:   sftp
+:uploader_name: SFTP
+:prefix:        {uploader_name}
+:default-host:  uploads.acme.com
+:default-port:  22
+
+Uploads artifacts, files, and signatures to a {uploader_name} server.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+include::partial$upload/yaml/hpup.adoc[]
+
+include::partial$upload/yaml/ssh.adoc[]
+
+      # Path where artifacts will be uploaded.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/yaml/download-url.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+include::partial$upload/toml/hpup.adoc[]
+
+include::partial$upload/toml/ssh.adoc[]
+
+  # Path where artifacts will be uploaded.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  path = "/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
+include::partial$upload/toml/download-url.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+include::partial$upload/json/hpup.adoc[]
+
+include::partial$upload/json/ssh.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "path": "/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}",
+
+include::partial$upload/json/download-url.adoc[]
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+include::partial$upload/maven/hpup.adoc[]
+
+include::partial$upload/maven/ssh.adoc[]
+
+        <!--
+          Path where artifacts will be uploaded.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <path>/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}</path>
+
+include::partial$upload/maven/download-url.adoc[]
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+include::partial$upload/gradle/hpup.adoc[]
+
+include::partial$upload/gradle/ssh.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/gradle/download-url.adoc[]
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$ssh/host.adoc[]
+
+include::partial$ssh/port.adoc[]
+
+include::partial$ssh/username.adoc[]
+
+include::partial$ssh/password.adoc[]
+
+include::partial$ssh/public-key.adoc[]
+
+include::partial$ssh/private-key.adoc[]
+
+include::partial$ssh/passphrase.adoc[]
+
+include::partial$ssh/fingerprint.adoc[]
+
+== Path
+
+The path where artifacts will be uploaded to.
+
+An example configuration may look like
+`path: '/uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final deployment like
+`/uploads/app/v1.0.0/app-1.0.0.zip`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from. This property is optional but should be set if artifacts
+are available for download.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.acme.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final URL like
+`pass:[https://artifacts.acme.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
