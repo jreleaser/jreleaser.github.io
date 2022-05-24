@@ -623,6 +623,26 @@ download:
         # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
         foo: bar
 
+      # The username required for authorization.
+      # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      username: __DO_NOT_SET_HERE__
+
+      # Password for login into the repository.
+      # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+      # environment variable must be defined.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      password: __DO_NOT_SET_HERE__
+
+      # The authorization method to use.
+      # Valid values are [`NONE`, `BASIC`, `BEARER`].
+      # `Basic` requires both username & password.
+      # `BEARER` requires a token (set as password).
+      # Defaults to `NONE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      authorization: BASIC
+
       # A list of assets to be downloaded.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       assets:
@@ -678,30 +698,47 @@ download:
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
 
-      # A list of assets to be downloaded.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      assets:
-          # Full download path to asset.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - input: 'https://artifacts.acme.com/logos/logo-256x256.png'
+  # The username required for authorization.
+  # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  username = "__DO_NOT_SET_HERE__"
 
-          # Local path where asset will be downloaded to.
-          # Defaults to `${jreleaser.downloadDirectory}/${downloader.name}`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          output: '{{projectName}}.png'
+  # Password for login into the repository..
+  # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+  # environment variable must be defined.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  password = "__DO_NOT_SET_HERE__"
 
-          # Unpack options
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          unpack:
-            # Unpack input archive when `true`.
-            # Defaults to `false`.
-            # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            enabled: false
+  # The authorization method to use.
+  # Valid values are [`NONE`, `BASIC`, `BEARER`].
+  # `Basic` requires both username & password.
+  # `BEARER` requires a token (set as password).
+  # Defaults to `NONE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  authorization = "BASIC"
 
-            # Skip the archive's root entry from the unpacked directory when `true`.
-            # Defaults to `false`.
-            # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            skipRootEntry: false</code></pre>
+  # A list of assets to be downloaded.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  [[dowload.http.app.assets]]
+    # Full download path to asset.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    input = "https://artifacts.acme.com/logos/logo-256x256.png"
+
+    # Local path where asset will be downloaded to.
+    # Defaults to `${jreleaser.downloadDirectory}/${downloader.name}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    output = "{{projectName}}.png"
+
+    # Unpack input archive when `true`.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    unpack.enabled: false
+
+    # Skip the archive's root entry from the unpacked directory when `true`.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    unpack.skipRootEntry: false</code></pre>
 </div>
 </div>
 </div>
@@ -739,6 +776,26 @@ download:
           // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
           "foo": "bar"
         },
+
+        // The username required for authorization.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "username": "__DO_NOT_SET_HERE__",
+
+        // Password for login into the repository.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "password": "__DO_NOT_SET_HERE__",
+
+        // The authorization method to use.
+        // Valid values are [`NONE`, `BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `NONE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "authorization": "BASIC",
 
         // A list of assets to be downloaded.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -826,6 +883,32 @@ download:
         &lt;/extraProperties&gt;
 
         &lt;!--
+          The username required for authorization.
+          If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;username&gt;__DO_NOT_SET_HERE__&lt;/username&gt;
+
+        &lt;!--
+          Password for login into the repository.
+          If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+          environment variable must be defined.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
+
+        &lt;!--
+          The authorization method to use.
+          Valid values are [`NONE`, `BASIC`, `BEARER`].
+          `Basic` requires both username &amp; password.
+          `BEARER` requires a token (set as password).
+          Defaults to `NONE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;authorization&gt;BASIC&lt;/authorization&gt;
+
+        &lt;!--
           A list of assets to be downloaded.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         --&gt;
@@ -905,6 +988,26 @@ download:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
+        // The username required for authorization.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        username = '__DO_NOT_SET_HERE__'
+
+        // Password for login into the repository.
+        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
+        // environment variable must be defined.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        password = '__DO_NOT_SET_HERE__'
+
+        // The authorization method to use.
+        // Valid values are [`NONE`, `BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `NONE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        authorization = 'BASIC'
+
         // A list of assets to be downloaded.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         asset {
@@ -939,6 +1042,38 @@ download:
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_username"><a class="anchor" href="#_username"></a>Username</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can have the username set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the HTTP server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_USERNAME</code>. If your instance is named <code>production</code>,
+you can store the username in the environment variable <code>JRELEASER_HTTP_PRODUCTION_USERNAME</code>. The name will be
+transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>If a configured username is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_password"><a class="anchor" href="#_password"></a>Password</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The password will be stored in an environment variable. The configured name of the HTTP server will
+be used. This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_PASSWORD</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_HTTP_PRODUCTION_PASSWORD</code>. The name will be
+transformed to uppercase.</p>
 </div>
 </div>
 </div>
