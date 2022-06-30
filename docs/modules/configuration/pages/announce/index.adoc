@@ -10,44 +10,47 @@ YAML::
 +
 --
 [source,yaml]
-[subs="attributes,+macros"]
+[subs="+macros"]
 ----
 # icon:dot-circle[]
 announce:
   # Enable or disable all configured announcers.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enabled: true
+  active: ALWAYS
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="attributes,+macros"]
+[subs="+macros"]
 ----
 # icon:dot-circle[]
 [announce]
 
   # Enable or disable all configured announcers.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enable = true
+  active = "ALWAYS"
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="attributes,+macros"]
+[subs="+macros"]
 ----
 {
   // icon:dot-circle[]
   "announce": {
     // Enable or disable all configured announcers.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    "enabled": true
+    "active": "ALWAYS"
   }
 }
 ----
@@ -56,7 +59,7 @@ Maven::
 +
 --
 [source,xml]
-[subs="attributes,verbatim,+macros"]
+[subs="verbatim,+macros"]
 ----
 <jreleaser>
   <!--
@@ -65,10 +68,11 @@ Maven::
   <announce>
     <!--
       Enable or disable all configured announcers.
-      Defaults to `true`.
+      Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      Defaults to `ALWAYS`.
       icon:dot-circle[]
     -->
-    <enabled>true</enabled>
+    <active>ALWAYS</active>
   </announce>
 </jreleaser>
 ----
@@ -77,17 +81,21 @@ Gradle::
 +
 --
 [source,groovy]
-[subs="attributes,+macros"]
+[subs="+macros"]
 ----
 jreleaser {
   // icon;dot-circle[]
   announce {
     // Enable or disable all configured announcers.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    enabled = true
+    active = 'ALWAYS'
   }
 }
 ----
 --
 ====
+
+NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_ANNOUNCE_ACTIVE`
+or from a system property `jreleaser.announce.active`. The system property takes precedence over the environment variable.

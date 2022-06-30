@@ -2,7 +2,7 @@
 :uploader_id:   http
 :uploader_name: HTTP
 
-Uploads artifacts, files, and signatures to an {uploader_name}/HTTPS server
+Uploads artifacts, files, and signatures to an {uploader_name}/HTTPS server.
 
 .Prerequisites:
 
@@ -30,25 +30,7 @@ include::partial$upload/yaml/common-head.adoc[]
       # icon:exclamation-triangle[] icon:file-alt[]
       downloadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]
 
-      # The username required for authorization.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      username: __DO_NOT_SET_HERE__
-
-      # Password for login into the repository.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-      # environment variable must be defined.
-      # icon:dot-circle[] icon:eye-slash[]
-      password: __DO_NOT_SET_HERE__
-
-      # The authorization method to use.
-      # Valid values are [`NONE`, `BASIC`, `BEARER`].
-      # `Basic` requires both username & password.
-      # `BEARER` requires a token (set as password).
-      # Defaults to `NONE`.
-      # icon:dot-circle[]
-      authorization: BASIC
+include::partial$upload/yaml/upa.adoc[]
 
       # The method to use for uploading artifacts.
       # Valid values are [`POST`, `PUT`].
@@ -80,25 +62,7 @@ include::partial$upload/toml/common-head.adoc[]
   # icon:exclamation-triangle[] icon:file-alt[]
   downloadUrl = "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]"
 
-  # The username required for authorization.
-  # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  username = "__DO_NOT_SET_HERE__"
-
-  # Password for login into the repository..
-  # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-  # environment variable must be defined.
-  # icon:dot-circle[] icon:eye-slash[]
-  password = "__DO_NOT_SET_HERE__"
-
-  # The authorization method to use.
-  # Valid values are [`NONE`, `BASIC`, `BEARER`].
-  # `Basic` requires both username & password.
-  # `BEARER` requires a token (set as password).
-  # Defaults to `NONE`.
-  # icon:dot-circle[]
-  authorization = "BASIC"
+include::partial$upload/toml/upa.adoc[]
 
   # The method to use for uploading artifacts.
   # Valid values are [`POST`, `PUT`].
@@ -129,25 +93,7 @@ include::partial$upload/json/common-head.adoc[]
         // icon:exclamation-triangle[] icon:file-alt[]
         "downloadUrl": "pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]",
 
-        // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "username": "__DO_NOT_SET_HERE__",
-
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        "password": "__DO_NOT_SET_HERE__",
-
-        // The authorization method to use.
-        // Valid values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // icon:dot-circle[]
-        "authorization": "BASIC",
+include::partial$upload/json/upa.adoc[]
 
         // The method to use for uploading artifacts.
         // Valid values are [`POST`, `PUT`].
@@ -185,31 +131,7 @@ include::partial$upload/maven/common-head.adoc[]
         -->
         <downloadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]</downloadUrl>
 
-        <!--
-          The username required for authorization.
-          If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <username>__DO_NOT_SET_HERE__</username>
-
-        <!--
-          Password for login into the repository.
-          If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-          environment variable must be defined.
-          icon:dot-circle[] icon:eye-slash[]
-        -->
-        <password>__DO_NOT_SET_HERE__</password>
-
-        <!--
-          The authorization method to use.
-          Valid values are [`NONE`, `BASIC`, `BEARER`].
-          `Basic` requires both username & password.
-          `BEARER` requires a token (set as password).
-          Defaults to `NONE`.
-          icon:dot-circle[]
-        -->
-        <authorization>BASIC</authorization>
+include::partial$upload/maven/upa.adoc[]
 
         <!--
           The method to use for uploading artifacts.
@@ -247,25 +169,7 @@ include::partial$upload/gradle/common-head.adoc[]
         // icon:exclamation-triangle[] icon:file-alt[]
         downloadUrl = 'pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]'
 
-        // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        username = '__DO_NOT_SET_HERE__'
-
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-        // environment variable must be defined.
-        // icon:dot-circle[] icon:eye-slash[]
-        password = '__DO_NOT_SET_HERE__'
-
-        // The authorization method to use.
-        // Valid values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // icon:dot-circle[]
-        authorization = 'BASIC'
+include::partial$upload/gradle/upa.adoc[]
 
         // The method to use for uploading artifacts.
         // Valid values are [`POST`, `PUT`].
@@ -281,6 +185,10 @@ include::partial$upload/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$http/username.adoc[]
+
+include::partial$http/password.adoc[]
 
 == UploadUrl
 
@@ -301,28 +209,6 @@ An example configuration may look like
 
 And will result in a final URL like
 `pass:[https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
-
-== Username
-
-You can have the username set in the configuration as shown above or you can have it read from an environment variable.
-The configured name of the HTTP server will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_HTTP_NAME_USERNAME`. If your instance is named `production`,
-you can store the username in the environment variable `JRELEASER_HTTP_PRODUCTION_USERNAME`. The name will be
-transformed to uppercase.
-
-If a configured username is found in the configuration file, then the environment variable is not used at all.
-
-== Password
-
-The password will be stored in an environment variable. The configured name of the HTTP server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_HTTP_NAME_PASSWORD`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_HTTP_PRODUCTION_PASSWORD`. The name will be
-transformed to uppercase.
-
 == Skip Upload
 
 Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must

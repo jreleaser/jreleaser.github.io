@@ -1,0 +1,150 @@
+= Ftp
+:uploader_id:   ftp
+:uploader_name: FTP
+:prefix:        {uploader_name}
+:default-host:  uploads.acme.com
+:default-port:  21
+
+Uploads artifacts, files, and signatures to a {uploader_name} server.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+include::partial$upload/yaml/hpup.adoc[]
+
+      # Path where artifacts will be uploaded.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/yaml/download-url.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+include::partial$upload/toml/hpup.adoc[]
+
+  # Path where artifacts will be uploaded.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  path = "uploads/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
+include::partial$upload/toml/download-url.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+include::partial$upload/json/hpup.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "path": "uploads/{{projectName}}/{{tagName}}/{{artifactFile}}",
+
+include::partial$upload/json/download-url.adoc[]
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+include::partial$upload/maven/hpup.adoc[]
+
+        <!--
+          Path where artifacts will be uploaded.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <path>uploads/{{projectName}}/{{tagName}}/{{artifactFile}}</path>
+
+include::partial$upload/maven/download-url.adoc[]
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+include::partial$upload/gradle/hpup.adoc[]
+
+        // Path where artifacts will be uploaded.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+include::partial$upload/gradle/download-url.adoc[]
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$ftp/host.adoc[]
+
+include::partial$ftp/port.adoc[]
+
+include::partial$ftp/username.adoc[]
+
+include::partial$ftp/password.adoc[]
+
+== Path
+
+The path (relative to the authenticated or anonymous user) where artifacts will be uploaded to.
+
+An example configuration may look like
+`path: 'uploads/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final deployment like
+`pass:[ftp://<host>:<port>/uploads/app/v1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from. This property is optional but should be set if artifacts
+are available for download.
+
+An example configuration may look like
+`downloadUrl: 'https://artifacts.acme.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'`.
+
+And will result in a final URL like
+`pass:[https://artifacts.acme.com:8081/upload/app/v1.0.0/app-1.0.0.zip]`.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Ftp` and `<name>` resolves to the capitalized name of the ftp instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadFtpFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadFtpFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadFtpFooBar`.
+

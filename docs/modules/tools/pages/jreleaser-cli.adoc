@@ -21,6 +21,7 @@ Commands:
   init                 Create a jreleaser config file.
   config               Display current configuration.
   template             Generate a packager/announcer template.
+  download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
   checksum             Calculate checksums.
@@ -148,15 +149,16 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 $ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-afghiqVw] [-grs] [-scp] [-b=<basedir>]
+Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [-b=<basedir>]
                         [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
-                        [-P=<key=value>]... [-sp=<platform>]...
+                        [-P=<key=value>]... [-sp=<platform>]... [-a | -d]
 
 Options:
   -a, --assembly            Display assembly configuration.
   -b, --basedir=<basedir>   Base directory.
   -c, --config-file=<configFile>
                             The config file.
+  -d, --download            Display download configuration.
   -D=<key=value>            Sets a System property. Repeatable.
   -f, --full                Display full configuration.
   -g, --debug               Set log level to debug.
@@ -239,6 +241,66 @@ xref:ROOT:distributions/index.adoc[distribution types].
 
 The value of `--packager` must match any of the available xref:configuration:packagers/index.adoc[].
 
+=== download
+
+[source]
+----
+$ jreleaser download -h
+Download assets.
+
+Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [-b=<basedir>]
+                          [-c=<configFile>] [-od=<outputdir>]
+                          [-D=<key=value>]... [-P=<key=value>]...
+                          [[[-d=<downloader>]... [-dn=<name>]...] |
+                          [[-xd=<downloader>]... [-xdn=<name>]...]]
+
+Options:
+  -b, --basedir=<basedir>   Base directory.
+  -c, --config-file=<configFile>
+                            The config file.
+  -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
+  -g, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+      -od, --output-directory=<outputdir>
+                            Output directory.
+  -P, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
+  -q, --quiet               Log errors only.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+
+Include Filter:
+  -d, --downloader=<downloader>
+                            Include an downloader by type. Repeatable.
+      -dn, --downloader-name=<name>
+                            Include an downloader by name. Repeatable.
+
+Exclude Filter:
+      -xd, --exclude-downloader=<downloader>
+                            Exclude an downloader by type. Repeatable.
+      -xdn, --exclude-downloader-name=<name>
+                            Exclude an downloader by name. Repeatable.
+
+Documentation found at https://jreleaser.org
+----
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
+found at the current directory.
+
+If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--downloader` and `--exclude-downloader-type` must match the type of configured
+xref:configuration:download/index.adoc[downloader].
+
+The value of `--downloader-name` and `--exclude-downloader-name` must match any of the available named
+xref:configuration:download/index.adoc[downloaders].
+
+This command must be invoked separately from the others.
+
 === assemble
 
 [source]
@@ -302,7 +364,7 @@ xref:configuration:assemble/index.adoc[assemblers].
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured assembler found in the
 xref:configuration:assemble/index.adoc[assemblers] section.
 
-This command must be invoked separately from the others as some of the assmeblers are platform specific.
+This command must be invoked separately from the others as some assemblers are platform specific.
 
 === changelog
 
@@ -511,7 +573,7 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
-The value of `--uploader` and `--exclude-uploader-type` must match the type of a configured
+The value of `--uploader` and `--exclude-uploader-type` must match the type of configured
 xref:configuration:upload/index.adoc[uploader].
 
 The value of `--uploader-name` and `--exclude-uploader-name` must match any of the available named

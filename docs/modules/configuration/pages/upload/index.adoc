@@ -1,6 +1,6 @@
 = Upload
 
-Artifacts and files may be uploaded to configured servers.
+Artifacts and files may be uploaded to configured locations.
 
 include::partial$legend.adoc[]
 
@@ -15,9 +15,10 @@ YAML::
 # icon:dot-circle[]
 upload:
   # Enable or disable all configured uploaders.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enabled: true
+  active: ALWAYS
 ----
 --
 TOML::
@@ -30,9 +31,10 @@ TOML::
 [upload]
 
   # Enable or disable all configured uploaders.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enable = true
+  active = "ALWAYS"
 ----
 --
 JSON::
@@ -45,9 +47,10 @@ JSON::
   // icon:dot-circle[]
   "upload": {
     // Enable or disable all configured uploaders.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    "enabled": true
+    "active": "ALWAYS"
   }
 }
 ----
@@ -65,10 +68,11 @@ Maven::
   <upload>
     <!--
       Enable or disable all configured uploaders.
-      Defaults to `true`.
+      Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      Defaults to `ALWAYS`.
       icon:dot-circle[]
     -->
-    <enabled>true</enabled>
+    <active>ALWAYS</active>
   </upload>
 </jreleaser>
 ----
@@ -83,11 +87,15 @@ jreleaser {
   // icon;dot-circle[]
   upload {
     // Enable or disable all configured uploaders.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    enabled = true
+    active = 'ALWAYS'
   }
 }
 ----
 --
 ====
+
+NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_UPLOAD_ACTIVE`
+or from a system property `jreleaser.upload.active`. The system property takes precedence over the environment variable.

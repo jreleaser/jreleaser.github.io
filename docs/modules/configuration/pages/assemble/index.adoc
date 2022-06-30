@@ -15,9 +15,10 @@ YAML::
 # icon:dot-circle[]
 assemble:
   # Enable or disable all configured assemblers.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enabled: true
+  active: ALWAYS
 ----
 --
 TOML::
@@ -30,9 +31,10 @@ TOML::
 [assemble]
 
   # Enable or disable all configured assemblers.
-  # Defaults to `true`.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
   # icon:dot-circle[]
-  enable = true
+  active = "ALWAYS"
 ----
 --
 JSON::
@@ -45,9 +47,10 @@ JSON::
   // icon:dot-circle[]
   "assemble": {
     // Enable or disable all configured assemblers.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    "enabled": true
+    "active": "ALWAYS"
   }
 }
 ----
@@ -65,10 +68,11 @@ Maven::
   <assemble>
     <!--
       Enable or disable all configured assemblers.
-      Defaults to `true`.
+      Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      Defaults to `ALWAYS`.
       icon:dot-circle[]
     -->
-    <enabled>true</enabled>
+    <active>ALWAYS</active>
   </assemble>
 </jreleaser>
 ----
@@ -83,14 +87,18 @@ jreleaser {
   // icon;dot-circle[]
   assemble {
     // Enable or disable all configured assemblers.
-    // Defaults to `true`.
+    // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
     // icon:dot-circle[]
-    enabled = true
+    active = 'ALWAYS'
   }
 }
 ----
 --
 ====
+
+NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_ASSEMBLE_ACTIVE`
+or from a system property `jreleaser.assemble.active`. The system property takes precedence over the environment variable.
 
 Assemblers will configure a matching distribution by name if it exists and if the assembler exports its artifacts
 (`true` by default), otherwise they'll create a new distribution with their respective name. Assemblers may configure
