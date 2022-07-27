@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Macports :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/packagers/macports.html">
+    <title>Asdf :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/packagers/asdf.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -252,7 +252,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Packagers</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="asdf.html">Asdf</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -270,7 +270,7 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="macports.html">Macports</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -530,35 +530,28 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Packagers</a></li>
-    <li><a href="macports.html">Macports</a></li>
+    <li><a href="asdf.html">Asdf</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/packagers/macports.html">latest</a>
-    <a class="version is-current" href="macports.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="asdf.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/packagers/macports.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/packagers/asdf.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Macports</h1>
+<h1 class="page">Asdf</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>JReleaser can generate and publish a <a href="https://www.macports.org/">Macports</a> Portfile into a repository that you have
-access to. This packager generates port file and publishes it to a repository of your choice, however it&#8217;s your
-responsibility to update the official <a href="https://github.com/macports/macports-ports/" class="bare">https://github.com/macports/macports-ports/</a> with a PR of your own. As
-a reference JReleaser publishes its release using a <a href="https://github.com/jreleaser/jreleaser-macports/blob/main/.github/workflows/update.yml">GitHub workflow</a>
-triggered on every push to the <code>main</code> branch of <a href="https://github.com/jreleaser/jreleaser-macports">jreleaser/jreleaser-macports</a>.</p>
-</div>
-<div class="paragraph">
-<p>The <code>macports</code> section specifies how the Portfile should be created.</p>
+<p><a href="https://asdf-vm.com/">asdf</a> is a tool version manager.</p>
 </div>
 <div class="paragraph">
 <p>The following artifact extensions are supported by this packager:</p>
@@ -566,12 +559,37 @@ triggered on every push to the <code>main</code> branch of <a href="https://gith
 <div class="ulist">
 <ul>
 <li>
-<p><code>.zip</code></p>
+<p><code>.tgz</code></p>
 </li>
 <li>
-<p><code>.dmg</code></p>
+<p><code>.txz</code></p>
+</li>
+<li>
+<p><code>.tar.gz</code></p>
+</li>
+<li>
+<p><code>.tar.xz</code></p>
+</li>
+<li>
+<p><code>.tar</code></p>
+</li>
+<li>
+<p><code>.zip</code></p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Default templates for <code>asdf</code> assume the project relies on <a href="../project.html#_semver" class="xref page">Semantic Versioning</a>. You&#8217;ll have
+to adjust the templates or provide your own if your project follows a different versioning scheme.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -631,8 +649,8 @@ Publication of snapshots is <strong>not</strong> allowed.
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  macports:
-    # Enables or disables Macports.
+  asdf:
+    # Enables or disables asdf.
     # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -650,14 +668,14 @@ packagers:
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     extraProperties:
-      # Key will be capitalized and prefixed with `macports`, i.e, `macportsFoo`.
+      # Key will be capitalized and prefixed with `asdf`, i.e, `asdfFoo`.
       foo: bar
 
-    # Directory with file templates used to prepare the Macports distribution.
-    # Defaults to `src/jreleaser/distributions/${distribution.name}/macports`.
+    # Directory with file templates used to prepare the asdf distribution.
+    # Defaults to `src/jreleaser/distributions/${distribution.name}/asdf`.
     # If specified, path must exist.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    templateDirectory: path/to/macports/templates
+    templateDirectory: path/to/asdf/templates
 
     # List of template files to be skipped.
     # Value may be an exact match or a regex.
@@ -678,7 +696,7 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
-    # Git repository to push the portfile to.
+    # Git repository to push the plugin to.
     # Defaults are shown.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     repository:
@@ -695,30 +713,30 @@ packagers:
       owner: duke
 
       # The name of the repository.
-      # Defaults to `macports`.
+      # Defaults to `asdf-duke`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      name: macports
+      name: asdf-duke
 
-      # The tag associated with the portfile.
+      # The tag associated with the plugin.
       # If left unspecified, will use `{{tagName}}`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       tagName: '{{distributionName}} {{tagName}}'
 
       # The target branch to use.
-      # May define a `JRELEASER_MACPORTS_${GIT}_BRANCH` environment variable instead.
+      # May define a `JRELEASER_ASDF_${GIT}_BRANCH` environment variable instead.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
       # Username used for authoring commits. Must have write access to the repository.
-      # If left unspecified, the `JRELEASER_MACPORTS_${GIT}_USERNAME`
+      # If left unspecified, the `JRELEASER_ASDF_${GIT}_USERNAME`
       # environment variable must be defined.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the repository.
-      # If left unspecified, the `JRELEASER_MACPORTS_${GIT}_TOKEN`
+      # If left unspecified, the `JRELEASER_ASDF_${GIT}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token: __DO_NOT_SET_HERE__
@@ -728,28 +746,10 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       commitMessage: '{{distributionName}} {{tagName}}'
 
-    # Name of the Macports package.
-    # Defaults to `${distribution.name}`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    packageName: app
-
-    # URL used to check the latest version.
-    # Defaults to `0`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    revision: 0
-
-    # List of categories to use.
-    # Defaults to `[devel]`.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    categories:
-      - 'devel'
-
-    # List of maintainers.
-    # Accepted values described at <a href="https://guide.macports.org/#reference.keywords.maintainers" class="bare">https://guide.macports.org/#reference.keywords.maintainers</a>
-    # Defaults to `[@${release.username}]`.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    maintainers:
-      - 'nomaintainer'</code></pre>
+    # Tool verification command.
+    # Defaults to `{{distributionExecutable}} --version`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    toolCheck: '{{distributionExecutable}} --version'</code></pre>
 </div>
 </div>
 </div>
@@ -757,8 +757,8 @@ packagers:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
-[packagers.macports]
-  # Enables or disables Macports.
+[packagers.asdf]
+  # Enables or disables asdf.
   # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -776,13 +776,13 @@ packagers:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `macports`, i.e, `macportsFoo`.
+  # Key will be capitalized and prefixed with `asdf`, i.e, `asdfFoo`.
 
-  # Directory with file templates used to prepare the Macports distribution.
-  # Defaults to `src/jreleaser/distributions/${distribution.name}/macports`.
+  # Directory with file templates used to prepare the asdf distribution.
+  # Defaults to `src/jreleaser/distributions/${distribution.name}/asdf`.
   # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/macports/templates"
+  templateDirectory = "path/to/asdf/templates"
 
   # List of template files to be skipped.
   # Value may be an exact match or a regex.
@@ -801,7 +801,7 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
-  # Git repository to push the portfile to.
+  # Git repository to push the plugin to.
   # Defaults are shown.
 
   # Enables or disables the repository.
@@ -817,30 +817,30 @@ packagers:
   repository.owner = "duke"
 
   # The name of the repository.
-  # Defaults to `macports`.
+  # Defaults to `asdf-duke`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  repository.name = "macports"
+  repository.name = "asdf-duke"
 
-  # The tag associated with the portfile.
+  # The tag associated with the plugin.
   # If left unspecified, will use `{{tagName}}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.tagName = "{{distributionName}} {{tagName}}"
 
   # The target branch to use.
-  # May define a `JRELEASER_MACPORTS_${GIT}_BRANCH` environment variable instead.
+  # May define a `JRELEASER_ASDF_${GIT}_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.branch = "HEAD"
 
   # Username used for authoring commits. Must have write access to the repository.
-  # If left unspecified, the `JRELEASER_MACPORTS_${GIT}_USERNAME`
+  # If left unspecified, the `JRELEASER_ASDF_${GIT}_USERNAME`
   # environment variable must be defined.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.username = "duke"
 
   # Password or OAuth token with write access to the repository.
-  # If left unspecified, the `JRELEASER_MACPORTS_${GIT}_TOKEN`
+  # If left unspecified, the `JRELEASER_ASDF_${GIT}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.token = "__DO_NOT_SET_HERE__"
@@ -850,26 +850,10 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.commitMessage = "{{distributionName}} {{tagName}}"
 
-  # Name of the Macports package.
-  # Defaults to `${distribution.name}`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  packageName = "app"
-
-  # URL used to check the latest version.
-  # Defaults to `0`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  revision = 0
-
-  # List of categories to use.
-  # Defaults to `[devel]`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  categories = ["devel"]
-
-  # List of maintainers.
-  # Accepted values described at <a href="https://guide.macports.org/#reference.keywords.maintainers" class="bare">https://guide.macports.org/#reference.keywords.maintainers</a>
-  # Defaults to `[@${release.username}]`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  maintainers = ["nomaintainer"]</code></pre>
+  # Tool verification command.
+  # Defaults to `{{distributionExecutable}} --version`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  toolCheck = "{{distributionExecutable}} --version"</code></pre>
 </div>
 </div>
 </div>
@@ -880,8 +864,8 @@ packagers:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "packagers": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "macports": {
-      // Enables or disables Macports.
+    "asdf": {
+      // Enables or disables asdf.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -899,15 +883,15 @@ packagers:
       // Additional properties used when evaluating templates.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "extraProperties": {
-        // Key will be capitalized and prefixed with `macports`, i.e, `macportsFoo`.
+        // Key will be capitalized and prefixed with `asdf`, i.e, `asdfFoo`.
         "foo": "bar"
       },
 
-      // Directory with file templates used to prepare the Macports distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/macports`.
+      // Directory with file templates used to prepare the asdf distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/asdf`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "templateDirectory": "path/to/macports/templates",
+      "templateDirectory": "path/to/asdf/templates",
 
       // List of template files to be skipped.
       // Value may be an exact match or a regex.
@@ -930,7 +914,7 @@ packagers:
         "email": "jreleaser@kordamp.org"
       },
 
-      // Git repository to push the portfile to.
+      // Git repository to push the plugin to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "repository": {
@@ -947,30 +931,30 @@ packagers:
         "owner": "duke",
 
         // The name of the repository.
-        // Defaults to `macports`.
+        // Defaults to `asdf-duke`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "name": "macports",
+        "name": "asdf-duke",
 
-        // The tag associated with the portfile.
+        // The tag associated with the plugin.
         // If left unspecified, will use `{{tagName}}`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "tagName": "{{distributionName}} {{tagName}}",
 
         // The target branch to use.
-        // May define a `JRELEASER_MACPORTS_${GIT}_BRANCH` environment variable instead.
+        // May define a `JRELEASER_ASDF_${GIT}_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
         // Username used for authoring commits. Must have write access to the repository.
-        // If left unspecified, the `JRELEASER_MACPORTS_${GIT}_USERNAME`
+        // If left unspecified, the `JRELEASER_ASDF_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the repository.
-        // If left unspecified, the `JRELEASER_MACPORTS_${GIT}_TOKEN`
+        // If left unspecified, the `JRELEASER_ASDF_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "token": "__DO_NOT_SET_HERE__",
@@ -981,26 +965,10 @@ packagers:
         "commitMessage": "{{distributionName}} {{tagName}}"
       },
 
-      // Name of the Macports package.
-      // Defaults to `${distribution.name}`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "packageName": "app",
-
-      // URL used to check the latest version.
-      // Defaults to `0`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "revision": 0,
-
-      // List of categories to use.
-      // Defaults to `[devel]`.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "categories": ["devel"],
-
-      // List of maintainers.
-      // Accepted values described at <a href="https://guide.macports.org/#reference.keywords.maintainers" class="bare">https://guide.macports.org/#reference.keywords.maintainers</a>
-      // Defaults to `[@${release.username}]`.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "maintainers": ["nomaintainer"]
+      // Tool verification command.
+      // Defaults to `{{distributionExecutable}} --version`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "toolCheck": "{{distributionExecutable}} --version"
     }
   }
 }</code></pre>
@@ -1018,9 +986,9 @@ packagers:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;macports&gt;
+    &lt;asdf&gt;
       &lt;!--
-        Enables or disables Macports.
+        Enables or disables asdf.
         Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1046,18 +1014,18 @@ packagers:
       --&gt;
       &lt;extraProperties&gt;
         &lt;!--
-          Key will be capitalized and prefixed with `macports`, i.e, `macportsFoo`.
+          Key will be capitalized and prefixed with `asdf`, i.e, `asdfFoo`.
         --&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
 
       &lt;!--
-        Directory with file templates used to prepare the Macports distribution.
-        Defaults to `src/jreleaser/distributions/${distribution.name}/macports`.
+        Directory with file templates used to prepare the asdf distribution.
+        Defaults to `src/jreleaser/distributions/${distribution.name}/asdf`.
         If specified, path must exist.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;templateDirectory&gt;path/to/macports/templates&lt;/templateDirectory&gt;
+      &lt;templateDirectory&gt;path/to/asdf/templates&lt;/templateDirectory&gt;
 
       &lt;!--
         List of template files to be skipped.
@@ -1090,7 +1058,7 @@ packagers:
       &lt;/commitAuthor&gt;
 
       &lt;!--
-        Git repository to push the portfile to.
+        Git repository to push the plugin to.
         Defaults are shown.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -1113,13 +1081,13 @@ packagers:
 
         &lt;!--
           The name of the repository.
-          Defaults to `macports`.
+          Defaults to `asdf-duke`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;name&gt;macports&lt;/name&gt;
+        &lt;name&gt;asdf-duke&lt;/name&gt;
 
         &lt;!--
-          The tag associated with the portfile.
+          The tag associated with the plugin.
           If left unspecified, will use `{{tagName}}`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
@@ -1127,7 +1095,7 @@ packagers:
 
         &lt;!--
           The target branch to use.
-          May define a `JRELEASER_MACPORTS_${GIT}_BRANCH`` environment variable instead.
+          May define a `JRELEASER_ASDF_${GIT}_BRANCH`` environment variable instead.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1135,7 +1103,7 @@ packagers:
 
         &lt;!--
           Username used for authoring commits. Must have write access to the repository.
-          If left unspecified, the `JRELEASER_MACPORTS_${GIT}_USERNAME`
+          If left unspecified, the `JRELEASER_ASDF_${GIT}_USERNAME`
           environment variable must be defined.
           Defaults to the same username as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1144,7 +1112,7 @@ packagers:
 
         &lt;!--
           Password or OAuth token with write access to the repository.
-          If left unspecified, the `JRELEASER_MACPORTS_${GIT}_TOKEN`
+          If left unspecified, the `JRELEASER_ASDF_${GIT}_TOKEN`
           environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1159,34 +1127,12 @@ packagers:
       &lt;/repository&gt;
 
       &lt;!--
-        Name of the Macports package.
-        Defaults to `${distribution.name}`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        Tool verification command.
+        Defaults to `{{distributionExecutable}} --version`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
-      &lt;packageName&gt;app&lt;/packageName&gt;
-
-      &lt;!--
-        URL used to check the latest version.
-        Defaults to `0`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      --&gt;
-      &lt;revision&gt;0&lt;/revision&gt;
-
-      &lt;!--
-        List of categories to use.
-        Defaults to `[devel]`.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;categories&gt;devel&lt;/categories&gt;
-
-      &lt;!--
-        List of maintainers.
-        Accepted values described at <a href="https://guide.macports.org/#reference.keywords.maintainers" class="bare">https://guide.macports.org/#reference.keywords.maintainers</a>
-        Defaults to `[@${release.username}]`.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      --&gt;
-      &lt;maintainers&gt;nomaintainer&lt;/maintainers&gt;
-    &lt;/macports&gt;
+      &lt;toolCheck&gt;{{distributionExecutable}} --version&lt;/toolCheck&gt;
+    &lt;/asdf&gt;
   &lt;/packagers&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1199,8 +1145,8 @@ packagers:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   packagers {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    macports {
-      // Enables or disables Macports.
+    asdf {
+      // Enables or disables asdf.
       // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1216,15 +1162,15 @@ packagers:
       downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `macports`, i.e, `macportsFoo`.
+      // Key will be capitalized and prefixed with `asdf`, i.e, `asdfFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
 
-      // Directory with file templates used to prepare the Macports distribution.
-      // Defaults to `src/jreleaser/distributions/${distribution.name}/macports`.
+      // Directory with file templates used to prepare the asdf distribution.
+      // Defaults to `src/jreleaser/distributions/${distribution.name}/asdf`.
       // If specified, path must exist.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory = 'path/to/macports/templates'
+      templateDirectory = 'path/to/asdf/templates'
 
       // List of template files to be skipped.
       // Value may be an exact match or a regex.
@@ -1245,7 +1191,7 @@ packagers:
         email = 'jreleaser@kordamp.org'
       }
 
-      // Git repository to push the portfile to.
+      // Git repository to push the plugin to.
       // Defaults are shown.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       repository {
@@ -1262,11 +1208,11 @@ packagers:
         owner = 'duke'
 
         // The name of the repository.
-        // Defaults to `macports`.
+        // Defaults to `asdf-duke`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        name = 'macports'
+        name = 'asdf-duke'
 
-        // The tag associated with the portfile.
+        // The tag associated with the plugin.
         // If left unspecified, will use `{{tagName}}`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         tagName = '{{distributionName}} {{tagName}}'
@@ -1278,14 +1224,14 @@ packagers:
         branch = 'HEAD'
 
         // Username used for authoring commits. Must have write access to the repository.
-        // If left unspecified, the `JRELEASER_MACPORTS_${GIT}_USERNAME`
+        // If left unspecified, the `JRELEASER_ASDF_${GIT}_USERNAME`
         // environment variable must be defined.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the repository.
-        // If left unspecified, the `JRELEASER_MACPORTS_${GIT}_TOKEN`
+        // If left unspecified, the `JRELEASER_ASDF_${GIT}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__DO_NOT_SET_HERE__'
@@ -1296,26 +1242,10 @@ packagers:
         commitMessage = '{{distributionName}} {{tagName}}'
       }
 
-      // Name of the Macports package.
-      // Defaults to `${distribution.name}`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      packageName = 'app'
-
-      // URL used to check the latest version.
-      // Defaults to `0`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      revision = 0
-
-      // List of categories to use.
-      // Defaults to `[devel]`.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      categories = ['devel']
-
-      // List of maintainers.
-      // Accepted values described at <a href="https://guide.macports.org/#reference.keywords.maintainers" class="bare">https://guide.macports.org/#reference.keywords.maintainers</a>
-      // Defaults to `[@${release.username}]`.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      maintainers = ['nomaintainer']
+      // Tool verification command.
+      // Defaults to `{{distributionExecutable}} --version`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      toolCheck = '{{distributionExecutable}} --version'
     }
   }
 }</code></pre>
@@ -1345,16 +1275,16 @@ be one of:
 <div class="ulist">
 <ul>
 <li>
-<p><code>JRELEASER_MACPORTS_GITHUB_TOKEN</code></p>
+<p><code>JRELEASER_ASDF_GITHUB_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_MACPORTS_GITLAB_TOKEN</code></p>
+<p><code>JRELEASER_ASDF_GITLAB_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_MACPORTS_GITEA_TOKEN</code></p>
+<p><code>JRELEASER_ASDF_GITEA_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_MACPORTS_CODEBERG_TOKEN</code></p>
+<p><code>JRELEASER_ASDF_CODEBERG_TOKEN</code></p>
 </li>
 </ul>
 </div>
@@ -1401,16 +1331,16 @@ running the workflow. You must configure a <a href="https://docs.github.com/en/a
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>if <code>artifact.extraProperties.macportsDownloadUrl</code> exists, use it.</p>
+<p>if <code>artifact.extraProperties.asdfDownloadUrl</code> exists, use it.</p>
 </li>
 <li>
 <p>if <code>artifact.extraProperties.downloadUrl</code> exists, use it.</p>
 </li>
 <li>
-<p>if explicit <code>downloadUrl</code> is set on <code>macports</code>, use it.</p>
+<p>if explicit <code>downloadUrl</code> is set on <code>asdf</code>, use it.</p>
 </li>
 <li>
-<p>if <code>distribution.extraProperties.macportsDownloadUrl</code> exists, use it.</p>
+<p>if <code>distribution.extraProperties.asdfDownloadUrl</code> exists, use it.</p>
 </li>
 <li>
 <p>if <code>distribution.extraProperties.downloadUrl</code> exists, use it.</p>
@@ -1420,7 +1350,7 @@ running the workflow. You must configure a <a href="https://docs.github.com/en/a
 </li>
 <li>
 <p>if <code>releaser.${git}.skipRelease</code> is <code>true</code> then look for a matching uploader given an extraProperty named
-<code>downloadUrlFrom</code> on <code>artifact</code>, <code>distribution, `macports</code> (in that order). The value must be
+<code>downloadUrlFrom</code> on <code>artifact</code>, <code>distribution, `asdf</code> (in that order). The value must be
 <code>&lt;uploaderType&gt;:&lt;uploaderName&gt;</code> such as "artifactory:app" or "s3:uploads".</p>
 </li>
 <li>
@@ -1434,94 +1364,11 @@ running the workflow. You must configure a <a href="https://docs.github.com/en/a
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Assuming the current version is <code>1.2.3</code>, and a distribution named <code>app</code>, the above configuration will generate
-a <code>ports/devel/app/Porfile</code> file in the <code>duke/macports</code> repository:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-tcl hljs" data-lang="tcl"># -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
-
-PortSystem       1.0
-PortGroup        java 1.0
-
-name             app
-version          1.2.3
-revision         0
-
-categories       devel java
-license          Apache-2.0
-maintainers      @duke
-platforms        darwin
-supported_archs  noarch
-
-description      Awesome App
-long_description Awesome App
-
-homepage         https://acme.com/app
-
-master_sites     https://github.com/duke/app/releases/download/v1.0.0/
-use_zip          yes
-
-checksums        rmd160 f7e88b1c323b5c1772ebce05837a7cfd4ceda09d \
-                 sha256 53e89097573fb807adcf410169f117532ae17a4cd72066f9e40420eaf0d13147 \
-                 size   6481
-
-java.version     1.8.+
-
-use_configure    no
-
-build {}
-
-destroot {
-    set target ${destroot}${prefix}/share/java/${name}
-
-    # Create the target java directory
-    xinstall -m 755 -d ${target}
-
-    # Copy over the needed elements of our directory tree
-    foreach d { bin lib } {
-        copy ${worksrcpath}/${d} ${target}
-    }
-
-    # Remove extraneous bat files
-    foreach f [glob -directory ${target}/bin *.bat] {
-        delete ${f}
-    }
-
-    ln -s ../share/java/${name}/bin/app ${destroot}${prefix}/bin/app
-}
-
-livecheck.type   none</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You are then responsible for submitting a ticket to MacPorts for updating an existing port of adding a new port.
-JReleaser <strong>does not</strong> create a ticker nor a pull request for you.</p>
-</div>
-<div class="paragraph">
-<p>Please consult the <a href="https://guide.macports.org/">MacPorts guide</a> to know more.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_appname"><a class="anchor" href="#_appname"></a>AppName</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>JReleaser calculates the value of the containing app directory when packaging a <a href="../../distributions/native-package.html" class="xref page">Native Package</a>
-distribution for macOs and a <code>.dmg</code> file. The default value matches <code>{{distributionName}}.app</code>. If a different value were
-to be needed then set the <code>appName</code> extra property on the <code>macports</code> packager. This property accepts <a href="../name-templates.html" class="xref page">Name Templates</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_skip_artifacts"><a class="anchor" href="#_skip_artifacts"></a>Skip Artifacts</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If there is more than one matching artifact in a given distribution you may add a <code>skipMacports</code> extra property to the target
-artifact to mark it as skipped for packaging with Macports.</p>
+<p>If there is more than one matching artifact in a given distribution you may add a <code>skipAsdf</code> extra property to the target
+artifact to mark it as skipped for packaging with asdf.</p>
 </div>
 </div>
 </div>
@@ -1532,7 +1379,7 @@ artifact to mark it as skipped for packaging with Macports.</p>
 <p>The default location for templates is:</p>
 </div>
 <div class="paragraph">
-<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/macports</code></p>
+<p><code>src/jreleaser/distributions/&lt;distribution-name&gt;/asdf</code></p>
 </div>
 <div class="paragraph">
 <p>The following list shows the filenames that may be used to override default templates:</p>
@@ -1540,7 +1387,25 @@ artifact to mark it as skipped for packaging with Macports.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>Portfile.tpl</code></p>
+<p><code>.github/workflows/build.yml.tpl</code></p>
+</li>
+<li>
+<p><code>bin/download.tpl</code></p>
+</li>
+<li>
+<p><code>bin/install.tpl</code></p>
+</li>
+<li>
+<p><code>bin/list-all.tpl</code></p>
+</li>
+<li>
+<p><code>lib/utils.bash.tpl</code></p>
+</li>
+<li>
+<p><code>README.md.tpl</code></p>
+</li>
+<li>
+<p><code>README-github.md.tpl</code></p>
 </li>
 </ul>
 </div>
