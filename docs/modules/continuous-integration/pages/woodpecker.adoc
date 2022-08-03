@@ -1,0 +1,36 @@
+= Woodpecker
+
+You can setup JReleaser to run with link:https://woodpecker-ci.org[Woodpecker].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,yaml]
+[subs="+macros"]
+..woodpecker.yml
+----
+pipeline:
+  fetch:
+    image: docker:git
+    commands:
+      - git fetch --tags
+
+  test:
+    image: maven:3-jdk-10
+    commands:
+      - mvn -B verify
+
+  release:
+    image: jreleaser/jreleaser-slim:latest
+    commands:
+      - jreleaser full-release
+    secrets:
+      - source: github_token
+        target: jreleaser_github_token
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+NOTE: You'll need to create link:https://woodpecker-ci.org/docs/usage/secrets[secrets] to store `JRELEASER_GITHUB_TOKEN` and any other
+secrets for JReleaser to access the GitHub API and other sensitive data.
+
