@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Http :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/configuration/upload/http.html">
+    <title>Gitea :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/configuration/upload/gitea.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -339,13 +339,13 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="ftp.html">Ftp</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="gitea.html">Gitea</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="gitlab.html">GitLab</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -548,39 +548,37 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Configuration</a></li>
     <li><a href="index.html">Upload</a></li>
-    <li><a href="http.html">Http</a></li>
+    <li><a href="gitea.html">Gitea</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/configuration/upload/http.html">latest</a>
-    <a class="version is-current" href="http.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="gitea.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/upload/http.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/configuration/pages/upload/gitea.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Http</h1>
+<h1 class="page">Gitea</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Uploads artifacts, files, and signatures to an HTTP/HTTPS server.</p>
+<p>Uploads artifacts, files, and signatures to a Gitea instance via its
+<a href="https://docs.gitea.io/en-us/packages/generic/">Packages</a> option.</p>
 </div>
-<div class="ulist">
-<div class="title">Prerequisites:</div>
-<ul>
-<li>
-<p>A HTTP/HTTPS server that accepts POST/PUT requests.</p>
-</li>
-<li>
-<p>Username + Password/Token if authorization is required.</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">NOTE</dt>
+<dd>
+<p>Only <strong>generic</strong> packages are supported at the moment.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p>Legend:</p>
@@ -628,7 +626,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 upload:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  http:
+  gitea:
     # Uploaders require a name.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     app:
@@ -672,49 +670,32 @@ upload:
       # Additional properties used when evaluating templates.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       extraProperties:
-        # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
         foo: bar
 
-      # URL of the HTTP/HTTPS server + path + artifact.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      uploadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+      # The Gitea host url.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      host: my.gitea.com
 
-      # URL of the HTTP/HTTPS server + path + artifact.
-      # If undefined, will use the same value as `uploadUrl`.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      downloadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
+      # The user or organization that owns the repository.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      owner: duke
 
-      # The username required for authorization.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+      # Token with write access to the repository.
+      # If left unspecified, the `JRELEASER_GITEA_${name}_TOKEN`
       # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      username: __DO_NOT_SET_HERE__
+      token: __DO_NOT_SET_HERE__
 
-      # Password for login into the repository.
-      # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-      # environment variable must be defined.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      password: __DO_NOT_SET_HERE__
+      # The package name to use.
+      # If unspecified, will use the uploader's name.
+      # <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+      packageName: app
 
-      # The authorization method to use.
-      # Supported values are [`NONE`, `BASIC`, `BEARER`].
-      # `Basic` requires both username & password.
-      # `BEARER` requires a token (set as password).
-      # Defaults to `NONE`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      authorization: BASIC
-
-      # The method to use for uploading artifacts.
-      # Supported values are [`POST`, `PUT`].
-      # Defaults to `PUT`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      method: POST
-
-      # Additional headers to be sent to the server.
-      # Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      headers:
-        'X-ARTIFACT-PLATFORM': '{{artifactPlatform}}'</code></pre>
+      # The package version to use.
+      # If unspecified, will use the project's version.
+      # <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+      packageVersion: '{{projectVersion}}'</code></pre>
 </div>
 </div>
 </div>
@@ -723,7 +704,7 @@ upload:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Uploaders require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[upload.http.app]
+[upload.gitea.app]
 
   # Enables or disables the uploader.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -764,47 +745,31 @@ upload:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+  # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
 
-  # URL of the HTTP/HTTPS server + path + artifact.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  uploadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+  # The Gitea host url.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  host = "my.gitea.com"
 
-  # URL of the HTTP/HTTPS server + path + artifact.
-  # If undefined, will use the same value as `uploadUrl`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  downloadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+  # The user or organization that owns the repository.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  owner = "duke"
 
-  # The username required for authorization.
-  # If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+  # Token with write access to the repository.
+  # If left unspecified, the `JRELEASER_GITEA_${name}_TOKEN`
   # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  username = "__DO_NOT_SET_HERE__"
+  token = "__DO_NOT_SET_HERE__"
 
-  # Password for login into the repository..
-  # If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-  # environment variable must be defined.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  password = "__DO_NOT_SET_HERE__"
+  # The package name to use.
+  # If unspecified, will use the uploader's name.
+  # <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+  packageName = "app"
 
-  # The authorization method to use.
-  # Supported values are [`NONE`, `BASIC`, `BEARER`].
-  # `Basic` requires both username & password.
-  # `BEARER` requires a token (set as password).
-  # Defaults to `NONE`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BASIC"
-
-  # The method to use for uploading artifacts.
-  # Supported values are [`POST`, `PUT`].
-  # Defaults to `PUT`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  method = "POST"
-
-  # Additional headers to be sent to the server.
-  # Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  headers."X-ARTIFACT-PLATFORM" = "{{artifactPlatform}}"</code></pre>
+  # The package version to use.
+  # If unspecified, will use the project's version.
+  # <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+  packageVersion = "{{projectVersion}}"</code></pre>
 </div>
 </div>
 </div>
@@ -815,7 +780,7 @@ upload:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "upload": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "http": {
+    "gitea": {
       // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "app": {
@@ -859,51 +824,33 @@ upload:
         // Additional properties used when evaluating templates.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "extraProperties": {
-          // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+          // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
           "foo": "bar"
         },
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "uploadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
+        // The Gitea host url.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "host": "my.gitea.com",
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "downloadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
+        // The user or organization that owns the repository.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "owner": "duke",
 
-        // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // Token with write access to the repository.
+        // If left unspecified, the `JRELEASER_GITEA_${name}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "username": "__DO_NOT_SET_HERE__",
+        "token": "__DO_NOT_SET_HERE__",
 
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-        // environment variable must be defined.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "password": "__DO_NOT_SET_HERE__",
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+        "packageName": "app",
 
-        // The authorization method to use.
-        // Supported values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "authorization": "BASIC",
-
-        // The method to use for uploading artifacts.
-        // Supported values are [`POST`, `PUT`].
-        // Defaults to `PUT`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "method": "POST",
-
-        // Additional headers to be sent to the server.
-        // Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "headers": {
-          "X-ARTIFACT-PLATFORM": "{{artifactPlatform}}"
-        }
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+        "packageVersion": "{{projectVersion}}"
       }
     }
   }
@@ -922,7 +869,7 @@ upload:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;http&gt;
+    &lt;gitea&gt;
       &lt;!--
         Uploaders require a name.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -984,68 +931,46 @@ upload:
         --&gt;
         &lt;extraProperties&gt;
           &lt;!--
-            Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+            Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
           --&gt;
           &lt;foo&gt;bar&lt;/foo&gt;
         &lt;/extraProperties&gt;
 
         &lt;!--
-          URL of the HTTP/HTTPS server + path + artifact.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+           The Gitea host url.
+           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         --&gt;
-        &lt;uploadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/uploadUrl&gt;
+        &lt;host&gt;my.gitea.com&lt;/host&gt;
 
         &lt;!--
-          URL of the HTTP/HTTPS server + path + artifact.
-          If undefined, will use the same value as `uploadUrl`.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          The user or organization that owns the repository.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         --&gt;
-        &lt;downloadUrl&gt;https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/downloadUrl&gt;
+        &lt;owner&gt;duke&lt;/owner&gt;
 
         &lt;!--
-          The username required for authorization.
-          If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
-          environment variable must be defined.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+           Token with write access to the repository.
+           If left unspecified, the `JRELEASER_GITEA_${name}_TOKEN`
+           environment variable must be defined.
+           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;username&gt;__DO_NOT_SET_HERE__&lt;/username&gt;
+        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
 
         &lt;!--
-          Password for login into the repository.
-          If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-          environment variable must be defined.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+           The package name to use.
+           If unspecified, will use the uploader's name.
+           <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
         --&gt;
-        &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
+        &lt;packageName&gt;app&lt;/packageName&gt;
 
         &lt;!--
-          The authorization method to use.
-          Supported values are [`NONE`, `BASIC`, `BEARER`].
-          `Basic` requires both username &amp; password.
-          `BEARER` requires a token (set as password).
-          Defaults to `NONE`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+           The package version to use.
+           If unspecified, will use the project's version.
+           <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
         --&gt;
-        &lt;authorization&gt;BASIC&lt;/authorization&gt;
-
-        &lt;!--
-          The method to use for uploading artifacts.
-          Supported values are [`POST`, `PUT`].
-          Defaults to `PUT`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;method&gt;POST&lt;/method&gt;
-
-        &lt;!--
-          Additional headers to be sent to the server.
-          Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;headers&gt;
-          &lt;X-ARTIFACT-PLATFORM&gt;{{artifactPlatform}}&lt;/X-ARTIFACT-PLATFORM&gt;
-        &lt;/headers&gt;
+        &lt;packageVersion&gt;{{projectVersion}}&lt;/packageVersion&gt;
       &lt;/app&gt;
-    &lt;/http&gt;
+    &lt;/gitea&gt;
   &lt;/upload&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1058,7 +983,7 @@ upload:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   upload {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    http {
+    gitea {
       // Uploaders require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app {
@@ -1100,49 +1025,33 @@ upload:
         signatures = true
 
         // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        uploadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+        // The Gitea host url.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        host = 'my.gitea.com'
 
-        // URL of the HTTP/HTTPS server + path + artifact.
-        // If undefined, will use the same value as `uploadUrl`.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+        // The user or organization that owns the repository.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        owner = 'duke'
 
-        // The username required for authorization.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_USERNAME`
+        // Token with write access to the repository.
+        // If left unspecified, the `JRELEASER_GITEA_${name}_TOKEN`
         // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        username = '__DO_NOT_SET_HERE__'
+        token = '__DO_NOT_SET_HERE__'
 
-        // Password for login into the repository.
-        // If left unspecified, the `JRELEASER_HTTP_${name}_PASSWORD`
-        // environment variable must be defined.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        password = '__DO_NOT_SET_HERE__'
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+        packageName = 'app'
 
-        // The authorization method to use.
-        // Supported values are [`NONE`, `BASIC`, `BEARER`].
-        // `Basic` requires both username & password.
-        // `BEARER` requires a token (set as password).
-        // Defaults to `NONE`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        authorization = 'BASIC'
-
-        // The method to use for uploading artifacts.
-        // Supported values are [`POST`, `PUT`].
-        // Defaults to `PUT`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        method = 'POST'
-
-        // Additional headers to be sent to the server.
-        // Values accept <a href="../name-templates.html" class="xref page">Name Templates</a>.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        headers.put('X-ARTIFACT-PLATFORM', '{{artifactPlatform}}')
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // <span class="icon"><i class="fa fa-fot-circle"></i></span> <span class="icon"><i class="fa fa-file-template"></i></span>
+        packageVersion = '{{projectVersion}}'
       }
     }
   }
@@ -1155,34 +1064,60 @@ upload:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_username"><a class="anchor" href="#_username"></a>Username</h2>
+<h2 id="_host"><a class="anchor" href="#_host"></a>Host</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can have the username set in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the HTTP server will be used to build the environment variable name.
+<p>You can have the host set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the Gitea server will be used to build the environment variable name.
 This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_USERNAME</code>. If your instance is named <code>production</code>,
-you can store the username in the environment variable <code>JRELEASER_HTTP_PRODUCTION_USERNAME</code>. The name will be
+<p>The name of the environment variable will be <code>JRELEASER_GITEA_NAME_HOST</code>. If your instance is named <code>production</code>,
+you can store the host in the environment variable <code>JRELEASER_GITEA_PRODUCTION_HOST</code>. The name will be
 transformed to uppercase.</p>
 </div>
 <div class="paragraph">
-<p>If a configured username is found in the configuration file, then the environment variable is not used at all.</p>
+<p>If a configured host is found in the configuration file, then the environment variable is not used at all.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_GITEA_NAME_HOST</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_GITEA_NAME_HOST</code></p>
+</li>
+<li>
+<p><code>JRELEASER_GITEA_HOST</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_password"><a class="anchor" href="#_password"></a>Password</h2>
+<h2 id="_token"><a class="anchor" href="#_token"></a>Token</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The password will be stored in an environment variable. The configured name of the HTTP server will
+<p>The password will be stored in an environment variable. The configured name of the Gitea server will
 be used. This means that the name per configured instance needs to be unique.</p>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_HTTP_NAME_PASSWORD</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_HTTP_PRODUCTION_PASSWORD</code>. The name will be
+<p>The name of the environment variable will be <code>JRELEASER_GITEA_NAME_TOKEN</code>. If your instance is named <code>production</code>,
+you need to store the secret in the environment variable <code>JRELEASER_GITEA_PRODUCTION_TOKEN</code>. The name will be
 transformed to uppercase.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives to <code>JRELEASER_GITEA_NAME_TOKEN</code> are (in order):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JRELEASER_GITEA_NAME_TOKEN</code></p>
+</li>
+<li>
+<p><code>JRELEASER_GITEA_TOKEN</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1194,11 +1129,11 @@ transformed to uppercase.</p>
 </div>
 <div class="paragraph">
 <p>An example configuration may look like
-<code>uploadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+<code>uploadUrl: 'https://{{host}}/api/packages/{{owner}}/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'</code>.</p>
 </div>
 <div class="paragraph">
 <p>And will result in a final deployment like
-<code>https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip</code>.</p>
+<code>https://my.gitea.com/api/packages/duke/generic/app/1.0.0/app-1.0.0.zip</code>.</p>
 </div>
 </div>
 </div>
@@ -1210,11 +1145,11 @@ transformed to uppercase.</p>
 </div>
 <div class="paragraph">
 <p>An example configuration may look like
-<code>downloadUrl: 'https://artifacts.company.com:8081/upload/{{projectName}}/{{tagName}}/{{artifactFile}}'</code>.</p>
+<code>downloadUrl: 'https://{{host}}/api/packages/{{owner}}/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'</code>.</p>
 </div>
 <div class="paragraph">
 <p>And will result in a final URL like
-<code>https://artifacts.company.com:8081/upload/app/v1.0.0/app-1.0.0.zip</code>.</p>
+<code>https://my.gitea.com/api/packages/duke/generic/app/1.0.0/app-1.0.0.zip</code>.</p>
 </div>
 </div>
 </div>
@@ -1239,19 +1174,19 @@ conform to the following rules:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Where <code>&lt;type&gt;</code> resolves to <code>Http</code> and <code>&lt;name&gt;</code> resolves to the capitalized name of the http instance, such
+<p>Where <code>&lt;type&gt;</code> resolves to <code>Gitea</code> and <code>&lt;name&gt;</code> resolves to the capitalized name of the Gitea instance, such
 that:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>if the name is <code>foo</code> the resulting property key is <code>skipUploadHttpFoo</code>.</p>
+<p>if the name is <code>foo</code> the resulting property key is <code>skipUploadGiteaFoo</code>.</p>
 </li>
 <li>
-<p>if the name is <code>fooBar</code> the resulting property key is <code>skipUploadHttpFooBar</code>.</p>
+<p>if the name is <code>fooBar</code> the resulting property key is <code>skipUploadGiteaFooBar</code>.</p>
 </li>
 <li>
-<p>if the name is <code>foo-bar</code> the resulting property key is <code>skipUploadHttpFooBar</code>.</p>
+<p>if the name is <code>foo-bar</code> the resulting property key is <code>skipUploadGiteaFooBar</code>.</p>
 </li>
 </ul>
 </div>
