@@ -97,6 +97,29 @@ include::partial$packagers/yaml/tap.adoc[]
         extraProperties:
           # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
           foo: bar
+
+    # A list of icons.
+    # If undefined, defaults to `${project.icons}`.
+    # icon:dot-circle[]
+    icons:
+        # Publicly available URL. PNG format is preferred.
+        # icon:exclamation-triangle[] icon:file-alt[]
+      - url: pass:[https://acme.com/app.png]
+        # Marks this icon as the primary one.
+        # Only a single icon may be set as primary.
+        # icon:dot-circle[]
+        primary: true
+        # Image width in pixels.
+        # icon:exclamation-triangle[]
+        width: 250
+        # Image height in pixels.
+        # icon:exclamation-triangle[]
+        height: 250
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[] icon:file-alt[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+          foo: bar
 ----
 --
 TOML::
@@ -166,6 +189,28 @@ include::partial$packagers/toml/tap.adoc[]
     # icon:dot-circle[] icon:file-alt[]
     extraProperties.foo = "bar"
     # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+
+  # A list of icons.
+  # If undefined, defaults to `${project.icons}`.
+  # icon:dot-circle[]
+  pass:[[][packagers.{tool_id}.icons]]
+    # Publicly available URL. PNG format is preferred.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    url = "pass:[https://acme.com/app.png]"
+    # Marks this icon as the primary one.
+    # Only a single icon may be set as primary.
+    # icon:dot-circle[]
+    primary = true
+    # Image width in pixels.
+    # icon:exclamation-triangle[]
+    width = 250
+    # Image height in pixels.
+    # icon:exclamation-triangle[]
+    height = 250
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
 ----
 --
 JSON::
@@ -238,6 +283,32 @@ include::partial$packagers/json/tap.adoc[]
           // icon:dot-circle[] icon:file-alt[]
           "extraProperties": {
             // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+            "foo": "bar"
+          }
+        }
+      ],
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icons: [
+        {
+          // Publicly available URL. PNG format is preferred.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "url": "pass:[https://acme.com/app.png]",
+          // Marks this icon as the primary one.
+          // Only a single icon may be set as primary.
+          // icon:dot-circle[]
+          "primary": true,
+          // Image width in pixels.
+          // icon:exclamation-triangle[]
+          "width": 250,
+          // Image height in pixels.
+          // icon:exclamation-triangle[]
+          "height": 250,
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[] icon:file-alt[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
             "foo": "bar"
           }
         }
@@ -345,6 +416,47 @@ include::partial$packagers/maven/tap.adoc[]
           </extraProperties>
         </screenshot>
       </screenshots>
+
+      <!--
+        A list of icons.
+        If undefined, defaults to `${project.icons}`.
+        icon:dot-circle[]
+      -->
+      <icons>
+        <icon>
+          <!--
+            Publicly available URL. PNG format is preferred.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <url>pass:[https://acme.com/app.png]</url>
+          <!--
+            Marks this icon as the primary one.
+            Only a single icon may be set as primary.
+            icon:dot-circle[]
+          -->
+          <primary>true</primary>>
+          <!--
+            Image width in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <width>250</width>
+          <!--
+            Image height in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <height>250</height>
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </icon>
+      </icons>
 include::partial$packagers/maven/common-footer.adoc[]
 ----
 --
@@ -416,6 +528,29 @@ include::partial$packagers/gradle/tap.adoc[]
         // icon:dot-circle[] icon:file-alt[]
         extraProperties.put('foo', 'bar')
       }
+
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icon {
+        // Publicly available URL. PNG format is preferred.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://acme.com/app.png]'
+        // Marks this icon as the primary one.
+        // Only a single icon may be set as primary.
+        // icon:dot-circle[]
+        primary = true
+        // Image width in pixels.
+        // icon:exclamation-triangle[]
+        width = 250
+        // Image height in pixels.
+        // icon:exclamation-triangle[]
+        height = 250
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `icon`, i.e, `icon`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+      }
 include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
@@ -433,6 +568,10 @@ artifact to mark it as skipped for packaging with AppImage.
 == Skip Screenshots
 
 You may add a `skipAppImage` extra property to a target screenshot to mark it as skipped for packaging with AppImage.
+
+== Skip Icons
+
+You may add a `skipAppImage` extra property to a target icon to mark it as skipped for packaging with AppImage.
 
 == Templates
 
@@ -474,6 +613,4 @@ any of these expressions to skip a template named `README.md.tpl`:
 
 == Icon
 
-You can override the default icon by placing a file named `app.png` inside `${templateDirectory}/icons`. This file is
-expected to be 128 by 128 pixels, iin color. Should you 'd like to use additional icons then place them alongside
-`app.png` and upadte `create-appimage.sh` to include these icons.
+You must define at least one icon. A square (128x128 pixels) image in PNG format is preferred.
