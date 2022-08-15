@@ -311,3 +311,13 @@ include::partial$release/skip-release.adoc[]
 GitHub link:https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes[offers an option]
 to generate release notes based on activity posted to a given repository. You may use this feature to generate the changelog.
 **However**, be aware that only one of `releaseNotes` or `changelog` may be enabled at all times.
+
+== Assets Size
+
+GitHub imposes a size limit for release assets (currently around 100MB). link:https://github.com/hub4j/github-api[hub4j],
+the underlying library used to interact with GitHub processes assets by reading all files in memory, one by one. This may
+lead to `OutOfMemoryError`s and failed releases.
+
+If your release has big assets then it's recommended to increase the memory of the `jreleaser` process. When running on
+the CLI you may pass a flag such as `JAVA_OPTS="-Xmx5g"`; when using Maven, Gradle, or Ant use their corresponding options to set
+the memory flags.
