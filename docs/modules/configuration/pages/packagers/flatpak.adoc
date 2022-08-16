@@ -1,17 +1,18 @@
-= AppImage
-:tool_id:       appImage
-:tool_name:     appImage
-:tool_env_var:  APPIMAGE
+= Flatpak
+:tool_id:       flatpak
+:tool_name:     flatpak
+:tool_env_var:  FLATPAK
 :tool_tap:      repository
-:tool_tap_name: duke-appimage
-:tool_manifest: appdata
+:tool_tap_name: com.acme.duke
+:tool_manifest: manifest
 :tool_package:  ${distribution.name}
 
-link:https://docs.appimage.org/packaging-guide/overview.html[AppImage] provides a way for upstream developers to provide 
-“native” binaries for Linux users just the same way they could do for other operating systems. 
+link:https://flatpak.org/[Flatpak] is a framework for distributing desktop applications across various Linux distributions.
+It has been created by developers who have a long history of working on the Linux desktop, and is run as an independent
+open source project.
 
-We recommend reading the link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html[Upstream Metadata] documentation
-as AppImage depends on it.
+We recommend reading the link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html[Upstream Metadata]
+and the link:https://docs.flatpak.org/en/latest/manifests.html[Flatpak manifest] documentation as Flatpak depends on them.
 
 The following artifact extensions are supported by this packager:
 
@@ -59,10 +60,25 @@ include::partial$packagers/yaml/tap.adoc[]
     # icon:icon:dot-circle[]
     developerName: Duke
 
-    # Indicates if the executable requires access to the terminal.
-    # Defaults to true if the distribution's stereotype is `CLI`.
-    # icon:icon:dot-circle[]
-    requestTerminal: false
+    # Sets the Flatpak runtime and Sdk.
+    # Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+    # See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+    # icon:exclamation-triangle[]
+    runtime: FREEDESKTOP
+
+    # The runtime's version to use.
+    # icon:exclamation-triangle[]
+    runtimeVersion: '21.08'
+
+    # List of Sdk extensions to apply.
+    # icon:dot-circle[]
+    sdkExtensions:
+      - org.flatpack.custom.extension
+
+    # List of sandbox permissions.
+    # icon:dot-circle[]
+    finishArgs:
+      - '--share=network'
 
     # A list of screenshots.
     # If undefined, defaults to `${project.screenshots}`.
@@ -152,10 +168,23 @@ include::partial$packagers/toml/tap.adoc[]
   # icon:icon:dot-circle[]
   developerName = "Duke"
 
-  # Indicates if the executable requires access to the terminal.
-  # Defaults to true if the distribution's stereotype is `CLI`.
-  # icon:icon:dot-circle[]
-  requestTerminal = false
+  # Sets the Flatpak runtime and Sdk.
+  # Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+  # See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+  # icon:exclamation-triangle[]
+  runtime = "FREEDESKTOP"
+
+  # The runtime's version to use.
+  # icon:exclamation-triangle[]
+  runtimeVersion = "21.08"
+
+  # List of Sdk extensions to apply.
+  # icon:dot-circle[]
+  sdkExtensions = ["org.flatpack.custom.extension"]
+
+  # List of sandbox permissions.
+  # icon:dot-circle[]
+  finishArgs = ["--share=network"]
 
   # A list of screenshots.
   # If undefined, defaults to `${project.screenshots}`.
@@ -245,10 +274,27 @@ include::partial$packagers/json/tap.adoc[]
       // icon:icon:dot-circle[]
       "developerName": "Duke",
 
-      // Indicates if the executable requires access to the terminal.
-      // Defaults to true if the distribution's stereotype is `CLI`.
-      // icon:icon:dot-circle[]
-      "requestTerminal": false,
+      // Sets the Flatpak runtime and Sdk.
+      // Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+      // See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+      // icon:exclamation-triangle[]
+      "runtime": "FREEDESKTOP",
+
+      // The runtime's version to use.
+      // icon:exclamation-triangle[]
+      "runtimeVersion": "21.08",
+
+      // List of Sdk extensions to apply.
+      // icon:dot-circle[]
+      "sdkExtensions": [
+        "org.flatpack.custom.extension"
+      ],
+
+      // List of sandbox permissions.
+      // icon:dot-circle[]
+      "finishArgs": [
+        "--share=network"
+      ]
 
       // A list of screenshots.
       // If undefined, defaults to `${project.screenshots}`.
@@ -355,11 +401,34 @@ include::partial$packagers/maven/tap.adoc[]
       <developerName>Duke</developerName>
 
       <!--
-        Indicates if the executable requires access to the terminal.
-        Defaults to true if the distribution's stereotype is `CLI`.
-        icon:icon:dot-circle[]
+        Sets the Flatpak runtime and Sdk.
+        Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+        See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+        icon:exclamation-triangle[]
       -->
-      <requestTerminal>false</requestTerminal>
+      <runtime>FREEDESKTOP</runtime>
+
+      <!--
+        The runtime's version to use.
+        icon:exclamation-triangle[]
+      -->
+      <runtimeVersion>21.08</runtimeVersion>
+
+      <!--
+        List of Sdk extensions to apply.
+        icon:dot-circle[]
+      -->
+      <sdkExtensions>
+        <sdkExtension>org.flatpack.custom.extension</sdkExtension>
+      </sdkExtensions>
+
+      <!--
+        List of sandbox permissions.
+        icon:dot-circle[]
+      -->
+      <finishArgs>
+        <finishArg>--share=network</finishArg>
+      </finishArgs>
 
       <!--
         A list of screenshots.
@@ -490,10 +559,23 @@ include::partial$packagers/gradle/tap.adoc[]
       // icon:icon:dot-circle[]
       developerName = 'Duke'
 
-      // Indicates if the executable requires access to the terminal.
-      // Defaults to true if the distribution's stereotype is `CLI`.
-      // icon:icon:dot-circle[]
-      requestTerminal = false
+      // Sets the Flatpak runtime and Sdk.
+      // Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+      // See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+      // icon:exclamation-triangle[]
+      runtime = 'FREEDESKTOP'
+
+      // The runtime's version to use.
+      // icon:exclamation-triangle[]
+      runtimeVersion = '21.08'
+
+      // List of Sdk extensions to apply.
+      // icon:dot-circle[]
+      sdkExtension('org.flatpack.custom.extension')
+
+      // List of sandbox permissions.
+      // icon:dot-circle[]
+      finishArg('--share=network')
 
       // A list of screenshots.
       // If undefined, defaults to `${project.screenshots}`.
@@ -562,39 +644,36 @@ include::partial$packagers/downloadUrl.adoc[]
 
 == Icon
 
-You must define at least one icon. A square (128x128 pixels) image in PNG format is preferred.
+You must define at least one icon. A square (256x256 pixels) image in PNG format is preferred.
 
 == Skip Artifacts
 
-If there is more than one matching artifact in a given distribution you may add a `skipAppImage` extra property to the target
-artifact to mark it as skipped for packaging with AppImage.
+If there is more than one matching artifact in a given distribution you may add a `skipFlatpak` extra property to the target
+artifact to mark it as skipped for packaging with Flatpak.
 
 == Skip Screenshots
 
-You may add a `skipAppImage` extra property to a target screenshot to mark it as skipped for packaging with AppImage.
+You may add a `skipFlatpak` extra property to a target screenshot to mark it as skipped for packaging with Flatpak.
 
 == Skip Icons
 
-You may add a `skipAppImage` extra property to a target icon to mark it as skipped for packaging with AppImage.
+You may add a `skipFlatpak` extra property to a target icon to mark it as skipped for packaging with Flatpak.
 
 == Templates
 
 The default location for templates is:
 
-`src/jreleaser/distributions/<distribution-name>/appimage`
+`src/jreleaser/distributions/<distribution-name>/flatpak`
 
 The following list shows the filenames that may be used to override default templates:
 
-* `.github/workflows/release.yml.tpl`
-* `icons/app.png`
-* `cli-app.desktop.tpl`
-* `cli-appdata.xml.tpl`
-* `create-appimage.sh.tpl`
+* `cli-app.yml.tpl`
+* `cli-metainfo.xml.tpl`
 * `desktop-app.desktop.tpl`
-* `desktop-appdata.xml.tpl`
-* `jreleaser.yml.tpl`
-* `README-github.adoc.tpl`
-* `VERSION.tpl`
+* `desktop-app.yml.tpl`
+* `desktop-metainfo.xml.tpl`
+* `flathub.json.tpl`
+* `README.md.tpl`
 
 Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
 which case xref:name-templates.adoc[] substitution will take place.
@@ -614,3 +693,13 @@ any of these expressions to skip a template named `README.md.tpl`:
 * `README.md.tpl`: matches the full template name
 * `README.md`: matches the transformed template name
 * `README.*`: matches using a regex
+
+== Publication to Flathub
+
+link:https://flathub.org/home[Flathub] is the home of hundreds of apps which can be easily installed on any Linux distribution.
+
+You are responsible for submitting a ticket to Flathub for adding a new app. JReleaser *does not* create a ticket
+nor a pull request for you. However, once your application has been accepted to Flathub you may update the flatpack
+configuration to point to the appointed repository.
+
+Please consult the link:https://github.com/flathub/flathub/wiki/App-Submission[App Submission] to know more.
