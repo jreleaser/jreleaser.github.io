@@ -606,17 +606,26 @@ project:
     Distribution files may additionally be published to be consumed by popular package managers
     such as Homebrew, Chocolatey, Snapcraft, or get ready to be launched via JBang. Releases
     may be announced in a variety of channels such as Twitter, Zulip, SDKMAN!, and more.
-
   links:
     homepage: https://jreleaser.org
+    faq: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/discussions
+    donation: https://opencollective.com/jreleaser
   authors:
     - Andres Almiray
   license: Apache-2.0
+  inceptionYear: 2020
+  stereotype: cli
+  screenshots:
+    - url: https://jreleaser.org/images/app-full-release-command.png
+      caption: JReleaser in action
+  icons:
+    - url: https://raw.githubusercontent.com/jreleaser/jreleaser/main/src/media/icon_256x256.png
+      width: 256
+      height: 256
   java:
     groupId: org.jreleaser
     version: 8
     multiProject: true
-  inceptionYear: 2020
   tags:
     - 'jreleaser'
     - 'release'
@@ -677,6 +686,9 @@ release:
         contributors:
           - 'GitHub'
           - 'allcontributors'
+      replacers:
+        - search: 'i18n: '
+        - search: 'deps: '
 
 # File signing is always active
 signing:
@@ -807,6 +819,21 @@ distributions:
       iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
         active: release
+    flatpak:
+      active: always
+      componentId: org.jreleaser.cli
+      developerName: JReleaser
+      runtime: freedesktop
+      runtimeVersion: 21.08
+      finishArgs:
+        - --share=network
+        - --filesystem=host
+      categories:
+        - Developer Tools
+      repository:
+        active: release
+        owner: flathub
+        name: org.jreleaser.cli
     jbang:
       active: always
     macports:
@@ -854,6 +881,8 @@ distributions:
           skipSpec: true
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
+        extraProperties:
+          skipFlatpak: true
 
   # Distribution 2 is of type JAVA_BINARY
   jreleaser-ant-tasks:
@@ -873,6 +902,15 @@ distributions:
   # Distribution 4 is of type JLINK
   # Name matches the assembled Jlink distribution
   jreleaser-standalone:
+    appImage:
+      active: always
+      componentId: org.jreleaser.cli
+      developerName: JReleaser
+      categories:
+        - Development
+      repository:
+        active: release
+        name: jreleaser-appimage
     brew:
       active: always
       formulaName: jreleaser
@@ -964,7 +1002,7 @@ the project is not snapshot.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the build
+<pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the Gradle build
 jreleaser-1.2.0-SNAPSHOT.tar
 jreleaser-1.2.0-SNAPSHOT.zip
 jreleaser-ant-tasks-1.2.0-SNAPSHOT.zip
@@ -1037,6 +1075,9 @@ VERSION</code></pre>
 <p><a href="https://github.com/jreleaser/jbang-catalog" class="bare">https://github.com/jreleaser/jbang-catalog</a></p>
 </li>
 <li>
+<p><a href="https://github.com/jreleaser/jreleaser-appimage" class="bare">https://github.com/jreleaser/jreleaser-appimage</a></p>
+</li>
+<li>
 <p><a href="https://github.com/jreleaser/jreleaser-copr" class="bare">https://github.com/jreleaser/jreleaser-copr</a></p>
 </li>
 <li>
@@ -1050,6 +1091,9 @@ VERSION</code></pre>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/scoop-jreleaser" class="bare">https://github.com/jreleaser/scoop-jreleaser</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flathub/org.jreleaser.cli" class="bare">https://github.com/flathub/org.jreleaser.cli</a></p>
 </li>
 </ul>
 </div>
