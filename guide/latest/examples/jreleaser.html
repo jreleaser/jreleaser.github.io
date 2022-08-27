@@ -246,6 +246,15 @@
     <a class="nav-link" href="../configuration/files.html">Files</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuration/name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -253,10 +262,19 @@
     <a class="nav-link" href="../configuration/packagers/index.html">Packagers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/flatpak.html">Flatpak</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/packagers/gofish.html">Gofish</a>
@@ -326,6 +344,12 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../configuration/upload/http.html">Http</a>
@@ -582,17 +606,27 @@ project:
     Distribution files may additionally be published to be consumed by popular package managers
     such as Homebrew, Chocolatey, Snapcraft, or get ready to be launched via JBang. Releases
     may be announced in a variety of channels such as Twitter, Zulip, SDKMAN!, and more.
-
-  website: https://jreleaser.org
+  links:
+    homepage: https://jreleaser.org
+    faq: https://{{repoHost}}/{{repoOwner}}/{{repoName}}/discussions
+    donation: https://opencollective.com/jreleaser
+    documentation: https://jreleaser.org/guide/latest
   authors:
     - Andres Almiray
   license: Apache-2.0
+  inceptionYear: 2020
+  stereotype: cli
+  screenshots:
+    - url: https://jreleaser.org/images/app-full-release-command.png
+      caption: JReleaser in action
+  icons:
+    - url: https://raw.githubusercontent.com/jreleaser/jreleaser/main/src/media/icon_256x256.png
+      width: 256
+      height: 256
   java:
     groupId: org.jreleaser
     version: 8
     multiProject: true
-  extraProperties:
-    inceptionYear: 2020
   tags:
     - 'jreleaser'
     - 'release'
@@ -631,10 +665,6 @@ release:
           title: 'regex:^docs: update CONTRIBUTORS.md.*'
           order: -2
       categories:
-        - title: 'Merge'
-          labels:
-            - 'merge_pull'
-            - 'merge_branch'
         - title: '🌐 Translation'
           key: 'i18n'
           order: 70
@@ -652,11 +682,14 @@ release:
             - 'allcontributors2'
       hide:
         categories:
-          - 'Merge'
+          - 'merge'
           - 'allcontributors'
         contributors:
           - 'GitHub'
           - 'allcontributors'
+      replacers:
+        - search: 'i18n: '
+        - search: 'deps: '
 
 # File signing is always active
 signing:
@@ -673,7 +706,7 @@ checksum:
 announce:
   twitter:
     active: release
-    status: 🚀 JReleaser {{projectVersion}} has been released! {{releaseNotesUrl}}
+    statusTemplate: src/jreleaser/twitter.tpl
 
 assemble:
   # Configure a cross-platform Jlink assembly
@@ -787,6 +820,21 @@ distributions:
       iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
         active: release
+    flatpak:
+      active: always
+      componentId: org.jreleaser.cli
+      developerName: JReleaser
+      runtime: freedesktop
+      runtimeVersion: 21.08
+      finishArgs:
+        - --share=network
+        - --filesystem=host
+      categories:
+        - Developer Tools
+      repository:
+        active: release
+        owner: flathub
+        name: org.jreleaser.cli
     jbang:
       active: always
     macports:
@@ -834,6 +882,8 @@ distributions:
           skipSpec: true
       - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
+        extraProperties:
+          skipFlatpak: true
 
   # Distribution 2 is of type JAVA_BINARY
   jreleaser-ant-tasks:
@@ -853,6 +903,15 @@ distributions:
   # Distribution 4 is of type JLINK
   # Name matches the assembled Jlink distribution
   jreleaser-standalone:
+    appImage:
+      active: always
+      componentId: org.jreleaser.cli
+      developerName: JReleaser
+      categories:
+        - Development
+      repository:
+        active: release
+        name: jreleaser-appimage
     brew:
       active: always
       formulaName: jreleaser
@@ -944,59 +1003,59 @@ the project is not snapshot.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the build
-jreleaser-1.1.0.tar
-jreleaser-1.1.0.zip
-jreleaser-ant-tasks-1.1.0.zip
-jreleaser-tool-provider-1.1.0.jar
+<pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the Gradle build
+jreleaser-1.2.0.tar
+jreleaser-1.2.0.zip
+jreleaser-ant-tasks-1.2.0.zip
+jreleaser-tool-provider-1.2.0.jar
 
 # binaries created by the Jlink assembler
-jreleaser-standalone-1.1.0-linux-aarch64.zip
-jreleaser-standalone-1.1.0-linux-x86_64.zip
-jreleaser-standalone-1.1.0-linux_musl-aarch64.zip
-jreleaser-standalone-1.1.0-linux_musl-x86_64.zip
-jreleaser-standalone-1.1.0-osx-aarch64.zip
-jreleaser-standalone-1.1.0-osx-x86_64.zip
-jreleaser-standalone-1.1.0-windows-aarch64.zip
-jreleaser-standalone-1.1.0-windows-x86_64.zip
+jreleaser-standalone-1.2.0-linux-aarch64.zip
+jreleaser-standalone-1.2.0-linux-x86_64.zip
+jreleaser-standalone-1.2.0-linux_musl-aarch64.zip
+jreleaser-standalone-1.2.0-linux_musl-x86_64.zip
+jreleaser-standalone-1.2.0-osx-aarch64.zip
+jreleaser-standalone-1.2.0-osx-x86_64.zip
+jreleaser-standalone-1.2.0-windows-aarch64.zip
+jreleaser-standalone-1.2.0-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
-jreleaser-installer-1.1.0-osx-x86_64.pkg
-jreleaser-installer-1.1.0-1_amd64.deb
-jreleaser-installer-1.1.0-1.x86_64.rpm
-jreleaser-installer-1.1.0-windows-x86_64.msi
+jreleaser-installer-1.2.0-osx-x86_64.pkg
+jreleaser-installer-1.2.0-1_amd64.deb
+jreleaser-installer-1.2.0-1.x86_64.rpm
+jreleaser-installer-1.2.0-windows-x86_64.msi
 
 # binaries created by the NativeImage assembler
-jreleaser-native-1.1.0-osx-x86_64.zip
-jreleaser-native-1.1.0-linux-x86_64.zip
+jreleaser-native-1.2.0-osx-x86_64.zip
+jreleaser-native-1.2.0-linux-x86_64.zip
 
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
-jreleaser-1.1.0.zip.rmd160
-jreleaser-1.1.0.zip.sha256
+jreleaser-1.2.0.zip.rmd160
+jreleaser-1.2.0.zip.sha256
 
 # signatures
 checksums_rmd160.txt.asc
 checksums_sha256.txt.asc
-jreleaser-1.1.0.tar.asc
-jreleaser-1.1.0.zip.asc
-jreleaser-ant-tasks-1.1.0.zip.asc
-jreleaser-tool-provider-1.1.0.jar.asc
-jreleaser-standalone-1.1.0-linux-aarch64.zip.asc
-jreleaser-standalone-1.1.0-linux-x86_64.zip.asc
-jreleaser-standalone-1.1.0-linux_musl-aarch64.zip.asc
-jreleaser-standalone-1.1.0-linux_musl-x86_64.zip.asc
-jreleaser-standalone-1.1.0-osx-aarch64.zip.asc
-jreleaser-standalone-1.1.0-osx-x86_64.zip.asc
-jreleaser-standalone-1.1.0-windows-aarch64.zip.asc
-jreleaser-standalone-1.1.0-windows-x86_64.zip.asc
-jreleaser-installer-1.1.0-osx-x86_64.pkg.asc
-jreleaser-installer-1.1.0-1_amd64.deb.asc
-jreleaser-installer-1.1.0-1.x86_64.rpm.asc
-jreleaser-installer-1.1.0-windows-x86_64.msi.asc
-jreleaser-native-1.1.0-osx-x86_64.zip.asc
-jreleaser-native-1.1.0-linux-x86_64.zip.asc
+jreleaser-1.2.0.tar.asc
+jreleaser-1.2.0.zip.asc
+jreleaser-ant-tasks-1.2.0.zip.asc
+jreleaser-tool-provider-1.2.0.jar.asc
+jreleaser-standalone-1.2.0-linux-aarch64.zip.asc
+jreleaser-standalone-1.2.0-linux-x86_64.zip.asc
+jreleaser-standalone-1.2.0-linux_musl-aarch64.zip.asc
+jreleaser-standalone-1.2.0-linux_musl-x86_64.zip.asc
+jreleaser-standalone-1.2.0-osx-aarch64.zip.asc
+jreleaser-standalone-1.2.0-osx-x86_64.zip.asc
+jreleaser-standalone-1.2.0-windows-aarch64.zip.asc
+jreleaser-standalone-1.2.0-windows-x86_64.zip.asc
+jreleaser-installer-1.2.0-osx-x86_64.pkg.asc
+jreleaser-installer-1.2.0-1_amd64.deb.asc
+jreleaser-installer-1.2.0-1.x86_64.rpm.asc
+jreleaser-installer-1.2.0-windows-x86_64.msi.asc
+jreleaser-native-1.2.0-osx-x86_64.zip.asc
+jreleaser-native-1.2.0-linux-x86_64.zip.asc
 
 # additional files
 VERSION</code></pre>
@@ -1017,6 +1076,9 @@ VERSION</code></pre>
 <p><a href="https://github.com/jreleaser/jbang-catalog" class="bare">https://github.com/jreleaser/jbang-catalog</a></p>
 </li>
 <li>
+<p><a href="https://github.com/jreleaser/jreleaser-appimage" class="bare">https://github.com/jreleaser/jreleaser-appimage</a></p>
+</li>
+<li>
 <p><a href="https://github.com/jreleaser/jreleaser-copr" class="bare">https://github.com/jreleaser/jreleaser-copr</a></p>
 </li>
 <li>
@@ -1030,6 +1092,9 @@ VERSION</code></pre>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/scoop-jreleaser" class="bare">https://github.com/jreleaser/scoop-jreleaser</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flathub/org.jreleaser.cli" class="bare">https://github.com/flathub/org.jreleaser.cli</a></p>
 </li>
 </ul>
 </div>

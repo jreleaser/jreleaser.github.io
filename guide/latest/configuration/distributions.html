@@ -246,6 +246,15 @@
     <a class="nav-link" href="files.html">Files</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -253,10 +262,19 @@
     <a class="nav-link" href="packagers/index.html">Packagers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/flatpak.html">Flatpak</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/gofish.html">Gofish</a>
@@ -326,6 +344,12 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upload/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="upload/http.html">Http</a>
@@ -609,7 +633,7 @@ distributions:
   app:
 
     # Enables or disables the distribution.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
@@ -619,6 +643,12 @@ distributions:
     # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     type: JAVA_BINARY
+
+    # The stereotype of this distribution.
+    # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+    # Defaults to `${project.stereotype}`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    stereotype: CLI
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     executable:
@@ -713,7 +743,7 @@ distributions:
 [distributions.app]
 
   # Enables or disables the distribution.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `ALWAYS`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
@@ -723,6 +753,12 @@ distributions:
   # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   type = "JAVA_BINARY"
+
+  # The stereotype of this distribution.
+  # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+  # Defaults to `${project.stereotype}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  stereotype = "CLI"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [distributions.app.executable]
@@ -812,7 +848,7 @@ distributions:
     "app": {
 
       // Enables or disables the distribution.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
@@ -822,6 +858,12 @@ distributions:
       // Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "type": "JAVA_BINARY",
+
+      // The stereotype of this distribution.
+      // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+      // Defaults to `${project.stereotype}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "stereotype": "CLI",
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "executable":  {
@@ -941,7 +983,7 @@ distributions:
 
       &lt;!--
         Enables or disables the distribution.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `ALWAYS`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -954,6 +996,14 @@ distributions:
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       --&gt;
       &lt;type&gt;JAVA_BINARY&lt;/type&gt;
+
+      &lt;!--
+        The stereotype of this distribution.
+        Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+        Defaults to `${project.stereotype}`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;stereotype&gt;CLI&lt;/stereotype&gt;
 
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1105,7 +1155,7 @@ distributions:
     app {
 
       // Enables or disables the distribution.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
@@ -1115,6 +1165,12 @@ distributions:
       // Supported values are = [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       distributionType = 'JAVA_BINARY'
+
+      // The stereotype of this distribution.
+      // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+      // Defaults to `${project.stereotype}`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      stereotype = 'CLI'
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       executable {

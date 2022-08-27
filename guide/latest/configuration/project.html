@@ -246,6 +246,15 @@
     <a class="nav-link" href="files.html">Files</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -253,10 +262,19 @@
     <a class="nav-link" href="packagers/index.html">Packagers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/flatpak.html">Flatpak</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/gofish.html">Gofish</a>
@@ -326,6 +344,12 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upload/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="upload/http.html">Http</a>
@@ -610,7 +634,7 @@ project:
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Supported values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   versionPattern: SEMVER
@@ -645,10 +669,6 @@ project:
   longDescription: |
     My Awesome app is the bees knees
 
-  # The project's website.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
-  website: https://acme.com/app
-
   # A list of author names.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
   authors:
@@ -660,18 +680,30 @@ project:
     - cli
     - awesome
 
+  # List of maintainers.
+  # Values are typically GitHub/GitLab usernames.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  maintainers:
+    - 'duke'
+
+  # The stereotype of this project.
+  # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+  # Defaults to `NONE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  stereotype: CLI
+
   # The project's license.
   # It's recommended to use a valid SPDX identifier if the project is Open Source.
   # See <a href="https://spdx.org/licenses" class="bare">https://spdx.org/licenses</a>.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
   license: Apache-2.0
 
-  # URL to the project's license.
+  # The project's inception year.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  licenseUrl: https://spdx.org/licenses/Apache-2.0.html
+  inceptionYear: 2021
 
   # The project's copyright notice.
-  # You may set `${project.extraProperties.inceptionYear}` and `${project.authors}` instead.
+  # You may set `${project.inceptionYear}` and `${project.authors}` instead.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   copyright: 2021 Duke
 
@@ -680,10 +712,32 @@ project:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   vendor: Acme inc.
 
-  # The project's documentation site.
-  # Defaults to `${project.website}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  docsUrl: https://acme.com/app/docs
+  links:
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    homepage: https://acme.com/app
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    documentation: https://acme.com/app/docs
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    license: https://spdx.org/licenses/Apache-2.0.html
+    # If undefined, will use the releaser's `issueTrackerUrl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    bugTracker: https://vcs.acme.com/app/issues
+    # If undefined, will use the releaser's `repoUrl`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    vcsBrowser: https://vcs.acme.com/app
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    faq: https://acme.com/app/faq
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    help: https://acme.com/app/help
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    donation: https://acme.com/app/donations
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    translate: https://acme.com/app/tr
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    contact: https://acme.com/app/contact
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    contribute: https://acme.com/app/contribute
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -727,7 +781,62 @@ project:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     extraProperties:
       # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
-      foo: bar</code></pre>
+      foo: bar
+
+  # A list of screenshots.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  screenshots:
+      # Publicly available URL. PNG format is preferred.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    - url: https://acme.com/app.png
+      # The type of image.
+      # Valid values are [`SOURCE`, `THUMBNAIL`].
+      # Defaults to `SOURCE`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      type: THUMBNAIL
+      # Marks this screenshot as the primary one.
+      # Only a single screenshot may be set as primary.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      primary: true
+      # A description of the image.
+      # Should be no more than 100 characters long.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      caption: App in action
+      # Image width in pixels.
+      # Required if type = `THUMBNAIL`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      width: 250
+      # Image height in pixels.
+      # Required if type = `THUMBNAIL`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      height: 250
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+        foo: bar
+
+  # A list of icons.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  icons:
+      # Publicly available URL. PNG format is preferred.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    - url: https://acme.com/app.png
+      # Marks this icon as the primary one.
+      # Only a single icon may be set as primary.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      primary: true
+      # Image width in pixels.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      width: 250
+      # Image height in pixels.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      height: 250
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+        foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -748,7 +857,7 @@ project:
 
   # The strategy used to parse the project version
   # May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-  # Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+  # Supported values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
   # Defaults to `SEMVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   versionPattern = "SEMVER"
@@ -782,10 +891,6 @@ project:
     My Awesome app is the bees knees
   """
 
-  # The project's website.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
-  website = "https://acme.com/app"
-
   # A list of author names.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
   authors = ["Duke"]
@@ -794,18 +899,29 @@ project:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   tags = ["cli", "awesome"]
 
+  # List of maintainers.
+  # Values are typically GitHub/GitLab usernames.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  maintainers = ["duke"]
+
+  # The stereotype of this project.
+  # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+  # Defaults to `NONE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  stereotype = "CLI"
+
   # The project's license.
   # It's recommended to use a valid SPDX identifier if the project is Open Source.
   # See <a href="https://spdx.org/licenses" class="bare">https://spdx.org/licenses</a>.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
   license = "Apache-2.0"
 
-  # URL to the project's license.
+  # The project's inception year.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  licenseUrl = "https://spdx.org/licenses/Apache-2.0.html"
+  inceptionYear = "2021"
 
   # The project's copyright notice.
-  # You may set `${project.extraProperties.inceptionYear}` and `${project.authors}` instead.
+  # You may set `${project.inceptionYear}` and `${project.authors}` instead.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   copyright = "2021 Duke"
 
@@ -814,10 +930,30 @@ project:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   vendor = "Acme inc."
 
-  # The project's documentation site.
-  # Defaults to `${project.website}`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  docsUrl = "https://acme.com/app/docs"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.links.homepage = "https://acme.com/app"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.documentation = "https://acme.com/app/docs"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.license = "https://spdx.org/licenses/Apache-2.0.html"
+  # If undefined, will use the releaser's `issueTrackerUrl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.bugTracker = "https://vcs.acme.com/app/issues"
+  # If undefined, will use the releaser's `repoUrl`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.vcsBrowser = "https://vcs.acme.com/app"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.faq = "https://acme.com/app/faq"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.help = "https://acme.com/app/help"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.donation = "https://acme.com/app/donations"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.translate = "https://acme.com/app/tr"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.contact = "https://acme.com/app/contact"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  links.contribute = "https://acme.com/app/contribute"
 
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -858,7 +994,60 @@ project:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   java.extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+
+  # A list of screenshots.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[[project.screenshots]]
+  # Publicly available URL. PNG format is preferred.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  url = "https://acme.com/app.png"
+  # The type of image.
+  # Valid values are [`SOURCE`, `THUMBNAIL`].
+  # Defaults to `SOURCE`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  type = "THUMBNAIL"
+  # Marks this screenshot as the primary one.
+  # Only a single screenshot may be set as primary.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  primary = true
+  # A description of the image.
+  # Should be no more than 100 characters long.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  caption = "App in action"
+  # Image width in pixels.
+  # Required if type = `THUMBNAIL`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  width = 250
+  # Image height in pixels.
+  # Required if type = `THUMBNAIL`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  height = 250
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+
+  # A list of icons.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[[project.icons]]
+  # Publicly available URL. PNG format is preferred.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  url = "https://acme.com/app.png"
+  # Marks this icon as the primary one.
+  # Only a single icon may be set as primary.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  primary = true
+  # Image width in pixels.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  width = 250
+  # Image height in pixels.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  height = 250
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -879,7 +1068,7 @@ project:
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Supported values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "versionPattern": "SEMVER",
@@ -914,10 +1103,6 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> Only if configured distributions or announcers.
     "longDescription": "My Awesome app is the bees knees",
 
-    // The project's website.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
-    "website": "https://acme.com/app",
-
     // A list of author names.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
     "authors": [
@@ -931,18 +1116,31 @@ project:
       "awesome"
     ],
 
+    // List of maintainers.
+    // Values are typically GitHub/GitLab usernames.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "maintainers": [
+      "duke"
+    ],
+
+    // The stereotype of this project.
+    // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+    // Defaults to `NONE`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "stereotype": "CLI",
+
     // The project's license.
     // It's recommended to use a valid SPDX identifier if the project is Open Source.
     // See <a href="https://spdx.org/licenses" class="bare">https://spdx.org/licenses</a>.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
     "license": "Apache-2.0",
 
-    // URL to the project's license.
+    // The project's inception year.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
+    "inceptionYear": "2021",
 
     // The project's copyright notice.
-    // You may set `${project.extraProperties.inceptionYear}` and `${project.authors}` instead.
+    // You may set `${project.inceptionYear}` and `${project.authors}` instead.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "copyright": "2021 Duke",
 
@@ -951,10 +1149,33 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "vendor": "Acme inc.",
 
-    // The project's documentation site.
-    // Defaults to `${project.website}`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "docsUrl": "https://acme.com/app/docs",
+    "links": {
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "homepage": "https://acme.com/app",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "documentation": "https://acme.com/app/docs",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "license": "https://spdx.org/licenses/Apache-2.0.html",
+      // If undefined, will use the releaser's `issueTrackerUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "bugTracker": "https://vcs.acme.com/app/issues",
+      // If undefined, will use the releaser's `repoUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "vcsBrowser": "https://vcs.acme.com/app",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "faq": "https://acme.com/app/faq",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "help": "https://acme.com/app/help",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "donation": "https://acme.com/app/donations",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "translate": "https://acme.com/app/tr",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "contact": "https://acme.com/app/contact",
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "contribute": "https://acme.com/app/contribute"
+    },
 
     // Additional properties used when evaluating templates.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1001,7 +1222,68 @@ project:
         // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
         "foo": "bar"
       }
-    }
+    },
+    // A list of screenshots.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    screenshots: [
+      {
+        // Publicly available URL. PNG format is preferred.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "url": "https://acme.com/app.png",
+        // The type of image.
+        // Valid values are [`SOURCE`, `THUMBNAIL`].
+        // Defaults to `SOURCE`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "type": "THUMBNAIL",
+        // Marks this screenshot as the primary one.
+        // Only a single screenshot may be set as primary.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "primary": true,
+        // A description of the image.
+        // Should be no more than 100 characters long.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "caption": "App in action",
+        // Image width in pixels.
+        // Required if type = `THUMBNAIL`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "width": 250,
+        // Image height in pixels.
+        // Required if type = `THUMBNAIL`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "height": 250,
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+          "foo": "bar"
+        }
+      }
+    ],
+    // A list of icons.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    icons: [
+      {
+        // Publicly available URL. PNG format is preferred.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "url": "https://acme.com/app.png",
+        // Marks this icon as the primary one.
+        // Only a single icon may be set as primary.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "primary": true,
+        // Image width in pixels.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "width": 250,
+        // Image height in pixels.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "height": 250,
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+          "foo": "bar"
+        }
+      }
+    ]
   }
 }</code></pre>
 </div>
@@ -1032,7 +1314,7 @@ project:
     &lt;!--
       The strategy used to parse the project version
       May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-      Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+      Supported values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
       Defaults to `SEMVER`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
@@ -1084,13 +1366,6 @@ project:
     &lt;/longDescription&gt;
 
     &lt;!--
-      The project's website.
-      If undefined, will use ${project.url} from Maven.
-      <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
-    --&gt;
-    &lt;website&gt;https://acme.com/app&lt;/website&gt;
-
-    &lt;!--
       A list of author names.
       If undefined, will use ${project.developers} from Maven, looking for
       matches of &lt;role&gt;author&lt;/role&gt;
@@ -1110,6 +1385,23 @@ project:
     &lt;/tags&gt;
 
     &lt;!--
+      List of maintainers.
+      Values are typically GitHub/GitLab usernames.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;maintainers&gt;
+      &lt;maintainer&gt;duke&lt;/maintainer&gt;
+    &lt;/maintainers&gt;
+
+    &lt;!--
+      The stereotype of this project.
+      Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+      Defaults to `NONE`.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;stereotype&gt;CLI&lt;/stereotype&gt;
+
+    &lt;!--
       The project's license.
       If undefined, will use ${project.licenses} from Maven.
       It's recommended to use a valid SPDX identifier if the project is Open Source.
@@ -1119,14 +1411,14 @@ project:
     &lt;license&gt;Apache-2.0&lt;/license&gt;
 
     &lt;!--
-      URL to the project's license.
+      The project's inception year.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;licenseUrl&gt;https://spdx.org/licenses/Apache-2.0.html&lt;/licenseUrl&gt;
+    &lt;inceptionYear&gt;2021&lt;/inceptionYear&gt;
 
     &lt;!--
       The project's copyright notice.
-      You may set `${project.extraProperties.inceptionYear}` and `${project.authors}` instead.
+      You may set `${project.inceptionYear}` and `${project.authors}` instead.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;copyright&gt;2021 Duke&lt;/copyright&gt;
@@ -1139,11 +1431,56 @@ project:
     &lt;vendor&gt;Acme inc.&lt;/vendor&gt;
 
     &lt;!--
-      The project's documentation site.
-      Defaults to `${project.website}`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;docsUrl&gt;https://acme.com/app/docs&lt;/docsUrl&gt;
+    &lt;links&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;homepage&gt;https://acme.com/app&lt;/homepage&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;documentation&gt;https://acme.com/app/docs&lt;/documentation&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;license&gt;https://spdx.org/licenses/Apache-2.0.html&lt;/license&gt;
+      &lt;!--
+        If undefined, will use the releaser's `issueTrackerUrl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;bugTracker&gt;https://vcs.acme.com/app/issues&lt;/bugTracker&gt;
+      &lt;!--
+        If undefined, will use the releaser's `repoUrl`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;vcsBrowser&gt;https://vcs.acme.com/app&lt;/vcsBrowser&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;faq&gt;https://acme.com/app/faq&lt;/faq&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;help&gt;https://acme.com/app/help&lt;/help&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;donation&gt;https://acme.com/app/donations&lt;/donation&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;translate&gt;https://acme.com/app/tr&lt;/translate&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;contact&gt;https://acme.com/app/contact&lt;/contact&gt;
+      &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;contribute&gt;https://acme.com/app/contribute&lt;/contribute&gt;
+    &lt;/links&gt;
 
     &lt;!--
       Additional properties used when evaluating templates.
@@ -1220,6 +1557,100 @@ project:
         &lt;foo&gt;bar&lt;/foo&gt;
       &lt;/extraProperties&gt;
     &lt;/java&gt;
+
+    &lt;!--
+      A list of screenshots.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;screenshots&gt;
+      &lt;screenshot&gt;
+        &lt;!--
+          Publicly available URL. PNG format is preferred.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;url&gt;https://acme.com/app.png&lt;/url&gt;
+        &lt;!--
+          The type of image.
+          Valid values are [`SOURCE`, `THUMBNAIL`].
+          Defaults to `SOURCE`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;type&gt;THUMBNAIL&lt;/type&gt;
+        &lt;!--
+          Marks this screenshot as the primary one.
+          Only a single screenshot may be set as primary.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;primary&gt;true&lt;/primary&gt;
+        &lt;!--
+          A description of the image.
+          Should be no more than 100 characters long.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;caption&gt;App in action&lt;/caption&gt;
+        &lt;!--
+          Image width in pixels.
+          Required if type = `THUMBNAIL`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;width&gt;250&lt;/width&gt;
+        &lt;!--
+          Image height in pixels.
+          Required if type = `THUMBNAIL`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;height&gt;250&lt;/height&gt;
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
+      &lt;/screenshot&gt;
+    &lt;/screenshots&gt;
+    &lt;!--
+      A list of icons.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;icons&gt;
+      &lt;icon&gt;
+        &lt;!--
+          Publicly available URL. PNG format is preferred.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;url&gt;https://acme.com/app.png&lt;/url&gt;
+        &lt;!--
+          Marks this icon as the primary one.
+          Only a single icon may be set as primary.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;primary&gt;true&lt;/primary&gt;
+        &lt;!--
+          Image width in pixels.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        --&gt;
+        &lt;width&gt;250&lt;/width&gt;
+        &lt;!--
+          Image height in pixels.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        --&gt;
+        &lt;height&gt;250&lt;/height&gt;
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
+      &lt;/icon&gt;
+    &lt;/icons&gt;
   &lt;/project&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1229,6 +1660,7 @@ project:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
   project {
     // May define a `JRELEASER_PROJECT_NAME` environment variable instead.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1242,7 +1674,7 @@ project:
 
     // The strategy used to parse the project version
     // May define a `JRELEASER_PROJECT_VERSION_PATTERN` environment variable instead.
-    // Valid values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
+    // Supported values are [`SEMVER`, `CALVER:&lt;format&gt;`, `CHRONVER`, `JAVA_RUNTIME`, `JAVA_MODULE`, `CUSTOM`].
     // Defaults to `SEMVER`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     versionPattern = 'SEMVER'
@@ -1277,10 +1709,6 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> Only if configured distributions or announcers.
     longDescription = 'My Awesome app is the bees knees'
 
-    // The project's website.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
-    website = 'https://acme.com/app'
-
     // A list of author names.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
     authors = ['Duke']
@@ -1289,18 +1717,29 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     tags = ['cli', 'awesome']
 
+    // List of maintainers.
+    // Values are typically GitHub/GitLab usernames.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    maintainers = ['duke']
+
+    // The stereotype of this project.
+    // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+    // Defaults to `NONE`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    stereotype = 'CLI'
+
     // The project's license.
     // It's recommended to use a valid SPDX identifier if the project is Open Source.
     // See <a href="https://spdx.org/licenses" class="bare">https://spdx.org/licenses</a>.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Only if configured distributions or announcers.
     license = 'Apache-2.0'
 
-    // URL to the project's license.
+    // The project's inception year.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    licenseUrl = 'https://spdx.org/licenses/Apache-2.0.html'
+    inceptionYear = '2021'
 
     // The project's copyright notice.
-    // You may set `${project.extraProperties.inceptionYear}` and `${project.authors}` instead.
+    // You may set `${project.inceptionYear}` and `${project.authors}` instead.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     copyright = '2021 Duke'
 
@@ -1309,10 +1748,33 @@ project:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     vendor = 'Acme inc.'
 
-    // The project's documentation site.
-    // Defaults to `${project.website}`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    docsUrl = 'https://acme.com/app/docs'
+    links {
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      homepage = 'https://acme.com/app'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      documentation = 'https://acme.com/app/docs'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      license = 'https://spdx.org/licenses/Apache-2.0.html'
+      // If undefined, will use the releaser's `issueTrackerUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      bugTracker = 'https://vcs.acme.com/app/issues'
+      // If undefined, will use the releaser's `repoUrl`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      vcsBrowser = 'https://vcs.acme.com/app'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      faq = 'https://acme.com/app/faq'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      help = 'https://acme.com/app/help'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      donation = 'https://acme.com/app/donations'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      translate = 'https://acme.com/app/tr'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      contact = 'https://acme.com/app/contact'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      contribute = 'https://acme.com/app/contribute'
+    }
 
     // Additional properties used when evaluating templates.
     // Key will be capitalized and prefixed with `project`, i.e, `projectFoo`.
@@ -1360,6 +1822,61 @@ project:
       // Additional properties used when evaluating templates.
       // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      extraProperties.put('foo', 'bar')
+    }
+
+    // A list of screenshots.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    screenshot {
+      // Publicly available URL. PNG format is preferred.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      url = 'https://acme.com/app.png'
+      // The type of image.
+      // Valid values are [`SOURCE`, `THUMBNAIL`].
+      // Defaults to `SOURCE`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      screenshotType = THUMBNAIL
+      // Marks this screenshot as the primary one.
+      // Only a single screenshot may be set as primary.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      primary = true
+      // A description of the image.
+      // Should be no more than 100 characters long.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      caption = 'App in action'
+      // Image width in pixels.
+      // Required if type = `THUMBNAIL`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      width = 250
+      // Image height in pixels.
+      // Required if type = `THUMBNAIL`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      height = 250
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshot`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties.put('foo', 'bar')
+    }
+
+    // A list of icons.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    icon {
+      // Publicly available URL. PNG format is preferred.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      url = 'https://acme.com/app.png'
+      // Marks this icon as the primary one.
+      // Only a single icon may be set as primary.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      primary = true
+      // Image width in pixels.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      width = 250
+      // Image height in pixels.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      height = 250
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `icon`, i.e, `icon`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties.put('foo', 'bar')
     }
   }

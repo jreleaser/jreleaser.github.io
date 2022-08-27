@@ -246,6 +246,15 @@
     <a class="nav-link" href="../files.html">Files</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -253,10 +262,19 @@
     <a class="nav-link" href="../packagers/index.html">Packagers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/flatpak.html">Flatpak</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/gofish.html">Gofish</a>
@@ -326,6 +344,12 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../upload/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../upload/http.html">Http</a>
@@ -601,7 +625,7 @@ announce:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   twitter:
     # Enables or disables Twitter.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     active: ALWAYS
@@ -649,7 +673,19 @@ announce:
     # The announcement message.
     # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    status: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'</code></pre>
+    status: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    # The announcement messages.
+    # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    statuses:
+      - '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      - 'New and exciting features added to {{projectNameCapitalized}} {{projectVersion}}'
+
+    # Path to a template file that contains a list of statuses.
+    # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    statusTemplate: path/to/template/twitter.tpl</code></pre>
 </div>
 </div>
 </div>
@@ -659,7 +695,7 @@ announce:
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 [announce.twitter]
   # Enables or disables Twitter.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   active = "ALWAYS"
@@ -706,7 +742,17 @@ announce:
   # The announcement message.
   # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  status = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"</code></pre>
+  status = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # The announcement message.
+  # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  statuses = ["🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}", "New and exciting featurer added to {{projectNameCapitalized}} {{projectVersion}}"]
+
+  # Path to a template file that contains a list of statuses.
+  # Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  statusTemplate = "path/to/template/twitter.tpl"</code></pre>
 </div>
 </div>
 </div>
@@ -719,7 +765,7 @@ announce:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "twitter": {
       // Enables or disables Twitter.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "active": "ALWAYS",
@@ -769,6 +815,17 @@ announce:
       // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "status": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+      // The announcement message.
+      // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "statuses": [
+        "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}","New and exciting featurer added to {{projectNameCapitalized}} {{projectVersion}}"],
+
+      // Path to a template file that contains a list of statuses.
+      // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "statusTemplate": "path/to/template/twitter.tpl"
     }
   }
 }</code></pre>
@@ -789,7 +846,7 @@ announce:
     &lt;twitter&gt;
       &lt;!--
         Enables or disables Twitter.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -858,6 +915,22 @@ announce:
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
       &lt;status&gt;🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
+
+      &lt;!--
+        The announcement message.
+        Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;statuses&gt;
+        &lt;status&gt;🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}&lt;/status&gt;
+        &lt;status&gt;New and exciting featurer added to {{projectNameCapitalized}} {{projectVersion}}&lt;/status&gt;
+      &lt;/statuses&gt;
+
+      &lt;!-- Path to a template file that contains a list of statuses.
+       Review the available   <a href="../name-templates.html" class="xref page">Name Templates</a>.
+         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;statusTemplate&gt;path/to/template/twitter.tpl&lt;/statusTemplate&gt;
     &lt;/twitter&gt;
   &lt;/announce&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -873,7 +946,7 @@ announce:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     twitter {
       // Enables or disables Twitter.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       active = 'ALWAYS'
@@ -921,6 +994,16 @@ announce:
       // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       status = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      // The announcement message.
+      // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      statuses = [
+        '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}','New and exciting featurer added to {{projectNameCapitalized}} {{projectVersion}}']
+
+      // Path to a template file that contains a list of statuses.
+      // Review the available <a href="../name-templates.html" class="xref page">Name Templates</a>.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      statusTemplate = 'path/to/template/twitter.tpl'
     }
   }
 }</code></pre>

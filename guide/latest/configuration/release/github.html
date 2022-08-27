@@ -246,6 +246,15 @@
     <a class="nav-link" href="../files.html">Files</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -253,10 +262,19 @@
     <a class="nav-link" href="../packagers/index.html">Packagers</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/chocolatey.html">Chocolatey</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/flatpak.html">Flatpak</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/gofish.html">Gofish</a>
@@ -326,6 +344,12 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../upload/gitlab.html">GitLab</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../upload/http.html">Http</a>
@@ -694,7 +718,7 @@ release:
       enabled: true
 
       # Release sections to be updated.
-      # Valid values are [`TITLE`, `BODY`, `ASSETS`].
+      # Supported values are [`TITLE`, `BODY`, `ASSETS`].
       # Defaults to `ASSETS`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       sections:
@@ -727,7 +751,7 @@ release:
     branch: main
 
     # Enables or disables asset upload.
-    # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
     # Defaults to `ALWAYS`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     uploadAssets: ALWAYS
@@ -790,6 +814,17 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       email: jreleaser@kordamp.org
 
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    releaseNotes:
+      # Generate release notes using GitHub's native support.
+      # Defaults to `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      enabled: false
+
+      # Configuration settings used for generating the release notes.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      configurationFile: .github/custom_release_config.yml
+
     # Changelog customization.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     changelog:
@@ -799,7 +834,7 @@ release:
       enabled: true
 
       # Sorts commits in ascending (oldest first) or descending (newer first).
-      # Valid values are: `ASC`, `DESC`.
+      # Supported values are: `ASC`, `DESC`.
       # Defaults to `DESC`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       sort: DESC
@@ -815,14 +850,19 @@ release:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       links: false
 
+      # Whether to skip merge commits from the generated changelog
+      # Defaults to `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipMergeCommits: false
+
       # Enables or disables formatting options.
-      # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       formatted: ALWAYS
 
       # Preconfigured changelog options.
-      # Valid values are [`gitmoji`, `conventional-commits`].
+      # Supported values are [`gitmoji`, `conventional-commits`].
       # Requires `formatted` to be enabled.
       # Defaults to empty.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1082,7 +1122,7 @@ release:
     enabled = true
 
     # Release sections to be updated.
-    # Valid values are [`TITLE`, `BODY`, `ASSETS`].
+    # Supported values are [`TITLE`, `BODY`, `ASSETS`].
     # Defaults to `ASSETS`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     sections = ["ASSETS"]
@@ -1114,7 +1154,7 @@ release:
   branch = "main"
 
   # Enables or disables asset upload.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
   # Defaults to `ALWAYS`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   uploadAssets = "ALWAYS"
@@ -1174,6 +1214,15 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   commitAuthor.email = "jreleaser@kordamp.org"
 
+  # Generate release notes using GitHub's native support.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  releaseNotes.enabled: false
+
+  # Configuration settings used for generating the release notes.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  releaseNotes.configurationFile: ".github/custom_release_config.yml"
+
   # Changelog customization.
 
   # Disables or enables the changelog.
@@ -1182,7 +1231,7 @@ release:
   changelog.enabled = true
 
   # Sorts commits in ascending (oldest first) or descending (newer first).
-  # Valid values are: `ASC`, `DESC`.
+  # Supported values are: `ASC`, `DESC`.
   # Defaults to `DESC`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.sort = "DESC"
@@ -1198,14 +1247,19 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.links = false
 
+  # Whether to skip merge commits from the generated changelog
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  changelog.skipMergeCommits = false
+
   # Enables or disables formatting options.
-  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   changelog.formatted = "ALWAYS"
 
   # Preconfigured changelog options.
-  # Valid values are [`gitmoji`, `conventional-commits`].
+  # Supported values are [`gitmoji`, `conventional-commits`].
   # Requires `formatted` to be enabled.
   # Defaults to empty.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1462,7 +1516,7 @@ release:
         "enabled": true,
 
         // Release sections to be updated.
-        // Valid values are [`TITLE`, `BODY`, `ASSETS`].
+        // Supported values are [`TITLE`, `BODY`, `ASSETS`].
         // Defaults to `ASSETS`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "sections": ["ASSETS"]
@@ -1495,7 +1549,7 @@ release:
       "branch": "main",
 
       // Enables or disables asset upload.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "uploadAssets": "ALWAYS",
@@ -1560,6 +1614,18 @@ release:
         "email": "jreleaser@kordamp.org"
       },
 
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "releaseNotes": {
+        // Generate release notes using GitHub's native support.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "enabled": false,
+
+        // Configuration settings used for generating the release notes.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "configurationFile": ".github/custom_release_config.yml"
+      },
+
       // Changelog customization.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "changelog": {
@@ -1569,7 +1635,7 @@ release:
         "enabled": true,
 
         // Sorts commits in ascending (oldest first) or descending (newer first).
-        // Valid values are: `ASC`, `DESC`.
+        // Supported values are: `ASC`, `DESC`.
         // Defaults to `DESC`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "sort": "DESC",
@@ -1585,14 +1651,19 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "links": false,
 
+        // Whether to skip merge commits from the generated changelog
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "skipMergeCommits": false,
+
         // Enables or disables formatting options.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "formatted": "ALWAYS",
 
         // Preconfigured changelog options.
-        // Valid values are [`gitmoji`, `conventional-commits`].
+        // Supported values are [`gitmoji`, `conventional-commits`].
         // Requires `formatted` to be enabled.
         // Defaults to empty.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1912,7 +1983,7 @@ release:
 
         &lt;!--
           Release sections to be updated.
-          Valid values are [`TITLE`, `BODY`, `ASSETS`].
+          Supported values are [`TITLE`, `BODY`, `ASSETS`].
           Defaults to `ASSETS`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -1957,7 +2028,7 @@ release:
 
       &lt;!--
         Enables or disables asset upload.
-        Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
         Defaults to `ALWAYS`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -2049,6 +2120,24 @@ release:
       &lt;/commitAuthor&gt;
 
       &lt;!--
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;releaseNotes&gt;
+        &lt;!--
+          Generate release notes using GitHub's native support.
+          Defaults to `false`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;enabled&gt;false&lt;/enabled&gt;
+
+        &lt;!--
+          Configuration settings used for generating the release notes.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;configurationFile&gt;.github/custom_release_config.yml&lt;/configurationFile&gt;
+      &lt;/releaseNotes&gt;
+
+      &lt;!--
         Changelog customization.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -2063,7 +2152,7 @@ release:
 
         &lt;!--
           Sorts commits in ascending (oldest first) or descending (newer first).
-          Valid values are&gt;`ASC`, `DESC`.
+          Supported values are&gt;`ASC`, `DESC`.
           Defaults to `DESC`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -2085,8 +2174,15 @@ release:
         &lt;links&gt;false&lt;/links&gt;
 
         &lt;!--
+          Whether to skip merge commits from the generated changelog
+          Defaults to `false`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;skipMergeCommits&gt;false&lt;/skipMergeCommits&gt;
+
+        &lt;!--
           Enables or disables formatting options.
-          Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `NEVER`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -2094,7 +2190,7 @@ release:
 
         &lt;!--
           Preconfigured changelog options.
-          Valid values are [`gitmoji`, `conventional-commits`].
+          Supported values are [`gitmoji`, `conventional-commits`].
           Requires `formatted` to be enabled.
           Defaults to empty.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2379,7 +2475,7 @@ release:
 
       // The user or organization that owns the repository.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      owner = 'duke'
+      repoOwner = 'duke'
 
       // The name of the repository.
       // If unspecified, will use ${project.name}.
@@ -2442,7 +2538,7 @@ release:
         enabled = true
 
         // Release sections to be updated.
-        // Valid values are [`TITLE`, `BODY`, `ASSETS`].
+        // Supported values are [`TITLE`, `BODY`, `ASSETS`].
         // Defaults to `ASSETS`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         section('ASSETS')
@@ -2475,7 +2571,7 @@ release:
       branch = 'main'
 
       // Enables or disables asset upload.
-      // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`, `PRERELEASE`, `RELEASE_PRERELEASE`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       uploadAssets = 'ALWAYS'
@@ -2540,6 +2636,18 @@ release:
         email = 'jreleaser@kordamp.org'
       }
 
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      releaseNotes {
+        // Generate release notes using GitHub's native support.
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        enabled = false
+
+        // Configuration settings used for generating the release notes.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        configurationFile = '.github/custom_release_config.yml'
+      }
+
       // Changelog customization.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       changelog {
@@ -2549,7 +2657,7 @@ release:
         enabled = true
 
         // Sorts commits in ascending (oldest first) or descending (newer first).
-        // Valid values are = `ASC`, `DESC`.
+        // Supported values are = `ASC`, `DESC`.
         // Defaults to `DESC`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         sort = 'DESC'
@@ -2565,14 +2673,19 @@ release:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         links = false
 
+        // Whether to skip merge commits from the generated changelog
+        // Defaults to `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        skipMergeCommits = false
+
         // Enables or disables formatting options.
-        // Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         formatted = 'ALWAYS'
 
         // Preconfigured changelog options.
-        // Valid values are [`gitmoji`, `conventional-commits`].
+        // Supported values are [`gitmoji`, `conventional-commits`].
         // Requires `formatted` to be enabled.
         // Defaults to empty.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2811,6 +2924,31 @@ You <strong>must</strong> use an environment variable, can not use external prop
 signature file may be skipped as well by defining <code>skipReleaseSignatures</code> as an extra property on the artifact. You may
 also define either of this two properties on the owning <code>distribution</code> in which case the settings apply to all artifacts
 found in the distribution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_release_notes"><a class="anchor" href="#_release_notes"></a>Release Notes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GitHub <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes">offers an option</a>
+to generate release notes based on activity posted to a given repository. You may use this feature to generate the changelog.
+<strong>However</strong>, be aware that only one of <code>releaseNotes</code> or <code>changelog</code> may be enabled at all times.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_assets_size"><a class="anchor" href="#_assets_size"></a>Assets Size</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GitHub imposes a size limit for release assets (currently around 100MB). <a href="https://github.com/hub4j/github-api">hub4j</a>,
+the underlying library used to interact with GitHub processes assets by reading all files in memory, one by one. This may
+lead to `OutOfMemoryError`s and failed releases.</p>
+</div>
+<div class="paragraph">
+<p>If your release has big assets then it&#8217;s recommended to increase the memory of the <code>jreleaser</code> process. When running on
+the CLI you may pass a flag such as <code>JAVA_OPTS="-Xmx5g"</code>; when using Maven, Gradle, or Ant use their corresponding options to set
+the memory flags.</p>
 </div>
 </div>
 </div>
