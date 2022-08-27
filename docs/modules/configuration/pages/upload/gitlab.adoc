@@ -1,0 +1,260 @@
+= GitLab
+:uploader_id:   gitlab
+:uploader_name: GITLAB
+
+Uploads artifacts, files, and signatures to a GitLab instance via its
+link:https://docs.gitlab.com/ee/user/packages/generic_packages/index.html[Packages] option.
+
+NOTE:: Only **generic** packages are supported at the moment.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+      # The GitLab host url.
+      # icon:exclamation-triangle[]
+      host: gitlab.com
+
+      # Token with write access to the repository.
+      # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
+      # environment variable must be defined.
+      # icon:dot-circle[] icon:eye-slash[]
+      token: __DO_NOT_SET_HERE__
+
+      # The package name to use.
+      # If unspecified, will use the uploader's name.
+      # icon:fot-circle[] icon:file-template[]
+      packageName: app
+
+      # The package version to use.
+      # If unspecified, will use the project's version.
+      # icon:fot-circle[] icon:file-template[]
+      packageVersion: '{{projectVersion}}'
+
+      # The id of the GitLab repository.
+      # icon:exclamation-triangle[]
+      projectIdentifier: 12345678
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+  # The GitLab host url.
+  # icon:exclamation-triangle[]
+  host = "gitlab.com"
+
+  # Token with write access to the repository.
+  # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
+  # environment variable must be defined.
+  # icon:dot-circle[] icon:eye-slash[]
+  token = "__DO_NOT_SET_HERE__"
+
+  # The package name to use.
+  # If unspecified, will use the uploader's name.
+  # icon:fot-circle[] icon:file-template[]
+  packageName = "app"
+
+  # The package version to use.
+  # If unspecified, will use the project's version.
+  # icon:fot-circle[] icon:file-template[]
+  packageVersion = "{{projectVersion}}"
+
+  # The id of the GitLab repository.
+  # icon:exclamation-triangle[]
+  projectIdentifier = "12345678"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+        // The GitLab host url.
+        // icon:exclamation-triangle[]
+        "host": "gitlab.com",
+
+        // Token with write access to the repository.
+        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        "token": "__DO_NOT_SET_HERE__",
+
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // icon:fot-circle[] icon:file-template[]
+        "packageName": "app",
+
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // icon:fot-circle[] icon:file-template[]
+        "packageVersion": "{{projectVersion}}",
+
+        // The id of the GitLab repository.
+        // icon:exclamation-triangle[]
+        "projectIdentifier": "12345678"
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+        <!--
+           The GitLab host url.
+           icon:exclamation-triangle[]
+        -->
+        <host>gitlab.com</host>
+
+        <!--
+           Token with write access to the repository.
+           If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
+           environment variable must be defined.
+           icon:dot-circle[] icon:eye-slash[]
+        -->
+        <token>__DO_NOT_SET_HERE__</token>
+
+        <!--
+           The package name to use.
+           If unspecified, will use the uploader's name.
+           icon:fot-circle[] icon:file-template[]
+        -->
+        <packageName>app</packageName>
+
+        <!--
+           The package version to use.
+           If unspecified, will use the project's version.
+           icon:fot-circle[] icon:file-template[]
+        -->
+        <packageVersion>{{projectVersion}}</packageVersion>
+
+        <!--
+           The id of the GitLab repository.
+           icon:exclamation-triangle[]
+        -->
+        <projectIdentifier>12345678</projectIdentifier>
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+        // The GitLab host url.
+        // icon:exclamation-triangle[]
+        host = 'gitlab.com'
+
+        // Token with write access to the repository.
+        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
+        // environment variable must be defined.
+        // icon:dot-circle[] icon:eye-slash[]
+        token = '__DO_NOT_SET_HERE__'
+
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // icon:fot-circle[] icon:file-template[]
+        packageName = 'app'
+
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // icon:fot-circle[] icon:file-template[]
+        packageVersion = '{{projectVersion}}'
+
+        // The id of the GitLab repository.
+        // icon:exclamation-triangle[]
+        projectIdentifier = '12345678'
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Host
+
+You can have the host set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the GitLab server will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_GITLAB_NAME_HOST`. If your instance is named `production`,
+you can store the host in the environment variable `JRELEASER_GITLAB_PRODUCTION_HOST`. The name will be
+transformed to uppercase.
+
+If a configured host is found in the configuration file, then the environment variable is not used at all.
+
+Alternatives to `JRELEASER_GITLAB_NAME_HOST` are (in order):
+
+* `JRELEASER_GITLAB_NAME_HOST`
+* `JRELEASER_GITLAB_HOST`
+
+== Token
+
+The password will be stored in an environment variable. The configured name of the GitLab server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_GITLAB_NAME_TOKEN`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_GITLAB_PRODUCTION_TOKEN`. The name will be
+transformed to uppercase.
+
+Alternatives to `JRELEASER_GITLAB_NAME_TOKEN` are (in order):
+
+* `JRELEASER_GITLAB_NAME_TOKEN`
+* `JRELEASER_GITLAB_TOKEN`
+
+== UploadUrl
+
+The uploadUrl is the URL to upload the artifacts to.
+
+An example configuration may look like
+`uploadUrl: 'https://{{host}}/api/v4/projects/{{projectIdentifier}}/packages/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'`.
+
+And will result in a final deployment like
+`pass:[https://gitlab.com/api/v4/projects/12345678/packages/generic/app/1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'https://{{host}}/api/v4/projects/{{projectIdentifier}}/packages/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'`.
+
+And will result in a final URL like
+`pass:[https://gitlab.com/api/v4/projects/12345678/packages/generic/app/1.0.0/app-1.0.0.zip]`.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Gitlab` and `<name>` resolves to the capitalized name of the GitLab instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadGitlabFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadGitlabFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadGitlabFooBar`.
+

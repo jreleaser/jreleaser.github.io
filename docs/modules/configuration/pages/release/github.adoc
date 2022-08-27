@@ -49,6 +49,17 @@ include::partial$release/yaml/common-head.adoc[]
 
 include::partial$release/yaml/commitauthor.adoc[]
 
+    # icon:dot-circle[]
+    releaseNotes:
+      # Generate release notes using GitHub's native support.
+      # Defaults to `false`.
+      # icon:dot-circle[]
+      enabled: false
+
+      # Configuration settings used for generating the release notes.
+      # icon:dot-circle[]
+      configurationFile: .github/custom_release_config.yml
+
 include::partial$release/yaml/changelog.adoc[]
 
 include::partial$release/yaml/milestone.adoc[]
@@ -88,6 +99,15 @@ include::partial$release/toml/common-head.adoc[]
   discussionCategoryName = "Announcements"
 
 include::partial$release/toml/commitauthor.adoc[]
+
+  # Generate release notes using GitHub's native support.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  releaseNotes.enabled: false
+
+  # Configuration settings used for generating the release notes.
+  # icon:dot-circle[]
+  releaseNotes.configurationFile: ".github/custom_release_config.yml"
 
 include::partial$release/toml/changelog.adoc[]
 
@@ -131,6 +151,18 @@ include::partial$release/json/common-head.adoc[]
       "discussionCategoryName": "Announcements",
 
 include::partial$release/json/commitauthor.adoc[]
+
+      // icon:dot-circle[]
+      "releaseNotes": {
+        // Generate release notes using GitHub's native support.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "enabled": false,
+
+        // Configuration settings used for generating the release notes.
+        // icon:dot-circle[]
+        "configurationFile": ".github/custom_release_config.yml"
+      },
 
 include::partial$release/json/changelog.adoc[]
 
@@ -186,6 +218,24 @@ include::partial$release/maven/common-head.adoc[]
 
 include::partial$release/maven/commitauthor.adoc[]
 
+      <!--
+        icon:dot-circle[]
+      -->
+      <releaseNotes>
+        <!--
+          Generate release notes using GitHub's native support.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <enabled>false</enabled>
+
+        <!--
+          Configuration settings used for generating the release notes.
+          icon:dot-circle[]
+        -->
+        <configurationFile>.github/custom_release_config.yml</configurationFile>
+      </releaseNotes>
+
 include::partial$release/maven/changelog.adoc[]
 
 include::partial$release/maven/milestone.adoc[]
@@ -230,6 +280,18 @@ include::partial$release/gradle/common-head.adoc[]
 
 include::partial$release/gradle/commitauthor.adoc[]
 
+      // icon:dot-circle[]
+      releaseNotes {
+        // Generate release notes using GitHub's native support.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        enabled = false
+
+        // Configuration settings used for generating the release notes.
+        // icon:dot-circle[]
+        configurationFile = '.github/custom_release_config.yml'
+      }
+
 include::partial$release/gradle/changelog.adoc[]
 
 include::partial$release/gradle/milestone.adoc[]
@@ -243,3 +305,19 @@ include::partial$release/gradle/common-footer.adoc[]
 include::partial$release/remote.adoc[]
 
 include::partial$release/skip-release.adoc[]
+
+== Release Notes
+
+GitHub link:https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes[offers an option]
+to generate release notes based on activity posted to a given repository. You may use this feature to generate the changelog.
+**However**, be aware that only one of `releaseNotes` or `changelog` may be enabled at all times.
+
+== Assets Size
+
+GitHub imposes a size limit for release assets (currently around 100MB). link:https://github.com/hub4j/github-api[hub4j],
+the underlying library used to interact with GitHub processes assets by reading all files in memory, one by one. This may
+lead to `OutOfMemoryError`s and failed releases.
+
+If your release has big assets then it's recommended to increase the memory of the `jreleaser` process. When running on
+the CLI you may pass a flag such as `JAVA_OPTS="-Xmx5g"`; when using Maven, Gradle, or Ant use their corresponding options to set
+the memory flags.

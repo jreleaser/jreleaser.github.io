@@ -1,0 +1,314 @@
+= Command Hooks
+
+Defines command or script hooks to be executed before or after a JReleaser step.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+hooks:
+  # Enable or disable all hooks.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
+  # icon:dot-circle[]
+  active: ALWAYS
+
+  # icon:dot-circle[]
+  command:
+    # Enable or disable all before, success, and failure hooks.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `ALWAYS`.
+    # icon:dot-circle[]
+    active: ALWAYS
+
+    # The type of hook
+    # Valid entries are `before`, `success`, `failure`.
+    # icon:dot-circle[]
+    before:
+        # Let the release continue if the hook fails.
+        # Defaults to `false`.
+        # icon:dot-circle[]
+      - continueOnError: true
+
+        # Enable or disable this hook.
+        # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        # Defaults to `ALWAYS`.
+        # icon:dot-circle[]
+        active: ALWAYS
+
+        # The command to be invoked.
+        # icon:exclamation-triangle[] icon:file-alt[]
+        cmd: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
+
+        # Filters this hook based on the given step.
+        # icon:dot-circle[]
+        filter:
+          includes: ['release']
+          excludes: ['publish']
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[hooks]
+  # Enable or disable all hooks.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # icon:dot-circle[]
+  [hooks.command]
+    # Enable or disable all before, success, and failure hooks.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `ALWAYS`.
+    # icon:dot-circle[]
+    active = "ALWAYS"
+
+    # The type of hook
+    # Valid entries are `before`, `success`, `failure`.
+    # icon:dot-circle[]
+    [[hooks.command.before]]
+      # Let the release continue if the hook fails.
+      # Defaults to `false`.
+      # icon:dot-circle[]
+      continueOnError = true
+
+      # Enable or disable this hook.
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `ALWAYS`.
+      # icon:dot-circle[]
+      active = "ALWAYS"
+
+      # The command to be invoked.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+
+      # Filters this hook based on the given step.
+      # icon:dot-circle[]
+      filter.includes = ["release"]
+      filter.excludes = ["publish"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "hooks": {
+    // Enable or disable all hooks.
+    // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
+    // icon:dot-circle[]
+    "active": "ALWAYS",
+
+    // icon:dot-circle[]
+    "command": {
+      // Enable or disable all before, success, and failure hooks.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      "active": "ALWAYS",
+
+      // The type of hook
+      // Valid entries are `before`, `success`, `failure`.
+      // icon:dot-circle[]
+      "before": [
+        {
+          // Let the release continue if the hook fails.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          "continueOnError": true,
+
+          // Enable or disable this hook.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `ALWAYS`.
+          // icon:dot-circle[]
+          "active": "ALWAYS",
+
+          // The command to be invoked.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "cmd": "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}",
+
+          // Filters this hook based on the given step.
+          // icon:dot-circle[]
+          "filter": {
+            "includes": ["release"],
+            "excludes": ["publish"]
+          }
+        }
+      ]
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <hooks>
+    <!--
+      Enable or disable all hooks.
+      Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      Defaults to `ALWAYS`.
+      icon:dot-circle[]
+    -->
+    <active>ALWAYS</active>
+
+    <!--
+      icon:dot-circle[]
+    -->
+    <command>
+      <!--
+        Enable or disable all before, success, and failure hooks.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `ALWAYS`.
+        icon:dot-circle[]
+      -->
+      <active>ALWAYS</active>
+
+      <!--
+        The type of hook
+        Valid entries are `before`, `success`, `failure`.
+        icon:dot-circle[]
+      -->
+      <before>
+        <commandHook>
+          <!--
+            Let the release continue if the hook fails.
+            Defaults to `false`.
+            icon:dot-circle[]
+          -->
+          <continueOnError>true</continueOnError>
+          <!--
+            Enable or disable this hook.
+            Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to `ALWAYS`.
+            icon:dot-circle[]
+          -->
+          <active>ALWAYS</active>
+
+          <!--
+            The command to be invoked.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <cmd>{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}</cmd>
+
+          <!--
+            Filters this hook based on the given step.
+            icon:dot-circle[]
+          -->
+          <filter>
+            <includes>release</include>
+            <excludes>publish</excludes>
+          </filter>
+        </commandHook>
+      </before>
+    </command>
+  </hooks>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  hooks {
+    // Enable or disable all hooks.
+    // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    // Defaults to `ALWAYS`.
+    // icon:dot-circle[]
+    active = 'ALWAYS'
+
+    // icon:dot-circle[]
+    command {
+      // Enable or disable all before, success, and failure hooks.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      active: ALWAYS
+
+      // The type of hook
+      // Valid entries are `before`, `success`, `failure`.
+      // icon:dot-circle[]
+      before {
+        // Let the release continue if the hook fails.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        continueOnError = true
+
+        // Enable or disable this hook.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `ALWAYS`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // The command to be invoked.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+
+        // Filters this hook based on the given step.
+        // icon:dot-circle[]
+        filter {
+          includes = ["release"]
+          excludes = ["publish"]
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_HOOKS_COMMAND_ACTIVE`
+or from a system property `jreleaser.hooks.command.active`. The system property takes precedence over the environment variable.
+
+== Step Names
+
+The following step names may be used when filtering hooks:
+
+* `download`
+* `assemble`
+* `changelog`
+* `checksum`
+* `sign`
+* `upload`
+* `release`
+* `prepare`
+* `package`
+* `publish`
+* `announce`
+
+== Template Names
+
+The following template names are also available:
+
+[horizontal]
+{{event.type}}:: One of [`before`, `success`, `failure`].
+{{event.name}}:: One of the previously mentioned steps.

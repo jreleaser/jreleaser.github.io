@@ -1,0 +1,705 @@
+= Flatpak
+:tool_id:       flatpak
+:tool_name:     flatpak
+:tool_env_var:  FLATPAK
+:tool_tap:      repository
+:tool_tap_name: com.acme.duke
+:tool_manifest: manifest
+:tool_package:  ${distribution.name}
+
+link:https://flatpak.org/[Flatpak] is a framework for distributing desktop applications across various Linux distributions.
+It has been created by developers who have a long history of working on the Linux desktop, and is run as an independent
+open source project.
+
+We recommend reading the link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html[Upstream Metadata]
+and the link:https://docs.flatpak.org/en/latest/manifests.html[Flatpak manifest] documentation as Flatpak depends on them.
+
+The following artifact extensions are supported by this packager:
+
+* `.tgz`
+* `.txz`
+* `.tar.gz`
+* `.tar.xz`
+* `.tar`
+* `.zip`
+
+WARNING: Publication of snapshots is *not* allowed.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # Unique identifier for this component.
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+    # icon:exclamation-triangle[]
+    componentId: com.acme.app
+
+    # The categories this software component is associated with
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+    # icon:exclamation-triangle[]
+    categories:
+      - Development
+
+    # Represent the developers or project responsible for development of the project.
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+    # Defaults to the project's authors separated by comma.
+    # icon:icon:dot-circle[]
+    developerName: Duke
+
+    # Sets the Flatpak runtime and Sdk.
+    # Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+    # See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+    # icon:exclamation-triangle[]
+    runtime: FREEDESKTOP
+
+    # The runtime's version to use.
+    # icon:exclamation-triangle[]
+    runtimeVersion: '21.08'
+
+    # List of Sdk extensions to apply.
+    # icon:dot-circle[]
+    sdkExtensions:
+      - org.flatpack.custom.extension
+
+    # List of sandbox permissions.
+    # icon:dot-circle[]
+    finishArgs:
+      - '--share=network'
+
+    # A list of screenshots.
+    # If undefined, defaults to `${project.screenshots}`.
+    # icon:dot-circle[]
+    screenshots:
+        # Publicly available URL. PNG format is preferred.
+        # icon:exclamation-triangle[] icon:file-alt[]
+      - url: pass:[https://acme.com/app.png]
+        # The type of image.
+        # Valid values are [`SOURCE`, `THUMBNAIL`].
+        # Defaults to `SOURCE`.
+        # icon:dot-circle[]
+        type: THUMBNAIL
+        # Marks this screenshot as the primary one.
+        # Only a single screenshot may be set as primary.
+        # icon:dot-circle[]
+        primary: true
+        # A description of the image.
+        # Should be no more than 100 characters long.
+        # icon:dot-circle[]
+        caption: App in action
+        # Image width in pixels.
+        # Required if type = `THUMBNAIL`.
+        # icon:dot-circle[]
+        width: 250
+        # Image height in pixels.
+        # Required if type = `THUMBNAIL`.
+        # icon:dot-circle[]
+        height: 250
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[] icon:file-alt[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+          foo: bar
+
+    # A list of icons.
+    # If undefined, defaults to `${project.icons}`.
+    # icon:dot-circle[]
+    icons:
+        # Publicly available URL. PNG format is preferred.
+        # icon:exclamation-triangle[] icon:file-alt[]
+      - url: pass:[https://acme.com/app.png]
+        # Marks this icon as the primary one.
+        # Only a single icon may be set as primary.
+        # icon:dot-circle[]
+        primary: true
+        # Image width in pixels.
+        # icon:exclamation-triangle[]
+        width: 250
+        # Image height in pixels.
+        # icon:exclamation-triangle[]
+        height: 250
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[] icon:file-alt[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+          foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # Unique identifier for this component.
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+  # icon:exclamation-triangle[]
+  componentId = "com.acme.app"
+
+  # The categories this software component is associated with
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+  # icon:exclamation-triangle[]
+  categories = ["Development"]
+
+  # Represent the developers or project responsible for development of the project.
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+  # Defaults to the project's authors separated by comma.
+  # icon:icon:dot-circle[]
+  developerName = "Duke"
+
+  # Sets the Flatpak runtime and Sdk.
+  # Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+  # See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+  # icon:exclamation-triangle[]
+  runtime = "FREEDESKTOP"
+
+  # The runtime's version to use.
+  # icon:exclamation-triangle[]
+  runtimeVersion = "21.08"
+
+  # List of Sdk extensions to apply.
+  # icon:dot-circle[]
+  sdkExtensions = ["org.flatpack.custom.extension"]
+
+  # List of sandbox permissions.
+  # icon:dot-circle[]
+  finishArgs = ["--share=network"]
+
+  # A list of screenshots.
+  # If undefined, defaults to `${project.screenshots}`.
+  # icon:dot-circle[]
+  pass:[[][packagers.{tool_id}.screenshots]]
+    # Publicly available URL. PNG format is preferred.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    url = "pass:[https://acme.com/app.png]"
+    # The type of image.
+    # Valid values are [`SOURCE`, `THUMBNAIL`].
+    # Defaults to `SOURCE`.
+    # icon:dot-circle[]
+    type = "THUMBNAIL"
+    # Marks this screenshot as the primary one.
+    # Only a single screenshot may be set as primary.
+    # icon:dot-circle[]
+    primary = true
+    # A description of the image.
+    # Should be no more than 100 characters long.
+    # icon:dot-circle[]
+    caption = "App in action"
+    # Image width in pixels.
+    # Required if type = `THUMBNAIL`.
+    # icon:dot-circle[]
+    width = 250
+    # Image height in pixels.
+    # Required if type = `THUMBNAIL`.
+    # icon:dot-circle[]
+    height = 250
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+
+  # A list of icons.
+  # If undefined, defaults to `${project.icons}`.
+  # icon:dot-circle[]
+  pass:[[][packagers.{tool_id}.icons]]
+    # Publicly available URL. PNG format is preferred.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    url = "pass:[https://acme.com/app.png]"
+    # Marks this icon as the primary one.
+    # Only a single icon may be set as primary.
+    # icon:dot-circle[]
+    primary = true
+    # Image width in pixels.
+    # icon:exclamation-triangle[]
+    width = 250
+    # Image height in pixels.
+    # icon:exclamation-triangle[]
+    height = 250
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // Unique identifier for this component.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+      // icon:exclamation-triangle[]
+      "componentId": "com.acme.app",
+
+      // The categories this software component is associated with
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+      // icon:exclamation-triangle[]
+      "categories": [
+        "Development"
+      ],
+
+      // Represent the developers or project responsible for development of the project.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+      // Defaults to the project's authors separated by comma.
+      // icon:icon:dot-circle[]
+      "developerName": "Duke",
+
+      // Sets the Flatpak runtime and Sdk.
+      // Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+      // See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+      // icon:exclamation-triangle[]
+      "runtime": "FREEDESKTOP",
+
+      // The runtime's version to use.
+      // icon:exclamation-triangle[]
+      "runtimeVersion": "21.08",
+
+      // List of Sdk extensions to apply.
+      // icon:dot-circle[]
+      "sdkExtensions": [
+        "org.flatpack.custom.extension"
+      ],
+
+      // List of sandbox permissions.
+      // icon:dot-circle[]
+      "finishArgs": [
+        "--share=network"
+      ]
+
+      // A list of screenshots.
+      // If undefined, defaults to `${project.screenshots}`.
+      // icon:dot-circle[]
+      screenshots: [
+        {
+          // Publicly available URL. PNG format is preferred.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "url": "pass:[https://acme.com/app.png]",
+          // The type of image.
+          // Valid values are [`SOURCE`, `THUMBNAIL`].
+          // Defaults to `SOURCE`.
+          // icon:dot-circle[]
+          "type": "THUMBNAIL",
+          // Marks this screenshot as the primary one.
+          // Only a single screenshot may be set as primary.
+          // icon:dot-circle[]
+          "primary": true,
+          // A description of the image.
+          // Should be no more than 100 characters long.
+          // icon:dot-circle[]
+          "caption": "App in action",
+          // Image width in pixels.
+          // Required if type = `THUMBNAIL`.
+          // icon:dot-circle[]
+          "width": 250,
+          // Image height in pixels.
+          // Required if type = `THUMBNAIL`.
+          // icon:dot-circle[]
+          "height": 250,
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[] icon:file-alt[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+            "foo": "bar"
+          }
+        }
+      ],
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icons: [
+        {
+          // Publicly available URL. PNG format is preferred.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "url": "pass:[https://acme.com/app.png]",
+          // Marks this icon as the primary one.
+          // Only a single icon may be set as primary.
+          // icon:dot-circle[]
+          "primary": true,
+          // Image width in pixels.
+          // icon:exclamation-triangle[]
+          "width": 250,
+          // Image height in pixels.
+          // icon:exclamation-triangle[]
+          "height": 250,
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[] icon:file-alt[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+            "foo": "bar"
+          }
+        }
+      ]
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        Unique identifier for this component.
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[<id>]
+        icon:exclamation-triangle[]
+      -->
+      <componentId>com.acme.app</componentId>
+
+      <!--
+        The categories this software component is associated with
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[<categories>]
+        icon:exclamation-triangle[]
+      -->
+      <categories>
+        <category>Development</category>
+      </categories>
+
+      <!--
+        Represent the developers or project responsible for development of the project.
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[<developer_name>]
+        Defaults to the project's authors separated by comma.
+        icon:icon:dot-circle[]
+      -->
+      <developerName>Duke</developerName>
+
+      <!--
+        Sets the Flatpak runtime and Sdk.
+        Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+        See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+        icon:exclamation-triangle[]
+      -->
+      <runtime>FREEDESKTOP</runtime>
+
+      <!--
+        The runtime's version to use.
+        icon:exclamation-triangle[]
+      -->
+      <runtimeVersion>21.08</runtimeVersion>
+
+      <!--
+        List of Sdk extensions to apply.
+        icon:dot-circle[]
+      -->
+      <sdkExtensions>
+        <sdkExtension>org.flatpack.custom.extension</sdkExtension>
+      </sdkExtensions>
+
+      <!--
+        List of sandbox permissions.
+        icon:dot-circle[]
+      -->
+      <finishArgs>
+        <finishArg>--share=network</finishArg>
+      </finishArgs>
+
+      <!--
+        A list of screenshots.
+        If undefined, defaults to `${project.screenshots}`.
+        icon:dot-circle[]
+      -->
+      <screenshots>
+        <screenshot>
+          <!--
+            Publicly available URL. PNG format is preferred.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <url>pass:[https://acme.com/app.png]</url>
+          <!--
+            The type of image.
+            Valid values are [`SOURCE`, `THUMBNAIL`].
+            Defaults to `SOURCE`.
+            icon:dot-circle[]
+          -->
+          <type>THUMBNAIL</type>
+          <!--
+            Marks this screenshot as the primary one.
+            Only a single screenshot may be set as primary.
+            icon:dot-circle[]
+          -->
+          <primary>true</primary>
+          <!--
+            A description of the image.
+            Should be no more than 100 characters long.
+            icon:dot-circle[]
+          -->
+          <caption>App in action</caption>
+          <!--
+            Image width in pixels.
+            Required if type = `THUMBNAIL`.
+            icon:dot-circle[]
+          -->
+          <width>250</width>
+          <!--
+            Image height in pixels.
+            Required if type = `THUMBNAIL`.
+            icon:dot-circle[]
+          -->
+          <height>250</height>
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </screenshot>
+      </screenshots>
+
+      <!--
+        A list of icons.
+        If undefined, defaults to `${project.icons}`.
+        icon:dot-circle[]
+      -->
+      <icons>
+        <icon>
+          <!--
+            Publicly available URL. PNG format is preferred.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <url>pass:[https://acme.com/app.png]</url>
+          <!--
+            Marks this icon as the primary one.
+            Only a single icon may be set as primary.
+            icon:dot-circle[]
+          -->
+          <primary>true</primary>>
+          <!--
+            Image width in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <width>250</width>
+          <!--
+            Image height in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <height>250</height>
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </icon>
+      </icons>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // Unique identifier for this component.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+      // icon:exclamation-triangle[]
+      componentId = 'com.acme.app'
+
+      // The categories this software component is associated with
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+      // icon:exclamation-triangle[]
+      category('Development')
+
+      // Represent the developers or project responsible for development of the project.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+      // Defaults to the project's authors separated by comma.
+      // icon:icon:dot-circle[]
+      developerName = 'Duke'
+
+      // Sets the Flatpak runtime and Sdk.
+      // Valid values are [`FREEDESKTOP`, `GNOME`, `KDE`, `ELEMENTARY`].
+      // See link:https://docs.flatpak.org/en/latest/available-runtimes.html[Available Runtimes].
+      // icon:exclamation-triangle[]
+      runtime = 'FREEDESKTOP'
+
+      // The runtime's version to use.
+      // icon:exclamation-triangle[]
+      runtimeVersion = '21.08'
+
+      // List of Sdk extensions to apply.
+      // icon:dot-circle[]
+      sdkExtension('org.flatpack.custom.extension')
+
+      // List of sandbox permissions.
+      // icon:dot-circle[]
+      finishArg('--share=network')
+
+      // A list of screenshots.
+      // If undefined, defaults to `${project.screenshots}`.
+      // icon:dot-circle[]
+      screenshot {
+        // Publicly available URL. PNG format is preferred.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://acme.com/app.png]'
+        // The type of image.
+        // Valid values are [`SOURCE`, `THUMBNAIL`].
+        // Defaults to `SOURCE`.
+        // icon:dot-circle[]
+        screenshotType = THUMBNAIL
+        // Marks this screenshot as the primary one.
+        // Only a single screenshot may be set as primary.
+        // icon:dot-circle[]
+        primary = true
+        // A description of the image.
+        // Should be no more than 100 characters long.
+        // icon:dot-circle[]
+        caption = 'App in action'
+        // Image width in pixels.
+        // Required if type = `THUMBNAIL`.
+        // icon:dot-circle[]
+        width = 250
+        // Image height in pixels.
+        // Required if type = `THUMBNAIL`.
+        // icon:dot-circle[]
+        height = 250
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshot`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+      }
+
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icon {
+        // Publicly available URL. PNG format is preferred.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://acme.com/app.png]'
+        // Marks this icon as the primary one.
+        // Only a single icon may be set as primary.
+        // icon:dot-circle[]
+        primary = true
+        // Image width in pixels.
+        // icon:exclamation-triangle[]
+        width = 250
+        // Image height in pixels.
+        // icon:exclamation-triangle[]
+        height = 250
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `icon`, i.e, `icon`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+      }
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
+
+== Icon
+
+You must define at least one icon. A square (256x256 pixels) image in PNG format is preferred.
+
+== Skip Artifacts
+
+If there is more than one matching artifact in a given distribution you may add a `skipFlatpak` extra property to the target
+artifact to mark it as skipped for packaging with Flatpak.
+
+== Skip Screenshots
+
+You may add a `skipFlatpak` extra property to a target screenshot to mark it as skipped for packaging with Flatpak.
+
+== Skip Icons
+
+You may add a `skipFlatpak` extra property to a target icon to mark it as skipped for packaging with Flatpak.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/flatpak`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `cli-app.yml.tpl`
+* `cli-metainfo.xml.tpl`
+* `desktop-app.desktop.tpl`
+* `desktop-app.yml.tpl`
+* `desktop-metainfo.xml.tpl`
+* `flathub.json.tpl`
+* `README.md.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex
+
+== Publication to Flathub
+
+link:https://flathub.org/home[Flathub] is the home of hundreds of apps which can be easily installed on any Linux distribution.
+
+You are responsible for submitting a ticket to Flathub for adding a new app. JReleaser *does not* create a ticket
+nor a pull request for you. However, once your application has been accepted to Flathub you may update the flatpack
+configuration to point to the appointed repository.
+
+Please consult the link:https://github.com/flathub/flathub/wiki/App-Submission[App Submission] to know more.

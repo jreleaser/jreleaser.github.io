@@ -14,6 +14,7 @@ The following functions may be used to modify text:
 |===
 | Key                    | Description
 | f_now                  | formats the current timestamp
+| f_trim                 | removes whitespace from the input
 | f_underscores          | transforms `.` and `-` into `_`
 | f_dash                 | transforms `.` and `_` into `-`
 | f_slash                | transforms `.` and `-` into `/`
@@ -22,6 +23,20 @@ The following functions may be used to modify text:
 | f_capitalize           | invokes `capitalize()`
 | f_uncapitalize         | invokes `uncapitalize()`
 | f_release_download_url | formats its input as a link to a release asset
+| f_md2html              | transforms its input from Markdown into HTML
+| f_file_read            | reads a file and includes its contents, verbatim.
+| f_file_size            | the size of the file, in bytes.
+| f_checksum_md2         | file checksum with the given algorithm
+| f_checksum_md5         | file checksum with the given algorithm
+| f_checksum_rmd160      | file checksum with the given algorithm
+| f_checksum_sha1        | file checksum with the given algorithm
+| f_checksum_sha256      | file checksum with the given algorithm
+| f_checksum_sha384      | file checksum with the given algorithm
+| f_checksum_sha512      | file checksum with the given algorithm
+| f_checksum_sha3-224    | file checksum with the given algorithm
+| f_checksum_sha3-256    | file checksum with the given algorithm
+| f_checksum_sha3-384    | file checksum with the given algorithm
+| f_checksum_sha3-512    | file checksum with the given algorithm
 |===
 
 The `f_release_download_url` function expects the name of a release asset and creates a link to said asset. The default
@@ -62,6 +77,7 @@ The following names are related to the current build
 | commitShortHash     | head commit hash abbreviated to 7 characters
 | commitFullHash      | head commit hash
 | timestamp           | current timestamp with RFC3339 format
+| basedir             | the base directory where JReleaser is invoked
 | baseOutputDirectory | the base output directory (by default, "target" in Maven, "build" in Gradle, "out" in CLI)
 | outputDirectory     | JReleaser's output directory (always ends with "jreleaser")
 | checksumDirectory   | directory where checksums are found
@@ -157,6 +173,7 @@ The following names are related to xref:configuration:project.adoc[]
 |===
 | Key                      | Description
 | projectName              | the project name
+| projectStereotype        | the project stereotype
 | projectNameCapitalized   | the project name, capitalized, hyphens replaced by spaces.
 | projectVersion           | the project version
 | projectEffectiveVersion  | the project effective version
@@ -176,12 +193,21 @@ The following names are related to xref:configuration:project.adoc[]
 | projectVersionModifier   | the modifier part of the project's version (calver)
 | projectDescription       | the project description
 | projectLongDescription   | the project long description
-| projectWebsite           | link to the project website
+| projectLinkHomepage      | link to the project's website
+| projectLinkDocumentation | link to the project's documentation
+| projectLinkLicense       | link to the project's license
+| projectLinkBugTracker    | link to the project's issue tracker
+| projectLinkVcsBrowser    | link to the project's source control
+| projectLinkFaq           | link to the project's FAQ
+| projectLinkHelp          | link to the project's help page
+| projectLinkDonation      | link to the project's donations page
+| projectLinkTranslate     | link to the project's translations page
+| projectLinkContact       | link to the project's contact page
+| projectLinkContribute    | link to the project's contribution page
 | projectLicense           | the project license, typically an SPDX identifier
-| projectLicenseUrl        | the URL of the project license
+| projectInceptionYear     | year when the project started
 | projectCopyright         | the project copyright notice
 | projectVendor            | the project's vendor (if any)
-| projectDocsUrl           | link to the project's documentation
 | projectAuthorsBySpace    | space separated list of author names
 | projectAuthorsByComma    | comma separated list of author names
 | projectTagsBySpace       | space separate list of project tags
@@ -455,6 +481,7 @@ The following names are related to xref:configuration:distributions.adoc[]
 |===
 | Key                           | Description
 | distributionName              | the name of the distribution
+| distributionStereotype        | the stereotype of the distribution
 | distributionExecutableName    | the name of the executable without extension
 | distributionExecutableUnix    | the name of the executable with unix extension
 | distributionExecutableWindows | the name of the executable with windows extension
@@ -1057,6 +1084,41 @@ jreleaser {
 ----
 --
 ====
+
+== AppImage
+
+The following names are related to xref:configuration:packagers/appimage.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                  | Description
+| appImageRepoOwner                    | the owner of the Git repository
+| appImageRepoName                     | the name of the Git repository
+| appImageComponentId                  | the component id
+| appImageCategories                   | the list of categories
+| appImageDeveloperName                | the developer name
+| appImageRequiresTerminal             | boolean indicating if the project requires terminal access
+| appImageReleases                     | list of releases
+| appImageUrls                         | list of links
+| appImageScreenshots                  | list of screenshots
+| appImageIcons                        | list of icons
+| appImageDistributionUrl              | the URL required to download the artifact
+| appImageDistributionArtifactFile     | the name of the artifact file
+| appImageDistributionArtifactFileName | the name of the artifact file without extension
+|===
+
+== Asdf
+
+The following names are related to xref:configuration:packagers/asdf.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                              | Description
+| asdfDistributionUrl              | the URL required to download the artifact
+| asdfDistributionArtifactFile     | the name of the artifact file
+| asdfDistributionArtifactFileName | the name of the artifact file without extension
+|===
+
 
 == Brew
 
