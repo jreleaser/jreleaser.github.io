@@ -1,0 +1,487 @@
+= Http
+
+Posts a payload to an HTTP/HTTPS server.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  # icon:dot-circle[]
+  http:
+
+    # A name is required.
+    # icon:exclamation-triangle[]
+    myHttp:
+
+      # Enable or disable this announcer.
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[]
+      active: ALWAYS
+
+      # Defines the connection timeout in seconds.
+      # Defaults to `20`.
+      # icon:dot-circle[]
+      connectTimeout: 20
+
+      # Defines the read timeout in seconds.
+      # Defaults to `60`.
+      # icon:dot-circle[]
+      readTimeout: 60
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[] icon:file-alt[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        foo: bar
+
+      # URL of the HTTP/HTTPS server.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      url: pass:[https://my.server.com/announcements]
+
+include::partial$upload/yaml/upa.adoc[]
+
+      # The method to use for sending the payload.
+      # Supported values are [`POST`, `PUT`].
+      # Defaults to `PUT`.
+      # icon:dot-circle[]
+      method: POST
+
+      # Additional headers to be sent to the server.
+      # Values accept xref:configuration:name-templates.adoc[].
+      # icon:dot-circle[] icon:file-alt[]
+      headers:
+        'Accept': 'text/plain'
+        'Content-Type': 'text/plain'
+
+      # The announcement to send.
+      # Review the available xref:configuration:name-templates.adoc[].
+      # icon:dot-circle[] icon:file-alt[]
+      payload: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      # Path to a template file that contains the payload.
+      # Review the available xref:configuration:name-templates.adoc[].
+      # Defaults to `src/jreleaser/templates/http/myHttp.tpl`.
+      # icon:dot-circle[]
+      payloadTemplate: path/to/template/myHttp.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+# A name is required.
+# icon:exclamation-triangle[]
+[announce.http.myHttp]
+
+  # Enable or disable this announcer.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # icon:dot-circle[]
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  readTimeout = 60
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+
+  # URL of the HTTP/HTTPS server.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  url = "pass:[https://my.server.com/announcements]"
+
+include::partial$upload/toml/upa.adoc[]
+
+  # The method to use for sending the payload.
+  # Supported values are [`POST`, `PUT`].
+  # Defaults to `PUT`.
+  # icon:dot-circle[]
+  method = "POST"
+
+  # Additional headers to be sent to the server.
+  # Values accept xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  headers."Accept" = "text/plain"
+  headers."Content-Type" = "text/plain"
+
+  # The announcement to send.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  payload = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # Path to a template file that contains the payload.
+  # Review the available xref:configuration:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/http/myHttp.tpl`.
+  # icon:dot-circle[]
+  payloadTemplate = "path/to/template/myHttp.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    // icon:dot-circle[]
+    "http": {
+
+      // A name is required.
+      // icon:exclamation-triangle[]
+      "myHttp": {
+
+        // Enable or disable this announcer.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "active": "ALWAYS",
+
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // icon:dot-circle[]
+        "connectTimeout": 20,
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // icon:dot-circle[]
+        "readTimeout": 60,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[] icon:file-alt[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+          "foo": "bar"
+        },
+
+        // URL of the HTTP/HTTPS server.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "url": "pass:[https://my.server.com/announcements]",
+
+include::partial$upload/json/upa.adoc[]
+
+        // The method to use for sending the payload.
+        // Supported values are [`POST`, `PUT`].
+        // Defaults to `PUT`.
+        // icon:dot-circle[]
+        "method": "POST",
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        "headers": {
+          "Accept": "text/plain",
+          "Content-Type": "text/plain"
+        }
+
+        // The announcement to send.
+        // Review the available xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        "payload": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+        // Path to a template file that contains the payload.
+        // Review the available xref:configuration:name-templates.adoc[].
+        // Defaults to `src/jreleaser/templates/http/myHttp.tpl`.
+        // icon:dot-circle[]
+        "payloadTemplate": "path/to/template/myHttp.tpl"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <announce>
+    <!--
+      icon:dot-circle[]
+    -->
+    <http>
+
+      <!--
+        A name is required.
+        icon:exclamation-triangle[]
+       -->
+      <myHttp>
+
+        <!--
+          Enable or disable this announcer.
+          Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          icon:dot-circle[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          Defines the connection timeout in seconds.
+          Defaults to `20`.
+          icon:dot-circle[]
+        -->
+        <connectTimeout>20</connectTimeout>
+
+        <!--
+          Defines the read timeout in seconds.
+          Defaults to `60`.
+          icon:dot-circle[]
+        -->
+        <readTimeout>60</readTimeout>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
+          URL of the HTTP/HTTPS server + path + artifact.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <url>pass:[https://my.server.com/announcements]</url>
+
+include::partial$upload/maven/upa.adoc[]
+
+        <!--
+          The method to use for sending the payload.
+          Supported values are [`POST`, `PUT`].
+          Defaults to `PUT`.
+          icon:dot-circle[]
+        -->
+        <method>POST</method>
+
+        <!--
+          Additional headers to be sent to the server.
+          Values accept xref:configuration:name-templates.adoc[].
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <headers>
+          <Accept>text/plain</Accept>
+          <Content-Type>text/plain</Content-Type>
+        </headers>
+
+        <!--
+          The announcement to send.
+          Review the available xref:configuration:name-templates.adoc[].
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <payload>🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</payload>
+
+        <!--
+          Path to a template file that contains the payload.
+          Review the available xref:configuration:name-templates.adoc[].
+          Defaults to `src/jreleaser/templates/http/myHttp.tpl`.
+          icon:dot-circle[]
+        -->
+        <payloadTemplate>path/to/template/myHttp.tpl</payloadTemplate>
+      </myHttp>
+    </http>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    // icon:dot-circle[]
+    http {
+
+      // A name is required.
+      // icon:exclamation-triangle[]
+      myHttp {
+
+        // Enable or disable this announcer.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // icon:dot-circle[]
+        connectTimeout = 20
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // icon:dot-circle[]
+        readTimeout = 60
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `http`, i.e, `httpFoo`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+
+        // URL of the HTTP/HTTPS server.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://my.server.com/announcements]'
+
+include::partial$upload/gradle/upa.adoc[]
+
+        // The method to use for sending the payload.
+        // Supported values are [`POST`, `PUT`].
+        // Defaults to `PUT`.
+        // icon:dot-circle[]
+        method = 'POST'
+
+        // Additional headers to be sent to the server.
+        // Values accept xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        headers.put('Accept', 'text/plain')
+        headers.put('Content-Type', 'text/plain')
+        
+        // The announcement to send.
+        // Review the available xref:configuration:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        payload = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+        // Path to a template file that contains the payload.
+        // Review the available xref:configuration:name-templates.adoc[].
+        // Defaults to `src/jreleaser/templates/http/myHttp.tpl`.
+        // icon:dot-circle[]
+        payloadTemplate = 'path/to/template/myHttp.tpl'
+      }
+    }
+  }
+}
+----
+--
+====
+
+You may define either `payload` or `payloadTemplate`, with the former taking precedence over the latter.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates/http`
+
+== Examples
+
+=== XWiki
+
+Assuming credentials are stored in the following environment variables:
+
+- `JRELEASER_HTTP_XWIKI_USERNAME`
+- `JRELEASER_HTTP_XWIKI_PASSWORD`
+
+**jreleaser.yml**
+[source,yaml]
+----
+announce:
+  http:
+    xwiki:
+      active: ALWAYS
+      url: 'http://xwiki.acme.com/xwiki/rest/wikis/xwiki/spaces/{{httpSpaceName}}/pages/{{httpPageName}}'
+      authorization: BASIC
+      method: PUT
+      headers:
+        Accept: text/xml
+        Content-Type: text/xml
+      extraProperties:
+        spaceName: Releases
+        pageName: '{{projectName}} {{tagName}}'
+----
+
+**src/jreleaser/templates/http/xwiki.tpl**
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<page xmlns="http://www.xwiki.org">
+    <name>{{httpPageName}}</name>
+    <title>{{httpPageName}}</title>
+    <author>XWiki.user</author>
+    <authorName>XWiki.user</authorName>
+    <majorVersion>0</majorVersion>
+    <minorVersion>0</minorVersion>
+    <hidden>false</hidden>
+    <syntax>xwiki/2.0</syntax>
+    <comment>{{projectName}} {{tagName}}</comment>
+    <content>
+    🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
+    </content>
+</page>
+----
+
+NOTE: Values for `httpSpaceName` and `httpPageName` are defined as extra properties.
+
+=== Confluence
+
+Assuming credentials are stored in the following environment variables:
+
+- `JRELEASER_HTTP_CONFLUENCE_USERNAME`
+- `JRELEASER_HTTP_CONFLUENCE_PASSWORD`
+
+**jreleaser.yml**
+[source,yaml]
+----
+announce:
+  http:
+    confluence:
+      active: ALWAYS
+      url: 'https://confluence.acme.com/wiki/rest/api/content'
+      authorization: BASIC
+      headers:
+        Accept: application/json
+        Content-Type: application/json
+      extraProperties:
+        spaceName: Releases
+        pageName: '{{projectName}} {{tagName}}'
+----
+
+**src/jreleaser/templates/http/confluence.tpl**
+[source,json]
+----
+{
+  "type": "page",
+  "title": "{{httpPageName}}",
+  "space": {
+    "key": "{{httpSpaceName}}"
+  },
+  "body": {
+    "storage": {
+      "value": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+      "representation": "storage"
+    }
+  }
+}
+----
+
+Assuming credentials are stored in the following environment variables:
+
+- `JRELEASER_HTTP_CONFLUENCE_USERNAME`
+- `JRELEASER_HTTP_CONFLUENCE_PASSWORD`
