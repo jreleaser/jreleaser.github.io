@@ -1,0 +1,41 @@
+= Azure Pipelines
+
+You can setup a link:https://azure.microsoft.com/en-us/services/devops/pipelines/[Azure Pipeline].
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+NOTE: You must configure link:https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#environment-variables[environment variables] matching the expected secrets in your pipeline.
+
+== Script
+
+[source,yaml]
+..azure-pipelines.yml
+----
+...
+## Define Build Stage
+steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '11'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+            
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'verify'
+      javaHomeOption: 'JDKVersion'
+
+  - script: curl -sL https://git.io/get-jreleaser > get_jreleaser.java
+    displayName: 'Get the JReleaser downloader'
+
+  - script: |
+      java get_jreleaser.java
+      java -jar jreleaser-cli.jar --version
+    displayName: 'Download JReleaser'
+
+  - script: |
+      java -jar jreleaser-cli.jar release -c jreleaser.yml
+    displayName: 'Execute JReleaser'  
+----
