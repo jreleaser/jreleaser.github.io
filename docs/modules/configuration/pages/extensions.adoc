@@ -1,0 +1,275 @@
+= Extensions
+
+Extensions let you customize specific aspects of the release process with your own implementations.
+
+If you're interested in writing your own extensions then refer to xref:extensions:index.adoc[this page].
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+extensions:
+
+  # Extensions need a name.
+  # icon:dot-circle[]
+  my-extension:
+
+    # Whether the extension is enabled or not.
+    # Defaults to `true`.
+    # icon:dot-circle[]
+    enabled: true
+
+    # Maven GAV coordinates used to resolve JARs.
+    # Mutually exclusive with `directory`.
+    # icon:dot-circle[]
+    gav: com.acme:my-jreleaser-extension:1.2.3
+
+    # Directory where JARs are located.
+    # Mutually exclusive with `gav`.
+    # icon:dot-circle[]
+    directory: path/to/my-jreleaser-extension/jars
+
+    # Customize extension providers individually.
+    # icon:dot-circle[]
+    providers:
+        # Fully qualified class name.
+        # icon:exclamation-triangle[]
+      - type: com.acme.MyJReleaserExtensionPoint
+        # Additional properties required during provider initialization.
+        # icon:dot-circle[]
+        properties:
+          key: value
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# Extensions need a name.
+# icon:dot-circle[]
+[extensions.my-extension]
+  # Whether the extension is enabled or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  enabled = true
+
+  # Maven GAV coordinates used to resolve JARs.
+  # Mutually exclusive with `directory`.
+  # icon:dot-circle[]
+  gav = "com.acme:my-jreleaser-extension:1.2.3"
+
+  # Directory where JARs are located.
+  # Mutually exclusive with `gav`.
+  # icon:dot-circle[]
+  directory = "path/to/my-jreleaser-extension/jars"
+
+  # Customize extension providers individually.
+  # icon:dot-circle[]
+pass:[[[]extensions.my-extension.providerspass:[]]]
+  # Fully qualified class name.
+  # icon:exclamation-triangle[]
+  type = "com.acme.MyJReleaserExtensionPoint"
+  # Additional properties required during provider initialization.
+  # icon:dot-circle[]
+  properties.key = "value"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "extensions": {
+    // Extensions need a name.
+    // icon:dot-circle[]
+    "my-extension": {
+
+      // Whether the extension is enabled or not.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      "enabled": true,
+
+      // Maven GAV coordinates used to resolve JARs.
+      // Mutually exclusive with `directory`.
+      // icon:dot-circle[]
+      "gav": "com.acme:my-jreleaser-extension:1.2.3",
+
+      // Directory where JARs are located.
+      // Mutually exclusive with `gav`.
+      // icon:dot-circle[]
+      "directory": "path/to/my-jreleaser-extension/jars",
+
+      // Customize extension providers individually.
+      // icon:dot-circle[]
+      "providers": [
+        {
+          // Fully qualified class name.
+          // icon:exclamation-triangle[]
+          "type": "com.acme.MyJReleaserExtensionPoint",
+          // Additional properties required during provider initialization.
+          // icon:dot-circle[]
+          "properties": {
+            "key": "value"
+          }
+        }
+      ]
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <extensions>
+    <!--
+      Extensions need a name.
+      icon:dot-circle[]
+    -->
+    <my-extension>
+
+      <!--
+        Whether the extension is enabled or not.
+        Defaults to `true`.
+        icon:dot-circle[]
+      -->
+      <enabled>true</enabled>
+
+      <!--
+        Maven GAV coordinates used to resolve JARs.
+        Mutually exclusive with `directory`.
+        icon:dot-circle[]
+      -->
+      <gav>com.acme:my-jreleaser-extension:1.2.3</gav>
+
+      <!--
+        Directory where JARs are located.
+        Mutually exclusive with `gav`.
+        icon:dot-circle[]
+      -->
+      <directory>path/to/my-jreleaser-extension/jars</directory>
+
+      <!--
+        Customize extension providers individually.
+        icon:dot-circle[]
+      -->
+      <providers>
+        <provider>
+
+          <!--
+            Fully qualified class name.
+            icon:exclamation-triangle[]
+           -->
+          <type>com.acme.MyJReleaserExtensionPoint</type>
+          <!--
+            Additional properties required during provider initialization.
+            icon:dot-circle[]
+           -->
+          <properties>
+            <key>value</key>
+          </properties>
+        </provider>
+      </providers>
+    </my-extension>
+  </extensions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  extensions {
+    // Extensions need a name.
+    // icon:dot-circle[]
+    my-extension {
+
+      // Whether the extension is enabled or not.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      enabled = true
+
+      // Maven GAV coordinates used to resolve JARs.
+      // Mutually exclusive with `directory`.
+      // icon:dot-circle[]
+      gav = 'com.acme:my-jreleaser-extension:1.2.3'
+
+      // Directory where JARs are located.
+      // Mutually exclusive with `gav`.
+      // icon:dot-circle[]
+      directory = 'path/to/my-jreleaser-extension/jars'
+
+      // Customize extension providers individually.
+      // icon:dot-circle[]
+      provider {
+        // Fully qualified class name.
+        // icon:exclamation-triangle[]
+        type = 'com.acme.MyJReleaserExtensionPoint'
+        // Additional properties required during provider initialization.
+        // icon:dot-circle[]
+        properties = [
+          key: 'value'
+        ]
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Packaging
+
+Extensions should be packaged as JAR files. If the extension has additional dependencies then those JARs may be placed
+next to the extension JAR _or_ the extension may be repackaged as an uberjar or fatjar.
+
+WARNING: Do not shade nor bundle JReleaser classes with your extension.
+
+== Directory
+
+The default location to place extensions is `${JRELEASER_USER_HOME}/extensions/<extension-name>`. This location may be
+changed by setting the `directory` property of the matching named extension. Here are some examples:
+
+An extension named `foo` with JAR file `foo-1.0.0.jar` may be placed at `${JRELEASER_USER_HOME}/extensions/foo`. +
+An extension named `bar` with JAR file `bar-2.0.0.jar` and dependencies may be placed at `${JRELEASER_USER_HOME}/extensions/bar`.
+
+[source]
+----
+${JRELEASER_USER_HOME}/extensions/
+├── bar
+│   ├── bar-2.0.0.jar
+│   └── guava-31.1-jre.jar
+└── foo
+    └── foo-1.0.0.jar
+----
+
+== GAV
+
+As an alternative to explicitly placing extension JARs at a given location, JReleaser may download the extension JAR (plus
+any dependencies it may have) from a Maven compatible repository.
+
+NOTE: Do not configure `gav` and `directory` at the same time. These properties are mutually exclusive to each other.
+

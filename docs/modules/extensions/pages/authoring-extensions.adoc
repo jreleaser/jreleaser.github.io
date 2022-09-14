@@ -1,0 +1,128 @@
+= Authoring Extensions
+
+Extensions are a collection of `ExtensionPoint` classes. Each extension point takes care of a particular feature.
+Follow these steps to create your own extensions.
+
+== 1. Build Tool
+
+Pick your Java build tool of choice (Maven, Gradle, etc). Declare the following dependency for compilation only,
+for example:
+
+[tabs]
+====
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<dependency>
+   <groupId>org.jreleaser</groupId>
+   <artifactId>jreleaser-model-api</artifactId>
+   <version>{jreleaser-version}</version>
+   <scope>provided</scope>
+   <optional>true</optional>
+</dependency>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes"]
+----
+dependencies {
+    compileOnly 'org.jreleaser:jreleaser-model-api:{jreleaser-version}'
+}
+----
+--
+====
+
+== 2. Extension Class
+
+Create a class that implements the `org.jreleaser.extensions.api.Extension` interface. This class must be
+registered as a service provider. Feel free to use link:https://github.com/kordamp/jipsy[Jipsy],
+link:https://github.com/google/auto/tree/master/service[AutoService], or any other annotation processor that can
+keep the service file up to date. Alternatively you must register the extension class in a resource file such as
+`META-INF/services/org.jreleaser.extensions.api.Extension`.
+
+NOTE: JReleaser does not yet support the Java Modules system. You can not use a full module descriptor with service
+providers.
+
+The `org.jreleaser.extensions.api.Extension` is defined as follows:
+
+[source,java]
+[subs="attributes,verbatim"]
+.Extension.java
+----
+include::{jreleaser-extension-api}/Extension.java[lines=18..-1]
+----
+
+Your custom extension class is responsible for providing extensions points, such as:
+
+[source,java]
+.MyExtension.java
+----
+package com.acme;
+
+import org.jreleaser.extensions.api.Extension;
+import org.jreleaser.extensions.api.ExtensionPoint;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+
+import java.util.Collections;
+import java.util.Set;
+
+@ServiceProviderFor(Extension.class)
+public final class MyExtension implements Extension {
+    @Override
+    public String getName() {
+        // provide a name, used for matching the name in the configuration DSL
+        return "my-extension";
+    }
+
+    @Override
+    public Set<? extends ExtensionPoint> provides() {
+        return Collections.singleton(new MyExtensionPoint());
+    }
+}
+----
+
+== 3. Extension Points
+
+An extension point class is an implementation of a given `org.jreleaser.extensions.api.ExtensionPoint` interface.
+Review the list of available xref:extensions:extension-points/index.adoc[extension points] to find what behavior you may
+extend.
+
+The `org.jreleaser.extensions.api.ExtensionPoint` is defined as follows:
+
+[source,java]
+[subs="attributes,verbatim"]
+.ExtensionPoint.java
+----
+include::{jreleaser-extension-api}/ExtensionPoint.java[lines=18..-1]
+----
+
+The `init()` method should be used to configure the extension point given key/value pairs defined in the
+xref:configuration:extensions.adoc[extensions] block found in the configuration DSL. Specific extension points
+may offer additional methods that require implementing. Consult their respective documentation to find out more.
+
+== 4. Packaging
+
+Extensions are packaged as JARs. Use the standard packaging mechanism from your build tool of choice. You have the
+following options depending on the extensions requirements:
+
+ * No additional dependencies. Package as a single JAR.
+ * Additional dependencies. Package as an uberjar. Use the link:https://maven.apache.org/plugins/maven-shade-plugin/[Maven shade plugin] or the
+link:https://imperceptiblethoughts.com/shadow/introduction/[Gradle shadow plugin].
+ * Additional dependencies. Package as a single JAR.
+
+Make sure that no JReleaser dependencies are found as part of the set of JARs or transitive closure. These JARs will be
+provided by JReleaser when loading the extension.
+
+== 5. Publishing
+
+You have the choice to publish the extension to a Maven compatible repository (such as Maven Central) or your local
+Artifact Repository Manager. Consumers of your extension may configure GAV coordinates to let JReleaser download the
+extension JARs plus any additional transitive dependencies it may require, or the can manually download the JARs and
+place them inside the default location or a custom location of their own. Review the xref:configuration:extensions.adoc[extensions]
+DSL for more information on these options.

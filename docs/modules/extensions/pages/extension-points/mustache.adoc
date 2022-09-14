@@ -1,0 +1,44 @@
+= MustacheExtensionPoint
+
+[source,java]
+[subs="attributes,verbatim"]
+.MustacheExtensionPoint.java
+----
+include::{jreleaser-extension-api}/mustache/MustacheExtensionPoint.java[lines=18..-1]
+----
+
+Example:
+
+The following extension point adds a new function named `f_chop`:
+
+[source,java]
+----
+package com.acme;
+
+import java.util.Map;
+import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
+import org.jreleaser.extensions.api.mustache.MustacheExtensionPoint;
+
+public final class MyMustacheExtensionPoint implements MustacheExtensionPoint {
+    public void apply(Map<String, Object> context) {
+        context.put("f_chop", new ChopFunction());
+    }
+
+    private static class ChopFunction implements Function<String, String> {
+        @Override
+        public String apply(String input) {
+            return StringUtils.chop(input);
+        }
+    }
+}
+----
+
+With this extension in place you'll be able to invoke the function on a template, such as
+
+[source]
+----
+{{#f_chop}}JReleaser{{/f_chop}}
+----
+
+Which will result in `JRelease` when evaluated.
