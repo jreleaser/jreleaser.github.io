@@ -693,7 +693,39 @@ providers.
 <div class="listingblock">
 <div class="title">Extension.java</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved include directive in modules/extensions/pages/authoring-extensions.adoc - include::https://raw.githubusercontent.com/jreleaser/jreleaser/main/api/jreleaser-model-api/src/main/java/org/jreleaser/extensions/api/Extension.java[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.jreleaser.extensions.api;
+
+import java.util.Set;
+
+/**
+ * Provides a collection of {@code ExtensionPoints}.
+ * &lt;p&gt;
+ * Every extension must define a unique name.
+ * &lt;p&gt;
+ * Extensions are loaded using the standard ServiceProvider mechanism,
+ * (see &lt;a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html"&gt;
+ * https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html&lt;/a&gt;
+ * for more details).
+ *
+ * @author Andres Almiray
+ * @since 1.3.0
+ */
+public interface Extension {
+    /**
+     * The given name of the extension.
+     *
+     * @return a non {@code null} String.
+     */
+    String getName();
+
+    /**
+     * A collection of {@code ExtensionPoint} instances.
+     * &lt;p&gt;
+     *
+     * @return a non {@code null} collection.
+     */
+    Set&lt;? extends ExtensionPoint&gt; provides();
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -742,7 +774,26 @@ extend.</p>
 <div class="listingblock">
 <div class="title">ExtensionPoint.java</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Unresolved include directive in modules/extensions/pages/authoring-extensions.adoc - include::https://raw.githubusercontent.com/jreleaser/jreleaser/main/api/jreleaser-model-api/src/main/java/org/jreleaser/extensions/api/ExtensionPoint.java[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.jreleaser.extensions.api;
+
+import java.util.Map;
+
+/**
+ * Defines an extension point for a given feature.
+ *
+ * @author Andres Almiray
+ * @since 1.3.0
+ */
+public interface ExtensionPoint {
+    /**
+     * Initializes the extension point with values defined in the configuration DSL.
+     *
+     * @param properties a {@code Map} of key/value pairs.
+     */
+    default void init(Map&lt;String, Object&gt; properties) {
+        // noop
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
