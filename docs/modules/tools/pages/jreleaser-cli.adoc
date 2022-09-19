@@ -4,7 +4,6 @@ Executes a JReleaser workflow as a command-line interface (CLI).
 
 [source]
 ----
-$ jreleaser -h
 JReleaser is a release automation tool for Java projects.
 Its goal is to simplify creating releases and publishing
 artifacts to multiple package managers while providing
@@ -26,6 +25,7 @@ Commands:
   changelog            Calculate the changelog.
   checksum             Calculate checksums.
   sign                 Sign release artifacts.
+  deploy               Deploys all staged artifacts.
   upload               Upload all artifacts.
   release              Create or update a release.
   prepare              Prepare all distributions.
@@ -515,6 +515,97 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
 in the xref:configuration:distributions.adoc[distribution] section.
 
+=== deploy
+
+[source]
+----
+$ jreleaser deploy -h
+Deploys all staged artifacts.
+
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
+                        [-c=<configFile>] [-od=<outputdir>] [-D=<key=value>]...
+                        [-P=<key=value>]... [-sp=<platform>]...
+                        [[[-y=<deployer>]... [-yn=<name>]...] |
+                        [[-xy=<deployer>]... [-xyn=<name>]...]]
+
+Options:
+  -b, --basedir=<basedir>   Base directory.
+  -c, --config-file=<configFile>
+                            The config file.
+  -D=<key=value>            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
+  -g, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+      -od, --output-directory=<outputdir>
+                            Output directory.
+  -P, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
+  -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+
+Include Filter:
+  -y, --deployer=<deployer> Include a deployer by type. Repeatable.
+      -yn, --deployer-name=<name>
+                            Include a deployer by name. Repeatable.
+
+Exclude Filter:
+      -xy, --exclude-deployer=<deployer>
+                            Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=<name>
+                            Exclude a deployer by name. Repeatable.
+
+Documentation found at https://jreleaser.org
+----
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
+found at the current directory.
+
+If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+The value of `--deployer` and `--exclude-deployer` must match the type of configured
+xref:configuration:deploy/index.adoc[deployer].
+
+The value of `--deployer-name` and `--exclude-deployer-name` must match any of the available named
+xref:configuration:deploy/index.adoc[deployers].
+
+NOTE: Use `--dry-run` during development to verify your configuration settings. No network deploys nor repository
+mutations should occur when this mode is activated.
+
+You may invoke this command in the following ways:
+
+Deploy all artifacts:
+[source]
+----
+$ jreleaser deploy
+----
+
+Deploy all artifacts to all configured Artifactory deployers:
+[source]
+----
+$ jreleaser deploy --deployer artifactory
+----
+
+Deploy all artifacts with all deployers with matching name:
+[source]
+----
+$ jreleaser deploy --deployer-name mine
+----
+
+Deploy all artifacts to a matching Artifactory deployer:
+[source]
+----
+$ jreleaser deploy --deployer artifactory --deployer-name mine
+----
+
 === upload
 
 [source]
@@ -622,10 +713,11 @@ Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=<basedir>]
                          [-c=<configFile>] [-od=<outputdir>]
                          [-D=<key=value>]... [-P=<key=value>]...
                          [-sp=<platform>]... [[[-d=<distribution>]...
-                         [-u=<uploader>]... [-un=<name>]...] |
-                         [[-xd=<distribution>]... [-xu=<uploader>]...
-                         [-xun=<name>]...] | [[--auto-config]
-                         [--project-name=<projectName>]
+                         [-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]...
+                         [-un=<name>]...] | [[-xd=<distribution>]...
+                         [-xy=<deployer>]... [-xyn=<name>]...
+                         [-xu=<uploader>]... [-xun=<name>]...] |
+                         [[--auto-config] [--project-name=<projectName>]
                          [--project-version=<projectVersion>]
                          [--project-version-pattern=<projectVersionPattern>]
                          [--project-snapshot-pattern=<projectSnapshotPattern>]
@@ -680,6 +772,9 @@ Include Filter:
   -u, --uploader=<uploader>  Include an uploader by type. Repeatable.
       -un, --uploader-name=<name>
                              Include an uploader by name. Repeatable.
+  -y, --deployer=<deployer>  Include a deployer by type. Repeatable.
+      -yn, --deployer-name=<name>
+                             Include a deployer by name. Repeatable.
 
 Exclude Filter:
       -xd, --exclude-distribution=<distribution>
@@ -688,6 +783,10 @@ Exclude Filter:
                              Exclude an uploader by type. Repeatable.
       -xun, --exclude-uploader-name=<name>
                              Exclude an uploader by name. Repeatable.
+      -xy, --exclude-deployer=<deployer>
+                             Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=<name>
+                             Exclude a deployer by name. Repeatable.
 
 Auto Config Options:
       --author=<author>      The project authors. Repeatable.
@@ -1131,9 +1230,11 @@ Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp]
                               [-b=<basedir>] [-c=<configFile>]
                               [-od=<outputdir>] [-D=<key=value>]...
                               [-P=<key=value>]... [-sp=<platform>]...
-                              [[[-u=<uploader>]... [-un=<name>]...
+                              [[[-y=<deployer>]... [-yn=<name>]...
+                              [-u=<uploader>]... [-un=<name>]...
                               [-d=<distribution>]... [-p=<packager>]...
-                              [-a=<announcer>]...] | [[-xu=<uploader>]...
+                              [-a=<announcer>]...] | [[-xy=<deployer>]...
+                              [-xyn=<name>]... [-xu=<uploader>]...
                               [-xun=<name>]... [-xd=<distribution>]...
                               [-xp=<packager>]... [-xa=<announcer>]...]]
 
@@ -1170,6 +1271,9 @@ Include Filter:
   -u, --uploader=<uploader> Include an uploader by type. Repeatable.
       -un, --uploader-name=<name>
                             Include an uploader by name. Repeatable.
+  -y, --deployer=<deployer> Include a deployer by type. Repeatable.
+      -yn, --deployer-name=<name>
+                            Include a deployer by name. Repeatable.
 
 Exclude Filter:
       -xa, --exclude-announcer=<announcer>
@@ -1182,6 +1286,10 @@ Exclude Filter:
                             Exclude an uploader by type. Repeatable.
       -xun, --exclude-uploader-name=<name>
                             Exclude an uploader by name. Repeatable.
+      -xy, --exclude-deployer=<deployer>
+                            Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=<name>
+                            Exclude a deployer by name. Repeatable.
 
 Documentation found at https://jreleaser.org
 ----

@@ -1,0 +1,118 @@
+= Maven
+
+Deploy staged artifacts to target Maven compatible repositories.
+
+Staged artifacts are typically produced by your build tool of choice.
+
+.Maven
+The following command places all staged files inside `target/staging-deploy`:
+
+[source]
+----
+$ mvn deploy -DaltDeploymentRepository=local::file:./target/staging-deploy
+----
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+deploy:
+  maven:
+    # Enable or disable all configured deployers.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `ALWAYS`.
+    # icon:dot-circle[]
+    active: ALWAYS
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[deploy.maven]
+
+  # Enable or disable all configured deployers.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "deploy": {
+    "maven": {
+      // Enable or disable all configured deployers.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      "active": "ALWAYS"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <deploy>
+    <maven>
+      <!--
+        Enable or disable all configured deployers.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `ALWAYS`.
+        icon:dot-circle[]
+      -->
+      <active>ALWAYS</active>
+    </maven>
+  </deploy>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  deploy {
+    maven{
+      // Enable or disable all configured deployers.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      active = 'ALWAYS'
+    }
+  }
+}
+----
+--
+====
+
+NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_DEPLOY_MAVEN_ACTIVE`
+or from a system property `jreleaser.deploy.maven.active`. The system property takes precedence over the environment variable.

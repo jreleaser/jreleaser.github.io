@@ -1,0 +1,241 @@
+= Gitlab
+:deployer_id:   gitlab
+:deployer_name: Gitlab
+:prefix:        GITLAB
+:deployer_url:  https://gitlab.com/api/v4/projects/12345678/packages/maven
+:default_auth:  BEARER
+
+Deploys staged artifacts to a Gitlab instance via its
+link:https://docs.gitlab.com/ee/user/packages/maven_repository/[Maven Packages] option.
+
+IMPORTANT: This feature *does not* support deploying artifacts other than JARs and POMs to a Maven compatible repository.
+If you need to upload any other binaries then check the xref:configuration:upload/gitlab.adoc[{deployer_name} Uploader].
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$deploy/maven/yaml/common-head.adoc[]
+
+        # The id of the GitLab repository.
+        # icon:exclamation-triangle[]
+        projectIdentifier: 12345678
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$deploy/maven/toml/common-head.adoc[]
+
+  # The id of the GitLab repository.
+  # icon:exclamation-triangle[]
+  projectIdentifier = "12345678"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$deploy/maven/json/common-head.adoc[]
+
+          // The id of the GitLab repository.
+          // icon:exclamation-triangle[]
+          "projectIdentifier": "12345678",
+
+include::partial$deploy/maven/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$deploy/maven/maven/common-head.adoc[]
+
+        <!--
+           The id of the GitLab repository.
+           icon:exclamation-triangle[]
+        -->
+        <projectIdentifier>12345678</projectIdentifier>
+include::partial$deploy/maven/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$deploy/maven/gradle/common-head.adoc[]
+
+        // The id of the GitLab repository.
+        // icon:exclamation-triangle[]
+        projectIdentifier = '12345678'
+
+include::partial$deploy/maven/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Url
+
+You may set the url in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the {deployer_name} instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_{prefix}_NAME_URL`. If your instance is named `production`,
+you can store the host in the environment variable `JRELEASER_{prefix}_PRODUCTION_URL`. The name will be
+transformed to uppercase.
+
+== Username
+
+The configured username needs to be authenticated against the {deployer_name} instance.
+
+You may set the username set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the {deployer_name} instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_{prefix}_NAME_USERNAME`. If your instance is named `production`,
+you can store the username in the environment variable `JRELEASER_{prefix}_PRODUCTION_USERNAME`. The name will be
+transformed to uppercase.
+
+If a configured username is found in the configuration file, then the environment variable is not used at all.
+
+Alternatives to `JRELEASER_{prefix}_NAME_USERNAME` are (in order):
+
+* `JRELEASER_{prefix}_NAME_USERNAME`
+* `JRELEASER_{prefix}_USERNAME`
+
+== Password
+
+The password will be stored in an environment variable. The configured name of the Gitea server will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_{prefix}_NAME_PASSWORD`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_{prefix}_PRODUCTION_PASSWORD`. The name will be
+transformed to uppercase.
+
+Alternatives to `JRELEASER_{prefix}_NAME_PASSWORD` are (in order):
+
+* `JRELEASER_{prefix}_NAME_PASSWORD`
+* `JRELEASER_{prefix}_NAME_TOKEN`
+* `JRELEASER_{prefix}_PASSWORD`
+* `JRELEASER_{prefix}_TOKEN`
+
+== Example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+deploy:
+  maven:
+    {deployer_id}:
+      app:
+        active: always
+        url: {deployer_url}
+        projectIdentifier: 12345678
+        stagingRepositories:
+          - target/staging-deploy
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[deploy.maven.{deployer_id}.app]
+  active = "ALWAYS"
+  host = "{deployer_url}"
+  projectIdentifier = "12345678"
+  stagingRepositories = ["target/staging-deploy"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "jreleaser": {
+    "deploy": {
+      "maven": {
+        "{deployer_id}": {
+          "app": {
+            "active": "ALWAYS",
+            "host": "{deployer_url}",
+            "projectIdentifier": "12345678",
+            "stagingRepositories": [
+              "target/staging-deploy"
+            ]
+          }
+        }
+      }  
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <deploy>
+    <maven>
+      <{deployer_id}>
+        <app>
+          <active>ALWAYS</active>
+          <host>{deployer_url}</host>
+          <projectIdentifier>12345678</projectIdentifier>
+          <stagingRepositories>target/staging-deploy</stagingRepositories>
+        </app>
+      </{deployer_id}>
+    </maven>
+  </deploy>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  deploy {
+    maven {
+      {deployer_id} {
+        app {
+          active = 'ALWAYS'
+          host = '{deployer_url}'
+          projectIdentifier = '12345678'
+          stagingRepository('target/staging-deploy')
+        }
+      }
+    }
+  }
+}
+----
+--
+====
