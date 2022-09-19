@@ -222,6 +222,33 @@
     <a class="nav-link" href="../configuration/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/deploy/index.html">Deploy</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/deploy/maven/index.html">Maven</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/github.html">Github</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/gitlab.html">Gitlab</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/nexus2.html">Nexus2</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../configuration/distributions.html">Distributions</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -618,8 +645,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser -h
-JReleaser is a release automation tool for Java projects.
+<pre class="highlightjs highlight"><code class="language-none hljs">JReleaser is a release automation tool for Java projects.
 Its goal is to simplify creating releases and publishing
 artifacts to multiple package managers while providing
 customizable options.
@@ -640,6 +666,7 @@ Commands:
   changelog            Calculate the changelog.
   checksum             Calculate checksums.
   sign                 Sign release artifacts.
+  deploy               Deploys all staged artifacts.
   upload               Upload all artifacts.
   release              Create or update a release.
   prepare              Prepare all distributions.
@@ -1223,6 +1250,121 @@ in the <a href="../configuration/distributions.html" class="xref page">distribut
 </div>
 </div>
 <div class="sect2">
+<h3 id="_deploy"><a class="anchor" href="#_deploy"></a>deploy</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy -h
+Deploys all staged artifacts.
+
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                        [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
+                        [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...] |
+                        [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...]]
+
+Options:
+  -b, --basedir=&lt;basedir&gt;   Base directory.
+  -c, --config-file=&lt;configFile&gt;
+                            The config file.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+      --dry-run             Skip remote operations.
+  -g, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+      -od, --output-directory=&lt;outputdir&gt;
+                            Output directory.
+  -P, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
+  -q, --quiet               Log errors only.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+
+Include Filter:
+  -y, --deployer=&lt;deployer&gt; Include a deployer by type. Repeatable.
+      -yn, --deployer-name=&lt;name&gt;
+                            Include a deployer by name. Repeatable.
+
+Exclude Filter:
+      -xy, --exclude-deployer=&lt;deployer&gt;
+                            Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=&lt;name&gt;
+                            Exclude a deployer by name. Repeatable.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|toml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--deployer</code> and <code>--exclude-deployer</code> must match the type of configured
+<a href="../configuration/deploy/index.html" class="xref page">deployer</a>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>--deployer-name</code> and <code>--exclude-deployer-name</code> must match any of the available named
+<a href="../configuration/deploy/index.html" class="xref page">deployers</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>--dry-run</code> during development to verify your configuration settings. No network deploys nor repository
+mutations should occur when this mode is activated.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You may invoke this command in the following ways:</p>
+</div>
+<div class="paragraph">
+<p>Deploy all artifacts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy all artifacts to all configured Artifactory deployers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy --deployer artifactory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy all artifacts with all deployers with matching name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy --deployer-name mine</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy all artifacts to a matching Artifactory deployer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy --deployer artifactory --deployer-name mine</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_upload"><a class="anchor" href="#_upload"></a>upload</h3>
 <div class="listingblock">
 <div class="content">
@@ -1353,10 +1495,11 @@ Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [-b=&lt;basedir&gt;
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
-                         [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] |
-                         [[-xd=&lt;distribution&gt;]... [-xu=&lt;uploader&gt;]...
-                         [-xun=&lt;name&gt;]...] | [[--auto-config]
-                         [--project-name=&lt;projectName&gt;]
+                         [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
+                         [-un=&lt;name&gt;]...] | [[-xd=&lt;distribution&gt;]...
+                         [-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
+                         [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...] |
+                         [[--auto-config] [--project-name=&lt;projectName&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
                          [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
@@ -1411,6 +1554,9 @@ Include Filter:
   -u, --uploader=&lt;uploader&gt;  Include an uploader by type. Repeatable.
       -un, --uploader-name=&lt;name&gt;
                              Include an uploader by name. Repeatable.
+  -y, --deployer=&lt;deployer&gt;  Include a deployer by type. Repeatable.
+      -yn, --deployer-name=&lt;name&gt;
+                             Include a deployer by name. Repeatable.
 
 Exclude Filter:
       -xd, --exclude-distribution=&lt;distribution&gt;
@@ -1419,6 +1565,10 @@ Exclude Filter:
                              Exclude an uploader by type. Repeatable.
       -xun, --exclude-uploader-name=&lt;name&gt;
                              Exclude an uploader by name. Repeatable.
+      -xy, --exclude-deployer=&lt;deployer&gt;
+                             Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=&lt;name&gt;
+                             Exclude a deployer by name. Repeatable.
 
 Auto Config Options:
       --author=&lt;author&gt;      The project authors. Repeatable.
@@ -1980,9 +2130,11 @@ Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp]
                               [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                               [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
                               [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-                              [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
+                              [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
+                              [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
                               [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...
-                              [-a=&lt;announcer&gt;]...] | [[-xu=&lt;uploader&gt;]...
+                              [-a=&lt;announcer&gt;]...] | [[-xy=&lt;deployer&gt;]...
+                              [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]...
                               [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
                               [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]...]]
 
@@ -2019,6 +2171,9 @@ Include Filter:
   -u, --uploader=&lt;uploader&gt; Include an uploader by type. Repeatable.
       -un, --uploader-name=&lt;name&gt;
                             Include an uploader by name. Repeatable.
+  -y, --deployer=&lt;deployer&gt; Include a deployer by type. Repeatable.
+      -yn, --deployer-name=&lt;name&gt;
+                            Include a deployer by name. Repeatable.
 
 Exclude Filter:
       -xa, --exclude-announcer=&lt;announcer&gt;
@@ -2031,6 +2186,10 @@ Exclude Filter:
                             Exclude an uploader by type. Repeatable.
       -xun, --exclude-uploader-name=&lt;name&gt;
                             Exclude an uploader by name. Repeatable.
+      -xy, --exclude-deployer=&lt;deployer&gt;
+                            Exclude a deployer by type. Repeatable.
+      -xyn, --exclude-deployer-name=&lt;name&gt;
+                            Exclude a deployer by name. Repeatable.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
