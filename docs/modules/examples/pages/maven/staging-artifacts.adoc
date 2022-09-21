@@ -1,0 +1,157 @@
+= Staging Artifacts
+
+xref:configuration:deploy/maven/index.adoc[] deployers require a set of staged artifacts. You must configure your build
+tool of choice to place all artifacts into a staged directory following Maven's default layout. For many deployers it's
+just enough to stage POM files and production JARs. Be aware that publication to Maven Central requires additional JARs
+such as a `-sources.jar` and `-javadoc.jar`.
+
+== Maven
+
+The following pom.xml shows the minimum set of XML elements required in a POM for publication to Maven Central, as well
+as plugin configuration to generate all required artifacts.
+
+.pom.xml
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.acme</groupId>
+    <artifactId>app</artifactId>
+    <version>1.0.0</version>
+
+    <name>app</name>
+    <description>Sample application</description>
+    <url>https://github.com/aalmiray/app</url>
+    <inceptionYear>2021</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://spdx.org/licenses/Apache-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>aalmiray</id>
+            <name>Andres Almiray</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/aalmiray/app.git</connection>
+        <developerConnection>scm:git:https://github.com/aalmiray/app.git</developerConnection>
+        <url>https://github.com/aalmiray/app.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-sources-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>publication</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
+----
+
+Invoke the following command to stage artifacts to a local directory
+
+[source]
+----
+$ mvn -Ppublication deploy -DaltDeploymentRepository=local::file:./target/staged-deploy
+----
+
+Resulting in the following file structure
+
+[source]
+----
+target/staged-deploy/
+└── com
+    └── acme
+        └── app
+            ├── 1.0.0
+            │   ├── app-1.0.0-javadoc.jar
+            │   ├── app-1.0.0-javadoc.jar.md5
+            │   ├── app-1.0.0-javadoc.jar.sha1
+            │   ├── app-1.0.0-sources.jar
+            │   ├── app-1.0.0-sources.jar.md5
+            │   ├── app-1.0.0-sources.jar.sha1
+            │   ├── app-1.0.0.jar
+            │   ├── app-1.0.0.jar.md5
+            │   ├── app-1.0.0.jar.sha1
+            │   ├── app-1.0.0.pom
+            │   ├── app-1.0.0.pom.md5
+            │   └── app-1.0.0.pom.sha1
+            ├── maven-metadata.xml
+            ├── maven-metadata.xml.md5
+            └── maven-metadata.xml.sha1
+----
