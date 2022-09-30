@@ -1,0 +1,57 @@
+= jreleaser-jfr
+
+:jreleaser-jfr-version: 1.0.0-SNAPSHOT
+
+This extension provides integration with Java Flight Recorder. It registers a
+xref:extension-points/workflow-listener.adoc[], triggering JFR events as a result.
+
+== GAV Coordinates
+
+[source]
+[subs="attributes"]
+----
+org.jreleaser.extensions:jreleaser-jfr-extension:{jreleaser-jfr-version}
+----
+
+== Configuration Properties
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Name            | Type      | Description
+| continueOnError | `boolean` | Halt execution on failure if `false`, continue if `true`.
+|===
+
+== Usage
+
+You must activate JFR before running JReleaser, the easiest way is to set JFR flags using the `$JAVA_OPTS` environment
+variable, such as
+
+[source]
+----
+$ export JAVA_OPTS="-XX:StartFlightRecording=dumponexit=true"
+----
+
+NOTE: You may need to set JFR flags in a different way if you're using the xref:tools:jreleaser-maven.adoc[] or the
+xref:tools:jreleaser-gradle.adoc[].
+
+You'll find JFR recordings inside `out/jreleaser/jfr` (CLI, Ant), `target/jreleaser/jfr` (Maven), or
+`build/jreleaser/jfr` (Gradle).
+
+== Events
+
+The following JFR events may be triggered by this extension:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Type              | Description
+| AnnounceEvent     | Triggered when an announcer starts/ends/fails.
+| AssembleEvent     | Triggered when an assembler starts/ends/fails.
+| DeployEvent       | Triggered when a deployer starts/ends/fails.
+| DistributionEvent | Triggered when an announcer starts/ends/fails.
+| DownloadEvent     | Triggered when a downloader starts/ends/fails.
+| PackagerEvent     | Triggered when a packager starts/ends/fails.
+| ReleaseEvent      | Triggered when the releaser starts/ends/fails.
+| SessionEvent      | Triggered when the executing session starts/ends/fails.
+| UploadEvent       | Triggered when a uploader starts/ends/fails.
+| WorkflowStepEvent | Triggered when a workflow step starts/ends/fails.
+|===
