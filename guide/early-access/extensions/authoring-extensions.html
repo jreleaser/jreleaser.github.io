@@ -491,6 +491,18 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="extension-points/mustache.html">MustacheExtensionPoint</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="extension-points/workflow-listener.html">WorkflowListener</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="extensions/index.html">Extensions</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="extensions/jreleaser-jfr.html">jreleaser-jfr</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -836,6 +848,8 @@ extend.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.jreleaser.extensions.api;
 
+import org.jreleaser.model.api.JReleaserContext;
+
 import java.util.Map;
 
 /**
@@ -848,9 +862,10 @@ public interface ExtensionPoint {
     /**
      * Initializes the extension point with values defined in the configuration DSL.
      *
+     * @param context the current execution context.
      * @param properties a {@code Map} of key/value pairs.
      */
-    default void init(Map&lt;String, Object&gt; properties) {
+    default void init(JReleaserContext context, Map&lt;String, Object&gt; properties) {
         // noop
     }
 }</code></pre>
