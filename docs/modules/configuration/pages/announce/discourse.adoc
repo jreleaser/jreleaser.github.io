@@ -1,8 +1,8 @@
-= Zulip
-:announcer_id:   zulip
-:announcer_name: Zulip
+= Discourse
+:announcer_id:   discourse
+:announcer_name: Discourse
 
-Posts a message to a link:https://zulip.com/[Zulip] server. You must procure an account and apiKey to use
+Posts a message to a link:https://www.discourse.org/[Discourse] server. You must procure a username and apiKey to use
 this announcer.
 
 include::partial$legend.adoc[]
@@ -17,29 +17,32 @@ YAML::
 ----
 include::partial$announce/yaml/common-head.adoc[]
 
-    # The Zulip account (typically an email address) to use.
+    # The Discourse server endpoint.
     # icon:exclamation-triangle[]
-    account: pass:[announce-bot@my.zulipchat.com]
+    host: pass:[https://my.discourseserver.com]
 
-    # The Zulip server endpoint.
-    # icon:exclamation-triangle[]
-    apiHost: pass:[https://my.zulipchat.com/api/v1]
+    # The Discourse username to use.
+    # If left unspecified, the `JRELEASER_DISCOURSE_USERNAME`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    username: duke
 
-    # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+    # The ApiKey associated with the given username.
+    # If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
     apiKey: __DO_NOT_SET_HERE__
 
-    # The channel where the message will be sent to
-    # Defaults to `announce`.
-    # icon:dot-circle[]
-    channel: announce
+    # The categoryName where the message will be sent to
+    # If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    categoryName: announce
 
-    # The message's subject.
+    # The message's title.
     # Review the available xref:configuration:name-templates.adoc[].
     # icon:dot-circle[] icon:file-alt[]
-    subject: '{{projectNameCapitalized}} {{projectVersion}} released!'
+    title: '{{projectNameCapitalized}} {{projectVersion}} released!'
 
     # The announcement message.
     # Review the available xref:configuration:name-templates.adoc[].
@@ -48,9 +51,9 @@ include::partial$announce/yaml/common-head.adoc[]
 
     # Path to a template file that contains the message.
     # Review the available xref:configuration:name-templates.adoc[].
-    # Defaults to `src/jreleaser/templates/zulip.tpl`.
+    # Defaults to `src/jreleaser/templates/discourse.tpl`.
     # icon:dot-circle[]
-    messageTemplate: path/to/template/zulip.tpl
+    messageTemplate: path/to/template/discourse.tpl
 ----
 --
 TOML::
@@ -61,29 +64,32 @@ TOML::
 ----
 include::partial$announce/toml/common-head.adoc[]
 
-  # The Zulip account (typically an email address) to use.
+  # The Discourse server endpoint.
   # icon:exclamation-triangle[]
-  account = "pass:[announce-bot@my.zulipchat.com]"
+  host = "pass:[https://my.discourseserver.com]"
 
-  # The Zulip server endpoint.
-  # icon:exclamation-triangle[]
-  apiHost = "pass:[https://my.zulipchat.com/api/v1]"
+  # The Discourse username to use.
+  # If left unspecified, the `JRELEASER_DISCOURSE_USERNAME`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  username = "duke"
 
-  # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+  # The ApiKey associated with the given username.
+  # If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   apiKey = "__DO_NOT_SET_HERE__"
 
-  # The channel where the message will be sent to
-  # Defaults to `announce`.
-  # icon:dot-circle[]
-  channel = "announce"
+  # The categoryName where the message will be sent to
+  # If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  categoryName = "announce"
 
-  # The message's subject.
+  # The message's title.
   # Review the available xref:configuration:name-templates.adoc[].
   # icon:dot-circle[] icon:file-alt[]
-  subject = "{{projectNameCapitalized}} {{projectVersion}} released!"
+  title = "{{projectNameCapitalized}} {{projectVersion}} released!"
 
   # The announcement message.
   # Review the available xref:configuration:name-templates.adoc[].
@@ -92,9 +98,9 @@ include::partial$announce/toml/common-head.adoc[]
 
   # Path to a template file that contains the message.
   # Review the available xref:configuration:name-templates.adoc[].
-  # Defaults to `src/jreleaser/templates/zulip.tpl`.
+  # Defaults to `src/jreleaser/templates/discourse.tpl`.
   # icon:dot-circle[]
-  messageTemplate = "path/to/template/zulip.tpl"
+  messageTemplate = "path/to/template/discourse.tpl"
 ----
 --
 JSON::
@@ -105,29 +111,32 @@ JSON::
 ----
 include::partial$announce/json/common-head.adoc[]
 
-      // The Zulip account (typically an email address) to use.
+      // The Discourse server endpoint.
       // icon:exclamation-triangle[]
-      "account": "pass:[announce-bot@my.zulipchat.com]",
+      "host": "pass:[https://my.discourseserver.com]",
 
-      // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
-      "apiHost": "pass:[https://my.zulipchat.com/api/v1]",
+      // The Discourse username to use.
+      // If left unspecified, the `JRELEASER_DISCOURSE_USERNAME`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "username": "duke",
 
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The ApiKey associated with the given username.
+      // If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "apiKey": "__DO_NOT_SET_HERE__",
 
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // icon:dot-circle[]
-      "channel": "announce",
+      // The categoryName where the message will be sent to
+      // If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "categoryName": "announce",
 
-      // The message's subject.
+      // The message's title.
       // Review the available xref:configuration:name-templates.adoc[].
       // icon:dot-circle[]
-      "subject": "{{projectNameCapitalized}} {{projectVersion}} released!",
+      "title": "{{projectNameCapitalized}} {{projectVersion}} released!",
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -136,9 +145,9 @@ include::partial$announce/json/common-head.adoc[]
 
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // Defaults to `src/jreleaser/templates/discourse.tpl`.
       // icon:dot-circle[]
-      "messageTemplate": "path/to/template/zulip.tpl"
+      "messageTemplate": "path/to/template/discourse.tpl"
 include::partial$announce/json/common-footer.adoc[]
 ----
 --
@@ -151,38 +160,41 @@ Maven::
 include::partial$announce/maven/common-head.adoc[]
 
       <!--
-        The Zulip account (typically an email address) to use.
+        The Discourse server endpoint.
         icon:exclamation-triangle[]
       -->
-      <account>pass:[announce-bot@my.zulipchat.com]</account>
+      <host>pass:[https://my.discourseserver.com]</host>
 
       <!--
-        The Zulip server endpoint.
-        icon:exclamation-triangle[]
+        The Discourse username to use.
+        If left unspecified, the `JRELEASER_DISCOURSE_USERNAME`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <apiHost>pass:[https://my.zulipchat.com/api/v1]</apiHost>
+      <username>duke</username>
 
       <!--
-        The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+        The ApiKey associated with the given username.
+        If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
         environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <apiKey>__DO_NOT_SET_HERE__</apiKey>
 
       <!--
-        The channel where the message will be sent to
-        Defaults to `announce`.
-        icon:dot-circle[]
+        The categoryName where the message will be sent to
+        If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <channel>announce</channel>
+      <categoryName>announce</categoryName>
 
       <!--
-        The message's subject.
+        The message's title.
         Review the available xref:configuration:name-templates.adoc[].
         icon:dot-circle[]
       -->
-      <subject>{{projectNameCapitalized}} {{projectVersion}} released!</subject>
+      <title>{{projectNameCapitalized}} {{projectVersion}} released!</title>
 
       <!--
         The announcement message.
@@ -194,10 +206,10 @@ include::partial$announce/maven/common-head.adoc[]
       <!--
         Path to a template file that contains the message.
         Review the available xref:configuration:name-templates.adoc[].
-        Defaults to `src/jreleaser/templates/zulip.tpl`.
+        Defaults to `src/jreleaser/templates/discourse.tpl`.
         icon:dot-circle[]
       -->
-      <messageTemplate>path/to/template/zulip.tpl</messageTemplate>
+      <messageTemplate>path/to/template/discourse.tpl</messageTemplate>
 include::partial$announce/maven/common-footer.adoc[]
 ----
 --
@@ -209,29 +221,32 @@ Gradle::
 ----
 include::partial$announce/gradle/common-head.adoc[]
 
-      // The Zulip account (typically an email address) to use.
+      // The Discourse server endpoint.
       // icon:exclamation-triangle[]
-      account = 'pass:[announce-bot@my.zulipchat.com]'
+      host = 'pass:[https://my.discourseserver.com]'
 
-      // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
-      apiHost = 'pass:[https://my.zulipchat.com/api/v1]'
+      // The Discourse username to use.
+      // If left unspecified, the `JRELEASER_DISCOURSE_USERNAME`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      username = 'duke'
 
-      // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
+      // The ApiKey associated with the given username.
+      // If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
       apiKey = '__DO_NOT_SET_HERE__'
 
-      // The channel where the message will be sent to
-      // Defaults to `announce`.
-      // icon:dot-circle[]
-      channel = 'announce'
+      // The categoryName where the message will be sent to
+      // If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      categoryName = 'announce'
 
-      // The message's subject.
+      // The message's title.
       // Review the available xref:configuration:name-templates.adoc[].
       // icon:dot-circle[]
-      subject = '{{projectNameCapitalized}} {{projectVersion}} released!'
+      title = '{{projectNameCapitalized}} {{projectVersion}} released!'
 
       // The announcement message.
       // Review the available xref:configuration:name-templates.adoc[].
@@ -240,9 +255,9 @@ include::partial$announce/gradle/common-head.adoc[]
 
       // Path to a template file that contains the message.
       // Review the available xref:configuration:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/zulip.tpl`.
+      // Defaults to `src/jreleaser/templates/discourse.tpl`.
       // icon:dot-circle[]
-      messageTemplate = 'path/to/template/zulip.tpl'
+      messageTemplate = 'path/to/template/discourse.tpl'
 include::partial$announce/gradle/common-footer.adoc[]
 ----
 --
@@ -258,7 +273,7 @@ The default location for templates is:
 
 The following list shows the filenames that may be used to override default templates:
 
-* `zulip.tpl`
+* `discourse.tpl`
 
 Templates may be initialized using the `template` command
 
