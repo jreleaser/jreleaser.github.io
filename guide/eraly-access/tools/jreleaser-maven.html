@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JReleaser Maven Plugin :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/tools/jreleaser-maven.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../_/css/site-extra.css">
+    <link rel="stylesheet" href="../../../_/css/navbar-eraly-access.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" href="../../../_/css/admonitions.css">
+    <link rel="stylesheet" href="../../../_/css/fontawesome.css">
+    <link rel="stylesheet" href="../../../_/css/all.css">
+    <script>
+      !function(){'use strict';var e=['debug','destroy','do','help','identify','is','off','on','ready','render','reset','safe','set'];if(window.noticeable)console.warn('Noticeable SDK code snippet loaded more than once');else{var n=window.noticeable=window.noticeable||[];function t(e){return function(){var t=Array.prototype.slice.call(arguments);return t.unshift(e),n.push(t),n}}!function(){for(var o=0;o<e.length;o++){var r=e[o];n[r]=t(r)}}(),function(){var e=document.createElement('script');e.async=!0,e.src='https://sdk.noticeable.io/l.js';var n=document.head;n.insertBefore(e,n.firstChild)}()}}();
+      noticeable.render('widget', '3rJSZeBH19k0WetbBGGF');
+    </script>    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7MK38WE53"></script>
+    <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','G-Q7MK38WE53')</script>
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+      <a class="navbar-item" href="https://jreleaser.org">JReleaser</a>
+      </div>
+      <div class="navbar-item hide-for-print">
+        <input id="search-input" type="text" placeholder="Search docs">
+      </div>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-link">Project</div>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://github.com/jreleaser/jreleaser">Repository</a>
+            <a class="navbar-item" href="https://github.com/jreleaser/jreleaser/issues">Issue Tracker</a>
+            <hr class="navbar-divider">
+            <a class="navbar-item" href="https://github.com/jreleaser/jreleaser/blob/main/CONTRIBUTING.adoc">Contributing</a>
+          </div>
+        </div>
+        <a class="navbar-item" href="https://twitter.com/jreleaser" aria-label="https://twitter.com/jreleaser">
+          <span class="icon">
+            <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path fill="#ffffff" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="guide" data-version="eraly-access">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">JReleaser</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../workflow.html">Workflow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../integrations.html">Integrations</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../install.html">Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../quick-start/index.html">Quick Start</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/cli.html"><span class="image"><img src="../_images/cli.svg" alt="cli" width="16" height="16"></span> Command Line</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/maven.html"><span class="image"><img src="../_images/maven.svg" alt="maven" width="16" height="16"></span> Apache Maven</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/gradle.html"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="16" height="16"></span> Gradle</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../quick-start/ant.html"><span class="image"><img src="../_images/ant.svg" alt="ant" width="16" height="16"></span> Apache Ant</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../distributions/index.html">Distributions</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/binary.html">Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/java-binary.html">Java Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/jlink.html">Jlink</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/native-image.html">Native Image</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/native-package.html">Native Package</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../distributions/single-jar.html">Single JAR</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/index.html">Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/artifacts.html">Artifacts, Globs, FileSets</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/announce/index.html">Announce</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/article.html">Article</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/discord.html">Discord</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/discourse.html">Discourse</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/discussions.html">GitHub Discussions</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/gitter.html">Gitter</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/google-chat.html">GoogleChat</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/http.html">Http</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/mail.html">Mail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/mastodon.html">Mastodon</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/mattermost.html">Mattermost</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/sdkman.html">Sdkman</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/slack.html">Slack</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/teams.html">Teams</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/telegram.html">Telegram</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/twitter.html">Twitter</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/webhooks.html">Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/announce/zulip.html">Zulip</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/assemble/index.html">Assemble</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/assemble/archive.html">Archive</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/assemble/jlink.html">Jlink</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/assemble/jpackage.html">Jpackage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/assemble/native-image.html">Native Image</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/checksum.html">Checksum</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/deploy/index.html">Deploy</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/deploy/maven/index.html">Maven</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/github.html">Github</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/gitlab.html">Gitlab</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../configuration/deploy/maven/nexus2.html">Nexus2</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/distributions.html">Distributions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/download/index.html">Download</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/download/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/download/http.html">Http</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/download/scp.html">Scp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/download/sftp.html">Sftp</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/environment.html">Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/extensions.html">Extensions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/files.html">Files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/hooks/index.html">Hooks</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/hooks/command.html">Command Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/name-templates.html">Name Templates</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/packagers/index.html">Packagers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/appimage.html">AppImage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/asdf.html">Asdf</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/chocolatey.html">Chocolatey</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/docker.html">Docker</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/flatpak.html">Flatpak</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/gofish.html">Gofish</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/homebrew.html">Homebrew</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/macports.html">Macports</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/scoop.html">Scoop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/sdkman.html">Sdkman</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/snap.html">Snap</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/packagers/spec.html">Spec</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/platform.html">Platform</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/project.html">Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/release/index.html">Release</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/codeberg.html">Codeberg</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/generic.html">Generic</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/github.html">GitHub</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/gitlab.html">GitLab</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/release/changelog.html">Changelog</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../configuration/signing.html">Signing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../configuration/upload/index.html">Upload</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/ftp.html">Ftp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/gitea.html">Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/gitlab.html">GitLab</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/http.html">Http</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/s3.html">AWS S3</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/scp.html">Scp</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../configuration/upload/sftp.html">Sftp</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Templates</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/templates.html">Template Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../templates/mustache.html">Mustache Primer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../continuous-integration/index.html">Continuous Integration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/azure-pipelines.html">Azure Pipelines</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/buddy.html">Buddy</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/buildkite.html">Buildkite</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/circle-ci.html">Circle CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/cirrus-ci.html">Cirrus CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/codefresh.html">Codefresh</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/codeship.html">CodeShip</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/dagger.html">Dagger</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/drone.html">Drone</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/github-actions.html">GitHub Actions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/gitlab-ci.html">GitLab CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/jenkins.html">Jenkins</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/semaphore.html">Semaphore</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/teamcity.html">TeamCity</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/travis-ci.html">Travis CI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/wercker.html">Wercker</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../continuous-integration/woodpecker.html">Woodpecker</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../extensions/index.html">Extensions</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../extensions/authoring-extensions.html">Authoring Extensions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../extensions/extension-points/index.html">Extension Points</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../extensions/extension-points/mustache.html">MustacheExtensionPoint</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../extensions/extension-points/workflow-listener.html">WorkflowListener</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../extensions/extensions/index.html">Extensions</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../extensions/extensions/jreleaser-jfr.html">jreleaser-jfr</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Tools</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jreleaser-cli.html">JReleaser CLI</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jreleaser-maven.html">JReleaser Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jreleaser-gradle.html">JReleaser Gradle Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jreleaser-ant.html">JReleaser Ant Tasks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jreleaser-tool-provider.html">JReleaser Tool Provider</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jreleaser-docker.html">JReleaser Docker Images</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jdks-maven.html">JDKs Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jdks-gradle.html">JDKs Gradle Plugin</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/index.html">Examples</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../examples/jreleaser.html">JReleaser&#8217;s Release</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/jlink/index.html">JLink</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/jlink/cross-platform-jlink.html">Cross Platform Jlink</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/jlink/quarkus-cli-app-jlink.html">Quarkus CLI Application</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/native-image/index.html">Native Image</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/native-image/quarkus-cli-app.html">Quarkus CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/native-image/springboot-cli-app.html">Spring Boot CLI Application</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/native-image/micronaut-cli-app.html">Micronaut CLI Application</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/maven/index.html">Maven</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/maven/staging-artifacts.html">Staging Artifacts</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/maven/maven-central.html">Publishing to Maven Central</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../examples/miscellaneous/index.html">Miscellaneous</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/miscellaneous/simple-release.html">Simple Release</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/miscellaneous/auto-config-release.html">AutoConfig Release</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/miscellaneous/elixir.html">Helloworld in Elixir</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../examples/miscellaneous/rust-cross-platform.html">Helloworld in Rust (Cross Platform)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../checklist.html">Checklist</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../faq.html">FAQ</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../sponsors.html">Sponsors</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../contributing.html">Contributing</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../links.html">Links</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JReleaser</span>
+    <span class="version">eraly-access</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../latest/index.html">JReleaser</a>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../latest/index.html">latest</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">eraly-access</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../latest/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">JReleaser</a></li>
+    <li><a href="index.html">Tools</a></li>
+    <li><a href="jreleaser-maven.html">JReleaser Maven Plugin</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">eraly-access</button>
+  <div class="version-menu">
+    <a class="version" href="../../latest/tools/jreleaser-maven.html">latest</a>
+    <a class="version is-current" href="jreleaser-maven.html">eraly-access</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/tools/pages/jreleaser-maven.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JReleaser Maven Plugin</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executes a JReleaser workflow as a Maven plugin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install"><a class="anchor" href="#_install"></a>Install</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+  &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;1.4.0-SNAPSHOT&lt;/version&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JReleaser may be configured using the Maven DSL shown at <a href="../configuration/index.html" class="xref page">Configuration</a>. Alternatively, an external
+configuration file may be used if the <code>&lt;configFile&gt;</code> field or <code>jreleaser.config.file</code> property is set.</p>
+</div>
+<div class="sect2">
+<h3 id="_defaults"><a class="anchor" href="#_defaults"></a>Defaults</h3>
+<div class="paragraph">
+<p>The following values will be taken directly from the <code>pom.xml</code> file and added to JReleaser&#8217;s configuration when
+the matching JReleaser element has not been explicitly configured:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">POM</th>
+<th class="tableblock halign-left valign-top">JReleaser</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.artifactId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.links.homepage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.organization.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.links.homepage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.groupId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.java.groupId</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.artifactId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.java.artifactId</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.inceptionYear</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project.inceptionYear</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The value of <code>project.java.multiProject</code> will be set to true if the current Maven session has more than 1 project.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>project.authors</code> will be resolved by matching all <code>&lt;developer&gt;</code> entries that have an <code>author</code> role. If no
+developer entries are found then all developers will be added as authors. The value of <code>&lt;developer&gt;&lt;name&gt;</code> will be queried
+first, if not found then <code>&lt;developer&gt;&lt;id&gt;</code> will be used as fallback.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>project.license</code> will be resolved from <code>&lt;licenses&gt;</code> with the first <code>&lt;license&gt;</code> that defines <code>&lt;name&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>project.java.version</code> will be determined following these expressions in order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>${maven.compiler.release}</code></p>
+</li>
+<li>
+<p><code>${maven.compiler.target}</code></p>
+</li>
+<li>
+<p><code>${maven.compiler.source}</code></p>
+</li>
+<li>
+<p><code>System.getProperty("java.version")</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_environment_variables"><a class="anchor" href="#_environment_variables"></a>Environment Variables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following settings may also be specified via environment variables</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Setting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment Variable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEFAULT_GIT_REMOTE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">origin</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>None of the exposed MOJOs are bound to a specific life-cycle phase, letting you decide when and how that
+should happen in your build.</p>
+</div>
+<div class="paragraph">
+<p>The following MOJOs are provided:</p>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserconfig"><a class="anchor" href="#_jreleaserconfig"></a>jreleaser:config</h3>
+<div class="paragraph">
+<p>Display current configuration.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>announce<br>
+Display announce configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.announce</code></p>
+</li>
+<li>
+<p>assembly<br>
+Display assembly configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.assembly</code></p>
+</li>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>changelog<br>
+Display changelog configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.changelog</code></p>
+</li>
+<li>
+<p>download<br>
+Display download configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.download</code></p>
+</li>
+<li>
+<p>full<br>
+Display full configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.full</code></p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleasertemplate"><a class="anchor" href="#_jreleasertemplate"></a>jreleaser:template</h3>
+<div class="paragraph">
+<p>Generate a packager/announcer template.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>announcerName<br>
+The name of the announcer<br>
+Type: String<br>
+User property: <code>jreleaser.announcer.name</code></p>
+</li>
+<li>
+<p>distributionName<br>
+The name of the distribution<br>
+Type: String<br>
+User property: <code>jreleaser.template.distribution.name</code></p>
+</li>
+<li>
+<p>distributionType (Default: JAVA_BINARY)<br>
+The type of the distribution<br>
+Type: Distributio.DistributionType<br>
+User property: <code>jreleaser.template.distribution.type</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>overwrite<br>
+Overwrite existing files.<br>
+Type: boolean<br>
+User property: <code>jreleaser.template.overwrite</code></p>
+</li>
+<li>
+<p>packagerName<br>
+The name of the packager.<br>
+Type: String<br>
+User property: <code>jreleaser.template.packager.name</code></p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.template.skip</code></p>
+</li>
+<li>
+<p>snapshot<br>
+Use snapshot templates.<br>
+Type: boolean<br>
+User property: <code>jreleaser.template.snapshot</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserdownload"><a class="anchor" href="#_jreleaserdownload"></a>jreleaser:download</h3>
+<div class="paragraph">
+<p>Downloads assets.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDownloaderNames<br>
+Exclude an downloader by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.downloader.names</p>
+</li>
+<li>
+<p>excludedDownloaders<br>
+Exclude an downloader by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.downloaders</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDownloaderNames<br>
+Include an downloader by name.<br>
+Type: String[]<br>
+User property: jreleaser.downloader.names</p>
+</li>
+<li>
+<p>includedDownloaders<br>
+Include an downloader by type.<br>
+Type: String[]<br>
+User property: jreleaser.downloaders</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.download.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserassemble"><a class="anchor" href="#_jreleaserassemble"></a>jreleaser:assemble</h3>
+<div class="paragraph">
+<p>Assemble all distributions.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>excludedAssemblers<br>
+Exclude an assembler.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.assemblers</p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedAssemblers<br>
+Include an assembler.<br>
+Type: String[]<br>
+User property: jreleaser.assemblers</p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.assemble.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserchangelog"><a class="anchor" href="#_jreleaserchangelog"></a>jreleaser:changelog</h3>
+<div class="paragraph">
+<p>Calculate the changelog.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.changelog.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserchecksum"><a class="anchor" href="#_jreleaserchecksum"></a>jreleaser:checksum</h3>
+<div class="paragraph">
+<p>Calculate checksums.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.checksum.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleasersign"><a class="anchor" href="#_jreleasersign"></a>jreleaser:sign</h3>
+<div class="paragraph">
+<p>Sign release artifacts.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.sign.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserdeploy"><a class="anchor" href="#_jreleaserdeploy"></a>jreleaser:deploy</h3>
+<div class="paragraph">
+<p>Deploys all staged artifacts.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDeployers<br>
+Exclude a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployers</p>
+</li>
+<li>
+<p>excludedDeployerNames<br>
+Exclude a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployer.names</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDeployers<br>
+Include a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.deployers</p>
+</li>
+<li>
+<p>includedDeployerNames<br>
+Include a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.deployer.names</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.deploy.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserupload"><a class="anchor" href="#_jreleaserupload"></a>jreleaser:upload</h3>
+<div class="paragraph">
+<p>Uploads all artifacts.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedUploaderNames<br>
+Exclude an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploader.names</p>
+</li>
+<li>
+<p>excludedUploaders<br>
+Exclude an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploaders</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedUploaderNames<br>
+Include an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.uploader.names</p>
+</li>
+<li>
+<p>includedUploaders<br>
+Include an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.uploaders</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.upload.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserrelease"><a class="anchor" href="#_jreleaserrelease"></a>jreleaser:release</h3>
+<div class="paragraph">
+<p>Create or update a release.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDeployers<br>
+Exclude a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployers</p>
+</li>
+<li>
+<p>excludedDeployerNames<br>
+Exclude a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployer.names
+User property: jreleaser.excluded.deployer.names</p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedUploaderNames<br>
+Exclude an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploader.names</p>
+</li>
+<li>
+<p>excludedUploaders<br>
+Exclude an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploaders</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDeployers<br>
+Include a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.deployers</p>
+</li>
+<li>
+<p>includedDeployerNames<br>
+Include a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.deployer.names</p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedUploaderNames<br>
+Include an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.uploader.names</p>
+</li>
+<li>
+<p>includedUploaders<br>
+Include an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.uploaders</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.release.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserprepare"><a class="anchor" href="#_jreleaserprepare"></a>jreleaser:prepare</h3>
+<div class="paragraph">
+<p>Prepare all distributions.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>distributionName<br>
+The name of the distribution.<br>
+Type: String<br>
+User property: <code>jreleaser.distribution.name</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.prepare.skip</code></p>
+</li>
+<li>
+<p>toolName<br>
+The name of the tool.<br>
+Type: String<br>
+User property: <code>jreleaser.tool.name</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserpackage"><a class="anchor" href="#_jreleaserpackage"></a>jreleaser:package</h3>
+<div class="paragraph">
+<p>Package all distributions.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>distributionName<br>
+The name of the distribution.<br>
+Type: String<br>
+User property: <code>jreleaser.distribution.name</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.package.skip</code></p>
+</li>
+<li>
+<p>toolName<br>
+The name of the tool.<br>
+Type: String<br>
+User property: <code>jreleaser.tool.name</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserpublish"><a class="anchor" href="#_jreleaserpublish"></a>jreleaser:publish</h3>
+<div class="paragraph">
+<p>Publish all distributions.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>distributionName<br>
+The name of the distribution.<br>
+Type: String<br>
+User property: <code>jreleaser.distribution.name</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.publish.skip</code></p>
+</li>
+<li>
+<p>toolName<br>
+The name of the tool.<br>
+Type: String<br>
+User property: <code>jreleaser.tool.name</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserannounce"><a class="anchor" href="#_jreleaserannounce"></a>jreleaser:announce</h3>
+<div class="paragraph">
+<p>Announce a release.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedAnnouncers<br>
+Include an announcer.<br>
+Type: String[]<br>
+User property: <code>jreleaser.announcers</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.announce.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserfull_release"><a class="anchor" href="#_jreleaserfull_release"></a>jreleaser:full-release</h3>
+<div class="paragraph">
+<p>Perform a full release.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>configFile<br>
+External configuration file.<br>
+Type: File<br>
+User property: <code>jreleaser.config.file</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>excludedAnnouncers<br>
+Exclude an announcer.<br>
+Type: String[]<br>
+User property: <code>jreleaser.excluded.announcers</code></p>
+</li>
+<li>
+<p>excludedDeployers<br>
+Exclude a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployers</p>
+</li>
+<li>
+<p>excludedDeployerNames<br>
+Exclude a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.deployer.names</p>
+</li>
+<li>
+<p>excludedDistributions<br>
+Exclude a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.distributions</p>
+</li>
+<li>
+<p>excludedPackagers<br>
+Exclude a packager.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.packagers</p>
+</li>
+<li>
+<p>excludedUploaderNames<br>
+Exclude an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploader.names</p>
+</li>
+<li>
+<p>excludedUploaders<br>
+Exclude an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.excluded.uploaders</p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>includedAnnouncers<br>
+Include an announcer.<br>
+Type: String[]<br>
+User property: <code>jreleaser.announcers</code></p>
+</li>
+<li>
+<p>includedDeployers<br>
+Include a deployer by type.<br>
+Type: String[]<br>
+User property: jreleaser.deployers</p>
+</li>
+<li>
+<p>includedDeployerNames<br>
+Include a deployer by name.<br>
+Type: String[]<br>
+User property: jreleaser.deployer.names</p>
+</li>
+<li>
+<p>includedDistributions<br>
+Include a distribution.<br>
+Type: String[]<br>
+User property: jreleaser.distributions</p>
+</li>
+<li>
+<p>includedPackagers<br>
+Include a packager.<br>
+Type: String[]<br>
+User property: jreleaser.packagers</p>
+</li>
+<li>
+<p>includedUploaderNames<br>
+Include an uploader by name.<br>
+Type: String[]<br>
+User property: jreleaser.uploader.names</p>
+</li>
+<li>
+<p>includedUploaders<br>
+Include an uploader by type.<br>
+Type: String[]<br>
+User property: jreleaser.uploaders</p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>skip<br>
+Skip execution.<br>
+Type: boolean<br>
+User property: <code>jreleaser.full.release.skip</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaserauto_config_release"><a class="anchor" href="#_jreleaserauto_config_release"></a>jreleaser:auto-config-release</h3>
+<div class="paragraph">
+<p>Create or update a release with auto-config enabled.</p>
+</div>
+<div class="paragraph">
+<p>Available parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>authors<br>
+The project authors.<br>
+Type: String[]<br>
+User property: <code>jreleaser.authors</code></p>
+</li>
+<li>
+<p>armored<br>
+Generate ascii armored signatures.<br>
+Type: boolean<br>
+User property: <code>jreleaser.armored</code></p>
+</li>
+<li>
+<p>branch<br>
+The release branch.<br>
+Type: String<br>
+User property: <code>jreleaser.release.branch</code></p>
+</li>
+<li>
+<p>changelog<br>
+Path to changelog file.<br>
+Type: String<br>
+User property: <code>jreleaser.changelog</code></p>
+</li>
+<li>
+<p>changelogFormatted<br>
+Format generated changelog.<br>
+Type: boolean<br>
+User property: <code>jreleaser.changelog.formatted</code></p>
+</li>
+<li>
+<p>commitAuthorEmail<br>
+Commit author e-mail.<br>
+Type: String<br>
+User property: <code>jreleaser.commit.author.email</code></p>
+</li>
+<li>
+<p>commitAuthorName<br>
+Commit author name.<br>
+Type: String<br>
+User property: <code>jreleaser.commit.author.name</code></p>
+</li>
+<li>
+<p>draft<br>
+If the release is a draft.<br>
+Type: boolean<br>
+User property: <code>jreleaser.draft</code></p>
+</li>
+<li>
+<p>dryrun<br>
+Skips remote operations.<br>
+Type: boolean<br>
+User property: <code>jreleaser.dry.run</code></p>
+</li>
+<li>
+<p>files<br>
+Input file(s) to be uploaded.<br>
+Type: String[]<br>
+User property: <code>jreleaser.files</code></p>
+</li>
+<li>
+<p>gitRootSearch<br>
+Searches for the Git root.<br>
+Type: boolean<br>
+User property: <code>jreleaser.git.root.search</code></p>
+</li>
+<li>
+<p>globs<br>
+Input file(s) to be uploaded (as globs).<br>
+Type: String[]<br>
+User property: <code>jreleaser.globs</code></p>
+</li>
+<li>
+<p>milestoneName<br>
+The milestone name.<br>
+Type: String<br>
+User property: <code>jreleaser.milestone.name</code></p>
+</li>
+<li>
+<p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
+Type: File<br>
+User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>overwrite<br>
+Overwrite an existing release.<br>
+Type: boolean<br>
+User property: <code>jreleaser.overwrite</code></p>
+</li>
+<li>
+<p>prerelease<br>
+If the release is a prerelease.<br>
+Type: boolean<br>
+User property: <code>jreleaser.prerelease</code></p>
+</li>
+<li>
+<p>prereleasePattern<br>
+The prerelease pattern.<br>
+Type: String<br>
+User property: <code>jreleaser.prerelease.pattern</code></p>
+</li>
+<li>
+<p>projectCopyright<br>
+The project copyright.<br>
+Type: String<br>
+User property: <code>jreleaser.project.copyright</code></p>
+</li>
+<li>
+<p>projectDescription<br>
+The project description.<br>
+Type: String<br>
+User property: <code>jreleaser.project.description</code></p>
+</li>
+<li>
+<p>projectInceptionYear<br>
+The project inception year.<br>
+Type: String<br>
+User property: <code>jreleaser.project.inception.year</code></p>
+</li>
+<li>
+<p>projectName (Default: ${project.artifactId})<br>
+The project name.<br>
+Type: String<br>
+User property: <code>jreleaser.project.name</code></p>
+</li>
+<li>
+<p>projectSnapshotLabel<br>
+The project snapshot label.<br>
+Type: String<br>
+User property: <code>jreleaser.project.snapshot.label</code></p>
+</li>
+<li>
+<p>projectSnapshotPattern (Default: .*-SNAPSHOT)<br>
+The project snapshot pattern.<br>
+Type: String<br>
+User property: <code>jreleaser.project.snapshot.pattern</code></p>
+</li>
+<li>
+<p>projectSnapshotFullChangelog<br>
+Calculate full changelog since last non-snapshot release.<br>
+Type: boolean<br>
+User property: <code>jreleaser.project.snapshot.full.changelog</code></p>
+</li>
+<li>
+<p>projectStereotype<br>
+The project stereotype.<br>
+Type: String<br>
+User property: <code>jreleaser.project.stereotype</code></p>
+</li>
+<li>
+<p>projectVersion (Default: ${project.version})<br>
+The project version.<br>
+Type: String<br>
+User property: <code>jreleaser.project.version</code></p>
+</li>
+<li>
+<p>projectVersionPattern<br>
+The project version pattern.<br>
+Type: String<br>
+User property: <code>jreleaser.project.version.pattern</code></p>
+</li>
+<li>
+<p>releaseName<br>
+The release name.<br>
+Type: String<br>
+User property: <code>jreleaser.release.name</code></p>
+</li>
+<li>
+<p>selectCurrentPlatform<br>
+Activates paths matching the current platform.<br>
+Type: boolean<br>
+User property: jreleaser.select.current.platform</p>
+</li>
+<li>
+<p>selectPlatforms<br>
+Activates paths matching the given platform.<br>
+Type: String[]<br>
+User property: jreleaser.select.platform</p>
+</li>
+<li>
+<p>signing<br>
+Sign files.<br>
+Type: boolean<br>
+User property: <code>jreleaser.signing</code></p>
+</li>
+<li>
+<p>skipRelease<br>
+Skip creating a release.<br>
+Type: boolean<br>
+User property: <code>jreleaser.skip.release</code></p>
+</li>
+<li>
+<p>skipTag<br>
+Skip tagging the release.<br>
+Type: boolean<br>
+User property: <code>jreleaser.skip.tag</code></p>
+</li>
+<li>
+<p>tagName<br>
+The release tag.<br>
+Type: String<br>
+User property: <code>jreleaser.tag.name</code></p>
+</li>
+<li>
+<p>update<br>
+Update an existing release.<br>
+Type: boolean<br>
+User property: <code>jreleaser.update</code></p>
+</li>
+<li>
+<p>updateSections<br>
+Release section(s) to be updated.<br>
+Type: UpdateSection<br>
+User property: jreleaser.update.sections</p>
+</li>
+<li>
+<p>username<br>
+Git username.<br>
+Type: String<br>
+User property: <code>jreleaser.username</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2021-2022 Andres Almiray. This page was built using an adapted version of the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public License Version 2.0</a> (MPL-2.0).</p>
+</footer>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+<script>
+var search = docsearch({
+  appId: 'BH4D9OD16A',
+  apiKey: '3639b4f0cfa7a592affa214858abbc39',
+  indexName: 'jreleaser',
+  inputSelector: '#search-input',
+  autocompleteOptions: { hint: false, keyboardShortcuts: ['s'] },
+  algoliaOptions: { hitsPerPage: 10 }
+}).autocomplete
+search.on('autocomplete:closed', function () { search.autocomplete.setVal() })
+</script>
+<script>
+window.addEventListener('load', function focusSearchInput () {
+  window.removeEventListener('load', focusSearchInput)
+  document.querySelector('#search-input').focus()
+})
+</script>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+
+  </body>
+</html>
