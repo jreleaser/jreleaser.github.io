@@ -3,6 +3,7 @@
 :deployer_name: Nexus2
 :prefix:        NEXUS2
 :deployer_url:  https://s01.oss.sonatype.org/service/local
+:deployer_snapshot_url:  https://s01.oss.sonatype.org/content/repositories/snapshot
 :default_auth:  BASIC
 
 Deploys staged artifacts to link:https://help.sonatype.com/repomanager2[Sonatype {deployer_name} Repository Manager] instance.
@@ -10,8 +11,6 @@ Deploys staged artifacts to link:https://help.sonatype.com/repomanager2[Sonatype
 NOTE: You may use this deployer to publish releases to link:https://search.maven.org/[Maven Central].
 
 IMPORTANT: This feature *does not* support deploying artifacts other than JARs and POMs to a Maven compatible repository.
-
-WARNING: Publication of snapshots is *not* allowed.
 
 include::partial$legend.adoc[]
 
@@ -24,6 +23,12 @@ YAML::
 [subs="attributes,+macros"]
 ----
 include::partial$deploy/maven/yaml/common-head.adoc[]
+
+        # URL where the {deployer_name} snapshots are enabled.
+        # If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
+        # environment variable must be defined.
+        # icon:exclamation-triangle[] icon:eye-slash[]
+        snapshotUrl: {deployer_snapshot_url}
 
         # Closes the staging repository.
         # Defaults to `false`.
@@ -54,6 +59,12 @@ TOML::
 ----
 include::partial$deploy/maven/toml/common-head.adoc[]
 
+ # URL where the {deployer_name} snapshots are enabled.
+ # If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
+ # environment variable must be defined.
+ # icon:exclamation-triangle[] icon:eye-slash[]
+ snapshotUrl = "{deployer_snapshot_url}"
+
   # Closes the staging repository.
   # Defaults to `false`.
   # icon:dot-circle[]
@@ -82,6 +93,12 @@ JSON::
 [subs="attributes,+macros"]
 ----
 include::partial$deploy/maven/json/common-head.adoc[]
+
+          // URL where the {deployer_name} snapshots are enabled.
+          // If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
+          // environment variable must be defined.
+          // icon:exclamation-triangle[] icon:eye-slash[]
+          "snapshotUrl": "{deployer_snapshot_url}",
 
           // Closes the staging repository.
           // Defaults to `false`.
@@ -112,6 +129,14 @@ Maven::
 [subs="attributes,verbatim,+macros"]
 ----
 include::partial$deploy/maven/maven/common-head.adoc[]
+
+          <!--
+            URL where the {deployer_name} snapshots are enabled.
+            If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
+            environment variable must be defined.
+            icon:exclamation-triangle[] icon:eye-slash[]
+          -->
+          <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
 
           <!--
             Closes the staging repository.
@@ -151,6 +176,12 @@ Gradle::
 ----
 include::partial$deploy/maven/gradle/common-head.adoc[]
 
+          // URL where the {deployer_name} snapshots are enabled.
+          // If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
+          // environment variable must be defined.
+          // icon:exclamation-triangle[] icon:eye-slash[]
+          snapshotUrl = '{deployer_snapshot_url}'
+
           // Closes the staging repository.
           // Defaults to `false`.
           // icon:dot-circle[]
@@ -183,6 +214,16 @@ This means that the name per configured instance needs to be unique.
 
 The name of the environment variable will be `JRELEASER_{prefix}_NAME_URL`. If your instance is named `production`,
 you can store the host in the environment variable `JRELEASER_{prefix}_PRODUCTION_URL`. The name will be
+transformed to uppercase.
+
+== SnapshotUrl
+
+You may set the snapshot url in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the {deployer_name} instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_{prefix}_NAME_SNAPSHOT_URL`. If your instance is named `foo`,
+you can store the host in the environment variable `JRELEASER_{prefix}_FOO_SNAPSHOT_URL`. The name will be
 transformed to uppercase.
 
 == Username
@@ -238,7 +279,7 @@ TOML::
 ----
 [deploy.maven.{deployer_id}.app]
   active = "ALWAYS"
-  host = "{deployer_url}"
+  url = "{deployer_url}"
   closeRepository = true
   releaseRepository = true
   stagingRepositories = ["target/staging-deploy"]
@@ -257,7 +298,7 @@ JSON::
         "{deployer_id}": {
           "app": {
             "active": "ALWAYS",
-            "host": "{deployer_url}",
+            "url": "{deployer_url}",
             "closeRepository": true,
             "releaseRepository": true,
             "stagingRepositories": [
@@ -283,7 +324,7 @@ Maven::
       <{deployer_id}>
         <app>
           <active>ALWAYS</active>
-          <host>{deployer_url}</host>
+          <url>{deployer_url}</url>
           <closeRepository>true</closeRepository>
           <releaseRepository>true</releaseRepository>
           <stagingRepositories>target/staging-deploy</stagingRepositories>
@@ -306,7 +347,7 @@ jreleaser {
       {deployer_id} {
         app {
           active = 'ALWAYS'
-          host = '{deployer_url}'
+          url = '{deployer_url}'
           closeRepository = true
           releaseRepository = true
           stagingRepository('target/staging-deploy')
