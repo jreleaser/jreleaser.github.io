@@ -717,18 +717,6 @@ This feature <strong>does not</strong> support deploying artifacts other than JA
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Publication of snapshots is <strong>not</strong> allowed.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -852,6 +840,12 @@ deploy:
           # Key will be capitalized and prefixed with `nexus2`, i.e, `nexus2Foo`.
           foo: bar
 
+        # URL where the Nexus2 snapshots are enabled.
+        # If left unspecified, the `JRELEASER_NEXUS2_${name}_SNAPSHOT_URL`
+        # environment variable must be defined.
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        snapshotUrl: <a href="https://s01.oss.sonatype.org/content/repositories/snapshot" class="bare">https://s01.oss.sonatype.org/content/repositories/snapshot</a>
+
         # Closes the staging repository.
         # Defaults to `false`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -949,6 +943,12 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `nexus2`, i.e, `nexus2Foo`.
+
+ # URL where the Nexus2 snapshots are enabled.
+ # If left unspecified, the `JRELEASER_NEXUS2_${name}_SNAPSHOT_URL`
+ # environment variable must be defined.
+ # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+ snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshot"
 
   # Closes the staging repository.
   # Defaults to `false`.
@@ -1050,6 +1050,12 @@ deploy:
           // Defaults to `60`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "readTimeout": 60,
+
+          // URL where the Nexus2 snapshots are enabled.
+          // If left unspecified, the `JRELEASER_NEXUS2_${name}_SNAPSHOT_URL`
+          // environment variable must be defined.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          "snapshotUrl": "https://s01.oss.sonatype.org/content/repositories/snapshot",
 
           // Closes the staging repository.
           // Defaults to `false`.
@@ -1202,6 +1208,14 @@ deploy:
           &lt;/extraProperties&gt;
 
           &lt;!--
+            URL where the Nexus2 snapshots are enabled.
+            If left unspecified, the `JRELEASER_NEXUS2_${name}_SNAPSHOT_URL`
+            environment variable must be defined.
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          --&gt;
+          &lt;snapshotUrl&gt;<a href="https://s01.oss.sonatype.org/content/repositories/snapshot&lt;/snapshotUrl&gt" class="bare">https://s01.oss.sonatype.org/content/repositories/snapshot&lt;/snapshotUrl&gt</a>;
+
+          &lt;!--
             Closes the staging repository.
             Defaults to `false`.
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1318,6 +1332,12 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           extraProperties.put('foo', 'bar')
 
+          // URL where the Nexus2 snapshots are enabled.
+          // If left unspecified, the `JRELEASER_NEXUS2_${name}_SNAPSHOT_URL`
+          // environment variable must be defined.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshot'
+
           // Closes the staging repository.
           // Defaults to `false`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1360,6 +1380,21 @@ This means that the name per configured instance needs to be unique.</p>
 <div class="paragraph">
 <p>The name of the environment variable will be <code>JRELEASER_NEXUS2_NAME_URL</code>. If your instance is named <code>production</code>,
 you can store the host in the environment variable <code>JRELEASER_NEXUS2_PRODUCTION_URL</code>. The name will be
+transformed to uppercase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_snapshoturl"><a class="anchor" href="#_snapshoturl"></a>SnapshotUrl</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may set the snapshot url in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the Nexus2 instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.</p>
+</div>
+<div class="paragraph">
+<p>The name of the environment variable will be <code>JRELEASER_NEXUS2_NAME_SNAPSHOT_URL</code>. If your instance is named <code>foo</code>,
+you can store the host in the environment variable <code>JRELEASER_NEXUS2_FOO_SNAPSHOT_URL</code>. The name will be
 transformed to uppercase.</p>
 </div>
 </div>
@@ -1444,7 +1479,7 @@ transformed to uppercase.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.nexus2.app]
   active = "ALWAYS"
-  host = "https://s01.oss.sonatype.org/service/local"
+  url = "https://s01.oss.sonatype.org/service/local"
   closeRepository = true
   releaseRepository = true
   stagingRepositories = ["target/staging-deploy"]</code></pre>
@@ -1461,7 +1496,7 @@ transformed to uppercase.</p>
         "nexus2": {
           "app": {
             "active": "ALWAYS",
-            "host": "https://s01.oss.sonatype.org/service/local",
+            "url": "https://s01.oss.sonatype.org/service/local",
             "closeRepository": true,
             "releaseRepository": true,
             "stagingRepositories": [
@@ -1485,7 +1520,7 @@ transformed to uppercase.</p>
       &lt;nexus2&gt;
         &lt;app&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
-          &lt;host&gt;<a href="https://s01.oss.sonatype.org/service/local&lt;/host&gt" class="bare">https://s01.oss.sonatype.org/service/local&lt;/host&gt</a>;
+          &lt;url&gt;<a href="https://s01.oss.sonatype.org/service/local&lt;/url&gt" class="bare">https://s01.oss.sonatype.org/service/local&lt;/url&gt</a>;
           &lt;closeRepository&gt;true&lt;/closeRepository&gt;
           &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
@@ -1506,7 +1541,7 @@ transformed to uppercase.</p>
       nexus2 {
         app {
           active = 'ALWAYS'
-          host = 'https://s01.oss.sonatype.org/service/local'
+          url = 'https://s01.oss.sonatype.org/service/local'
           closeRepository = true
           releaseRepository = true
           stagingRepository('target/staging-deploy')
