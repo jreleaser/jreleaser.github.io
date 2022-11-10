@@ -1338,6 +1338,7 @@ assemble:
 <p>Given the following file structure</p>
 </div>
 <div class="listingblock">
+<div class="title">Unix</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">.
 ├── BUILD
@@ -1346,6 +1347,18 @@ assemble:
 └── target
     └── release
         └── app</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Windows</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── release
+        └── app.exe</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1382,13 +1395,15 @@ assemble:
   archive:
     app:
       active: ALWAYS
+      attachPlatform: true
       fileSets:
         - input: '.'
           includes:
             - 'LICENSE'
             - 'README'
         - input: 'target/release'
-          output: 'bin'</code></pre>
+          output: 'bin'
+          includes: [ 'app{.exe,}' ]</code></pre>
 </div>
 </div>
 </div>
@@ -1400,12 +1415,14 @@ assemble:
 
 [assemble.archive.app]
   active = "ALWAYS"
+  attachPlatform = true
   [[assemble.archive.app.fileSets]]
     input = "."
     includes = ["LICENSE", "README"]
   [[assemble.archive.app.fileSets]]
     input = "target/release"
-    output = "bin"</code></pre>
+    output = "bin"
+    includes = [ "app{.exe,}" ]</code></pre>
 </div>
 </div>
 </div>
@@ -1420,6 +1437,7 @@ assemble:
     "archive": {
       "app": {
         "active": "ALWAYS",
+        "attachPlatform": true,
         "fileSets": [
           {
             "input": ".",
@@ -1427,7 +1445,8 @@ assemble:
           },
           {
             "input": "target/release",
-            "output": "bin"
+            "output": "bin",
+            "includes": [ "app{.exe,}" ]
           }
         ]
       }
@@ -1448,6 +1467,7 @@ assemble:
     &lt;archive&gt;
       &lt;app&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
+        &lt;attachPlatform&gt;true&lt;/attachPlatform&gt;
         &lt;fileSets&gt;
           &lt;fileSet&gt;
             &lt;input&gt;.&lt;/input&gt;
@@ -1459,6 +1479,9 @@ assemble:
           &lt;fileSet&gt;
             &lt;input&gt;target/release&lt;/input&gt;
             &lt;output&gt;bin&lt;/output&gt;
+            &lt;includes&gt;
+              &lt;include&gt;app{.exe,}&lt;/include&gt;
+            &lt;/includes&gt;
           &lt;/fileSet&gt;
         &lt;/fileSets&gt;
       &lt;/app&gt;
@@ -1479,6 +1502,7 @@ assemble:
     archive {
       app {
         active = 'ALWAYS'
+        attachPlatform = true
         fileSet {
           input = '.'
           includes = ['LICENSE', 'README']
@@ -1486,6 +1510,7 @@ assemble:
         fileSet {
           input = 'target/release'
           output = 'bin'
+          includes = [ 'app{.exe,}' ]
         }
       }
     }
@@ -1497,15 +1522,36 @@ assemble:
 </div>
 </div>
 <div class="paragraph">
-<p>Results in an assembled Zip archive named <code>app-1.0.0.zip</code> with the following entries</p>
+<p>When run on Linux, macOs, and Windows on intel chips results in the following assembled Zip archives:</p>
 </div>
 <div class="listingblock">
+<div class="title">app-1.0.0-linux-x86_64.zip</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">app-1.0.0
+<pre class="highlightjs highlight"><code class="language-none hljs">app-1.0.0-linux-x86_64
 ├── LICENSE
 ├── README
 └── bin
     └── app</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">app-1.0.0-osx-x86_64.zip</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">app-1.0.0-osx-x86_64
+├── LICENSE
+├── README
+└── bin
+    └── app</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">app-1.0.0-windows-x86_64.zip</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">app-1.0.0-wndows-x86_64
+├── LICENSE
+├── README
+└── bin
+    └── app.exe</code></pre>
 </div>
 </div>
 </div>
