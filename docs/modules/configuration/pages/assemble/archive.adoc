@@ -207,6 +207,7 @@ include::partial$assemble/gradle/common-footer.adoc[]
 Given the following file structure
 
 [source]
+.Unix
 ----
 .
 ├── BUILD
@@ -215,6 +216,18 @@ Given the following file structure
 └── target
     └── release
         └── app
+----
+
+[source]
+.Windows
+----
+.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── release
+        └── app.exe
 ----
 
 And this assembly configuration
@@ -234,6 +247,7 @@ assemble:
   archive:
     app:
       active: ALWAYS
+      attachPlatform: true
       fileSets:
         - input: '.'
           includes:
@@ -241,6 +255,7 @@ assemble:
             - 'README'
         - input: 'target/release'
           output: 'bin'
+          includes: [ 'app{.exe,}' ]
 ----
 --
 TOML::
@@ -254,12 +269,14 @@ TOML::
 
 [assemble.archive.app]
   active = "ALWAYS"
+  attachPlatform = true
   pass:[[[assemble.archive.app.fileSets]]]
     input = "."
     includes = ["LICENSE", "README"]
   pass:[[[assemble.archive.app.fileSets]]]
     input = "target/release"
     output = "bin"
+    includes = [ "app{.exe,}" ]
 ----
 --
 JSON::
@@ -276,6 +293,7 @@ JSON::
     "archive": {
       "app": {
         "active": "ALWAYS",
+        "attachPlatform": true,
         "fileSets": [
           {
             "input": ".",
@@ -283,7 +301,8 @@ JSON::
           },
           {
             "input": "target/release",
-            "output": "bin"
+            "output": "bin",
+            "includes": [ "app{.exe,}" ]
           }
         ]
       }
@@ -306,6 +325,7 @@ Maven::
     <archive>
       <app>
         <active>ALWAYS</active>
+        <attachPlatform>true</attachPlatform>
         <fileSets>
           <fileSet>
             <input>.</input>
@@ -317,6 +337,9 @@ Maven::
           <fileSet>
             <input>target/release</input>
             <output>bin</output>
+            <includes>
+              <include>app{.exe,}</include>
+            </includes>
           </fileSet>
         </fileSets>
       </app>
@@ -339,6 +362,7 @@ jreleaser {
     archive {
       app {
         active = 'ALWAYS'
+        attachPlatform = true
         fileSet {
           input = '.'
           includes = ['LICENSE', 'README']
@@ -346,6 +370,7 @@ jreleaser {
         fileSet {
           input = 'target/release'
           output = 'bin'
+          includes = [ 'app{.exe,}' ]
         }
       }
     }
@@ -355,13 +380,34 @@ jreleaser {
 --
 ====
 
-Results in an assembled Zip archive named `app-1.0.0.zip` with the following entries
+When run on Linux, macOs, and Windows on intel chips results in the following assembled Zip archives:
 
 [source]
+.app-1.0.0-linux-x86_64.zip
 ----
-app-1.0.0
+app-1.0.0-linux-x86_64
 ├── LICENSE
 ├── README
 └── bin
     └── app
+----
+
+[source]
+.app-1.0.0-osx-x86_64.zip
+----
+app-1.0.0-osx-x86_64
+├── LICENSE
+├── README
+└── bin
+    └── app
+----
+
+[source]
+.app-1.0.0-windows-x86_64.zip
+----
+app-1.0.0-wndows-x86_64
+├── LICENSE
+├── README
+└── bin
+    └── app.exe
 ----
