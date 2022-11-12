@@ -792,7 +792,12 @@ Documentation found at https://jreleaser.org</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">select-platform</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_SELECT_PLATFORM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_SELECT_PLATFORMS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;empty-string&gt;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reject-platform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_REJECT_PLATFORMS</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;empty-string&gt;</p></td>
 </tr>
 <tr>
@@ -803,7 +808,8 @@ Documentation found at https://jreleaser.org</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
-<p><code>JRELEASER_SELECT_PLATFORM</code> may define a command separated list of values such as <code>osx-x86_64,linux-x86_64</code>.</p>
+<p><code>JRELEASER_SELECT_PLATFORMs</code> and <code>JRELEASER_REJECT_PLATFORMs</code> may define a command separated list of values such as
+<code>osx-x86_64,linux-x86_64</code>.</p>
 </div>
 </div>
 </div>
@@ -945,8 +951,8 @@ Display current configuration.
 
 Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                        [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]... [--announce |
-                        -a | --changelog | -d]
+                        [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                        [-sp=&lt;platform&gt;]... [--announce | -a | --changelog | -d]
 
 Options:
   -a, --assembly            Display assembly configuration.
@@ -968,6 +974,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1137,9 +1146,9 @@ Assemble distributions.
 Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]... [[[-s=&lt;assembler&gt;]...
-                          [-d=&lt;distribution&gt;]...] | [[-xs=&lt;assembler&gt;]...
-                          [-xd=&lt;distribution&gt;]...]]
+                          [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                          [[[-s=&lt;assembler&gt;]... [-d=&lt;distribution&gt;]...] |
+                          [[-xs=&lt;assembler&gt;]... [-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1156,6 +1165,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1250,8 +1262,8 @@ Calculate checksums.
 Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
                           [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] |
-                          [[-xd=&lt;distribution&gt;]...]]
+                          [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                          [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1268,6 +1280,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1309,8 +1324,9 @@ Sign release artifacts.
 
 Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
                       [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                      [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-                      [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
+                      [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                      [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] |
+                      [[-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1327,6 +1343,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1366,10 +1385,9 @@ in the <a href="../configuration/distributions.html" class="xref page">distribut
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy -h
 Deploys all staged artifacts.
 
-Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                        [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                        [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                        [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]...
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;basedir&gt;]
+                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                        [-P=&lt;key=value&gt;]... [[[-y=&lt;deployer&gt;]...
                         [-yn=&lt;name&gt;]...] | [[-xy=&lt;deployer&gt;]...
                         [-xyn=&lt;name&gt;]...]]
 
@@ -1389,11 +1407,6 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
       --strict              Enable strict mode.
   -V, --version             Print version information and exit.
   -w, --warn                Set log level to warn.
@@ -1486,10 +1499,10 @@ Upload all artifacts.
 Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                         [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                        [-sp=&lt;platform&gt;]... [[[-u=&lt;uploader&gt;]...
-                        [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...] |
-                        [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
-                        [-xd=&lt;distribution&gt;]...]]
+                        [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                        [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
+                        [-d=&lt;distribution&gt;]...] | [[-xu=&lt;uploader&gt;]...
+                        [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1507,6 +1520,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1608,12 +1624,12 @@ Create or update a release.
 Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
-                         [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
-                         [-un=&lt;name&gt;]...] | [[-xd=&lt;distribution&gt;]...
-                         [-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
-                         [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...] |
-                         [[--auto-config] [--project-name=&lt;projectName&gt;]
+                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[-d=&lt;distribution&gt;]... [-y=&lt;deployer&gt;]...
+                         [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xy=&lt;deployer&gt;]...
+                         [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...]
+                         | [[--auto-config] [--project-name=&lt;projectName&gt;]
                          [--project-version=&lt;projectVersion&gt;]
                          [--project-version-pattern=&lt;projectVersionPattern&gt;]
                          [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
@@ -1654,6 +1670,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                              Sets the value of a property. Repeatable.
   -q, --quiet                Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                             Activates paths not matching the given platform.
+                               Repeatable.
       -scp, --select-current-platform
                              Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1818,9 +1837,9 @@ Prepare all distributions.
 Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
-                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
-                         [-xp=&lt;packager&gt;]...]]
+                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1837,6 +1856,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -1921,9 +1943,9 @@ Package all distributions.
 Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
-                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
-                         [-xp=&lt;packager&gt;]...]]
+                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1941,6 +1963,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -2038,9 +2063,9 @@ Publish all distributions.
 Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...
-                         [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
-                         [-xp=&lt;packager&gt;]...]]
+                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -2058,6 +2083,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -2155,8 +2183,8 @@ Announce a release.
 Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                           [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-sp=&lt;platform&gt;]... [[[-a=&lt;announcer&gt;]...] |
-                          [[-xa=&lt;announcer&gt;]...]]
+                          [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                          [[[-a=&lt;announcer&gt;]...] | [[-xa=&lt;announcer&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -2174,6 +2202,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
@@ -2248,14 +2279,15 @@ Perform a full release.
 Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
                               [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
                               [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                              [-P=&lt;key=value&gt;]... [-sp=&lt;platform&gt;]...
-                              [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
-                              [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
-                              [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...
-                              [-a=&lt;announcer&gt;]...] | [[-xy=&lt;deployer&gt;]...
-                              [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]...
-                              [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
-                              [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]...]]
+                              [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                              [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]...
+                              [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
+                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...
+                              [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...] |
+                              [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
+                              [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
+                              [-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...
+                              [-xa=&lt;announcer&gt;]...]]
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -2273,6 +2305,9 @@ Options:
   -P, --set-property=&lt;key=value&gt;
                             Sets the value of a property. Repeatable.
   -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
       -scp, --select-current-platform
                             Activates paths matching the current platform.
       -sp, --select-platform=&lt;platform&gt;
