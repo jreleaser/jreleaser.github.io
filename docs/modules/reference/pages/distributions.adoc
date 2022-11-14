@@ -1,0 +1,683 @@
+= Distributions
+
+Distributions define artifacts that may be published using supported packages and announced with supported announcers.
+
+Each distribution is responsible for defining a unique name and a list of artifacts that belong to it.
+
+A distribution requires at least 1 artifact to be listed.
+
+Distributions inherit the configuration specified in the xref:reference:packagers/index.adoc[] block and may override it.
+
+Distributions have a type that enables or disables additional features. These types are:
+
+* xref:concepts:distributions/binary.adoc[]
+* xref:concepts:distributions/java-binary.adoc[]
+* xref:concepts:distributions/jlink.adoc[]
+* xref:concepts:distributions/native-image.adoc[]
+* xref:concepts:distributions/native-package.adoc[]
+* xref:concepts:distributions/single-jar.adoc[]
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+distributions:
+  # A named distribution
+  # icon:exclamation-triangle[]
+  app:
+
+    # Enables or disables the distribution.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `ALWAYS`.
+    # icon:dot-circle[]
+    active: ALWAYS
+
+    # The distribution type.
+    # Used to determine packager templates.
+    # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
+    # icon:exclamation-triangle[]
+    type: JAVA_BINARY
+
+    # The stereotype of this distribution.
+    # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+    # Defaults to `${project.stereotype}`.
+    # icon:dot-circle[]
+    stereotype: CLI
+
+    # icon:dot-circle[]
+    executable:
+      # Name of the executable launcher.
+      # If left undefined, will use ${distribution.name}.
+      # icon:dot-circle[]
+      name: app
+
+      # Executable extension on Linux/MacOS.
+      # If left undefined, value will be left empty.
+      # icon:dot-circle[]
+      unixExtension: sh
+
+      # Executable extension on Windows.
+      # If left undefined, will use `bat`.
+      # icon:dot-circle[]
+      windowsExtension: cmd
+
+    # A list of tags.
+    # icon:dot-circle[]
+    tags:
+      - cli
+      - awesome
+
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties:
+      # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+      foo: bar
+
+    platform:
+      # Key value pairs.
+      # Keys match a full platform or an os.name, os.arch.
+      # Same rules apply as in xref:platform.adoc[].
+      # icon:dot-circle[]
+      replacements:
+        osx-x86_64: mac
+        aarch_64: aarch64
+        x86_64: amd64
+        linux_musl: alpine
+
+    # A list of artifacts.
+    # At least on entry must be present.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    artifacts:
+      - path: path/to/{{distributionName}}-{{projectVersion}}.zip
+      - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
+        platform: osx
+      - path: path/to/{{distributionName}}-{{projectVersion}}-win.zip
+        platform: windows
+
+    # icon:dot-circle[]
+    java:
+      # Maven coordinates: groupId.
+      # If left undefined, will use ${project.java.groupId}.
+      # icon:dot-circle[]
+      groupId: com.acme
+
+      # Maven coordinates: artifactId.
+      # If left undefined, will use ${project.java.artifactId}.
+      # icon:dot-circle[]
+      artifactId: app
+
+      # The minimum Java version required by consumers to run the application.
+      # If left undefined, will use ${project.java.version}.
+      # icon:dot-circle[]
+      version: 8
+
+      # The application's entry point.
+      # If left undefined, will use ${project.java.mainClass}.
+      # icon:dot-circle[]
+      mainClass: com.acme.Main
+
+      # Identifies the project as being member of a multi-project build.
+      # If left undefined, will use ${project.java.multiProject}.
+      # icon:dot-circle[]
+      multiProject: false
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# A named distribution
+# icon:exclamation-triangle[]
+[distributions.app]
+
+  # Enables or disables the distribution.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `ALWAYS`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # The distribution type.
+  # Used to determine packager templates.
+  # Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
+  # icon:exclamation-triangle[]
+  type = "JAVA_BINARY"
+
+  # The stereotype of this distribution.
+  # Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+  # Defaults to `${project.stereotype}`.
+  # icon:dot-circle[]
+  stereotype = "CLI"
+
+  # icon:dot-circle[]
+  [distributions.app.executable]
+    # Name of the executable launcher.
+    # If left undefined, will use ${distribution.name}.
+    # icon:dot-circle[]
+    name = "app"
+
+    # Executable extension on Linux/MacOS.
+    # If left undefined, value will be left empty.
+    # icon:dot-circle[]
+    unixExtension = "sh"
+
+    # Executable extension on Windows.
+    # If left undefined, will use `bat`.
+    # icon:dot-circle[]
+    windowsExtension = "cmd"
+
+  # A list of tags.
+  # icon:dot-circle[]
+  tags = ["cli", "awesome"]
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in xref:platform.adoc[].
+  # icon:dot-circle[]
+  [distributions.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
+
+  # A list of artifacts.
+  # At least on entry must be present.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  artifacts = [
+    { path = "path/to/{{distributionName}}-{{projectVersion}}.zip" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip", platform = "osx" },
+    { path = "path/to/{{distributionName}}-{{projectVersion}}-win.zip", platform = "windows" }
+  ]
+
+  # Maven coordinates: groupId.
+  # If left undefined, will use ${project.java.groupId}.
+  # icon:dot-circle[]
+  java.groupId = "com.acme"
+
+  # Maven coordinates: artifactId.
+  # If left undefined, will use ${project.java.artifactId}.
+  # icon:dot-circle[]
+  java.artifactId = "app"
+
+  # The minimum Java version required by consumers to run the application.
+  # If left undefined, will use ${project.java.version}.
+  # icon:dot-circle[]
+  java.version = "8"
+
+  # The application's entry point.
+  # If left undefined, will use ${project.java.mainClass}.
+  # icon:dot-circle[]
+  java.mainClass = "com.acme.Main"
+
+  # Identifies the project as being member of a multi-project build.
+  # If left undefined, will use ${project.java.multiProject}.
+  # icon:dot-circle[]
+  java.multiProject = false
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  java.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "distributions": {
+    // A named distribution
+    // icon:exclamation-triangle[]
+    "app": {
+
+      // Enables or disables the distribution.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      "active": "ALWAYS",
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are: [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
+      // icon:exclamation-triangle[]
+      "type": "JAVA_BINARY",
+
+      // The stereotype of this distribution.
+      // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+      // Defaults to `${project.stereotype}`.
+      // icon:dot-circle[]
+      "stereotype": "CLI",
+
+      // icon:dot-circle[]
+      "executable":  {
+        // Name of the executable launcher.
+        // If left undefined, will use ${distribution.name}.
+        // icon:dot-circle[]
+        "name": "app",
+
+        // Executable extension on Linux/MacOS.
+        // If left undefined, value will be left empty.
+        // icon:dot-circle[]
+        "unixExtension": "sh",
+
+        // Executable extension on Windows.
+        // If left undefined, will use `bat`.
+        // icon:dot-circle[]
+        "windowsExtension": "cmd"
+      },
+
+      // A list of tags.
+      // icon:dot-circle[]
+      "tags": [
+         "cli",
+         "awesome"
+      ],
+
+      // Additional properties used when evaluating templates.
+      // icon:dot-circle[] icon:file-alt[]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+        "foo": "bar"
+      },
+
+      "platform": {
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in xref:platform.adoc[].
+        // icon:dot-circle[]
+        "replacements": {
+          "osx-x86_64": "mac",
+          "aarch_64": "aarch64",
+          "x86_64": "amd64",
+          "linux_musl": "alpine"
+        }
+      },
+
+      // A list of artifacts.
+      // At least on entry must be present.
+      // icon:exclamation-triangle[] icon:file-alt[]
+      "artifacts": [
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
+          "platform": "osx"
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-win.zip",
+          "platform": "windows"
+        }
+      ],
+
+      // icon:dot-circle[]
+      "java": {
+        // Maven coordinates: groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // icon:dot-circle[]
+        "groupId": "com.acme",
+
+        // Maven coordinates: artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // icon:dot-circle[]
+        "artifactId": "app",
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // icon:dot-circle[]
+        "version": "8",
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // icon:dot-circle[]
+        "mainClass": "com.acme.Main",
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // icon:dot-circle[]
+        "multiProject": false,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <distributions>
+    <!--
+      A named distribution
+      icon:exclamation-triangle[]
+    -->
+    <app>
+
+      <!--
+        Enables or disables the distribution.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `ALWAYS`.
+        icon:dot-circle[]
+      -->
+      <active>ALWAYS</active>
+
+      <!--
+        The distribution type.
+        Used to determine packager templates.
+        Supported values are>[`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
+        icon:exclamation-triangle[]
+      -->
+      <type>JAVA_BINARY</type>
+
+      <!--
+        The stereotype of this distribution.
+        Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+        Defaults to `${project.stereotype}`.
+        icon:dot-circle[]
+      -->
+      <stereotype>CLI</stereotype>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <executable>
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use ${distribution.name}.
+          icon:dot-circle[]
+        -->
+        <name>app</name>
+
+        <!--
+          Executable extension on Linux/MacOS.
+          If left undefined, value will be left empty.
+          icon:dot-circle[]
+        -->
+        <unixExtension>sh</unixExtension>
+
+        <!--
+          Executable extension on Windows.
+          If left undefined, will use `bat`.
+          icon:dot-circle[]
+        -->
+        <windowsExtension>cmd</windowsExtension>
+      </executable>
+
+      <!--
+        A list of tags.
+        icon:dot-circle[]
+      -->
+      <tags>
+        <tag>cli</tag>
+        <tag>awesome</tag>
+      </tags>
+
+      <!--
+        Additional properties used when evaluating templates.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <platform>
+        <!--
+          Key value pairs.
+          Keys match a full platform or an os.name, os.arch.
+          Same rules apply as in xref:platform.adoc[].
+          icon:dot-circle[]
+        -->
+        <replacements>
+          <osx-x86_64>mac</osx-x86_64>
+          <aarch_64>aarch64</aarch_64>
+          <x86_64>amd64</x86_64>
+          <linux_musl>alpine</linux_musl>
+        </replacements>
+      </platform>
+
+      <!--
+        A list of artifacts.
+        At least on entry must be present.
+        icon:exclamation-triangle[] icon:file-alt[]
+      -->
+      <artifacts>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}.zip</path>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
+          <platform>osx</platform>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-win.zip</path>
+          <platform>windows</platform>
+        </artifact>
+      </artifacts>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <java>
+        <!--
+          Maven coordinates>groupId.
+          If left undefined, will use ${project.java.groupId}.
+          icon:dot-circle[]
+        -->
+        <groupId>com.acme</groupId>
+
+        <!--
+          Maven coordinates>artifactId.
+          If left undefined, will use ${project.java.artifactId}.
+          icon:dot-circle[]
+        -->
+        <artifactId>app</artifactId>
+
+        <!--
+          The minimum Java version required by consumers to run the application.
+          If left undefined, will use ${project.java.version}.
+          icon:dot-circle[]
+        -->
+        <version>8</version>
+
+        <!--
+          The application's entry point.
+          If left undefined, will use ${project.java.mainClass}.
+          icon:dot-circle[]
+        -->
+        <mainClass>com.acme.Main</mainClass>
+
+        <!--
+          Identifies the project as being member of a multi-project build.
+          If left undefined, will use ${project.java.multiProject}.
+          icon:dot-circle[]
+        -->
+        <multiProject>false</multiProject>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </java>
+    </app>
+  </distributions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  distributions {
+    // A named distribution
+    // icon:exclamation-triangle[]
+    app {
+
+      // Enables or disables the distribution.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `ALWAYS`.
+      // icon:dot-circle[]
+      active = 'ALWAYS'
+
+      // The distribution type.
+      // Used to determine packager templates.
+      // Supported values are = [`JAVA_BINARY`, `SINGLE_JAR`, `JLINK`, `NATIVE_IMAGE`, `NATIVE_PACKAGE`, `BINARY`].
+      // icon:exclamation-triangle[]
+      distributionType = 'JAVA_BINARY'
+
+      // The stereotype of this distribution.
+      // Supported values are [`NONE`, `CLI`, `DESKTOP`, `WEB`, `MOBILE`].
+      // Defaults to `${project.stereotype}`.
+      // icon:dot-circle[]
+      stereotype = 'CLI'
+
+      // icon:dot-circle[]
+      executable {
+        // Name of the executable launcher.
+        // If left undefined, will use ${distribution.name}.
+        // icon:dot-circle[]
+        name = 'app'
+
+        // Executable extension on Linux/MacOS.
+        // If left undefined, value will be left empty.
+        // icon:dot-circle[]
+        unixExtension = 'sh'
+
+        // Executable extension on Windows.
+        // If left undefined, will use `bat`.
+        // icon:dot-circle[]
+        windowsExtension = 'cmd'
+      }
+
+      // A list of tags.
+      // icon:dot-circle[]
+      tags = ['cli', 'awesome']
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `distribution`, i.e, `distributionFoo`.
+      // icon:dot-circle[] icon:file-alt[]
+      extraProperties.put('foo', 'bar')
+
+      // icon:dot-circle[]
+      platform {
+
+        // Key value pairs.
+        // Keys match a full platform or an os.name, os.arch.
+        // Same rules apply as in xref:platform.adoc[].
+        // icon:dot-circle[]
+        replacements = [
+          'osx-x86_64': 'mac',
+          aarch_64: 'aarch64',
+          x86_64: 'amd64',
+          linux_musl: 'alpine'
+        ]
+      }
+
+      // A list of artifacts.
+      // At least on entry must be present.
+      // icon:exclamation-triangle[] icon:file-alt[]
+      artifact {
+        path = "path/to/${project.name}-${project.version}.zip"
+      }
+      artifact {
+        path = "path/to/${project.name}-${project.version}-mac.zip"
+        platform = 'osx'
+      }
+      artifact {
+        path = "path/to/${project.name}-${project.version}-win.zip"
+        platform = 'windows'
+      }
+
+      // icon:dot-circle[]
+      java {
+        // Maven coordinates = groupId.
+        // If left undefined, will use ${project.java.groupId}.
+        // icon:dot-circle[]
+        groupId = 'com.acme'
+
+        // Maven coordinates = artifactId.
+        // If left undefined, will use ${project.java.artifactId}.
+        // icon:dot-circle[]
+        artifactId = 'app'
+
+        // The minimum Java version required by consumers to run the application.
+        // If left undefined, will use ${project.java.version}.
+        // icon:dot-circle[]
+        version = '8'
+
+        // The application's entry point.
+        // If left undefined, will use ${project.java.mainClass}.
+        // icon:dot-circle[]
+        mainClass = 'com.acme.Main'
+
+        // Identifies the project as being member of a multi-project build.
+        // If left undefined, will use ${project.java.multiProject}.
+        // icon:dot-circle[]
+        multiProject = false
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
+        // icon:dot-circle[]
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+It's recommended to list universal artifacts first, then platform specific.
+
+include::partial$platform.adoc[]
+

@@ -1,0 +1,271 @@
+= Gofish
+:tool_id:       gofish
+:tool_name:     Gofish
+:tool_env_var:  GOFISH
+:tool_tap:      repository
+:tool_tap_name: duke-fish-food
+:tool_manifest: fish food
+:tool_package:  ${distribution.name}
+
+WARNING: This packager has been deprecated in `v1.1.0` and will be removed in `v2.0.0`.
+
+link:https://gofi.sh/[GoFish] is a cross-platform systems package manager, bringing the ease of use of Homebrew to
+Linux and Windows. This packager generates a fish food file and publishes it to a repository of your choice, however
+it's your responsibility to update the official link:https://github.com/fishworks/fish-food[] with a PR of your own. As
+a reference JReleaser publishes its release using a link:https://github.com/jreleaser/jreleaser-fish-food/blob/main/.github/workflows/update.yml[GitHub workflow]
+triggered on every push to the `main` branch of link:https://github.com/jreleaser/jreleaser-fish-food[jreleaser/jreleaser-fish-food].
+
+The following artifact extensions are supported by this packager:
+
+* `.tgz`
+* `.txz`
+* `.tar.gz`
+* `.tar.xz`
+* `.tar`
+* `.zip`
+
+== Distribution Support
+
+[%header, cols="<,^"]
+|===
+| Distribution                                  | Supported
+| xref:concepts:distributions/binary.adoc[]         | {icon_req_n}
+| xref:concepts:distributions/java-binary.adoc[]    | {icon_req_n}
+| xref:concepts:distributions/jlink.adoc[]          | {icon_req_n}
+| xref:concepts:distributions/native-image.adoc[]   | {icon_req_n}
+| xref:concepts:distributions/native-package.adoc[] | {icon_req_n}
+| xref:concepts:distributions/single-jar.adoc[]     | {icon_req_n}
+|===
+
+WARNING: Publication of snapshots is *not* allowed.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+include::partial$packagers/yaml/package-name.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+include::partial$packagers/toml/package-name.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+include::partial$packagers/json/package-name.adoc[]
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+include::partial$packagers/maven/package-name.adoc[]
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+include::partial$packagers/gradle/package-name.adoc[]
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
+
+== Example
+
+Assuming the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `Foo/app.lua` file in the `duke/duke-fish-food` repository:
+
+[source,lua]
+----
+local name = "app"
+local version = "1.2.3"
+
+food = {
+    name = name,
+    description = "Awesome App",
+    license = "Apache-2.0"
+    homepage = "https://acme.com/app",
+    version = version,
+    packages = {
+        {
+            os = "darwin",
+            arch = "amd64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "/bin/" .. name,
+                    installpath = "bin/" .. name,
+                    executable = true
+                }
+            }
+        },
+        {
+            os = "darwin",
+            arch = "arm64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "/bin/" .. name,
+                    installpath = "bin/" .. name,
+                    executable = true
+                }
+            }
+        },
+        {
+            os = "linux",
+            arch = "amd64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "/bin/" .. name,
+                    installpath = "bin/" .. name,
+                    executable = true
+                }
+            }
+        },
+        {
+            os = "linux",
+            arch = "arm64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "/bin/" .. name,
+                    installpath = "bin/" .. name,
+                    executable = true
+                }
+            }
+        },
+        {
+            os = "windows",
+            arch = "amd64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "\\bin\\" .. name .. ".bat",
+                    installpath = "bin\\" .. name .. ".bat",
+                    executable = true
+                }
+            }
+        },
+        {
+            os = "windows",
+            arch = "arm64",
+            url = "https://github.com/duke/" .. name .. "/releases/download/v" .. version .. "/" .. name .. "-" .. version .. ".zip",
+            sha256 = "d619026717cf198ea328e1dd8db5a3498bc69138830772bcd5fe06b2d9367482",
+            resources = {
+                {
+                    path = name .. "-" .. version .. "\\bin\\" .. name .. ".bat",
+                    installpath = "bin\\" .. name .. ".bat",
+                    executable = true
+                }
+            }
+        },
+    }
+}
+----
+
+== Skip Artifacts
+
+If there is more than one matching artifact in a given distribution you may add a `skipGofish` extra property to the target
+artifact to mark it as skipped for packaging with Gofish.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/gofish`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `food.lua.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex

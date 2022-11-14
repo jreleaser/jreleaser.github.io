@@ -1,0 +1,234 @@
+= Checksum
+
+JReleaser calculates checksums for all input files and artifacts. These checksums are grouped into a single file named
+`checksums_<algorithm>.txt` which in turn may be signed and uploaded to a release.
+
+Use the following options to customize how checksums are handled:
+
+Supported algorithms:
+
+* `MD2`
+* `MD5`
+* `RMD160`
+* `SHA-1`
+* `SHA-256`
+* `SHA-384` 
+* `SHA-512` 
+* `SHA3-224` 
+* `SHA3-256` 
+* `SHA3-384` 
+* `SHA3-512`
+  
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+checksum:
+  # The name of the grouping checksums file.
+  # Defaults to `checksums.txt`.
+  # icon:dot-circle[] icon:file-alt[]
+  name: '{{projectName}}-{{projectVersion}}_checksums.txt'
+
+  # Algorithm to be used.
+  # Supported values are [`MD2`, `MD5`, `RMD160`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`, `SHA3-224`, `SHA3-256`, `SHA3-384`, `SHA3-512`].
+  # Default value is `SHA-256`.
+  # `SHA-256` is always configured.
+  # icon:dot-circle[]
+  algorithms:
+    - MD5
+    - SHA-256
+  
+  # Uploads individual checksum files.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  individual: true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files: true
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# icon:dot-circle[]
+[checksum]
+  # The name of the grouping checksums file.
+  # Defaults to `checksums.txt`.
+  # icon:dot-circle[] icon:file-alt[]
+  name = "{{projectName}}-{{projectVersion}}_checksums.txt"
+
+  # Algorithm to be used.
+  # Supported values are [`MD2`, `MD5`, `RMD160`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`, `SHA3-224`, `SHA3-256`, `SHA3-384`, `SHA3-512`].
+  # Default value is `SHA-256`.
+  # `SHA-256` is always configured.
+  # icon:dot-circle[]
+  algorithms = ["MD5", "SHA-256"]
+
+  # Uploads individual checksum files.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  individual = true
+
+  # Whether to checksum files in the `files` section or not.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  files = true
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // icon:dot-circle[]
+  "checksum": {
+
+    // The name of the grouping checksums file.
+    // Defaults to `checksums.txt`.
+    // icon:dot-circle[] icon:file-alt[]
+    "name": "{{projectName}}-{{projectVersion}}_checksums.txt",
+
+    // Algorithm to be used.
+    // Supported values are [`MD2`, `MD5`, `RMD160`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`, `SHA3-224`, `SHA3-256`, `SHA3-384`, `SHA3-512`].
+    // Default value is `SHA-256`.
+    // `SHA-256` is always configured.
+    // icon:dot-circle[]
+    "algorithms": [
+      "MD5",
+      "SHA-256"
+    ],
+
+    // Uploads individual checksum files.
+    // Defaults to `false`.
+    // icon:dot-circle[]
+    "individual": true,
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "files": true
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <checksum>
+
+    <!--
+      The name of the grouping checksums file.
+      Defaults to `checksums.txt`.
+      icon:dot-circle[] icon:file-alt[]
+    -->
+    <name>{{projectName}}-{{projectVersion}}_checksums.txt</name>
+
+    <!--
+      Algorithm to be used.
+      Supported values are [`MD2`, `MD5`, `RMD160`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`, `SHA3-224`, `SHA3-256`, `SHA3-384`, `SHA3-512`].
+      Default value is `SHA-256`.
+      `SHA-256` is always configured.
+      icon:dot-circle[]
+    -->
+    <algorithms>
+        <algorithm>MD5</algorithm>
+        <algorithm>SHA-256</algorithm>
+    </algorithms>
+
+    <!--
+      Uploads individual checksum files.
+      Defaults to `false`.
+      icon:dot-circle[]
+    -->
+    <individual>true</individual>
+
+    <!--
+      Whether to checksum files in the `files` section or not.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <files>true</files>
+  </checksum>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // icon:dot-circle[]
+  checksum {
+    // The name of the grouping checksums file.
+    // Defaults to `checksums.txt`.
+    // icon:dot-circle[] icon:file-alt[]
+    name = '{{projectName}}-{{projectVersion}}_checksums.txt'
+
+    // Algorithm to be used.
+    // Supported values are [`MD2`, `MD5`, `RMD160`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`, `SHA3-224`, `SHA3-256`, `SHA3-384`, `SHA3-512`].
+    // Default value is `SHA-256`.
+    // `SHA-256` is always configured.
+    // icon:dot-circle[]
+    algorithm('MD5')
+    algorithm('SHA-256')
+
+    // Uploads individual checksum files.
+    // Defaults to `false`.
+    // icon:dot-circle[]
+    individual = true
+
+    // Whether to checksum files in the `files` section or not.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    files = true
+  }
+}
+----
+--
+====
+
+== Extra Properties
+
+Both xref:reference:distributions.adoc[] and xref:concepts:artifacts.adoc[Artifacts] may define an extra property named
+"individualChecksum". If the value is set to `true` then the checksums for the given element will also be added to the
+release files.
+
+The precedence rules are:
+
+ * If the Artifact has a property "individualChecksum":
+   ** if the property resolves to `true` then the individual checksum is released.
+   ** if the property resolves to `false` then the individual checksum is skipped and no more rules are checked.
+ * If the Distribution has a property "individualChecksum":
+   ** if the property resolves to `true` then individual checksums for all its artifacts are released.
+   ** if the property resolves to `false` then all of its individual checksums are skipped and no more rules are checked.
+ * If the `checksum.individual` property is set:
+   ** if the property resolves to `true` then individual checksums are released.
+   ** if the property resolves to `false` then no individual checksums are released.
+
+== Skip Checksum
+
+Artifacts and globs in the xref:reference:files.adoc[] section may define an extra property will prevent checksum
+calculation. The name of this property must match `skipChecksum` and be set to `true`.

@@ -1,0 +1,257 @@
+= Sdkman
+:tool_id:        sdkman
+:announcer_id:   sdkman
+:announcer_name: Sdkman
+
+Publishes a release to link:https://sdkman.io[Sdkman]. Please follow the instructions at
+link:https://sdkman.io/vendors[] to register your project as a candidate and obtain publishing credentials.
+
+NOTE: If this announcer is enabled but no xref:reference:packagers/sdkman.adoc[] packager is active in a distribution
+then the whole project will be released and announced.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/yaml/common-head.adoc[]
+
+    # The name of the candidate registered in thew Sdkman database.
+    # If unspecified, will use ${project.name}.
+    # icon:dot-circle[]
+    candidate: app
+
+    # Sdkman command to use.
+    # Supported values are [`MAJOR`, `MINOR`]
+    # Defaults to `MAJOR`.
+    # icon:dot-circle[]
+    command: MAJOR
+
+    # The release notes URL to use.
+    # Defaults to `${release.${git}.releaseNotesUrl}`.
+    # icon:dot-circle[] icon:file-alt[]
+    releaseNotesUrl: pass:[https://host.com/{{projectName}}/{{tagName}}]
+
+    # Custom download URL.
+    # icon:dot-circle[] icon:file-alt[]
+    downloadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]
+
+    # The consumer key for publishing to Sdkman.
+    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    consumerKey: __DO_NOT_SET_HERE__
+
+    # The consumer token for publishing to Sdkman.
+    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    consumerToken: __DO_NOT_SET_HERE__
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/toml/common-head.adoc[]
+
+  # The name of the candidate registered in thew Sdkman database.
+  # If unspecified, will use ${project.name}.
+  # icon:dot-circle[]
+  candidate = "app"
+
+  # The release notes URL to use.
+  # Defaults to `${release.${git}.releaseNotesUrl}`.
+  # icon:dot-circle[] icon:file-alt[]
+  releaseNotesUrl = "pass:[https://host.com/{{projectName}}/{{tagName}}]"
+
+  # Custom download URL.
+  # icon:dot-circle[] icon:file-alt[]
+  downloadUrl = "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
+
+  # Sdkman command to use.
+  # Supported values are [`MAJOR`, `MINOR`]
+  # Defaults to `MAJOR`.
+  # icon:dot-circle[]
+  command = "MAJOR"
+
+  # The consumer key for publishing to Sdkman.
+  # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  consumerKey = "__DO_NOT_SET_HERE__"
+
+  # The consumer token for publishing to Sdkman.
+  # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  consumerToken = "__DO_NOT_SET_HERE__"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$announce/json/common-head.adoc[]
+
+      // The name of the candidate registered in thew Sdkman database.
+      // If unspecified, will use ${project.name}.
+      // icon:dot-circle[]
+      "candidate": "app",
+
+      // The release notes URL to use.
+      // Defaults to `${release.${git}.releaseNotesUrl}`.
+      // icon:dot-circle[] icon:file-alt[]
+      "releaseNotesUrl": "pass:[https://host.com/{{projectName}}/{{tagName}}]",
+
+      // Custom download URL.
+      // icon:dot-circle[] icon:file-alt[]
+      "downloadUrl": "https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
+
+      // Sdkman command to use.
+      // Supported values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
+      // icon:dot-circle[]
+      "command": "MAJOR",
+
+      // The consumer key for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "consumerKey": "__DO_NOT_SET_HERE__",
+
+      // The consumer token for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "consumerToken": "__DO_NOT_SET_HERE__"
+include::partial$announce/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$announce/maven/common-head.adoc[]
+
+      <!--
+        The name of the candidate registered in thew Sdkman database.
+        If unspecified, will use ${project.name}.
+        icon:dot-circle[]
+      -->
+      <candidate>app</candidate>
+
+      <!--
+        The release notes URL to use.
+        Defaults to `${release.${git}.releaseNotesUrl}`.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <releaseNotesUrl>pass:[https://host.com/{{projectName}}/{{tagName}}]</releaseNotesUrl>
+
+      <!--
+        Custom download URL.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <downloadUrl>pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]</downloadUrl>
+
+      <!--
+        Sdkman command to use.
+        Supported values are [`MAJOR`, `MINOR`]
+        Defaults to `MAJOR`.
+        icon:dot-circle[]
+      -->
+      <command>MAJOR</command>
+
+      <!--
+        The consumer key for publishing to Sdkman.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <consumerKey>__DO_NOT_SET_HERE__</consumerKey>
+
+      <!--
+        The consumer token for publishing to Sdkman.
+        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <consumerToken>__DO_NOT_SET_HERE__</consumerToken>
+include::partial$announce/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$announce/gradle/common-head.adoc[]
+
+      // The name of the candidate registered in thew Sdkman database.
+      // If unspecified, will use ${project.name}.
+      // icon:dot-circle[]
+      candidate = 'app'
+
+      // The release notes URL to use.
+      // Defaults to `${release.${git}.releaseNotesUrl}`.
+      // icon:dot-circle[] icon:file-alt[]
+      releaseNotesUrl = 'pass:[https://host.com/{{projectName}}/{{tagName}}]'
+
+      // Custom download URL.
+      // icon:dot-circle[] icon:file-alt[]
+      downloadUrl = 'https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
+
+      // Sdkman command to use.
+      // Supported values are [`MAJOR`, `MINOR`]
+      // Defaults to `MAJOR`.
+      // icon:dot-circle[]
+      command = 'MAJOR'
+
+      // The consumer key for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      consumerKey = '__DO_NOT_SET_HERE__'
+
+      // The consumer token for publishing to Sdkman.
+      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      consumerToken = '__DO_NOT_SET_HERE__'
+include::partial$announce/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Requirements
+
+This announcer has the following requirements:
+
+* No snapshot releases are supported.
+* Only `zip` artifacts are supported.
+* The default platform is set to `UNIVERSAL` if the artifact did not define a value for its `platform` field.
+* If there's more than one artifact then each artifact requires distinct `platform` values, otherwise the latest
+ artifact will override any previous matches by platform.
+* You may explicitly skip a distribution or artifact by defining an extra property named `skipSdkman` with a `true` value.
+* Announcing will be skipped if no suitable artifacts are found.
+
+Supported platform values are:
+
+* `mac`, `osx`.
+* `win`, `windows`.
+* `linux`.
+
+include::partial$packagers/downloadUrl.adoc[]
+

@@ -1,0 +1,177 @@
+= Gitter
+:announcer_id:   gitter
+:announcer_name: Gitter
+
+Posts a message to a link:https://gitter.im/[Gitter] room. You must create a custom webhook for this announcer to work.
+
+1. Log into link:https://gitter.im/[Gitter].
+2. Browse to the room you want to integrate to.
+3. Click on the `Settings` menu and select `Integrations`.
+4. Click on the `CUSTOM` button.
+5. Copy the generated webhook URL.
+
+IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the `JRELEASER_GITTER_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/yaml/common-head.adoc[]
+
+    # The webhook associated with a specific Gitter room.
+    # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    webhook: __DO_NOT_SET_HERE__
+
+    # The announcement message.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    message: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    # Path to a template file that contains the message.
+    # Review the available xref:reference:name-templates.adoc[].
+    # Defaults to `src/jreleaser/templates/gitter.tpl`.
+    # icon:dot-circle[]
+    messageTemplate: path/to/template/gitter.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/toml/common-head.adoc[]
+
+  # The webhook associated with a specific Gitter room.
+  # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  webhook = "__DO_NOT_SET_HERE__"
+
+  # The announcement message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  message = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # Path to a template file that contains the message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/gitter.tpl`.
+  # icon:dot-circle[]
+  messageTemplate = "path/to/template/gitter.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$announce/json/common-head.adoc[]
+
+      // The webhook associated with a specific Gitter room.
+      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "webhook": "__DO_NOT_SET_HERE__",
+
+      // The announcement message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      "message": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/gitter.tpl`.
+      // icon:dot-circle[]
+      "messageTemplate": "path/to/template/gitter.tpl"
+include::partial$announce/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$announce/maven/common-head.adoc[]
+
+      <!--
+        The webhook associated with a specific Gitter room.
+        If left unspecified, the `JRELEASER_GITTER_WEBHOOK` environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <webhook>__DO_NOT_SET_HERE__</webhook>
+
+      <!--
+        The announcement message.
+        Review the available xref:reference:name-templates.adoc[].
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <message>🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+
+      <!--
+        Path to a template file that contains the message.
+        Review the available xref:reference:name-templates.adoc[].
+        Defaults to `src/jreleaser/templates/gitter.tpl`.
+        icon:dot-circle[]
+      -->
+      <messageTemplate>path/to/template/gitter.tpl</messageTemplate>
+include::partial$announce/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$announce/gradle/common-head.adoc[]
+
+      // The webhook associated with a specific Gitter room.
+      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      webhook = '__DO_NOT_SET_HERE__'
+
+      // The announcement message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      message = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/gitter.tpl`.
+      // icon:dot-circle[]
+      messageTemplate = 'path/to/template/gitter.tpl'
+include::partial$announce/gradle/common-footer.adoc[]
+----
+--
+====
+
+You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `gitter.tpl`
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]

@@ -1,0 +1,248 @@
+= JBang
+:tool_id:       jbang
+:tool_name:     JBang
+:tool_env_var:  JBANG
+:tool_tap:      catalog
+:tool_tap_name: jbang-catalog
+:tool_manifest: catalog
+
+Unleash the power of Java with link:https://github.com/jbangdev/jbang[jbang]. You can publish distributions as JBang
+catalogs.
+
+Each separate executable will have its own JBang script. All executables will be collected in the same catalog. Existing
+catalogs located at the target repository will be merged into a single catalog.
+
+Publications of snapshots is supported, in which case executables will bear the `-snapshot` suffix in their alias.
+
+== Distribution Support
+
+[%header, cols="<,^"]
+|===
+| Distribution                                  | Supported
+| xref:concepts:distributions/binary.adoc[]         | {icon_req_n}
+| xref:concepts:distributions/java-binary.adoc[]    | {icon_req_y}
+| xref:concepts:distributions/jlink.adoc[]          | {icon_req_n}
+| xref:concepts:distributions/native-image.adoc[]   | {icon_req_n}
+| xref:concepts:distributions/native-package.adoc[] | {icon_req_n}
+| xref:concepts:distributions/single-jar.adoc[]     | {icon_req_y}
+|===
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # The jbang executable alias.
+    # If left undefined, will use `${distribution.executable}`
+    # icon:dot-circle[]
+    alias: cli
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # The jbang executable alias.
+  # If left undefined, will use `${distribution.executable}`
+  # icon:dot-circle[]
+  alias = "cli"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // The jbang executable alias.
+      // If left undefined, will use `${distribution.executable}`
+      // icon:dot-circle[]
+      "alias": "cli"
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        The jbang executable alias.
+        If left undefined, will use `${distribution.executable}`
+        icon:dot-circle[]
+      -->
+      <alias>cli</alias>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // The jbang executable alias.
+      // If left undefined, will use `${distribution.executable}`
+      // icon:dot-circle[]
+      alias = 'cli'
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+NOTE: You must define a value for `java.mainClass` in the owning distribution.
+
+NOTE: When the project's version is snapshot, unless manually updated, the default prepared template assumes JARs may be
+resolved from link:https://jitpack.io[].
+
+IMPORTANT: Aliases must be unique!
+
+The following property names have additional meaning
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key             | Description
+| reverseRepoHost | reversed Git host, i.e. "com.github"
+| reverseDomain   | reversed custom link:https://jitpack.io/docs/#custom-domain-name[domain name]
+|===
+
+Assuming the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a `app.java` file in the `duke/jbang-catalog` repository:
+
+[source,json]
+.jbang-catalog.json
+----
+{
+  "aliases": {
+    "app": {
+      "script-ref": "app.java",
+      "description": "Sample app"
+    }
+  }
+}
+----
+
+[source,java]
+.app.java
+----
+//usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 8
+//DEPS com.acme:app:1.2.3
+
+public class app {
+    public static void main(String... args) throws Exception {
+        com.acme.Main.main(args);
+    }
+}
+----
+
+When the version is snapshot then the catalog and the script template change to:
+
+[source,json]
+.jbang-catalog.json
+----
+{
+  "aliases": {
+    "app-snapshot": {
+      "script-ref": "app_snapshot.java",
+      "description": "Sample app"
+    }
+  }
+}
+----
+
+[source,java]
+.app_snapshot.java
+----
+//usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 8
+//REPOS jitpack
+//DEPS com.github.duke:app:main-SNAPSHOT
+
+public class app_snapshot {
+    public static void main(String... args) throws Exception {
+        com.acme.Main.main(args);
+    }
+}
+----
+
+
+include::partial$packagers/token.adoc[]
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/jbang`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `jbang.java.tpl`
+* `jbang-catalog.json.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex

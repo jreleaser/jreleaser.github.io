@@ -1,0 +1,183 @@
+      // Changelog customization.
+      // icon:dot-circle[]
+      "changelog": {
+        // Disables or enables the changelog.
+        // defaults to `true`.
+        // icon:dot-circle[]
+        "enabled": true,
+
+        // Sorts commits in ascending (oldest first) or descending (newer first).
+        // Supported values are: `ASC`, `DESC`.
+        // Defaults to `DESC`.
+        // icon:dot-circle[]
+        "sort": "DESC",
+
+        // Path to an external file that contains the changelog, read as is.
+        // May be a relative path to the configuration file or an absolute path.
+        // If unspecified, JReleaser will automatically calculate the changelog.
+        // icon:dot-circle[]
+        "external": "path/to/changelog.md",
+
+        // Create explicit markdown links for commit hashes.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "links": false,
+
+        // Whether to skip merge commits from the generated changelog
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "skipMergeCommits": false,
+
+        // Enables or disables formatting options.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "formatted": "ALWAYS",
+
+        // Preconfigured changelog options.
+        // Supported values are [`gitmoji`, `conventional-commits`].
+        // Requires `formatted` to be enabled.
+        // Defaults to empty.
+        // icon:dot-circle[]
+        "preset": "gitmoji",
+
+        // The template to use for each change.
+        // Defaults to `- {{commitShortHash}} {{commitTitle}} ({{commitAuthor}})`.
+        // icon:dot-circle[] icon:file-alt[]
+        "format": "- {{commitShortHash}} {{commitTitle}}",
+
+        // The template to use for the whole changelog.
+        // Defaults is shown.
+        // icon:dot-circle[] icon:file-alt[]
+        "content": "#Changelog\n\n{{changelogChanges}}\n{{changelogContributors}}",
+
+        // Path to a template file that defines the contents.
+        // Review the available xref:reference:name-templates.adoc[].
+        // Defaults to `src/jreleaser/templates/changelog.tpl`.
+        // icon:dot-circle[]
+        "contentTemplate": "path/to/template/changelog.tpl",
+
+        // icon:dot-circle[]
+        "contributors": {
+          // Enables the contributors block.
+          // Defaults to `true`.
+          // icon:dot-circle[]
+          "enabled": true,
+
+          // The template to use for each contributor.
+          // Defaults to `{{contributorName}}`.
+          // icon:dot-circle[] icon:file-alt[]
+          "format": "- {{contributorName}} ({{contributorUsernameAsLink}})"
+        },
+
+        // icon:dot-circle[]
+        "hide": {
+          // Hide uncategorized commits.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          "uncategorized": true,
+
+          // Hide matching categories.
+          // Entries must exactly match category keys defined below.
+          // Defaults to empty.
+          // icon:dot-circle[]
+          "categories": [
+            "merge"
+          ],
+
+          // Hide matching contributor names.
+          // Value may be plain text or regex.
+          // Defaults to empty.
+          // icon:dot-circle[]
+          "contributors": [
+            "[bot]"
+          ]
+        },
+
+        // A list of labels to be included.
+        // Only changes matching this list will be included.
+        // Defaults to empty.
+        // icon:dot-circle[]
+        "includeLabels": [
+           "issue"
+        ],
+
+        // A list of labels to be excluded.
+        // Changes matching this list will be excluded.
+        // Defaults to empty.
+        // icon:dot-circle[]
+        "excludeLabels": [
+           "issue"
+        ],
+
+        // Defines rules that apply labels to changes.
+        // Matchers are evaluated independently; the label will
+        // be set if at least one of the matchers meets the criteria.
+        // icon:dot-circle[]
+        "labelers": [
+          {
+            // The label to be applied.
+            // icon:exclamation-triangle[]
+            "label": "issue",
+
+            // Matches the text of the first commit line.
+            // Value may be plain text or regex.
+            // Use `regex:` as prefix to indicate a regex.
+            // icon:dot-circle[]
+            "title": "regex:fix:",
+
+            // Matches the full text of the commit.
+            // Value may be plain text or regex.
+            // Use `regex:` as prefix to indicate a regex.
+            // icon:dot-circle[]
+            "body": "Fixes #",
+
+            // Priority when sorting.
+            // Defaults to `null`
+            // icon:dot-circle[]
+            "order": 1
+          }
+        ],
+
+        // Groups changes by category.
+        // Defaults are shown.
+        // icon:dot-circle[]
+        "categories": [
+          {
+            // Used for rendering
+            "title": "🚀 Features",
+            // Used for identifying the category
+            "key": "features",
+            "labels": [
+              "feature",
+              "enhancement"
+            ],
+            "order": 1
+          },
+          {
+            "title": "🐛 Bug Fixes",
+            "key": "fixes",
+            // You may override the format per category.
+            "format": "- {{commitShortHash}} {{commitBody}}",
+            "labels": [
+              "bug",
+              "fix"
+            ],
+            "order": 2
+          }
+        ],
+
+        // Defines rules for replacing the generated content.
+        // Each replacer is applied in order.
+        // icon:dot-circle[] icon:file-alt[]
+        "replacers": [
+          {
+            "search": "\[chore\]\s",
+            "replace": ""
+          },
+          {
+            "search": "/CVE-(\d\{4\})-(\d+)/g",
+            "replace": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
+          }
+        ]
+      },

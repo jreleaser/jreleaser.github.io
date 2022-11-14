@@ -1,0 +1,356 @@
+= Webhooks
+
+Posts a message to a service that supports incoming webhooks.
+
+IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the corresponding environment variable over explicitly setting a value in the configuration DSL.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  # icon:dot-circle[]
+  webhooks:
+
+    # Webhooks require a name.
+    # icon:exclamation-triangle[]
+    myWebhook:
+
+      # Enable or disable this announcer.
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[]
+      active: ALWAYS
+
+      # Defines the connection timeout in seconds.
+      # Defaults to `20`.
+      # icon:dot-circle[]
+      connectTimeout: 20
+
+      # Defines the read timeout in seconds.
+      # Defaults to `60`.
+      # icon:dot-circle[]
+      readTimeout: 60
+
+      # Additional properties used when evaluating templates.
+      # icon:dot-circle[] icon:file-alt[]
+      extraProperties:
+        # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        foo: bar
+
+      # The webhook associated with a specific Gitter room.
+      # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+      # environment variable must be defined.
+      # icon:exclamation-triangle[] icon:eye-slash[]
+      webhook: __DO_NOT_SET_HERE__
+
+      # The announcement message.
+      # Review the available xref:reference:name-templates.adoc[].
+      # icon:dot-circle[] icon:file-alt[]
+      message: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+      # The name of the JSON property that contains the message.
+      # Defaults to `text`.
+      # Ignored if `messageTemplate` is used.
+      # icon:dot-circle[]
+      messageProperty: text
+
+      # Path to a template file that contains the message.
+      # Review the available xref:reference:name-templates.adoc[].
+      # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+      # icon:dot-circle[]
+      messageTemplate: path/to/template/myWebhook.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+# Webhooks require a name.
+# icon:exclamation-triangle[]
+[announce.webhooks.myWebhook]
+
+  # Enable or disable this announcer.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[]
+  active = "ALWAYS"
+
+  # Defines the connection timeout in seconds.
+  # Defaults to `20`.
+  # icon:dot-circle[]
+  connectTimeout = 20
+
+  # Defines the read timeout in seconds.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  readTimeout = 60
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+
+  # The webhook associated with a specific Gitter room.
+  # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  webhook = "__DO_NOT_SET_HERE__"
+
+  # The announcement message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  message = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+  # The name of the JSON property that contains the message.
+  # Defaults to `text`.
+  # Ignored if `messageTemplate` is used.
+  # icon:dot-circle[]
+  messageProperty = "text"
+
+  # Path to a template file that contains the message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+  # icon:dot-circle[]
+  messageTemplate = "path/to/template/myWebhook.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    // icon:dot-circle[]
+    "webhooks": {
+
+      // Webhooks require a name.
+      // icon:exclamation-triangle[]
+      "myWebhook": {
+
+        // Enable or disable this announcer.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        "active": "ALWAYS",
+
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // icon:dot-circle[]
+        "connectTimeout": 20,
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // icon:dot-circle[]
+        "readTimeout": 60,
+
+        // Additional properties used when evaluating templates.
+        // icon:dot-circle[] icon:file-alt[]
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          "foo": "bar"
+        },
+
+        // The webhook associated with a specific Gitter room.
+        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        "webhook": "__DO_NOT_SET_HERE__",
+
+        // The announcement message.
+        // Review the available xref:reference:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        "message": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+
+        // The name of the JSON property that contains the message.
+        // Defaults to `text`.
+        // Ignored if `messageTemplate` is used.
+        // icon:dot-circle[]
+        "messageProperty": "text",
+
+        // Path to a template file that contains the message.
+        // Review the available xref:reference:name-templates.adoc[].
+        // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+        // icon:dot-circle[]
+        "messageTemplate": "path/to/template/myWebhook.tpl"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <announce>
+    <!--
+      icon:dot-circle[]
+    -->
+    <webhooks>
+
+      <!--
+        Webhooks require a name.
+        icon:exclamation-triangle[]
+       -->
+      <myWebhook>
+
+        <!--
+          Enable or disable this announcer.
+          Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          icon:dot-circle[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          Defines the connection timeout in seconds.
+          Defaults to `20`.
+          icon:dot-circle[]
+        -->
+        <connectTimeout>20</connectTimeout>
+
+        <!--
+          Defines the read timeout in seconds.
+          Defaults to `60`.
+          icon:dot-circle[]
+        -->
+        <readTimeout>60</readTimeout>
+
+        <!--
+          Additional properties used when evaluating templates.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+
+        <!--
+          The webhook associated with a specific Gitter room.
+          If left unspecified, the `JRELEASER_${name}_WEBHOOK` environment variable must be defined.
+          icon:exclamation-triangle[] icon:eye-slash[]
+        -->
+        <webhook>__DO_NOT_SET_HERE__</webhook>
+
+        <!--
+          The announcement message.
+          Review the available xref:reference:name-templates.adoc[].
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <message>🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+
+        <!--
+          The name of the JSON property that contains the message.
+          Defaults to `text`.
+          Ignored if `messageTemplate` is used.
+          icon:dot-circle[]
+        -->
+        <messageProperty>text</messageProperty>
+
+        <!--
+          Path to a template file that contains the message.
+          Review the available xref:reference:name-templates.adoc[].
+          Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+          icon:dot-circle[]
+        -->
+        <messageTemplate>path/to/template/myWebhook.tpl</messageTemplate>
+      </myWebhook>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    // icon:dot-circle[]
+    webhooks {
+
+      // Webhooks require a name.
+      // icon:exclamation-triangle[]
+      myWebhook {
+
+        // Enable or disable this announcer.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[]
+        active = 'ALWAYS'
+
+        // Defines the connection timeout in seconds.
+        // Defaults to `20`.
+        // icon:dot-circle[]
+        connectTimeout = 20
+
+        // Defines the read timeout in seconds.
+        // Defaults to `60`.
+        // icon:dot-circle[]
+        readTimeout = 60
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+
+        // The webhook associated with a specific Gitter room.
+        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        webhook = '__DO_NOT_SET_HERE__'
+
+        // The announcement message.
+        // Review the available xref:reference:name-templates.adoc[].
+        // icon:dot-circle[] icon:file-alt[]
+        message = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+        // The name of the JSON property that contains the message.
+        // Defaults to `text`.
+        // Ignored if `messageTemplate` is used.
+        // icon:dot-circle[]
+        messageProperty = 'text'
+
+        // Path to a template file that contains the message.
+        // Review the available xref:reference:name-templates.adoc[].
+        // Defaults to `src/jreleaser/templates/myWebhook.tpl`.
+        // icon:dot-circle[]
+        messageTemplate = 'path/to/template/myWebhook.tpl'
+      }
+    }
+  }
+}
+----
+--
+====
+
+You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates`
+

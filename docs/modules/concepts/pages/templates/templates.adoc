@@ -1,0 +1,191 @@
+= Template Basics
+
+Once size does not fit all as no two build are setup identically. JReleaser recognizes this and lets you customize
+every single aspect of the release process, by means of parameterizable configuration settings and file templates.
+
+Many fields found in the xref:reference:index.adoc[] options can be parameterized using
+link:https://mustache.github.io/[Mustache] templates. Basically you write down text as you'd normally do and use
+the `{{placeholder}}` syntax in places where you'd want to have a value placeholder be replaced by
+the actual value as computed/exposed by JReleaser.
+
+There are several predefined xref:reference:name-templates.adoc[] that can be used as placeholders in configuration
+field names. You may also use these placeholders in template files, such as those that may be used by the
+xref:reference:announce/mail.adoc[] announcer, or the xref:reference:packagers/homebrew.adoc[] packager.
+
+JReleaser provides built-in file templates for all packagers which will be automatically selected when preparing files
+for a particular packager. You may override this behavior by providing your own templates, either at the default location
+expected by each packager, or by pointing the packager to a different template source.
+
+Template files may be generated using the appropriate command exposed by your tool of choice:
+xref:tools:jreleaser-cli.adoc#_template[CLI], xref:tools:jreleaser-maven.adoc#_jreleasertemplate[Maven],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[Gradle], xref:tools:jreleaser-ant.adoc#_jreleaser_template[Ant].
+
+Some configuration elements let you define custom properties that may be used as placeholders, for example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  extraProperties:
+    foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "extraProperties": {
+      "foo": "bar"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <project>
+    <extraProperties>
+      <foo>bar</foo>
+    </extraProperties>
+  </project>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    extraProperties.put('foo', 'bar')
+  }
+}
+----
+--
+====
+
+These extra properties will always be prefixed by their containing element, in this case `project`, thus the `foo`
+resolves to `projectFoo` and can be consumed as `{{projectFoo}}` from any template.
+
+A property name may use the special `_split` suffix in which case it's assumed that the value is a literal that should
+be treated as a collection. The last character in the value is used as the separator.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  extraProperties:
+    foo_split: '1,2,3,4,5,'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  extraProperties.foo_split = "1,2,3,4,5,"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "extraProperties": {
+      "foo_split": "1,2,3,4,5,"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <project>
+    <extraProperties>
+      <foo_split>1,2,3,4,5,</foo_split>
+    </extraProperties>
+  </project>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    extraProperties.put('foo_split', '1,2,3,4,5,')
+  }
+}
+----
+--
+====
+
+Given this input and the following template:
+
+[source]
+----
+{{projectFoo}}
+
+{{#projectFoo}}
+{{.}}
+{{/projectFoo}}
+----
+
+Then the resulting evalution will be
+
+[source]
+----
+[1, 2, 3, 4, 5]
+
+1
+2
+3
+4
+5
+----
+
+
