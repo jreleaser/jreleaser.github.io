@@ -724,38 +724,46 @@
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Distribution</th>
 <th class="tableblock halign-center valign-top">Supported</th>
+<th class="tableblock halign-center valign-top">Buildx</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/binary.html" class="xref page">Binary</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/java-binary.html" class="xref page">Java Binary</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/jlink.html" class="xref page">Jlink</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/native-image.html" class="xref page">Native Image</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/native-package.html" class="xref page">Native Package</a></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../concepts/distributions/single-jar.html" class="xref page">Single JAR</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span></p></td>
 </tr>
 </tbody>
@@ -972,6 +980,30 @@ packagers:
     labels:
       foo: bar
 
+    # Configure multi-arch image support.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    buildx:
+
+      # Enable buildx support.
+      # Default is `false`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      enabled: true
+
+      # Configure the buildx builder.
+      # Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      createBuilderFlags:
+        - '--name'
+        - 'jreleaser'
+        - '--bootstrap'
+        - '--use'
+
+      # Configure platforms to be used.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      platforms:
+        - 'linux/amd64'
+        - 'linux/arm64'
+
     # A list of docker registries where images will be published.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     registries:
@@ -1142,6 +1174,23 @@ packagers:
   # A map of Docker labels.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   labels.foo = "bar"
+
+  # Configure multi-arch image support.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+
+  # Enable buildx support.
+  # Default is `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  buildx.enabled = true
+
+  # Configure the buildx builder.
+  # Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  buildx.createBuilderFlags = ["--name", "jreleaser", "--driver", "docker-container", "--bootstrap", "--use"]
+
+  # Configure platforms to be used.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  buildx.platforms = ["linux/amd64", "linux/arm64"]
 
   # A list of docker registries where images will be published.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1330,6 +1379,33 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "labels": {
         "foo": "bar"
+      },
+
+      // Configure multi-arch image support.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "buildx": {
+
+        // Enable buildx support.
+        // Default is `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "enabled": true,
+
+        // Configure the buildx builder.
+        // Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "createBuilderFlags": [
+          "--name",
+          "jreleaser",
+          "--bootstrap",
+          "--use"
+        ],
+
+        // Configure platforms to be used.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "platforms": [
+          "linux/amd64",
+          "linux/arm64"
+        ]
       },
 
       // A list of docker registries where images will be published.
@@ -1588,6 +1664,40 @@ packagers:
       &lt;/labels&gt;
 
       &lt;!--
+        Configure multi-arch image support.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;buildx&gt;
+        &lt;!--
+          Enable buildx support.
+          Default is `false`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+
+        &lt;!--
+          Configure the buildx builder.
+          Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;createBuilderFlags&gt;
+          &lt;createBuilderFlag&gt;--name&lt;/createBuilderFlag&gt;
+          &lt;createBuilderFlag&gt;jreleaser&lt;/createBuilderFlag&gt;
+          &lt;createBuilderFlag&gt;--bootstrap&lt;/createBuilderFlag&gt;
+          &lt;createBuilderFlag&gt;--use&lt;/createBuilderFlag&gt;
+        &lt;/createBuilderFlags&gt;
+
+        &lt;!--
+          Configure platforms to be used.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;platforms&gt;
+          &lt;platform&gt;linux/amd64&lt;/platform&gt;
+          &lt;platform&gt;linux/arm64&lt;/platform&gt;
+        &lt;/platforms&gt;
+      &lt;/buildx&gt;
+
+      &lt;!--
         A list of docker registries where images will be published.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -1780,6 +1890,29 @@ packagers:
       // The key `openjdk@${java.version}` will be added automatically if not defined.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       label('foo', 'bar')
+
+      // Configure multi-arch image support.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      buildx {
+
+        // Enable buildx support.
+        // Default is `false`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        enabled = true
+
+        // Configure the buildx builder.
+        // Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        createBuilderFlag('--name')
+        createBuilderFlag('jreleaser')
+        createBuilderFlag('--bootstrap')
+        createBuilderFlag('--use')
+
+        // Configure platforms to be used.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        platform('linux/amd64')
+        platform('linux/arm64')
+      }
 
       // A list of docker registries where images will be published.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
