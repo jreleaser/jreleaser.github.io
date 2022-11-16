@@ -453,3 +453,75 @@ For a project with the following commits
 Generates a changelog similar to
 
 image::ROOT:jreleaser-changelog-preset-gitmoji.png[]
+
+== Appending
+
+JReleaser may append the changelog for a given release to an existing changelog (typically `CHANGELOG.md` at the root of
+the project). This can be achieved by enabling the `append` block, for example
+
+[source,yaml]
+[subs="attributes,+macros"]
+----
+release:
+  github:
+    changelog:
+      formatted: always
+      categoryTitleFormat: '#### {{categoryTitle}}'
+      contributorsTitleFormat: '#### Contributors'
+      preset: conventional-commits
+      append:
+        enabled: true
+----
+
+Given an initial `CHANGELOG.md` such as
+
+[source]
+.CHANGELOG.md
+----
+# Changelog
+
+Lorem isum dolor sit amet.
+
+<!-- JRELEASER_CHANGELOG_APPEND - Do not remove or modify this section -->
+----
+
+The updated changelog for a `1.0.0` releas would look like this
+
+[source]
+.CHANGELOG.md
+----
+# Changelog
+
+Lorem isum dolor sit amet.
+
+<!-- JRELEASER_CHANGELOG_APPEND - Do not remove or modify this section -->
+## [v1.0.0]
+
+### Changelog
+
+#### 🛠  Build
+- 2454d3a Add arguments to Main class (Andres Almiray)
+- 9797539 Use fetch-depth=0 when checking out on release (Andres Almiray)
+- ca15da0 Add Maven assembly descriptor (Andres Almiray)
+- 8270c4f Setup build & release workflows (Andres Almiray)
+- 1442ef0 Add JReleaser configuration (Andres Almiray)
+- 839fab8 Add Maven wrapper files (Andres Almiray)
+- 0cd14e9 Add sources (Andres Almiray)
+- fd17794 Add license file (Andres Almiray)
+
+---
+- 51c3234 Init repository (Andres Almiray)
+
+
+#### Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray
+----
+
+Note the use of a special comment as anchor for finding the right place to append the generated changelog. If the anchor
+does not exist then the generated changelog will be prepended at the beginning of the full changelog.
+
+NOTE: Changelog appending is only active when a project is not snapshot.
+
+IMPORTANT: JReleaser does not verify if a previous tag is already found in the full changelog before appending.
+
