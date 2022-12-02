@@ -132,11 +132,27 @@ checksum:
   # Do not checksum additional files, only distribution artifacts
   files: false
 
+# Deploy JARs and POMs to Maven Central
+deploy:
+  maven:
+    nexus2:
+      maven-central:
+        active: RELEASE
+        url: https://s01.oss.sonatype.org/service/local
+        closeRepository: true
+        releaseRepository: true
+        stagingRepositories:
+          - build/repos/local/release
+
 # Announcing a release only occurs when it's not snapshot
 announce:
   twitter:
     active: release
     statusTemplate: src/jreleaser/twitter.tpl
+  mastodon:
+    active: RELEASE
+    host: https://fosstodon.org
+    statusTemplate: src/jreleaser/mastodon.tpl
   http:
     noticeable:
       active: release
@@ -273,10 +289,14 @@ distributions:
         - --filesystem=host
       categories:
         - Developer Tools
+      skipReleases:
+        - '.*-RC.*'
+        - '.*-M.*'
       repository:
-        active: release
+        active: RELEASE
         owner: flathub
         name: org.jreleaser.cli
+        branch: master
     jbang:
       active: always
     macports:
@@ -525,4 +545,8 @@ Docker images will also be published to DockerHub:
  * https://hub.docker.com/r/jreleaser/jreleaser-slim
  * https://hub.docker.com/r/jreleaser/jreleaser-alpine
 
-Finally, a Twitter thread will be posted as well as a news item at link:https://jreleaser.noticeable.news/[].
+JARs and POMs will be posted to Maven Central:
+
+ * https://search.maven.org/search?q=jreleaser
+
+Finally, Twitter & Mastodon threads will be posted, as well as a news item at link:https://jreleaser.noticeable.news/[].
