@@ -834,11 +834,27 @@ checksum:
   # Do not checksum additional files, only distribution artifacts
   files: false
 
+# Deploy JARs and POMs to Maven Central
+deploy:
+  maven:
+    nexus2:
+      maven-central:
+        active: RELEASE
+        url: https://s01.oss.sonatype.org/service/local
+        closeRepository: true
+        releaseRepository: true
+        stagingRepositories:
+          - build/repos/local/release
+
 # Announcing a release only occurs when it's not snapshot
 announce:
   twitter:
     active: release
     statusTemplate: src/jreleaser/twitter.tpl
+  mastodon:
+    active: RELEASE
+    host: https://fosstodon.org
+    statusTemplate: src/jreleaser/mastodon.tpl
   http:
     noticeable:
       active: release
@@ -975,10 +991,14 @@ distributions:
         - --filesystem=host
       categories:
         - Developer Tools
+      skipReleases:
+        - '.*-RC.*'
+        - '.*-M.*'
       repository:
-        active: release
+        active: RELEASE
         owner: flathub
         name: org.jreleaser.cli
+        branch: master
     jbang:
       active: always
     macports:
@@ -1261,7 +1281,17 @@ VERSION</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Finally, a Twitter thread will be posted as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
+<p>JARs and POMs will be posted to Maven Central:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://search.maven.org/search?q=jreleaser" class="bare">https://search.maven.org/search?q=jreleaser</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Finally, Twitter &amp; Mastodon threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
 </div>
 </article>
   </div>
