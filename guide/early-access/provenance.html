@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Checklist :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/checklist.html">
+    <title>Provenance :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/provenance.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../_/css/site.css">
     <link rel="stylesheet" href="../../_/css/site-extra.css">
@@ -630,10 +630,10 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="provenance.html">Provenance</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="checklist.html">Checklist</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -685,101 +685,104 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">JReleaser</a></li>
-    <li><a href="checklist.html">Checklist</a></li>
+    <li><a href="provenance.html">Provenance</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../latest/checklist.html">latest</a>
-    <a class="version is-current" href="checklist.html">early-access</a>
+    <a class="version is-missing" href="../latest/index.html">latest</a>
+    <a class="version is-current" href="provenance.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/ROOT/pages/checklist.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/ROOT/pages/provenance.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Checklist</h1>
+<h1 class="page">Provenance</h1>
+<div class="sect1">
+<h2 id="_pgp"><a class="anchor" href="#_pgp"></a>PGP</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Review the following items before making your first release:</p>
+<p>All release artifacts are signed with PGP. Follow these instructions to verify artifacts against their signatures.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Sources must be inside a Git repository with at least one remote (default name <code>origin</code>). You can change the default
-remote name to something else by setting a <code>JRELEASER_DEFAULT_GIT_REMOTE</code> environment variable.</p>
+<p>Download the <a href="http://keyserver.ubuntu.com/pks/lookup?op=get&amp;search=0xf1d5f6a91c86b0702cd0734bccc55c5167419adb">public key</a>.
+Save it as <code>jreleaser.asc</code>.</p>
 </li>
 <li>
-<p>The default branch name is <code>main</code>. If you use a different name then you may set it explicitly in the configuration of
-the chosen releaser or set a <code>JRELEASER_BRANCH</code> environment variable. This variable may also be set in the
-<a href="reference/environment.html" class="xref page">Environment</a> configuration file.</p>
-</li>
-<li>
-<p>JReleaser expects to be configured at the root of the Git project. If you configure it at some other location within the
-project structure then you may have to instruct JReleaser to search for the Git root:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="tools/jreleaser-cli.html" class="xref page"><span class="image"><img src="_images/cli.svg" alt="cli" width="20" height="20"></span> CLI</a> use <code>-grs</code> or <code>--git-root-search</code> command flags.</p>
-</li>
-<li>
-<p><a href="tools/jreleaser-maven.html" class="xref page"><span class="image"><img src="_images/maven.svg" alt="maven" width="24" height="24"></span> Maven</a> set the <code>jreleaser.git.root.search</code> property or use <code>&lt;gitRootSearch&gt;</code>
-in the plugin&#8217;s configuration.</p>
-</li>
-<li>
-<p><a href="tools/jreleaser-gradle.html" class="xref page"><span class="image"><img src="_images/gradle.svg" alt="gradle" width="24" height="24"></span> Gradle</a> set the <code>gitRootSearch</code> property on the <code>jreleaser</code> extension
-or use the <code>--git-root-search</code> command flag.</p>
-</li>
-<li>
-<p><a href="tools/jreleaser-ant.html" class="xref page"><span class="image"><img src="_images/ant.svg" alt="ant" width="24" height="24"></span> Ant</a> set the <code>gitRootSearch</code> task property.</p>
+<p>Verify the fingerprint matches the following:</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>The default project versioning scheme is <a href="reference/project.html#_semver" class="xref page">Semantic Versioning</a>.</p>
-</li>
-<li>
-<p>The default tag format is <code>v{{projectVersion}}</code>.</p>
-</li>
-<li>
-<p>JReleaser will tag the release by default. If you do not want this then set the <code>skipTag</code> property to <code>true</code> on the
-chosen releaser.</p>
-</li>
-<li>
-<p>The default distribution type is <code><a href="#distributions/java-binary.adoc" class="xref unresolved">JAVA_BINARY</a></code>.</p>
-</li>
-<li>
-<p>You are encouraged to try your first releases locally (if all configured artifacts/files are available) running in
-dryrun mode:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ gpg --show-keys jreleaser.asc
+pub   rsa4096 2021-02-10 [SC] [expires: 2031-02-08]
+      F1D5F6A91C86B0702CD0734BCCC55C5167419ADB
+uid                      Andres Almiray &lt;aalmiray@********.com&gt;
+sub   rsa4096 2021-02-10 [E] [expires: 2031-02-08]</code></pre>
+</div>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="tools/jreleaser-cli.html#_release" class="xref page"><span class="image"><img src="_images/cli.svg" alt="cli" width="20" height="20"></span> CLI</a> use <code>--dry-run</code> command flag.</p>
+<p>Import the key with <code>gpg --import jreleaser.asc</code>.</p>
 </li>
 <li>
-<p><a href="tools/jreleaser-maven.html#_jreleaserrelease" class="xref page"><span class="image"><img src="_images/maven.svg" alt="maven" width="24" height="24"></span> Maven</a> set the <code>jreleaser.dry.run</code> property.</p>
-</li>
-<li>
-<p><a href="tools/jreleaser-gradle.html#_jreleaserrelease" class="xref page"><span class="image"><img src="_images/gradle.svg" alt="gradle" width="24" height="24"></span> Gradle</a> set the <code>dryrun</code> property on the <code>jreleaser</code> extension
-or use the <code>--dry-run</code> command flag.</p>
-</li>
-<li>
-<p><a href="tools/jreleaser-ant.html#_jreleaser_release" class="xref page"><span class="image"><img src="_images/ant.svg" alt="ant" width="24" height="24"></span> Ant</a> set the <code>dryrun</code> task property.</p>
+<p>Verify the chosen artifact with:</p>
 </li>
 </ul>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ gpg --verify jreleaser-early-access.zip.asc jreleaser-early-access.zip
+gpg: Signature made Tue Dec 13 06:51:49 2022 CET
+gpg:                using RSA key CCC55C5167419ADB
+gpg: Good signature from "Andres Almiray &lt;aalmiray@********.com&gt;" [ultimate]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_slsa"><a class="anchor" href="#_slsa"></a>SLSA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting with <code>v1.4.0</code> JReleaser provides <a href="https://slsa.dev">SLSA</a> provenance for all release artifacts.
+Follow these instructions to verify artifacts.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Install or build the <a href="https://github.com/slsa-framework/slsa-verifier">slsa-verifier</a> binary.</p>
 </li>
 <li>
-<p>JReleaser generates 2 files after most commands are run. These are <code>output.properties</code> and <code>trace.log</code>. The first
-contains a set of calculated values such as the project version, tag, timestamp, and more. The second contains the
-full execution log plus any stacktraces in case of errors. You&#8217;ll find these files inside the corresponding output
-directory: <code>[out | target | build]/jreleaser</code>.</p>
+<p>Download <a href="https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-all-early-access.intoto.jsonl">jreleaser-all-early-access.intoto.jsonl</a>.</p>
+</li>
+<li>
+<p>Download the binary or binary files you&#8217;d like to verify.</p>
+</li>
+<li>
+<p>Run the verifier against the binary. For example:</p>
 </li>
 </ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ slsa-verifier verify-artifact jreleaser-early-access.zip \
+   --provenance-path jreleaser-all-early-access.intoto.jsonl \
+   --source-uri github.com/jreleaser/jreleaser
+Verified signature against tlog entry index 8865454 at URL: https://rekor.sigstore.dev/api/v1/log/entries/24296fb24b8ad77acceaa92d35076867e961260048db8f9ee7726329e5a14ae3a6cfd678aeacad11
+Verified build using builder https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@refs/tags/v1.4.0 at commit caa516c7c52ca72a352f97e4153334080f8b7f43
+PASSED: Verified SLSA provenance</code></pre>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>
