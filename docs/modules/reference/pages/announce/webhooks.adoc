@@ -1,4 +1,5 @@
 = Webhooks
+:default-message: 🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
 
 Posts a message to a service that supports incoming webhooks.
 
@@ -54,7 +55,7 @@ announce:
       # The announcement message.
       # Review the available xref:reference:name-templates.adoc[].
       # icon:dot-circle[] icon:file-alt[]
-      message: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+      message: '{default-message}'
 
       # The name of the JSON property that contains the message.
       # Defaults to `text`.
@@ -114,7 +115,7 @@ TOML::
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
   # icon:dot-circle[] icon:file-alt[]
-  message = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+  message = "{default-message}"
 
   # The name of the JSON property that contains the message.
   # Defaults to `text`.
@@ -181,7 +182,7 @@ JSON::
         // The announcement message.
         // Review the available xref:reference:name-templates.adoc[].
         // icon:dot-circle[] icon:file-alt[]
-        "message": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}",
+        "message": "{default-message}",
 
         // The name of the JSON property that contains the message.
         // Defaults to `text`.
@@ -272,7 +273,7 @@ Maven::
           Review the available xref:reference:name-templates.adoc[].
           icon:dot-circle[] icon:file-alt[]
         -->
-        <message>🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</message>
+        <message>{default-message}</message>
 
         <!--
           The name of the JSON property that contains the message.
@@ -347,7 +348,7 @@ jreleaser {
         // The announcement message.
         // Review the available xref:reference:name-templates.adoc[].
         // icon:dot-circle[] icon:file-alt[]
-        message = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+        message = '{default-message}'
 
         // The name of the JSON property that contains the message.
         // Defaults to `text`.
@@ -381,3 +382,506 @@ The default location for templates is:
 
 `src/jreleaser/templates`
 
+== Examples
+
+=== Discord
+
+Posts a message to a link:https://discord.com/[Discord] room. You must create a custom webhook for this announcer to work.
+
+1. Log into the target discord server.
+2. Select the channel you want to integrate to, click on its settings icon.
+3. Click on the `Integrations` menu item.
+4. Click on Webhooks.
+5. Create a new webhook.
+6. Copy the generated webhook URL.
+
+NOTE: Set a `JRELEASER_DISCORD_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  webhooks:
+    discord:
+      active: ALWAYS
+      message: '{default-message}'
+      messageProperty: content
+      structuredMessage: true
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[announce.webhooks.discord]
+  active = "ALWAYS"
+  message = "{default-message}"
+  messageProperty = "content"
+  structuredMessage = true
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "discord": {
+        "active": "ALWAYS",
+        "message": "{default-message}",
+        "messageProperty": "content",
+        "structuredMessage": true
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <discord>
+        <active>ALWAYS</active>
+        <message>{default-message}</message>
+        <messageProperty>content</messageProperty>
+        <structuredMessage>true</structuredMessage>
+      </discord>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      discord {
+        active = 'ALWAYS'
+        message = '{default-message}'
+        messageProperty = 'text'
+        structuredMessage = true
+      }
+    }
+  }
+}
+----
+--
+====
+
+=== Gitter
+
+Posts a message to a link:https://gitter.im/[Gitter] room. You must create a custom webhook for this announcer to work.
+
+1. Log into link:https://gitter.im/[Gitter].
+2. Browse to the room you want to integrate to.
+3. Click on the `Settings` menu and select `Integrations`.
+4. Click on the `CUSTOM` button.
+5. Copy the generated webhook URL.
+
+NOTE: Set a `JRELEASER_GITTER_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  webhooks:
+    gitter:
+      active: ALWAYS
+      message: '{default-message}'
+      messageProperty: message
+      structuredMessage: true
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[announce.webhooks.gitter]
+  active = "ALWAYS"
+  message = "{default-message}"
+  messageProperty = "message"
+  structuredMessage = true
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "gitter": {
+        "active": "ALWAYS",
+        "message": "{default-message}",
+        "messageProperty": "message",
+        "structuredMessage": true
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <gitter>
+        <active>ALWAYS</active>
+        <message>{default-message}</message>
+        <messageProperty>message</messageProperty>
+        <structuredMessage>true</structuredMessage>
+      </gitter>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      gitter {
+        active = 'ALWAYS'
+        message = '{default-message}'
+        messageProperty = 'message'
+        structuredMessage = true
+      }
+    }
+  }
+}
+----
+--
+====
+
+=== GoogleChat
+
+Posts a message to a link:https://chat.google.com/[GoogleChat] room. You must create a custom webhook for this announcer to work.
+Follow the instructions at link:https://developers.google.com/chat/how-tos/webhooks[] to register an
+incoming webhook.
+
+NOTE: Set a `JRELEASER_GOOGLECHAT_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  webhooks:
+    googleChat:
+      active: ALWAYS
+      message: '{default-message}'
+      messageProperty: text
+      structuredMessage: true
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[announce.webhooks.googleChat]
+  active = "ALWAYS"
+  message = "{default-message}"
+  messageProperty = "text"
+  structuredMessage = true
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "googleChat": {
+        "active": "ALWAYS",
+        "message": "{default-message}",
+        "messageProperty": "text",
+        "structuredMessage": true
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <googleChat>
+        <active>ALWAYS</active>
+        <message>{default-message}</message>
+        <messageProperty>text</messageProperty>
+        <structuredMessage>true</structuredMessage>
+      </googleChat>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      googleChat {
+        active = 'ALWAYS'
+        message = '{default-message}'
+        messageProperty = 'text'
+        structuredMessage = true
+      }
+    }
+  }
+}
+----
+--
+====
+
+=== Mattermost
+
+Posts a message to a link:https://mattermost.com/[Mattermost] room. You must create a custom webhook for this announcer to work.
+
+NOTE: Set a `JRELEASER_MATTERMOST_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  webhooks:
+    mattermost:=
+      active: ALWAYS
+      message: '{default-message}'
+      messageProperty: text
+      structuredMessage: true
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[announce.webhooks.mattermost]
+  active = "ALWAYS"
+  message = "{default-message}"
+  messageProperty = "text"
+  structuredMessage = true
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "mattermost": {
+        "active": "ALWAYS",
+        "message": "{default-message}",
+        "messageProperty": "text",
+        "structuredMessage": true
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <mattermost>
+        <active>ALWAYS</active>
+        <message>{default-message}</message>
+        <messageProperty>text</messageProperty>
+        <structuredMessage>true</structuredMessage>
+      </mattermost>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      mattermost {
+        active = 'ALWAYS'
+        message = '{default-message}'
+        messageProperty = 'text'
+        structuredMessage = true
+      }
+    }
+  }
+}
+----
+--
+====
+
+=== Teams
+
+Posts a message to a link:https://www.microsoft.com/en-ww/microsoft-teams[Teams] room. You must create a custom webhook for this announcer to work.
+
+1. Log into Teams.
+2. Click on the `Apps` icon.
+3. Click on the `Connectors` menu item.
+4. Click on `Incoming Webhook` and add it to a team.
+5. Configure the webhook.
+6. Copy the generated webhook URL.
+
+NOTE: Set a `JRELEASER_TEAMS_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+announce:
+  webhooks:
+    teams:
+      active: ALWAYS
+      messageTemplate: path/to/template/teams.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[announce.webhooks.teams]
+  active = "ALWAYS"
+  messageTemplate = "path/to/template/teams.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "teams": {
+        "active": "ALWAYS",
+        "messageTemplate": "path/to/template/teams.tpl"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <teams>
+        <active>ALWAYS</active>
+        <messageTemplate>path/to/template/teams.tpl</messageTemplate>
+      </teams>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      teams {
+        active = 'ALWAYS'
+        messageTemplate = 'path/to/template/teams.tpl'
+      }
+    }
+  }
+}
+----
+--
+====
