@@ -791,7 +791,7 @@ following the name of the archive, thus if the archive is named <code>app-1.2.3.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../reference/packagers/sdkman.html" class="xref page">Sdkman</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><span class="icon yellow"><i class="fa fa-exclamation-triangle"></i></span></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../../reference/packagers/snap.html" class="xref page">Snap</a></p></td>
@@ -803,6 +803,19 @@ following the name of the archive, thus if the archive is named <code>app-1.2.3.
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<a href="../../reference/packagers/sdkman.html" class="xref page">Sdkman</a> is only supported if the executable is originally Java based and has been
+transformed using GraalVM Native Image. You must add an extraProperty named <code>graalVMNativeImage</code> to the artifact.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -822,6 +835,51 @@ respective <code>platform</code> property. However, it&#8217;s possible to skip 
       - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.zip
         extraProperties:
             universal: true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_graalvm_native_image"><a class="anchor" href="#_graalvm_native_image"></a>GraalVM Native Image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Native image binaries can be created in many ways. Frameworks such as Micronaut, Quarkus, and Helidon provide Maven and
+Gradle plugins that can create such binaries. The distribution should be packages as a Zip or Tar. The archive must
+contain a root entry, typically following the name of the archive, thus if the archive is named <code>app-1.2.3.zip</code> the root
+entry should be <code>app-1.2.3</code>.</p>
+</div>
+<div class="ulist">
+<div class="title">Maven</div>
+<ul>
+<li>
+<p><a href="https://www.graalvm.org/reference-manual/native-image/NativeImageMavenPlugin/">native-image-maven-plugin</a></p>
+</li>
+<li>
+<p><a href="http://maven.apache.org/plugins/maven-assembly-plugin/">maven-assembly-plugin</a>: packages the distribution as a Zip.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Gradle</div>
+<ul>
+<li>
+<p><a href="https://docs.gradle.org/current/userguide/distribution_plugin.html">distribution</a> plugin: packages a distribution as a Zip.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Alternatively, you may also configure a <a href="../../reference/assemble/native-image.html" class="xref page">Native Image</a> assembler.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">distributions:
+  myNativeImageApp:
+    type: BINARY
+    artifacts:
+      - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}.zip
+        platform: 'linux-x86_64'
+        extraProperties:
+            graalVMNativeImage: true</code></pre>
 </div>
 </div>
 </div>
