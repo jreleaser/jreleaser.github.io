@@ -760,6 +760,7 @@ project:
     groupId: org.jreleaser
     version: 8
     multiProject: true
+    mainClass: org.jreleaser.cli.Main
   tags:
     - 'jreleaser'
     - 'release'
@@ -829,12 +830,6 @@ release:
 signing:
   active: always
   armored: true
-  # Do not sign additional files, only distribution artifacts and checksums
-  files: false
-
-checksum:
-  # Do not checksum additional files, only distribution artifacts
-  files: false
 
 # Deploy JARs and POMs to Maven Central
 deploy:
@@ -851,7 +846,7 @@ deploy:
 # Announcing a release only occurs when it's not snapshot
 announce:
   twitter:
-    active: release
+    active: RELEASE
     statusTemplate: src/jreleaser/twitter.tpl
   mastodon:
     active: RELEASE
@@ -859,7 +854,7 @@ announce:
     statusTemplate: src/jreleaser/mastodon.tpl
   http:
     noticeable:
-      active: release
+      active: RELEASE
       url: https://api.noticeable.io/graphql
       authorization: bearer
       bearerKeyword: Apikey
@@ -872,10 +867,9 @@ assemble:
   # Configure a cross-platform Jlink assembly
   jlink:
     jreleaser-standalone:
-      active: always
+      active: ALWAYS
       java:
         version: 11
-        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       jdeps:
@@ -915,7 +909,7 @@ assemble:
   # Configure platform specific installers
   jpackage:
     jreleaser-installer:
-      active: always
+      active: ALWAYS
       jlink: jreleaser-standalone
       attachPlatform: true
       applicationPackage:
@@ -943,10 +937,9 @@ assemble:
   # Configure native executables
   nativeImage:
     jreleaser-native:
-      active: always
+      active: ALWAYS
       java:
         version: 17
-        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       mainJar:
@@ -961,7 +954,7 @@ assemble:
         - path: '{{jdkPathPrefix}}/graal17Windows/{{graalFilePrefix}}'
           platform: 'windows-x86_64'
       upx:
-        active: always
+        active: ALWAYS
         version: '3.96'
       args:
         - '-Duser.language=en'
@@ -969,21 +962,19 @@ assemble:
         - '-H:Optimize=2'
         - '-H:+RemoveUnusedSymbols'
         -
-# Configure 6 distributions
+# Configure 5 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
   jreleaser:
-    java:
-      mainClass: org.jreleaser.cli.Main
     chocolatey:
-      active: always
+      active: ALWAYS
       remoteBuild: true
       title: JReleaser
       iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
-        active: release
+        active: RELEASE
     flatpak:
-      active: always
+      active: ALWAYS
       componentId: org.jreleaser.cli
       developerName: JReleaser
       runtime: freedesktop
@@ -1002,23 +993,23 @@ distributions:
         name: org.jreleaser.cli
         branch: master
     jbang:
-      active: always
+      active: ALWAYS
     macports:
-      active: always
+      active: ALWAYS
       categories:
         - devel
         - java
       maintainers:
         - '@aalmiray'
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-macports
     scoop:
-      active: always
+      active: ALWAYS
       bucket:
-        active: release
+        active: RELEASE
     sdkman:
-      active: release
+      active: RELEASE
       architectures:
         - buildOn: [ amd64, arm64 ]
       plugs:
@@ -1036,9 +1027,9 @@ distributions:
         - home
         - dot-config-files
     spec:
-      active: always
+      active: ALWAYS
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-copr
     artifacts:
       # Transform the artifact name
@@ -1051,14 +1042,7 @@ distributions:
         extraProperties:
           skipFlatpak: true
 
-  # Distribution 2 is of type JAVA_BINARY
-  jreleaser-ant-tasks:
-    artifacts:
-      # Transform the artifact name
-      - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
-        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
-
-  # Distribution 3 is of type SINGLE_JAR
+  # Distribution 2 is of type SINGLE_JAR
   jreleaser-tool-provider:
     type: SINGLE_JAR
     artifacts:
@@ -1066,31 +1050,31 @@ distributions:
       - path: apps/{{distributionName}}/build/libs/{{distributionName}}-{{projectVersion}}.jar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.jar'
 
-  # Distribution 4 is of type JLINK
-  # Name matches the assembled Jlink distribution
+  # Distribution 3 is of type JLINK
+  # Name matches the assembled jlink distribution
   jreleaser-standalone:
     appImage:
-      active: always
+      active: ALWAYS
       componentId: org.jreleaser.cli
       developerName: JReleaser
       categories:
         - Development
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-appimage
         commitMessage: 'jreleaser {{tagName}}'
     brew:
-      active: always
+      active: ALWAYS
       formulaName: jreleaser
       multiPlatform: true
       tap:
-        active: release
+        active: RELEASE
         commitMessage: 'jreleaser {{tagName}}'
     docker:
       # inherited by specs
-      active: always
+      active: ALWAYS
       repository:
-        active: release
+        active: RELEASE
         commitMessage: 'jreleaser {{tagName}}'
       # inherited by specs
       registries:
@@ -1126,10 +1110,9 @@ distributions:
             - 'RUN apk add unzip binutils fakeroot rpm'
 
   # Distribution 4 is of type NATIVE_PACKAGE
+  # Name matches the assembled jpackage distribution
   jreleaser-installer:
     type: NATIVE_PACKAGE
-    executable:
-      windowsExtension: exe
     artifacts:
       # Transform the artifact name
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-x86_64.pkg'
@@ -1145,11 +1128,9 @@ distributions:
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.msi'
         platform: 'windows-x86_64'
 
-  # Distribution 4 is of type NATIVE_IMAGE
+  # Distribution 5 is of type BINARY
+  # Name matches the assembled nativeImage distribution
   jreleaser-native:
-    type: NATIVE_IMAGE
-    executable:
-      windowsExtension: exe
     artifacts:
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip'
         platform: 'osx-x86_64'
@@ -1160,7 +1141,12 @@ distributions:
 
 files:
   artifacts:
-    - path: VERSION</code></pre>
+    - path: VERSION
+      extraProperties:
+        skipChecksum: true
+        skipSigning: true
+    - path: plugins/jreleaser-ant-tasks/build/distributions/jreleaser-ant-tasks-{{projectVersion}}.zip
+      transform: 'jreleaser-ant-tasks/jreleaser-ant-tasks-{{projectEffectiveVersion}}.zip'</code></pre>
 </div>
 </div>
 <div class="paragraph">
