@@ -1,0 +1,589 @@
+= Native Image
+:assembler_id:   nativeImage
+:java-assembler: true
+:platform:       true
+
+Creates a Native Image binary using link:https://www.graalvm.org/reference-manual/native-image/[GraalVM Native Image].
+
+IMPORTANT: You need a local installation of GraalVM. JReleaser will *not* install GraalVM for you, however it can
+install the `native-image` command if needed. You may configure the xref:tools:jdks-maven.adoc[] or the
+xref:tools:jdks-gradle.adoc[] to downloads a GraalVM distribution.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/yaml/common-head.adoc[]
+
+      # Name of the executable launcher.
+      # If left undefined, will use ${assembler.name}.
+      # icon:dot-circle[]
+      executable: app
+
+      # Directory with file templates used to prepare the NativeImage assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+      # If specified, path must exist.
+      # icon:dot-circle[]
+      templateDirectory: path/to/nativeImage/templates
+
+      # Name of the generated image.
+      # If left undefined, will use
+      # ${assembler.executable}-${project.version}.
+      # Generated artifacts always have the platform as suffix.
+      # icon:dot-circle[] icon:file-alt[]
+      imageName: 'app-{{projectVersion}}'
+
+      # Name transformation of the generated image.
+      # Transformed artifacts always have the platform as suffix.
+      # icon:dot-circle[] icon:file-alt[]
+      imageNameTransform: 'app-{{projectEffectiveVersion}}'
+
+      # Archive format to use.
+      # Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+      # Defaults to `ZIP`.
+      # icon:dot-circle[]
+      archiveFormat: TGZ
+
+      # List of Graal JDKs.
+      # icon:dot-circle[] icon:file-alt[]
+      targetJdks:
+        - path: path/to/jdk
+          platform: osx-x86_64
+        - path: path/to/jdk
+          platform: linux-x86_64
+
+      # A list of build arguments.
+      # The `-H:Name` argument will always be replaced with the
+      # value of $executable.
+      # icon:dot-circle[]
+      args:
+        - '--install-exit-handlers'
+
+      # A list of additional GraalVM components to be installed.
+      # icon:dot-circle[]
+      components:
+        - 'espresso'
+
+      # Compress the resulting executable with UPX.
+      # icon:dot-circle[]
+      upx:
+        # Enables or disables UPX.
+        # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        # Defaults to `NEVER`.
+        # icon:dot-circle[]
+        active: ALWAYS
+
+        # Tool version.
+        # icon:exclamation-triangle[]
+        version: '3.96'
+
+        # A list of arguments.
+        # icon:dot-circle[]
+        args:
+          - '-f'
+
+      # icon:dot-circle[]
+      linux:
+        # A list of arguments.
+        # icon:dot-circle[]
+        args:
+          - '--static'
+
+      # icon:dot-circle[]
+      windows:
+        # A list of arguments.
+        # icon:dot-circle[]
+        args:
+          - '--foo'
+
+      # icon:dot-circle[]
+      osx:
+        # A list of arguments.
+        # icon:dot-circle[]
+        args:
+          - '--bar'
+
+include::partial$assemble/yaml/common-java.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/toml/common-head.adoc[]
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${assembler.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # Directory with file templates used to prepare the NativeImage assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/nativeImage/templates"
+
+  # Name of the generated image.
+  # If left undefined, will use
+  # ${assembler.executable}-${project.version}.
+  # Generated artifacts always have the platform as suffix.
+  # icon:dot-circle[] icon:file-alt[]
+  imageName = "app-{{projectVersion}}"
+
+  # Name transformation of the generated image.
+  # Transformed artifacts always have the platform as suffix.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNameTransform = "app-{{projectEffectiveVersion}}"
+
+  # Archive format to use.
+  # Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+  # Defaults to `ZIP`.
+  # icon:dot-circle[]
+  archiveFormat = "TGZ"
+
+  # List of Graal JDKs.
+  # icon:dot-circle[] icon:file-alt[]
+  targetJdks = [
+    { path = "path/to/jdk", platform = "osx-x86_64" },
+    { path = "path/to/jdk", platform = "linux-x86_64" }]
+
+  # A list of build arguments.
+  # The `-H:Name` argument will always be replaced with the
+  # value of $executable.
+  # icon:dot-circle[]
+  args = ["--install-exit-handlers"]
+
+  # A list of additional GraalVM components to be installed.
+  # icon:dot-circle[]
+  components = ["espresso"]
+
+  # Compress the resulting executable with UPX.
+  # icon:dot-circle[]
+  [assemble.{assembler_id}.app.upx]
+    # Enables or disables UPX.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[]
+    active = "ALWAYS"
+
+    # Tool version.
+    # icon:exclamation-triangle[]
+    version = "3.96"
+
+    # A list of arguments.
+    # icon:dot-circle[]
+    args = ["-f]
+
+  # icon:dot-circle[]
+  [assemble.{assembler_id}.app.linux]
+    # A list of arguments.
+    # icon:dot-circle[]
+    args = ["--static]
+
+  # icon:dot-circle[]
+  [assemble.{assembler_id}.app.windows]
+    # A list of arguments.
+    # icon:dot-circle[]
+    args = ["--foo]
+
+  # icon:dot-circle[]
+  [assemble.{assembler_id}.app.osx]
+    # A list of arguments.
+    # icon:dot-circle[]
+    args = ["--bar]
+
+include::partial$assemble/toml/common-java.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/json/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        "executable": "app",
+
+        // Directory with file templates used to prepare the NativeImage assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        "templateDirectory": "path/to/nativeImage/templates",
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${assembler.executable}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageName": "app-{{projectVersion}}",
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageNameTransform": "app-{{projectEffectiveVersion}}",
+
+        // Archive format to use.
+        // Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+        // Defaults to `ZIP`.
+        // icon:dot-circle[]
+        "archiveFormat": "TGZ",
+
+        // List of Graal JDKs.
+        // icon:dot-circle[] icon:file-alt[]
+        "targetJdks": [
+          {
+            "path": "path/to/jdk",
+            "platform": "osx-x86_64"
+          },
+          {
+            "path": "path/to/jdk",
+            "platform": "linux-x86_64"
+          }
+        ],
+
+        // A list of build arguments.
+        // The `-H:Name` argument will always be replaced with the
+        // value of $executable.
+        // icon:dot-circle[]
+        "args": [
+          "--install-exit-handlers"
+        ],
+
+        // A list of additional GraalVM components to be installed.
+        // icon:dot-circle[]
+        "components": [
+          "espresso"
+        ],
+        
+        // Compress the resulting executable with UPX.
+        // icon:dot-circle[]
+        "upx": {
+          // Enables or disables UPX.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // icon:dot-circle[]
+          "active": "ALWAYS",
+
+          // Tool version.
+          // icon:exclamation-triangle[]
+          "version": "3.96",
+
+          // A list of arguments.
+          // icon:dot-circle[]
+          "args": ["-f"]
+        },
+
+        // icon:dot-circle[]
+        "linux": {
+          // A list of arguments.
+          // icon:dot-circle[]
+          "args": ["--static"]
+        },
+
+        // icon:dot-circle[]
+        "windows": {
+          // A list of arguments.
+          // icon:dot-circle[]
+          "args": ["--foo"]
+        },
+
+        // icon:dot-circle[]
+        "osx": {
+          // A list of arguments.
+          // icon:dot-circle[]
+          "args": ["--bar"]
+        },
+
+include::partial$assemble/json/common-java.adoc[]
+include::partial$assemble/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$assemble/maven/common-head.adoc[]
+
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use ${distribution.name}.
+          icon:dot-circle[]
+        -->
+        <executable>app</executable>
+
+        <!--
+          Directory with file templates used to prepare the NativeImage assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+          If specified, path must exist.
+          icon:dot-circle[]
+        -->
+        <templateDirectory>path/to/brew/templates</templateDirectory>
+
+        <!--
+          Name of the generated image.
+          If left undefined, will use
+          ${assembler.executable}-${project.version}.
+          Generated artifacts always have the platform as suffix.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageName>app-{{projectVersion}}</imageName>
+
+        <!--
+          Name transformation of the generated image.
+          Transformed artifacts always have the platform as suffix.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageNameTransform>app</imageNameTransform>
+
+        <!--
+          Archive format to use.
+          Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+          Defaults to `ZIP`.
+          icon:dot-circle[]
+        -->
+        <archiveFormat>TGZ</archiveFormat>
+
+        <!--
+          List of Graal JDKs.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <targetJdks>
+          <graalJdk>
+            <path>path/to/jdk</path>
+            <platform>osx-x86_64</platform>
+          </graalJdk>
+          <graalJdk>
+            <path>path/to/jdk</path>
+            <platform>linux-x86_64</platform>
+          </graalJdk>
+        </targetJdks>
+
+        <!--
+          A list of build arguments.
+          The `-H =Name` argument will always be replaced with the
+          value of $executable.
+          icon:dot-circle[]
+        -->
+        <args>
+          <arg>--install-exit-handlers</arg>
+        </args>
+
+        <!--
+          A list of additional GraalVM components to be installed.
+          icon:dot-circle[]
+        -->
+        <components>
+          <component>espresso</component>
+        <components>
+
+        <!--
+          Compress the resulting executable with UPX.
+          icon:dot-circle[]
+        --->  
+        <upx>
+          <!--
+            Enables or disables UPX.
+            Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to `NEVER`.
+            icon:dot-circle[]
+          -->
+          <active>ALWAYS</active>
+
+          <!--
+            Tool version.
+            icon:exclamation-triangle[]
+          -->
+          <version>3.96</version>
+
+          <!--
+            A list of arguments.
+            icon:dot-circle[]
+          -->
+          <args>
+            <arg>-f</arg>
+          </args>
+        </upx>
+
+        <!--
+          icon:dot-circle[]
+        --->
+        <linux>
+          <!--
+            A list of arguments.
+            icon:dot-circle[]
+          -->
+          <args>
+            <arg>--static</arg>
+          </args>
+        </linux>
+
+        <!--
+          icon:dot-circle[]
+        --->
+        <windows>
+          <!--
+            A list of arguments.
+            icon:dot-circle[]
+          -->
+          <args>
+            <arg>--foo</arg>
+          </args>
+        </windows>
+
+        <!--
+          icon:dot-circle[]
+        --->
+        <osx>
+          <!--
+            A list of arguments.
+            icon:dot-circle[]
+          -->
+          <args>
+            <arg>--bar</arg>
+          </args>
+        </osx>
+            
+include::partial$assemble/maven/common-java.adoc[]
+include::partial$assemble/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/gradle/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        executable = 'app'
+
+        // Directory with file templates used to prepare the NativeImage assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        templateDirectory = 'path/to/nativeImage/templates'
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${assembler.executable}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        imageName = 'app-{{projectVersion}}'
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        imageNameTransform = 'app-{{projectEffectiveVersion}}'
+
+        // Archive format to use.
+        // Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`].
+        // Defaults to `ZIP`.
+        // icon:dot-circle[]
+        archiveFormat = 'TGZ'
+
+        // List of Graal JDKs.
+        // icon:dot-circle[] icon:file-alt[]
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'osx-x86_64'
+        }
+        graalJdk {
+          path = 'path/to/jdk'
+          platform = 'linux-x86_64'
+        }
+
+        // A list of build arguments.
+        // The `-H =Name` argument will always be replaced with the
+        // value of $executable.
+        // icon:dot-circle[]
+        arg('--install-exit-handlers')
+
+        // A list of additional GraalVM components to be installed.
+        // icon:dot-circle[]
+        component('espresso')
+
+        // Compress the resulting executable with UPX.
+        // icon:dot-circle[]
+        upx {
+          // Enables or disables UPX.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to `NEVER`.
+          // icon:dot-circle[]
+          active = 'ALWAYS'
+
+          // Tool version.
+          // icon:exclamation-triangle[]
+          version = '3.96'
+
+          // A list of arguments.
+          // icon:dot-circle[]
+          arg('-f')
+        }
+
+        // icon:dot-circle[]
+        linux {
+          // A list of arguments.
+          // icon:dot-circle[]
+          arg('--static')
+        }
+
+        // icon:dot-circle[]
+        windows {
+          // A list of arguments.
+          // icon:dot-circle[]
+          arg('--foo')
+        }
+
+        // icon:dot-circle[]
+        osx {
+          // A list of arguments.
+          // icon:dot-circle[]
+          arg('--bar')
+        }
+            
+include::partial$assemble/gradle/common-java.adoc[]
+include::partial$assemble/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Graal JDKs
+
+The following rules apply when resolving which Graal JDK will be used to generate native image executables:
+
+. A matching JDK (by platform) will be searched in `graalJdks`.
+. If no match is found then the currently executing JDK will be used.
+
+Paths for `graalJdks` must exist in the file system. You may use the
+xref:tools:jdks-maven.adoc#_configuration_dsl[{icon_maven_s} jdks-maven-plugin] or
+xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download required JDKs.
+
+== UPX
+
+Executables may optionally be compressed with link:https://upx.github.io/[UPX]. You must define a version.
+JReleaser will check if a matching binary exists in the system or download a binary that matches the current
+platform.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/assemblers/<distribution-name>/nativeImage`
+

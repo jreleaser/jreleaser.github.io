@@ -1,0 +1,1020 @@
+= Environment
+
+JReleaser can configure some of its fields from external sources. This allows keeping a stable configuration file and only
+update the external sources to produce a new release. Values may be read from a Java properties file or from
+environment variables, the file has precendence over the environment variables.
+
+By default, the external properties file should be located at `~/.jreleaser/config.properties` however you may change
+that location by setting/changing the value of the `JRELEASER_USER_HOME` environment variable or using the block
+described next:
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# Configures environment sources.
+# icon:dot-circle[]
+environment:
+
+  # Location of a properties file with key/value pairs
+  # Each key must be prefixed with `JRELEASER_` and match
+  # the environment variable it overrides.
+  # icon:dot-circle[]
+  variables: path/to/alternate/config.properties
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  properties:
+    foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# Configures environment sources.
+# icon:dot-circle[]
+[environment]
+
+  # Location of a properties file with key/value pairs
+  # Each key must be prefixed with `JRELEASER_` and match
+  # the environment variable it overrides.
+  # icon:dot-circle[]
+  variables = "path/to/alternate/config.properties"
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[]
+  properties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // Configures environment sources.
+  // icon:dot-circle[]
+  "environment": {
+    // Location of a properties file with key/value pairs
+    // Each key must be prefixed with `JRELEASER_` and match
+    // the environment variable it overrides.
+    // icon:dot-circle[]
+    "variables": "path/to/alternate/config.properties",
+
+    // Additional properties used when evaluating templates.
+    // icon:dot-circle[]
+    "properties": {
+      "foo": "bar"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <!--
+    Configures environment sources.
+    icon:dot-circle[]
+  -->
+  <environment>
+    <!--
+      Location of a properties file with key/value pairs
+      Each key must be prefixed with `JRELEASER_` and match
+      the environment variable it overrides.
+      icon:dot-circle[]
+    -->
+    <variables>path/to/alternate/config.properties</variables>
+
+    <!--
+     Additional properties used when evaluating templates.
+     icon:dot-circle[]
+    -->
+    <properties>
+      <foo>bar</foo>
+    </properties>
+  </environment>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // Configures environment sources.
+  // icon:dot-circle[]
+  environment {
+    // Location of a properties file with key/value pairs
+    // Each key must be prefixed with `JRELEASER_` and match
+    // the environment variable it overrides.
+    // icon:dot-circle[]
+    variables = 'path/to/alternate/config.properties'
+
+    // Additional properties used when evaluating templates.
+    // icon:dot-circle[]
+    properties.put('foo', 'bar')
+  }
+}
+----
+--
+====
+
+Formats currently supported for the file configurable in the `variables` field are:
+
+* `.properties`
+* `.yml`
+* `.toml`
+* `.json`
+
+[tabs]
+====
+PROPERTIES::
++
+--
+[source,properties]
+[subs="+macros"]
+.config.properties
+----
+JRELEASER_GITHUB_TOKEN = b9df0920aefcbfa69f57c4f02bae4396
+----
+--
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+.config.yml
+----
+JRELEASER_GITHUB_TOKEN: b9df0920aefcbfa69f57c4f02bae4396
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+.config.toml
+----
+JRELEASER_GITHUB_TOKEN = "b9df0920aefcbfa69f57c4f02bae4396"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+.config.json
+----
+{
+  "JRELEASER_GITHUB_TOKEN": "b9df0920aefcbfa69f57c4f02bae4396"
+}
+----
+--
+====
+
+NOTE: The config file must use the appropriate file extension that matches the format in use.
+
+IMPORTANT: The config file should have key/value pairs with no nesting. Each key maps to the corresponding environment
+variable that requires a value.
+
+TIP: Use the `yml` or `toml` formats for key/values that require multiple lines, such as JRELEASER_GPG_PUBLIC_KEY.
+
+When using a format that supports multi-line strings be sure to follow these rules:
+
+*Yaml*
+
+ * Use a `|` as the sole character of the first line.
+ * Indent every other line, typically with 2 spaces.
+
+*Toml*
+
+ * Do not indent lines unless the indentation must be part of the content.
+
+As an example, the `JRELEASER_GPG_PUBLIC_KEY` key/value may be written as follows:
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+.config.yml
+----
+JRELEASER_GPG_PUBLIC_KEY: |
+  -----BEGIN PGP PUBLIC KEY BLOCK----
+
+  mQGiBEYVIwERBACndCqn1kKjVD8r2YjYAsqzNQet/U7wn6pIrvKd+23W+LH04tRY
+  ...
+  -----END PGP PUBLIC KEY BLOCK-----
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+.config.toml
+----
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK----
+
+mQGiBEYVIwERBACndCqn1kKjVD8r2YjYAsqzNQet/U7wn6pIrvKd+23W+LH04tRY
+...
+-----END PGP PUBLIC KEY BLOCK-----"""
+----
+--
+====
+
+Take special note that the empty line at the 2nd row is required, otherwise you may get an error similar
+to the following one:
+
+[source]
+----
+Caused by: http://java.io.IOException: public key ring doesn't start with public key tag: tag 0xffffffff
+----
+
+== Maven
+
+JReleaser will honor Maven project properties. These properties can be defined in several ways:
+
+- on the command line by using the `-D` flag.
+- on a `pom.xml` by using the `<properties>` block.
+- on a settings file using the `<properties>` block inside an active profile.
+
+JReleaser should be able to handle properties define in any of these ways.
+Precedence is:
+
+- values defined in the model.
+- values defined as Maven properties.
+- values defined in `<releaser><environment><variables>`.
+- environment variables.
+
+Keys must either be fully uppercase words separated by underscores (`_`) or fully lowercase words separated by dots (`.`).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+`~/.m2/settings.xml` as:
+
+[source,xml]
+[subs="verbatim"]
+.settings.xml
+----
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <profiles>
+      <profile>
+        <id>jreleaser</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <JRELEASER_GITHUB_TOKEN>2ee1ce8ff570e0bOVEdrZvie8792058</JRELEASER_GITHUB_TOKEN>
+        </properties>
+      </profile>
+    </profiles>
+</settings>
+----
+
+Or as
+
+[source,xml]
+[subs="verbatim"]
+.settings.xml
+----
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <profiles>
+      <profile>
+        <id>jreleaser</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <jreleaser.github.token>2ee1ce8ff570e0bOVEdrZvie8792058</jreleaser.github.token>
+        </properties>
+      </profile>
+    </profiles>
+</settings>
+----
+
+== Gradle
+
+JReleaser will honor Gradle project properties. These properties can be defined in several ways:
+
+- on the command line by using the `-P` flag.
+- on a `gradle.properties` file adjacent to the project.
+- on a `gradle.properties` file located at `~/.gradle`.
+
+JReleaser should be able to handle properties define in any of these ways.
+Precedence is:
+- values defined in the model.
+- values defined as Gradle project properties.
+- values defined in `jreleaser.environment.variables`.
+- environment variables.
+
+Keys must either be fully uppercase words separated by underscores (`_`) or fully lowercase words separated by dots (`.`).
+The uppercase variant has precedence over the lowercase variant. For example, the Github token may be defined in
+`/.gradle/gradle.properties` as:
+
+[source]
+.gradle.properties
+----
+JRELEASER_GITHUB_TOKEN = 2ee1ce8ff570e0bOVEdrZvie8792058
+----
+
+Or as:
+
+[source]
+.gradle.properties
+----
+jreleaser.github.token = 2ee1ce8ff570e0bOVEdrZvie8792058
+----
+
+== Keys & Values
+
+The following key/values may be defined as properties or as environment variables:
+
+=== Project
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                       | Description
+| JRELEASER_PROJECT_NAME                    | the project name
+| JRELEASER_PROJECT_VERSION                 | the project version
+| JRELEASER_PROJECT_VERSION_PATTERN         | the project version pattern
+| JRELEASER_PROJECT_SNAPSHOT_PATTERN        | a regex to determine if the project version is snapshot
+| JRELEASER_PROJECT_SNAPSHOT_LABEL          | the snapshot tag
+| JRELEASER_PROJECT_SNAPSHOT_FULL_CHANGELOG | generate full changelog since last non-snapshot release
+|===
+
+=== Release
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                          | Description
+| JRELEASER_TAG_NAME           | the release tag name
+| JRELEASER_PREVIOUS_TAG_NAME  | the tag to compare the release tag to
+| JRELEASER_RELEASE_NAME       | the release name
+| JRELEASER_MILESTONE_NAME     | the milestone name/title
+| JRELEASER_BRANCH             | the release branch
+| JRELEASER_OVERWRITE          | overwrite an existing release
+| JRELEASER_UPDATE             | update an existing release
+| JRELEASER_SKIP_TAG           | skip tagging the release
+| JRELEASER_SKIP_RELEASE       | skip creating a release
+| JRELEASER_PRERELEASE         | release is a prerelease (github/gitea)
+| JRELEASER_PRERELEASE_PATTERN | a regex to determine if the release is a prerelease (github/gitea)
+| JRELEASER_DRAFT              | release is a draft (github/gitea)
+| JRELEASER_GITHUB_TOKEN       | a GitHub token with `repo` scope
+| JRELEASER_GITHUB_USERNAME    | a GitHub username with commit access
+| JRELEASER_GITLAB_TOKEN       | a GitLab token with `api` scope
+| JRELEASER_GITLAB_USERNAME    | a GitLab username with commit access
+| JRELEASER_GITEA_TOKEN        | a Gitea personal token
+| JRELEASER_GITEA_USERNAME     | a Gitea username with commit access
+| JRELEASER_CODEBERG_TOKEN     | a Codeberg personal token
+| JRELEASER_CODEBERG_USERNAME  | a Codeberg username with commit access
+| JRELEASER_GENERIC_TOKEN      | a git personal token or password
+| JRELEASER_GENERIC_USERNAME   | a username with commit access
+|===
+
+=== Assemble
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_ASSEMBLE_ACTIVE | whether the `assemble` section is active or not
+|===
+
+=== Announce
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_ANNOUNCE_ACTIVE | whether the `announce` section is active or not
+|===
+
+=== Download
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_DOWNLOAD_ACTIVE | whether the `download` section is active or not
+|===
+
+=== Files
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                    | Description
+| JRELEASER_FILES_ACTIVE | whether the `files` section is active or not
+|===
+
+=== Hooks
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                    | Description
+| JRELEASER_HOOKS_ACTIVE | whether the `hooks` section is active or not
+|===
+
+=== Signing
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                          | Description
+| JRELEASER_SIGNING_ACTIVE     | whether the `signing` section is active or not
+| JRELEASER_GPG_PASSPHRASE     | the passphrase to decrypt the secret key
+| JRELEASER_GPG_PUBLIC_KEY     | the public key used for signing
+| JRELEASER_GPG_SECRET_KEY     | the secret key used for signing
+| JRELEASER_GPG_EXECUTABLE     | the executable used for signing
+| JRELEASER_GPG_HOMEDIR        | the directory from which gpg will load keyrings
+| JRELEASER_GPG_KEYNAME        | the name of the key to sign with
+| JRELEASER_GPG_PUBLIC_KEYRING | a path to a public keyring to add to the list of keyrings
+| JRELEASER_COSIGN_PASSWORD    | the passphrase to decrypt the secret cosign key
+| JRELEASER_COSIGN_PRIVATE_KEY | a path to the private cosign key
+| JRELEASER_COSIGN_PUBLIC_KEY  | a path to the public cosign key
+|===
+
+=== Upload
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_UPLOAD_ACTIVE | whether the `upload` section is active or not
+|===
+
+=== Article
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                 | Description
+| JRELEASER_ARTICLE_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_ARTICLE_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_ARTICLE_GITHUB_BRANCH     | the branch to use
+| JRELEASER_ARTICLE_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_ARTICLE_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_ARTICLE_GITLAB_BRANCH     | the branch to use
+| JRELEASER_ARTICLE_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_ARTICLE_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_ARTICLE_GITEA_BRANCH      | the branch to use
+| JRELEASER_ARTICLE_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_ARTICLE_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_ARTICLE_CODEBERG_BRANCH   | the branch to use
+|===
+
+=== Artifactory
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                    | Description
+| JRELEASER_ARTIFACTORY_${NAME}_HOST     | host matching the named Artifactory instance
+| JRELEASER_ARTIFACTORY_${NAME}_USERNAME | a username matching the named Artifactory instance
+| JRELEASER_ARTIFACTORY_${NAME}_PASSWORD | a password/token matching the named Artifactory instance
+|===
+
+=== AppImage
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                  | Description
+| JRELEASER_APPIMAGE_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_APPIMAGE_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_APPIMAGE_GITHUB_BRANCH     | the branch to use
+| JRELEASER_APPIMAGE_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_APPIMAGE_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_APPIMAGE_GITHUB_BRANCH     | the branch to use
+| JRELEASER_APPIMAGE_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_APPIMAGE_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_APPIMAGE_GITHUB_BRANCH     | the branch to use
+| JRELEASER_APPIMAGE_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_APPIMAGE_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_APPIMAGE_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Asdf
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                              | Description
+| JRELEASER_ASDF_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_ASDF_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_ASDF_GITHUB_BRANCH     | the branch to use
+| JRELEASER_ASDF_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_ASDF_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_ASDF_GITHUB_BRANCH     | the branch to use
+| JRELEASER_ASDF_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_ASDF_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_ASDF_GITHUB_BRANCH     | the branch to use
+| JRELEASER_ASDF_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_ASDF_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_ASDF_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Brew
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                  | Description
+| JRELEASER_HOMEBREW_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_HOMEBREW_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_HOMEBREW_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_HOMEBREW_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+| JRELEASER_HOMEBREW_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_HOMEBREW_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_HOMEBREW_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Chocolatey
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                    | Description
+| JRELEASER_CHOCOLATEY_API_KEY           | the api key required by push.chocolatey.org
+| JRELEASER_CHOCOLATEY_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_CHOCOLATEY_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_CHOCOLATEY_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_CHOCOLATEY_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+| JRELEASER_CHOCOLATEY_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_CHOCOLATEY_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_CHOCOLATEY_GITHUB_BRANCH     | the branch to use
+|===
+
+=== CommandHooks
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                            | Description
+| JRELEASER_HOOKS_COMMAND_ACTIVE | whether the `hooks.command` section is active or not
+|===
+
+=== Discord
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_DISCORD_WEBHOOK | the webhook URL
+|===
+
+=== Discourse
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                               | Description
+| JRELEASER_DISCOURSE_API_KEY       | the api key required by Discourse
+| JRELEASER_DISCOURSE_USERNAME      | the username required by Discourse
+| JRELEASER_DISCOURSE_CATEGORY_NAME | the category name required by Discourse
+|===
+
+=== Docker
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_DOCKER_${NAME}_USERNAME  | a docker username matching the named server
+| JRELEASER_DOCKER_${NAME}_PASSWORD  | a docker password matching the named server
+| JRELEASER_DOCKER_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_DOCKER_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_DOCKER_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_DOCKER_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+| JRELEASER_DOCKER_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_DOCKER_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_DOCKER_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Flatpak
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                 | Description
+| JRELEASER_FLATPAK_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_FLATPAK_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_FLATPAK_GITHUB_BRANCH     | the branch to use
+| JRELEASER_FLATPAK_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_FLATPAK_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_FLATPAK_GITHUB_BRANCH     | the branch to use
+| JRELEASER_FLATPAK_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_FLATPAK_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_FLATPAK_GITHUB_BRANCH     | the branch to use
+| JRELEASER_FLATPAK_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_FLATPAK_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_FLATPAK_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Ftp
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                            | Description
+| JRELEASER_FTP_${NAME}_HOST     | host of the named FTP server
+| JRELEASER_FTP_${NAME}_PORT     | port of the named FTP server
+| JRELEASER_FTP_${NAME}_USERNAME | a username matching the named FTP server
+| JRELEASER_FTP_${NAME}_PASSWORD | a password matching the named FTP server
+|===
+
+=== GitHub Discussions
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                    | Description
+| JRELEASER_GITHUB_TOKEN | a GitHub token with `discussions` scope
+|===
+
+=== Gitea
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                              | Description
+| JRELEASER_GITEA_${NAME}_URL      | url matching named Gitea instance (deploy)
+| JRELEASER_GITEA_${NAME}_HOST     | host matching named Gitea instance
+| JRELEASER_GITEA_${NAME}_TOKEN    | token matching named Gitea instance
+| JRELEASER_GITEA_${NAME}_PASSWORD | password matching the named Gitea instance
+| JRELEASER_GITEA_HOST             | host of a shared Gitea instance (deploy, upload, release)
+| JRELEASER_GITEA_TOKEN            | token of a shared Gitea instance (deploy, upload, release)
+| JRELEASER_GITEA_PASSWORD         | password of a shared Gitea instance (deploy, upload, release)
+|===
+
+=== GitLab
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_GITHUB_${NAME}_URL       | url matching named Github instance (deploy)
+| JRELEASER_GITHUB_${NAME}_HOST      | host matching named Github instance
+| JRELEASER_GITHUB_${NAME}_TOKEN     | token matching named Github instance
+| JRELEASER_GITHUB_${NAME}_PASSWORD  | password matching the named Github instance
+| JRELEASER_GITHUB_HOST              | host of a shared Github instance (deploy, upload, release)
+| JRELEASER_GITHUB_TOKEN             | token of a shared Github instance (deploy, upload, release)
+| JRELEASER_GITHUB_PASSWORD          | password of a shared Github instance (deploy, upload, release)
+|===
+
+
+=== GitLab
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_GITLAB_${NAME}_URL       | url matching named GitLab instance (deploy)
+| JRELEASER_GITLAB_${NAME}_HOST      | host matching named GitLab instance
+| JRELEASER_GITLAB_${NAME}_TOKEN     | token matching named GitLab instance
+| JRELEASER_GITLAB_${NAME}_PASSWORD  | password matching the named Gitlab instance
+| JRELEASER_GITLAB_HOST              | host of a shared GitLab instance (deploy, upload, release)
+| JRELEASER_GITLAB_TOKEN             | token of a shared GitLab instance (deploy, upload, release)
+| JRELEASER_GITLAB_PASSWORD          | password of a shared Gitlab instance (deploy, upload, release)
+|===
+
+=== Gitter
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                      | Description
+| JRELEASER_GITTER_WEBHOOK | the webhook URL
+|===
+
+=== Gofish
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_GOFISH_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_GOFISH_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_GOFISH_GITHUB_BRANCH     | the branch to use
+| JRELEASER_GOFISH_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_GOFISH_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_GOFISH_GITHUB_BRANCH     | the branch to use
+| JRELEASER_GOFISH_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_GOFISH_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_GOFISH_GITHUB_BRANCH     | the branch to use
+| JRELEASER_GOFISH_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_GOFISH_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_GOFISH_GITHUB_BRANCH     | the branch to use
+|===
+
+=== GoogleChat
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                           | Description
+| JRELEASER_GOOGLE_CHAT_WEBHOOK | the webhook URL
+|===
+
+=== JBang
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                               | Description
+| JRELEASER_JBANG_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_JBANG_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_JBANG_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_JBANG_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+| JRELEASER_JBANG_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_JBANG_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_JBANG_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Http
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                             | Description
+| JRELEASER_HTTP_${NAME}_USERNAME | a username matching the named HTTP server
+| JRELEASER_HTTP_${NAME}_PASSWORD | a password/token matching the named HTTP server
+|===
+
+=== Macports
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                  | Description
+| JRELEASER_MACPORTS_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_MACPORTS_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_MACPORTS_GITHUB_BRANCH     | the branch to use
+| JRELEASER_MACPORTS_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_MACPORTS_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_MACPORTS_GITHUB_BRANCH     | the branch to use
+| JRELEASER_MACPORTS_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_MACPORTS_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_MACPORTS_GITHUB_BRANCH     | the branch to use
+| JRELEASER_MACPORTS_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_MACPORTS_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_MACPORTS_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Mail
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_MAIL_PASSWORD | the password required for sending e-mails
+|===
+
+=== Mastodon
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                             | Description
+| JRELEASER_MASTODON_ACCESS_TOKEN | the access token required by Mastodon
+|===
+
+=== Mattermost
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                          | Description
+| JRELEASER_MATTERMOST_WEBHOOK | the webhook URL
+|===
+
+=== Nexus2
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                   | Description
+| JRELEASER_NEXUS2_${NAME}_URL          | url matching the named Nexus2 instance (release)
+| JRELEASER_NEXUS2_${NAME}_SNAPSHOT_URL | url matching the named Nexus2 instance (snapshots)
+| JRELEASER_NEXUS2_${NAME}_USERNAME     | a username matching the named Nexus2 instance
+| JRELEASER_NEXUS2_${NAME}_PASSWORD     | a password/token matching the named Nexus2 instance
+|===
+
+=== S3
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_S3_${NAME}_REGION        | region where the S3 bucket is located
+| JRELEASER_S3_${NAME}_BUCKET        | the name of the bucket
+| JRELEASER_S3_${NAME}_PATH          | artifact path within the bucket
+| JRELEASER_S3_${NAME}_DOWNLOAD_URL  | custom download URL
+| JRELEASER_S3_${NAME}_ACCESS_KEY_ID | accessKeyId matching the named S3 instance
+| JRELEASER_S3_${NAME}_SECRET_KEY    | secretKey matching the named S3 instance
+| JRELEASER_S3_${NAME}_SESSION_TOKEN | sessionToken matching the named S3 instance
+|===
+
+=== Scoop
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                               | Description
+| JRELEASER_SCOOP_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_SCOOP_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_SCOOP_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_SCOOP_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SCOOP_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_SCOOP_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_SCOOP_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Scp
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                               | Description
+| JRELEASER_SCP_${NAME}_HOST        | host of the named SCP server
+| JRELEASER_SCP_${NAME}_PORT        | port of the named SCP server
+| JRELEASER_SCP_${NAME}_USERNAME    | a username matching the named SCP server
+| JRELEASER_SCP_${NAME}_PUBLIC_KEY  | a SSH public key
+| JRELEASER_SCP_${NAME}_PRIVATE_KEY | a SSH private key
+| JRELEASER_SCP_${NAME}_PASSPHRASE  | passphrase required to read the private key
+| JRELEASER_SCP_${NAME}_FINGERPRINT | SSH fingerprint of the remote server
+| JRELEASER_SSH_${NAME}_HOST        | host of the named SCP server
+| JRELEASER_SSH_${NAME}_PORT        | port of the named SCP server
+| JRELEASER_SSH_${NAME}_USERNAME    | a username matching the named SCP server
+| JRELEASER_SSH_${NAME}_PUBLIC_KEY  | a SSH public key
+| JRELEASER_SSH_${NAME}_PRIVATE_KEY | a SSH private key
+| JRELEASER_SSH_${NAME}_PASSPHRASE  | passphrase required to read the private key
+| JRELEASER_SSH_${NAME}_FINGERPRINT | SSH fingerprint of the remote server
+| JRELEASER_SCP_HOST                | host of the named SCP server
+| JRELEASER_SCP_PORT                | port of the named SCP server
+| JRELEASER_SCP_USERNAME            | a username matching the named SCP server
+| JRELEASER_SCP_PUBLIC_KEY          | a SSH public key
+| JRELEASER_SCP_PRIVATE_KEY         | a SSH private key
+| JRELEASER_SCP_PASSPHRASE          | passphrase required to read the private key
+| JRELEASER_SCP_FINGERPRINT         | SSH fingerprint of the remote server
+| JRELEASER_SSH_HOST                | host of the named SCP server
+| JRELEASER_SSH_PORT                | port of the named SCP server
+| JRELEASER_SSH_USERNAME            | a username matching the named SCP server
+| JRELEASER_SSH_PUBLIC_KEY          | a SSH public key
+| JRELEASER_SSH_PRIVATE_KEY         | a SSH private key
+| JRELEASER_SSH_PASSPHRASE          | passphrase required to read the private key
+| JRELEASER_SSH_FINGERPRINT         | SSH fingerprint of the remote server
+|===
+
+=== Sdkman
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                             | Description
+| JRELEASER_SDKMAN_CONSUMER_KEY   | the consumer key required by Sdkman
+| JRELEASER_SDKMAN_CONSUMER_TOKEN | the consumer token required by Sdkman
+|===
+
+=== Sftp
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                | Description
+| JRELEASER_SFTP_${NAME}_HOST        | host of the named SFTP server
+| JRELEASER_SFTP_${NAME}_PORT        | port of the named SFTP server
+| JRELEASER_SFTP_${NAME}_USERNAME    | a username matching the named SFTP server
+| JRELEASER_SFTP_${NAME}_PUBLIC_KEY  | a SSH public key
+| JRELEASER_SFTP_${NAME}_PRIVATE_KEY | a SSH private key
+| JRELEASER_SFTP_${NAME}_PASSPHRASE  | passphrase required to read the private key
+| JRELEASER_SFTP_${NAME}_FINGERPRINT | SSH fingerprint of the remote server
+| JRELEASER_SSH_${NAME}_HOST         | host of the named SFTP server
+| JRELEASER_SSH_${NAME}_PORT         | port of the named SFTP server
+| JRELEASER_SSH_${NAME}_USERNAME     | a username matching the named SFTP server
+| JRELEASER_SSH_${NAME}_PUBLIC_KEY   | a SSH public key
+| JRELEASER_SSH_${NAME}_PRIVATE_KEY  | a SSH private key
+| JRELEASER_SSH_${NAME}_PASSPHRASE   | passphrase required to read the private key
+| JRELEASER_SSH_${NAME}_FINGERPRINT  | SSH fingerprint of the remote server
+| JRELEASER_SFTP_HOST                | host of the named SFTP server
+| JRELEASER_SFTP_PORT                | port of the named SFTP server
+| JRELEASER_SFTP_USERNAME            | a username matching the named SFTP server
+| JRELEASER_SFTP_PUBLIC_KEY          | a SSH public key
+| JRELEASER_SFTP_PRIVATE_KEY         | a SSH private key
+| JRELEASER_SFTP_PASSPHRASE          | passphrase required to read the private key
+| JRELEASER_SFTP_FINGERPRINT         | SSH fingerprint of the remote server
+| JRELEASER_SSH_HOST                 | host of the named SFTP server
+| JRELEASER_SSH_PORT                 | port of the named SFTP server
+| JRELEASER_SSH_USERNAME             | a username matching the named SFTP server
+| JRELEASER_SSH_PUBLIC_KEY           | a SSH public key
+| JRELEASER_SSH_PRIVATE_KEY          | a SSH private key
+| JRELEASER_SSH_PASSPHRASE           | passphrase required to read the private key
+| JRELEASER_SSH_FINGERPRINT          | SSH fingerprint of the remote server
+|===
+
+=== Slack
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_SLACK_TOKEN   | a bot or a personal Slack token
+| JRELEASER_SLACK_WEBHOOK | the webhook URL
+|===
+
+=== Snap
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                              | Description
+| JRELEASER_SNAP_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_SNAP_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_SNAP_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_SNAP_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SNAP_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_SNAP_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_SNAP_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Spec
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                              | Description
+| JRELEASER_SPEC_GITHUB_TOKEN      | a GitHub token with `repo` scope
+| JRELEASER_SPEC_GITHUB_USERNAME   | a GitHub username with commit access
+| JRELEASER_SPEC_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SPEC_GITLAB_TOKEN      | a GitLab token with `api` scope
+| JRELEASER_SPEC_GITLAB_USERNAME   | a GitLab username with commit access
+| JRELEASER_SPEC_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SPEC_GITEA_TOKEN       | a Gitea personal token
+| JRELEASER_SPEC_GITEA_USERNAME    | a Gitea username with commit access
+| JRELEASER_SPEC_GITHUB_BRANCH     | the branch to use
+| JRELEASER_SPEC_CODEBERG_TOKEN    | a Codeberg personal token
+| JRELEASER_SPEC_CODEBERG_USERNAME | a Codeberg username with commit access
+| JRELEASER_SPEC_GITHUB_BRANCH     | the branch to use
+|===
+
+=== Teams
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_TEAMS_WEBHOOK | the webhook URL
+|===
+
+=== Telegram
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                        | Description
+| JRELEASER_TELEGRAM_TOKEN   | the token associated with a Telegram bot
+| JRELEASER_TELEGRAM_CHAT_ID | the identifier of the chat where messages will be sent
+|===
+
+=== Twitter
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                                   | Description
+| JRELEASER_TWITTER_CONSUMER_KEY        | the consumer key required by Twitter
+| JRELEASER_TWITTER_CONSUMER_SECRET     | the consumer secret required by Twitter
+| JRELEASER_TWITTER_ACCESS_TOKEN        | the access token required by Twitter
+| JRELEASER_TWITTER_ACCESS_TOKEN_SECRET | the access token secret required by Twitter
+|===
+
+=== Webhooks
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                       | Description
+| JRELEASER_${NAME}_WEBHOOK | the webhook URL matching the named Webhook announcer
+|===
+
+=== Zulip
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| Key                     | Description
+| JRELEASER_ZULIP_API_KEY | the api key required by Zulip
+|===
+
+

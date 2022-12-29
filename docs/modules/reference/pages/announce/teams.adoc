@@ -1,0 +1,155 @@
+= Teams
+:announcer_id:   teams
+:announcer_name: Teams
+
+WARNING: This announcer has been deprecated in `v1.4.0` and will be removed in `v2.0.0`. Use xref:reference:announce/webhooks.adoc[]
+instead as shown xref:reference:announce/webhooks.adoc#_teams[here].
+
+Posts a message to a link:https://www.microsoft.com/en-ww/microsoft-teams[Teams] room. You must create a custom webhook for this announcer to work.
+
+1. Log into Teams.
+2. Click on the `Apps` icon.
+3. Click on the `Connectors` menu item.
+4. Click on `Incoming Webhook` and add it to a team.
+5. Configure the webhook.
+6. Copy the generated webhook URL.
+
+IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
+setting the `JRELEASER_TEAMS_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/yaml/common-head.adoc[]
+
+    # The webhook associated with a specific Teams room.
+    # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    webhook: __DO_NOT_SET_HERE__
+
+    # Path to a template file that contains the message.
+    # Review the available xref:reference:name-templates.adoc[].
+    # Defaults to `src/jreleaser/templates/teams.tpl`.
+    # icon:exclamation-triangle[]
+    messageTemplate: path/to/template/teams.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$announce/toml/common-head.adoc[]
+
+  # The webhook associated with a specific Teams room.
+  # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  webhook = "__DO_NOT_SET_HERE__"
+
+  # Path to a template file that contains the message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/teams.tpl`.
+  # icon:exclamation-triangle[]
+  messageTemplate = "path/to/template/teams.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$announce/json/common-head.adoc[]
+
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "webhook": "__DO_NOT_SET_HERE__",
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // icon:dot-circle[] icon:exclamation-triangle[]
+      "messageTemplate": "path/to/template/teams.tpl"
+include::partial$announce/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$announce/maven/common-head.adoc[]
+
+      <!--
+        The webhook associated with a specific Teams room.
+        If left unspecified, the `JRELEASER_TEAMS_WEBHOOK` environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <webhook>__DO_NOT_SET_HERE__</webhook>
+
+      <!--
+        Path to a template file that contains the message.
+        Review the available xref:reference:name-templates.adoc[].
+        Defaults to `src/jreleaser/templates/teams.tpl`.
+        icon:dot-circle[] icon:exclamation-triangle[]
+      -->
+      <messageTemplate>path/to/template/teams.tpl</messageTemplate>
+include::partial$announce/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$announce/gradle/common-head.adoc[]
+
+      // The webhook associated with a specific Teams room.
+      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      webhook = '__DO_NOT_SET_HERE__'
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/teams.tpl`.
+      // icon:dot-circle[] icon:exclamation-triangle[]
+      messageTemplate = 'path/to/template/teams.tpl'
+include::partial$announce/gradle/common-footer.adoc[]
+----
+--
+====
+
+The message must follow the link:https://docs.microsoft.com/en-us/outlook/actionable-messages/adaptive-card[Adaptive Card]
+format.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `teams.tpl`
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]

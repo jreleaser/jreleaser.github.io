@@ -1,0 +1,489 @@
+= Artifactory
+:uploader_id:   artifactory
+:uploader_name: Artifactory
+:upload_url:    https://duke.jfrog.io/artifactory/binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}
+
+Uploads artifacts, files, and signatures to a link:https://jfrog.com/artifactory/[JFrog {uploader_name}] instance.
+
+.Prerequisites:
+
+ * A running Artifactory instance.
+ * A generic repository.
+ * A user + password / token with grants to upload an artifact.
+
+IMPORTANT: This feature *does not* support deploying JARs and POMs to a Maven repository.
+
+TIP: You may use this uploader with link:https://www.sonatype.com[Sonatype] Nexus as well, just configure the right host,
+credentials, and path matching your settings.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+      # URL of the Artifactory host.
+      # icon:exclamation-triangle[] icon:file-alt[]
+      host: https://host.com/artifactory
+
+      # The username that can write to the repository.
+      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+      # environment variable must be defined.
+      # icon:exclamation-triangle[] icon:eye-slash[]
+      username: __DO_NOT_SET_HERE__
+
+      # Password for login into the repository.
+      # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+      # environment variable must be defined.
+      # icon:exclamation-triangle[] icon:eye-slash[]
+      password: __DO_NOT_SET_HERE__
+
+      # The authorization method to use.
+      # Supported values are [`BASIC`, `BEARER`].
+      # `Basic` requires both username & password.
+      # `BEARER` requires a token (set as password).
+      # Defaults to `BEARER`.
+      # icon:dot-circle[]
+      authorization: BASIC
+      
+      # List of repositories where artifacts will be uploaded.
+      # icon:exclamation-triangle[]
+      repositories:
+
+          # Path where the artifact will be uploaded to.
+          # icon:exclamation-triangle[] icon:eye-slash[]
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          # Enables or disables the repository.
+          # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          # Defaults to the active setting of the containing artifactory.
+          # icon:dot-circle[]
+          active: ALWAYS
+
+          # Set of supported file types.
+          # icon:dot-circle[]
+          fileTypes:
+            - ZIP
+            - TGZ
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+  # URL of the Artifactory host.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  host = "https://host.com/artifactory"
+
+  # The username that can write to the repository.
+  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  username = "__DO_NOT_SET_HERE__"
+
+  # Password for login into the repository..
+  # If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  password = "__DO_NOT_SET_HERE__"
+
+  # The authorization method to use.
+  # Supported values are [`BASIC`, `BEARER`].
+  # `Basic` requires both username & password.
+  # `BEARER` requires a token (set as password).
+  # Defaults to `BEARER`.
+  # icon:dot-circle[]
+  authorization = "BASIC"
+
+  # List of repositories where artifacts will be uploaded.
+  # icon:exclamation-triangle[]
+  pass:[[[upload.artifactory.app.repositories]]]
+
+    # Path where the artifact will be uploaded to.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+
+   # Enables or disables the uploader.
+   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+   # Defaults to the active setting of the containing artifactory.
+   # icon:dot-circle[]
+   active = "ALWAYS"
+
+    # Set of supported file types.
+    # icon:dot-circle[]
+    fileTypes = ["ZIP", "TGZ"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+        // URL of the Artifactory host.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        "host": "https://host.com/artifactory",
+
+        // The username that can write to the repository.
+        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        "username": "__DO_NOT_SET_HERE__",
+
+        // Password for login into the repository.
+        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        "password": "__DO_NOT_SET_HERE__",
+
+        // The authorization method to use.
+        // Supported values are [`BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `BEARER`.
+        // icon:dot-circle[]
+        "authorization": "BEARER",
+
+        // List of repositories where artifacts will be uploaded.
+        // icon:exclamation-triangle[]
+        "repositories": [
+          {
+            // Path where the artifact will be uploaded to.
+            // icon:exclamation-triangle[] icon:eye-slash[]
+            "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}",
+
+            // Enables or disables the uploader.
+            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to the active setting of the containing artifactory.
+            // icon:dot-circle[]
+            "active": "ALWAYS",
+
+            // Set of supported file types.
+            // icon:dot-circle[]
+            "fileTypes": [
+              "ZIP",
+              "TGZ"
+             ]
+          }
+        ]
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+        <!--
+          URL of the Artifactory host.
+          icon:exclamation-triangle[] icon:file-alt[]
+        -->
+        <host>https://host.com/artifactory</host>
+
+        <!--
+          The username that can write to the repository.
+          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+          environment variable must be defined.
+          icon:exclamation-triangle[] icon:eye-slash[]
+        -->
+        <username>__DO_NOT_SET_HERE__</username>
+
+        <!--
+          Password for login into the repository.
+          If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+          environment variable must be defined.
+          icon:exclamation-triangle[] icon:eye-slash[]
+        -->
+        <password>__DO_NOT_SET_HERE__</password>
+
+        <!--
+          The authorization method to use.
+          Supported values are [`BASIC`, `BEARER`].
+          `Basic` requires both username & password.
+          `BEARER` requires a token (set as password).
+          Defaults to `BEARER`.
+          icon:dot-circle[]
+        -->
+        <authorization>BEARER</authorization>
+
+        <!--
+          List of repositories where artifacts will be uploaded.
+          icon:exclamation-triangle[]
+        -->
+        <repositories>
+          <repository>
+
+          <!--
+            Path where the artifact will be uploaded to.
+            icon:exclamation-triangle[] icon:eye-slash[]
+          -->
+          <path>binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}</path>
+
+          <!--
+            Enables or disables the distribution.
+            Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to the active setting of the containing artifactory.
+            icon:dot-circle[]
+          -->
+          <active>ALWAYS</active>
+
+          <!--
+            Set of supported file types.
+            icon:dot-circle[]
+          -->
+          <fileTypes>ZIP,TGZ</fileTypes>
+          </repository>
+        </repositories>
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+        // URL of the Artifactory host.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        host = 'https://host.com/artifactory'
+
+        // The username that can write to the repository.
+        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_USERNAME`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        username = '__DO_NOT_SET_HERE__'
+
+        // Password for login into the repository.
+        // If left unspecified, the `JRELEASER_ARTIFACTORY_${name}_PASSWORD`
+        // environment variable must be defined.
+        // icon:exclamation-triangle[] icon:eye-slash[]
+        password = '__DO_NOT_SET_HERE__'
+
+        // The authorization method to use.
+        // Supported values are [`BASIC`, `BEARER`].
+        // `Basic` requires both username & password.
+        // `BEARER` requires a token (set as password).
+        // Defaults to `BEARER`.
+        // icon:dot-circle[]
+        authorization = 'BEARER'
+
+        // List of repositories where artifacts will be uploaded.
+        // icon:exclamation-triangle[]
+        repository {
+          // Path where the artifact will be uploaded to.
+          // icon:exclamation-triangle[] icon:eye-slash[]
+          path = 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+
+          // Enables or disables the uploader.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to the active setting of the containing artifactory.
+          // icon:dot-circle[]
+          active = 'ALWAYS'
+
+          // Set of supported file types.
+          // icon:dot-circle[]
+          fileType = 'ZIP'
+          fileType = 'TGZ'
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+== File Types
+
+Supported files types are:
+
+ * `DEB`
+ * `DMG`
+ * `EXE`
+ * `JAR`
+ * `MSI`
+ * `NUGET`
+ * `PKG`
+ * `RPM`
+ * `TAR`
+ * `TAR_BZ2`
+ * `TAR_GZ`
+ * `TAR_XZ`
+ * `TAR_ZST`
+ * `TBZ2`
+ * `TGZ`
+ * `TXZ`
+ * `ZIP`
+
+If a repository does not define any file types then all file types are accepted.
+
+== Host
+
+You may set the host in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the Artifactory instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_HOST`. If your instance is named `production`,
+you can store the host in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_HOST`. The name will be
+transformed to uppercase.
+
+== Username
+
+The configured username needs to be authenticated against the Artifactory instance.
+
+You may set the username set in the configuration as shown above, or you can have it read from an environment variable.
+The configured name of the Artifactory instance will be used to build the environment variable name.
+This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_USERNAME`. If your instance is named `production`,
+you can store the username in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_USERNAME`. The name will be
+transformed to uppercase.
+
+If a configured username is found in the configuration file, then the environment variable is not used at all.
+
+== Password
+
+The password will be stored in an environment variable. The configured name of the Artifactory instance will
+be used. This means that the name per configured instance needs to be unique.
+
+The name of the environment variable will be `JRELEASER_ARTIFACTORY_NAME_PASSWORD`. If your instance is named `production`,
+you need to store the secret in the environment variable `JRELEASER_ARTIFACTORY_PRODUCTION_PASSWORD`. The name will be
+transformed to uppercase.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Artifactory` and `<name>` resolves to the capitalized name of the artifactory instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadArtifactoryFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadArtifactoryFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadArtifactoryFooBar`.
+
+== Example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+upload:
+  artifactory:
+    duke:
+      active: always
+      host: 'https://host.com/artifactory'
+      repository:
+        - path: 'binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+[upload.artifactory.duke]
+  active = "ALWAYS"
+  host = "https://host.com/artifactory"
+  pass:[[[upload.artifactory.duke.repositories]]]
+    path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+{
+  "jreleaser": {
+    "upload": {
+      "artifactory": {
+        "duke": {
+          "active": "ALWAYS",
+          "host": "https://host.com/artifactory",
+          "repositories": [
+            {
+              "path": "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <artifactory>
+      <duke>
+        <active>ALWAYS</active>
+        <host>https://host.com/artifactory</host>
+        <repositories>
+          <repository>
+            <path>binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}</path>
+          </repository>
+        </repositories>
+      </duke>
+    </artifactory>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+jreleaser {
+  upload {
+    artifactory {
+      duke {
+        active = 'ALWAYS'
+        host = 'https://host.com/artifactory'
+        repository {
+          path = "binaries/{{projectName}}/{{projectVersion}}/{{artifactFile}}"
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+The following environment variables must be defined:
+
+* `JRELEASER_ARTIFACTORY_DUKE_USERNAME`
+* `JRELEASER_ARTIFACTORY_DUKE_PASSWORD`
+

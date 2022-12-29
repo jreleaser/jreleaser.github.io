@@ -1,0 +1,686 @@
+= Jlink
+:assembler_id:   jlink
+:archive!:
+:java-assembler: true
+:platform:       true
+
+Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[{assembler_id}].
+
+TIP: Cross platform Java runtime images may be created however you must ensure that all configured JDKs have the 
+same matching major version.
+
+IMPORTANT: You have to install additional JDKs to enable cross-platform images. JReleaser will *not* install these JDKs
+for you. You may configure the xref:tools:jdks-maven.adoc[] or the xref:tools:jdks-gradle.adoc[] to downloads JDKs.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/yaml/common-head.adoc[]
+
+      # Name of the executable launcher.
+      # If left undefined, will use ${assembler.name}.
+      # icon:dot-circle[]
+      executable: app
+
+      # Directory with file templates used to prepare the Jlink assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+      # If specified, path must exist.
+      # icon:dot-circle[]
+      templateDirectory: path/to/jlink/templates
+
+      # Name of the generated image.
+      # If left undefined, will use 
+      # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
+      # Generated artifacts always have the platform as suffix.
+      # icon:dot-circle[] icon:file-alt[]
+      imageName: 'app-{{projectVersion}}'
+
+      # Name transformation of the generated image.
+      # Transformed artifacts always have the platform as suffix.
+      # icon:dot-circle[] icon:file-alt[]
+      imageNameTransform: 'app-{{projectEffectiveVersion}}'
+      
+      # List of module names.
+      # Overrides modules found by jdeps.
+      # Setting any values here automatically disables jdeps.
+      # icon:dot-circle[]
+      moduleNames: 
+        - java.base
+        - com.acme.demo
+
+      # List of additional module names.
+      # Additional required modules but not detected by jdeps.
+      # icon:dot-circle[]
+      additionalModuleNames:
+        - jdk.crypto.ec
+        - jdk.localedata
+
+      # List of JDKs for generating cross-platform images.
+      # icon:dot-circle[] icon:file-alt[]
+      targetJdks:
+        - path: path/to/jdk
+          platform: osx-x86_64
+        - path: path/to/jdk
+          platform: linux-x86_64
+
+      # The JDK to use.
+      # If undefined, will find a matching JDK.
+      # icon:dot-circle[] icon:file-alt[]
+      jdk:
+        path: path/to/jdk
+        platform: linux-x86_64
+
+      # Configuration flags for Jdeps
+      # icon:dot-circle[]
+      jdeps:
+        # Enables or disables jdeps
+        # If disabled then [`java.base`] is set as default value for `moduleNames`,
+        # you may define an explicit value for `moduleNames` or use `additionalModuleNames`.
+        # Defaults to `true`
+        # icon:dot-circle[]
+        enabled: true
+
+        # Specifies the version when processing multi-release jar files.
+        # Value should be integer >= 9 or `base`.
+        # Defaults to empty
+        # icon:dot-circle[]
+        multiRelease: base
+
+        # Ignore missing dependences.
+        # Defaults to `false`
+        # icon:dot-circle[]
+        ignoreMissingDeps: true
+
+        # Use wildcard expression in classpath.
+        # Defaults to `true`
+        # icon:dot-circle[]
+        useWildcardInPath: false
+
+        # JARs or classes used to limit the module search
+        # Must be defined as paths.
+        # Defaults to empty.
+        # icon:dot-circle[]  icon:file-alt[]
+        targets:
+          - out/classes/com/acme/Main.class
+
+      # A list of build arguments.
+      # Defaults are shown.
+      # icon:dot-circle[]
+      args:
+        - "--no-header-files"
+        - "--no-man-pages"
+        - "--compress=2"
+        - "--strip-debug"
+
+      # Copy main and input JARs into archive.
+      # Defaults to `true`.
+      # icon:dot-circle[]
+      copyJars: true
+
+include::partial$assemble/yaml/common-java.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/toml/common-head.adoc[]
+
+  # Name of the executable launcher.
+  # If left undefined, will use ${assembler.name}.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # Directory with file templates used to prepare the Jlink assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+  # If specified, path must exist.
+  # icon:dot-circle[]
+  templateDirectory = "path/to/jlink/templates"
+
+  # Name of the generated image.
+  # If left undefined, will use
+  # ${project.java.groupId}.${project.java.artifactId}-${project.version}.
+  # Generated artifacts always have the platform as suffix.
+  # icon:dot-circle[] icon:file-alt[]
+  imageName = "app-{{projectVersion}}"
+
+  # Name transformation of the generated image.
+  # Transformed artifacts always have the platform as suffix.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNameTransform = "app-{{projectEffectiveVersion}}"
+
+  # List of module names.
+  # Overrides modules found by jdeps.
+  # Setting any values here automatically disables jdeps.
+  # icon:dot-circle[]
+  moduleNames = [
+    "java.base",
+    "com.acme.demo"]
+
+  # List of additional module names.
+  # Additional required modules but not detected by jdeps.
+  # icon:dot-circle[]
+  additionalModuleNames = [
+    "jdk.crypto.ec",
+    "jdk.localedata"]
+
+  # List of JDKs for generating cross-platform images.
+  # icon:dot-circle[] icon:file-alt[]
+  targetJdks = [
+    { path = "path/to/jdk", platform = "osx-x86_64" },
+    { path = "path/to/jdk", platform = "linux-x86_64" }]
+
+  # The JDK to use.
+  # If undefined, will find a matching JDK.
+  # icon:dot-circle[] icon:file-alt[]
+  jdk = { path = "path/to/jdk", platform = "linux-x86_64" }
+
+  # Configuration flags for Jdeps
+  # icon:dot-circle[]
+
+  # Enables or disables jdeps
+  # If disabled then [`java.base`] is set as default value for `moduleNames`,
+  # you may define an explicit value for `moduleNames` or use `additionalModuleNames`.
+  # Defaults to `true`
+  # icon:dot-circle[]
+  jdeps.enabled = true
+
+  # Specifies the version when processing multi-release jar files.
+  # Value should be integer >= 9 or `base`.
+  # Defaults to empty
+  # icon:dot-circle[]
+  jdeps.multiRelease = 'base'
+
+  # Ignore missing dependences.
+  # Defaults to `false`
+  # icon:dot-circle[]
+  jdeps.ignoreMissingDeps = true
+
+  # Use wildcard expression in classpath.
+  # Defaults to `true`
+  # icon:dot-circle[]
+  jdeps.useWildcardInPath = false
+
+  # JARs or classes used to limit the module search
+  # Must be defined as paths.
+  # Defaults to empty.
+  # icon:dot-circle[]  icon:file-alt[]
+  jdeps.targets = [ "out/classes/com/acme/Main.class" ]
+
+  # A list of build arguments.
+  # Defaults are shown
+  # icon:dot-circle[]
+  args = ["--no-header-files",
+    "--no-man-pages",
+    "--compress=2",
+    "--strip-debug"]
+
+  # Copy main and input JARs into archive.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  copyJars = true
+
+include::partial$assemble/toml/common-java.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/json/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        "executable": "app",
+
+        // Directory with file templates used to prepare the Jlink assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        "templateDirectory": "path/to/jlink/templates",
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageName": "app-{{projectVersion}}",
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        "imageNameTransform": "app-{{projectEffectiveVersion}}",
+
+        // List of module names.
+        // Overrides modules found by jdeps.
+        // Setting any values here automatically disables jdeps.
+        // icon:dot-circle[]
+        "moduleNames": [
+           "java.base",
+           "com.acme.demo"
+        ],
+
+        // List of additional module names.
+        // Additional required modules but not detected by jdeps.
+        // icon:dot-circle[]
+        "additionalModuleNames": [
+          "jdk.crypto.ec",
+          "jdk.localedata"
+        ],
+
+        // List of JDKs for generating cross-platform images.
+        // icon:dot-circle[] icon:file-alt[]
+        "targetJdks": [
+          {
+            "path": "path/to/jdk",
+            "platform": "osx-x86_64"
+          },
+          {
+            "path": "path/to/jdk",
+            "platform": "linux-x86_64"
+          }
+        ],
+
+        // The JDK to use.
+        // If undefined, will find a matching JDK.
+        // icon:dot-circle[] icon:file-alt[]
+        "jdk": {
+          "path": "path/to/jdk",
+          "platform": "linux-x86_64"
+        },
+
+        // Configuration flags for Jdeps
+        // icon:dot-circle[]
+        "jdeps": {
+          // Enables or disables jdeps
+          // If disabled then [`java.base`] is set as default value for `moduleNames`,
+          // you may define an explicit value for `moduleNames` or use `additionalModuleNames`.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          "enabled": true,
+
+          // Specifies the version when processing multi-release jar files.
+          // Value should be integer >= 9 or `base`.
+          // Defaults to empty
+          // icon:dot-circle[]
+          "multiRelease": "base",
+
+          // Ignore missing dependences.
+          // Defaults to `false`
+          // icon:dot-circle[]
+          "ignoreMissingDeps": true,
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          "useWildcardInPath": false,
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // icon:dot-circle[]  icon:file-alt[]
+          "targets": [
+            "out/classes/com/acme/Main.class"
+          ]
+        },
+
+        // A list of build arguments.
+        // Defaults are shown.
+        // icon:dot-circle[]
+        "args": [
+          "--no-header-files",
+          "--no-man-pages",
+          "--compress=2",
+          "--strip-debug"
+        ],
+
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // icon:dot-circle[]
+        "copyJars": true,
+
+include::partial$assemble/json/common-java.adoc[]
+include::partial$assemble/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$assemble/maven/common-head.adoc[]
+
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use ${distribution.name}.
+          icon:dot-circle[]
+        -->
+        <executable>app</executable>
+
+        <!--
+          Directory with file templates used to prepare the Jlink assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+          If specified, path must exist.
+          icon:dot-circle[]
+        -->
+        <templateDirectory>path/to/brew/templates</templateDirectory>
+
+        <!--
+          Name of the generated image.
+          If left undefined, will use
+          ${project.java.groupId}.${project.java.artifactId}-${project.version}.
+          Generated artifacts always have the platform as suffix.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageName>app-{{projectVersion}}</imageName>
+
+        <!--
+          Name transformation of the generated image.
+          Transformed artifacts always have the platform as suffix.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <imageNameTransform>app</imageNameTransform>
+
+        <!--
+          List of module names.
+          Overrides modules found by jdeps.
+          Setting any values here automatically disables jdeps.
+          icon:dot-circle[]
+        -->
+        <moduleNames>
+          <moduleName>java.base</moduleName>
+          <moduleName>com.acme.demo</moduleName>
+        </moduleNames>
+
+        <!--
+          List of additional module names.
+          Additional required modules but not detected by jdeps.
+          icon:dot-circle[]
+        -->
+        <additionalModuleNames>
+          <additionalModuleName>jdk.crypto.ec</additionalModuleName>
+          <additionalModuleName>jdk.localedata</additionalModuleName>
+        <additionalModuleNames>
+
+        <!--
+          List of JDKs for generating cross-platform images.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <targetJdks>
+          <targetJdk>
+            <path>path/to/jdk</path>
+            <platform>osx-x86_64</platform>
+          </targetJdk>
+          <targetJdk>
+            <path>path/to/jdk</path>
+            <platform>linux-x86_64</platform>
+          </targetJdk>
+        </targetJdks>
+
+        <!--
+          The JDK to use.
+          If undefined, will find a matching JDK.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <jdk>
+          <path>path/to/jdk</path>
+          <platform>linux-x86_64</platform>
+        </jdk>
+
+        <!--
+          Configuration flags for Jdeps
+          icon:dot-circle[]
+        -->
+        <jdeps>
+          <!--
+            Enables or disables jdeps
+            If disabled then [`java.base`] is set as default value for `moduleNames`,
+            you may define an explicit value for `moduleNames` or use `additionalModuleNames`.
+            Defaults to `true`
+            icon:dot-circle[]
+          -->
+          <enabled>true</enabled>
+
+          <!--
+            Specifies the version when processing multi-release jar files.
+            Value should be integer >= 9 or `base`.
+            Defaults to empty
+            icon:dot-circle[]
+          -->
+          <multiRelease>base</multiRelease>
+
+          <!--
+            Ignore missing dependences.
+            Defaults to `false`
+            icon:dot-circle[]
+          -->
+          <ignoreMissingDeps>true</ignoreMissingDeps>
+
+          <!--
+            Use wildcard expression in classpath.
+            Defaults to `true`
+            icon:dot-circle[]
+          -->
+          <useWildcardInPath>false</useWildcardInPath>
+
+          <!--
+            JARs or classes used to limit the module search
+            Must be defined as paths.
+            Defaults to empty.
+            icon:dot-circle[]  icon:file-alt[]
+          -->
+          <targets>
+            <target>${project.build.directory}/classes/com/acme/Main.class</target>
+          </target>
+        </jdeps>
+
+        <!--
+          A list of build arguments.
+          Defaults are shown.
+          icon:dot-circle[]
+        -->
+        <args>
+          <arg>--no-header-files</arg>
+          <arg>--no-man-pages</arg>
+          <arg>--compress=2</arg>
+          <arg>--strip-debug</arg>
+        </args>
+
+        <!--
+          Copy main and input JARs into archive.
+          Defaults to `true`.
+          icon:dot-circle[]
+        -->
+        <copyJars>true</copyJars>
+
+include::partial$assemble/maven/common-java.adoc[]
+include::partial$assemble/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$assemble/gradle/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use ${assembler.name}.
+        // icon:dot-circle[]
+        executable = 'app'
+
+        // Directory with file templates used to prepare the Jlink assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jlink`.
+        // If specified, path must exist.
+        // icon:dot-circle[]
+        templateDirectory = 'path/to/jlink/templates'
+
+        // Name of the generated image.
+        // If left undefined, will use
+        // ${project.java.groupId}.${project.java.artifactId}-${project.version}.
+        // Generated artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        imageName = 'app-{{projectVersion}}'
+
+        // Name transformation of the generated image.
+        // Transformed artifacts always have the platform as suffix.
+        // icon:dot-circle[] icon:file-alt[]
+        imageNameTransform = 'app-{{projectEffectiveVersion}}'
+
+        // List of module names.
+        // Overrides modules found by jdeps.
+        // Setting any values here automatically disables jdeps.
+        // icon:dot-circle[]
+        moduleNames = [
+            'java.base',
+            'com.acme.demo'
+        ]
+
+        // List of additional module names.
+        // Additional required modules but not detected by jdeps.
+        // icon:dot-circle[]
+        additionalModuleNames = [
+          'jdk.crypto.ec',
+          'jdk.localedata'
+        ]
+
+        // List of JDKs for generating cross-platform images.
+        // icon:dot-circle[] icon:file-alt[]
+        targetJdk {
+          path = 'path/to/jdk'
+          platform = 'osx-x86_64'
+        }
+        targetJdk {
+          path = 'path/to/jdk'
+          platform = 'linux-x86_64'
+        }
+
+        // The JDK to use.
+        // If undefined, will find a matching JDK.
+        // icon:dot-circle[] icon:file-alt[]
+        jdk {
+          path = 'path/to/jdk'
+          platform = 'linux-x86_64'
+        }
+
+        // Configuration flags for Jdeps
+        // icon:dot-circle[]
+        jdeps {
+          // Enables or disables jdeps
+          // If disabled then [`java.base`] is set as default value for `moduleNames`,
+          // you may define an explicit value for `moduleNames` or use `additionalModuleNames`.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          enabled = true
+
+          // Specifies the version when processing multi-release jar files.
+          // Value should be integer >= 9 or `base`.
+          // Defaults to empty
+          // icon:dot-circle[]
+          multiRelease = 'base'
+
+          // Ignore missing dependences.
+          // Defaults to `false`
+          // icon:dot-circle[]
+          ignoreMissingDeps = true
+
+          // Use wildcard expression in classpath.
+          // Defaults to `true`
+          // icon:dot-circle[]
+          useWildcardInPath = false
+
+          // JARs or classes used to limit the module search
+          // Must be defined as paths.
+          // Defaults to empty.
+          // icon:dot-circle[]  icon:file-alt[]
+          targets = [ 'build/classes/com/acme/Main.class' ]
+        }
+
+        // A list of build arguments.
+        // Defaults are shown.
+        // icon:dot-circle[]
+        arg('--install-exit-handlers')
+        arg('--no-header-files')
+        arg('--no-man-pages')
+        arg('--compress=2')
+        arg('--strip-debug')
+
+        // Copy main and input JARs into archive.
+        // Defaults to `true`.
+        // icon:dot-circle[]
+        copyJars = true
+
+include::partial$assemble/gradle/common-java.adoc[]
+include::partial$assemble/gradle/common-footer.adoc[]
+----
+--
+====
+
+== Archive Format
+
+By default all archive use the Zip format, however you may change this by setting and extra property named `archiveFormat`
+on a given `targetJdk`. the Jlink assembler will use it as a hint to select the appropriate archiving format, for example
+here's how the format may be changed for archives that target Linux platforms:
+
+[source,yaml]
+----
+assemble:
+  jlink:
+    app:
+      active: always
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+          extraProperties:
+            archiveFormat: TGZ
+        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'
+----
+
+Supported values for the `archiveFormat` property are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`], with `ZIP` being the
+default if left unspecified.
+
+== JDKs
+
+You may specify a value for both `jdk` and `targetJdks`, either, or none. The following rules apply when resolving which
+JDKs will be used to generate custom Java runtimes:
+
+. If both `jdk` and `targetJdks` are specified then they _must_ match the same major version.
+. If only `jdk` is specified then the `targetJdks` will contain a single entry matching the given `jdk`.
+. If no `jdk` is specified then a matching JDK will be searched in `targetJdks`.
+. If no match is found in rule #3 then the currently executing JDK will be used leading to the same result as rule #2.
+
+Paths for `jdk` and `targetJdks` must exist in the file system. You may use the
+xref:tools:jdks-maven.adoc#_configuration_dsl[{icon_maven_s} jdks-maven-plugin] or
+xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugin] to download required JDKs.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/assemblers/<distribution-name>/jlink`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `launcher.bat.tpl`
+* `launcher.tpl`

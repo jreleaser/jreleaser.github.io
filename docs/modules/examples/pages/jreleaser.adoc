@@ -55,6 +55,7 @@ project:
     groupId: org.jreleaser
     version: 8
     multiProject: true
+    mainClass: org.jreleaser.cli.Main
   tags:
     - 'jreleaser'
     - 'release'
@@ -77,7 +78,6 @@ release:
     changelog:
       formatted: ALWAYS
       preset: conventional-commits
-      format: '- {{commitShortHash}} {{commitTitle}}'
       contributors:
         format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
       contentTemplate: 'src/jreleaser/changelog.tpl'
@@ -125,21 +125,31 @@ release:
 signing:
   active: always
   armored: true
-  # Do not sign additional files, only distribution artifacts and checksums
-  files: false
 
-checksum:
-  # Do not checksum additional files, only distribution artifacts
-  files: false
+# Deploy JARs and POMs to Maven Central
+deploy:
+  maven:
+    nexus2:
+      maven-central:
+        active: RELEASE
+        url: https://s01.oss.sonatype.org/service/local
+        closeRepository: true
+        releaseRepository: true
+        stagingRepositories:
+          - build/repos/local/release
 
 # Announcing a release only occurs when it's not snapshot
 announce:
   twitter:
-    active: release
+    active: RELEASE
     statusTemplate: src/jreleaser/twitter.tpl
+  mastodon:
+    active: RELEASE
+    host: https://fosstodon.org
+    statusTemplate: src/jreleaser/mastodon.tpl
   http:
     noticeable:
-      active: release
+      active: RELEASE
       url: https://api.noticeable.io/graphql
       authorization: bearer
       bearerKeyword: Apikey
@@ -152,10 +162,9 @@ assemble:
   # Configure a cross-platform Jlink assembly
   jlink:
     jreleaser-standalone:
-      active: always
+      active: ALWAYS
       java:
         version: 11
-        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       jdeps:
@@ -195,7 +204,7 @@ assemble:
   # Configure platform specific installers
   jpackage:
     jreleaser-installer:
-      active: always
+      active: ALWAYS
       jlink: jreleaser-standalone
       attachPlatform: true
       applicationPackage:
@@ -223,10 +232,9 @@ assemble:
   # Configure native executables
   nativeImage:
     jreleaser-native:
-      active: always
+      active: ALWAYS
       java:
         version: 17
-        mainClass: org.jreleaser.cli.Main
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       mainJar:
@@ -241,7 +249,7 @@ assemble:
         - path: '{{jdkPathPrefix}}/graal17Windows/{{graalFilePrefix}}'
           platform: 'windows-x86_64'
       upx:
-        active: always
+        active: ALWAYS
         version: '3.96'
       args:
         - '-Duser.language=en'
@@ -249,21 +257,19 @@ assemble:
         - '-H:Optimize=2'
         - '-H:+RemoveUnusedSymbols'
         -
-# Configure 6 distributions
+# Configure 5 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
   jreleaser:
-    java:
-      mainClass: org.jreleaser.cli.Main
     chocolatey:
-      active: always
+      active: ALWAYS
       remoteBuild: true
       title: JReleaser
       iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
       bucket:
-        active: release
+        active: RELEASE
     flatpak:
-      active: always
+      active: ALWAYS
       componentId: org.jreleaser.cli
       developerName: JReleaser
       runtime: freedesktop
@@ -273,28 +279,32 @@ distributions:
         - --filesystem=host
       categories:
         - Developer Tools
+      skipReleases:
+        - '.*-RC.*'
+        - '.*-M.*'
       repository:
-        active: release
+        active: RELEASE
         owner: flathub
         name: org.jreleaser.cli
+        branch: master
     jbang:
-      active: always
+      active: ALWAYS
     macports:
-      active: always
+      active: ALWAYS
       categories:
         - devel
         - java
       maintainers:
         - '@aalmiray'
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-macports
     scoop:
-      active: always
+      active: ALWAYS
       bucket:
-        active: release
+        active: RELEASE
     sdkman:
-      active: release
+      active: RELEASE
       architectures:
         - buildOn: [ amd64, arm64 ]
       plugs:
@@ -312,9 +322,9 @@ distributions:
         - home
         - dot-config-files
     spec:
-      active: always
+      active: ALWAYS
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-copr
     artifacts:
       # Transform the artifact name
@@ -327,14 +337,7 @@ distributions:
         extraProperties:
           skipFlatpak: true
 
-  # Distribution 2 is of type JAVA_BINARY
-  jreleaser-ant-tasks:
-    artifacts:
-      # Transform the artifact name
-      - path: plugins/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
-        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
-
-  # Distribution 3 is of type SINGLE_JAR
+  # Distribution 2 is of type SINGLE_JAR
   jreleaser-tool-provider:
     type: SINGLE_JAR
     artifacts:
@@ -342,31 +345,31 @@ distributions:
       - path: apps/{{distributionName}}/build/libs/{{distributionName}}-{{projectVersion}}.jar
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.jar'
 
-  # Distribution 4 is of type JLINK
-  # Name matches the assembled Jlink distribution
+  # Distribution 3 is of type JLINK
+  # Name matches the assembled jlink distribution
   jreleaser-standalone:
     appImage:
-      active: always
+      active: ALWAYS
       componentId: org.jreleaser.cli
       developerName: JReleaser
       categories:
         - Development
       repository:
-        active: release
+        active: RELEASE
         name: jreleaser-appimage
         commitMessage: 'jreleaser {{tagName}}'
     brew:
-      active: always
+      active: ALWAYS
       formulaName: jreleaser
       multiPlatform: true
       tap:
-        active: release
+        active: RELEASE
         commitMessage: 'jreleaser {{tagName}}'
     docker:
       # inherited by specs
-      active: always
+      active: ALWAYS
       repository:
-        active: release
+        active: RELEASE
         commitMessage: 'jreleaser {{tagName}}'
       # inherited by specs
       registries:
@@ -402,10 +405,9 @@ distributions:
             - 'RUN apk add unzip binutils fakeroot rpm'
 
   # Distribution 4 is of type NATIVE_PACKAGE
+  # Name matches the assembled jpackage distribution
   jreleaser-installer:
     type: NATIVE_PACKAGE
-    executable:
-      windowsExtension: exe
     artifacts:
       # Transform the artifact name
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-x86_64.pkg'
@@ -421,11 +423,9 @@ distributions:
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.msi'
         platform: 'windows-x86_64'
 
-  # Distribution 4 is of type NATIVE_IMAGE
+  # Distribution 5 is of type BINARY
+  # Name matches the assembled nativeImage distribution
   jreleaser-native:
-    type: NATIVE_IMAGE
-    executable:
-      windowsExtension: exe
     artifacts:
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip'
         platform: 'osx-x86_64'
@@ -437,6 +437,11 @@ distributions:
 files:
   artifacts:
     - path: VERSION
+      extraProperties:
+        skipChecksum: true
+        skipSigning: true
+    - path: plugins/jreleaser-ant-tasks/build/distributions/jreleaser-ant-tasks-{{projectVersion}}.zip
+      transform: 'jreleaser-ant-tasks/jreleaser-ant-tasks-{{projectEffectiveVersion}}.zip'
 ----
 
 Which will create and tag a prerelease on GitHub when the project is snapshot, and a regular release when
@@ -448,60 +453,60 @@ The release will have the following assets:
 [subs="attributes"]
 ----
 # binaries created by the Gradle build
-jreleaser-{jreleaser-version}.tar
-jreleaser-{jreleaser-version}.zip
-jreleaser-ant-tasks-{jreleaser-version}.zip
-jreleaser-tool-provider-{jreleaser-version}.jar
+jreleaser-{jreleaser-effective-version}.tar
+jreleaser-{jreleaser-effective-version}.zip
+jreleaser-ant-tasks-{jreleaser-effective-version}.zip
+jreleaser-tool-provider-{jreleaser-effective-version}.jar
 
 # binaries created by the Jlink assembler
-jreleaser-standalone-{jreleaser-version}-linux-aarch64.zip
-jreleaser-standalone-{jreleaser-version}-linux-x86_64.zip
-jreleaser-standalone-{jreleaser-version}-linux_musl-aarch64.zip
-jreleaser-standalone-{jreleaser-version}-linux_musl-x86_64.zip
-jreleaser-standalone-{jreleaser-version}-osx-aarch64.zip
-jreleaser-standalone-{jreleaser-version}-osx-x86_64.zip
-jreleaser-standalone-{jreleaser-version}-windows-aarch64.zip
-jreleaser-standalone-{jreleaser-version}-windows-x86_64.zip
+jreleaser-standalone-{jreleaser-effective-version}-linux-aarch64.zip
+jreleaser-standalone-{jreleaser-effective-version}-linux-x86_64.zip
+jreleaser-standalone-{jreleaser-effective-version}-linux_musl-aarch64.zip
+jreleaser-standalone-{jreleaser-effective-version}-linux_musl-x86_64.zip
+jreleaser-standalone-{jreleaser-effective-version}-osx-aarch64.zip
+jreleaser-standalone-{jreleaser-effective-version}-osx-x86_64.zip
+jreleaser-standalone-{jreleaser-effective-version}-windows-aarch64.zip
+jreleaser-standalone-{jreleaser-effective-version}-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
-jreleaser-installer-{jreleaser-version}-osx-x86_64.pkg
-jreleaser-installer-{jreleaser-version}-1_amd64.deb
-jreleaser-installer-{jreleaser-version}-1.x86_64.rpm
-jreleaser-installer-{jreleaser-version}-windows-x86_64.msi
+jreleaser-installer-{jreleaser-effective-version}-osx-x86_64.pkg
+jreleaser-installer-{jreleaser-effective-version}-1_amd64.deb
+jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm
+jreleaser-installer-{jreleaser-effective-version}-windows-x86_64.msi
 
 # binaries created by the NativeImage assembler
-jreleaser-native-{jreleaser-version}-osx-x86_64.zip
-jreleaser-native-{jreleaser-version}-linux-x86_64.zip
-jreleaser-native-{jreleaser-version}-windows-x86_64.zip
+jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip
+jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip
+jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip
 
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
-jreleaser-{jreleaser-version}.zip.rmd160
-jreleaser-{jreleaser-version}.zip.sha256
+jreleaser-{jreleaser-effective-version}.zip.rmd160
+jreleaser-{jreleaser-effective-version}.zip.sha256
 
 # signatures
 checksums_rmd160.txt.asc
 checksums_sha256.txt.asc
-jreleaser-{jreleaser-version}.tar.asc
-jreleaser-{jreleaser-version}.zip.asc
-jreleaser-ant-tasks-{jreleaser-version}.zip.asc
-jreleaser-tool-provider-{jreleaser-version}.jar.asc
-jreleaser-standalone-{jreleaser-version}-linux-aarch64.zip.asc
-jreleaser-standalone-{jreleaser-version}-linux-x86_64.zip.asc
-jreleaser-standalone-{jreleaser-version}-linux_musl-aarch64.zip.asc
-jreleaser-standalone-{jreleaser-version}-linux_musl-x86_64.zip.asc
-jreleaser-standalone-{jreleaser-version}-osx-aarch64.zip.asc
-jreleaser-standalone-{jreleaser-version}-osx-x86_64.zip.asc
-jreleaser-standalone-{jreleaser-version}-windows-aarch64.zip.asc
-jreleaser-standalone-{jreleaser-version}-windows-x86_64.zip.asc
-jreleaser-installer-{jreleaser-version}-osx-x86_64.pkg.asc
-jreleaser-installer-{jreleaser-version}-1_amd64.deb.asc
-jreleaser-installer-{jreleaser-version}-1.x86_64.rpm.asc
-jreleaser-installer-{jreleaser-version}-windows-x86_64.msi.asc
-jreleaser-native-{jreleaser-version}-osx-x86_64.zip.asc
-jreleaser-native-{jreleaser-version}-linux-x86_64.zip.asc
-jreleaser-native-{jreleaser-version}-windows-x86_64.zip.asc
+jreleaser-{jreleaser-effective-version}.tar.asc
+jreleaser-{jreleaser-effective-version}.zip.asc
+jreleaser-ant-tasks-{jreleaser-effective-version}.zip.asc
+jreleaser-tool-provider-{jreleaser-effective-version}.jar.asc
+jreleaser-standalone-{jreleaser-effective-version}-linux-aarch64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-linux-x86_64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-linux_musl-aarch64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-linux_musl-x86_64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-osx-aarch64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-osx-x86_64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-windows-aarch64.zip.asc
+jreleaser-standalone-{jreleaser-effective-version}-windows-x86_64.zip.asc
+jreleaser-installer-{jreleaser-effective-version}-osx-x86_64.pkg.asc
+jreleaser-installer-{jreleaser-effective-version}-1_amd64.deb.asc
+jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm.asc
+jreleaser-installer-{jreleaser-effective-version}-windows-x86_64.msi.asc
+jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip.asc
+jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip.asc
+jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip.asc
 
 # additional files
 VERSION
@@ -525,4 +530,8 @@ Docker images will also be published to DockerHub:
  * https://hub.docker.com/r/jreleaser/jreleaser-slim
  * https://hub.docker.com/r/jreleaser/jreleaser-alpine
 
-Finally, a Twitter thread will be posted as well as a news item at link:https://jreleaser.noticeable.news/[].
+JARs and POMs will be posted to Maven Central:
+
+ * https://search.maven.org/search?q=jreleaser
+
+Finally, Twitter & Mastodon threads will be posted, as well as a news item at link:https://jreleaser.noticeable.news/[].

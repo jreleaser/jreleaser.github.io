@@ -1,0 +1,3866 @@
+= Name Templates
+
+Several fields in the JReleaser config file support templating. JReleaser makes use of the
+link:https://mustache.github.io/[Mustache] format for its templating support. Packagers rely on input files that
+also support templates. A template name can be used as `{{name}}`
+
+The following is a list of pre-defined template names:
+
+== Functions
+
+The following functions may be used to modify text:
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                    | Description
+| f_capitalize           | invokes `capitalize()`
+| f_checksum_md2         | file checksum with the given algorithm
+| f_checksum_md5         | file checksum with the given algorithm
+| f_checksum_rmd160      | file checksum with the given algorithm
+| f_checksum_sha1        | file checksum with the given algorithm
+| f_checksum_sha256      | file checksum with the given algorithm
+| f_checksum_sha3-224    | file checksum with the given algorithm
+| f_checksum_sha3-256    | file checksum with the given algorithm
+| f_checksum_sha3-384    | file checksum with the given algorithm
+| f_checksum_sha3-512    | file checksum with the given algorithm
+| f_checksum_sha384      | file checksum with the given algorithm
+| f_checksum_sha512      | file checksum with the given algorithm
+| f_chop                 | remove the last character from a String
+| f_dash                 | transforms `.` and `_` into `-`
+| f_delete_whitespace    | deletes all whitespaces from a String
+| f_escape_csv           | returns a String value for a CSV column enclosed in double quotes, if required
+| f_escape_ecma_script   | escapes the characters in a String using EcmaScript String rules
+| f_escape_html3         | escapes the characters in a String using HTML entities
+| f_escape_html4         | escapes the characters in a String using HTML entities
+| f_escape_java          | escapes the characters in a String using Java String rules
+| f_escape_json          | escapes the characters in a String using Json String rules
+| f_escape_xml10         | escapes the characters in a String using XML entities
+| f_escape_xml11         | escapes the characters in a String using XML entities
+| f_escape_xsi           | escapes the characters in a String using XSI rules
+| f_file_read            | reads a file and includes its contents, verbatim
+| f_file_size            | the size of the file, in bytes
+| f_json                 | converts the given input into JSON
+| f_lower                | invokes `toLowerCase()`
+| f_md2html              | transforms its input from Markdown into HTML
+| f_normalize_whitespace | similar to xpath/#function-normalize-space
+| f_now                  | formats the current timestamp (in local timezone)
+| f_now_gmt              | formats the current timestamp (in GMT timezone)
+| f_recursive_eval       | evaluates templates found in the input
+| f_release_download_url | formats its input as a link to a release asset
+| f_reverse              | reverses a String
+| f_slash                | transforms `.` and `-` into `/`
+| f_strip                | strips whitespace from the start and end of a String
+| f_swapcase             | swaps the case of a String changing upper and title case to lower case, and lower case to upper case
+| f_trim                 | removes whitespace from the input
+| f_uncapitalize         | invokes `uncapitalize()`
+| f_underscores          | transforms `.` and `-` into `_`
+| f_upper                | invokes `toUpperCase()`
+|===
+
+The `f_release_download_url` function expects the name of a release asset and creates a link to said asset. The default
+format is Markdown. Use a prefix such as `md:`, `adoc:`, or `html:` to indicate a different format.
+
+Example:
+
+[source]
+----
+{{#f_now}}YYYY-MM-dd{{/f_now}}
+{{#f_dash}}1.2.3{{/f_dash}}
+{{#f_release_download_url}}jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}md:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}adoc:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}html:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+----
+
+Results in
+
+[source]
+[subs="attributes,-macros"]
+----
+2021-07-26
+1-2-3
+[jreleaser-{jreleaser-effective-version}.zip](https://github.com/jreleaser/jreleaser/releases/download/{jreleaser-tag}/jreleaser-{jreleaser-effective-version}.zip)
+[jreleaser-{jreleaser-effective-version}.zip](https://github.com/jreleaser/jreleaser/releases/download/{jreleaser-tag}/jreleaser-{jreleaser-effective-version}.zip)
+link:https://github.com/jreleaser/jreleaser/releases/download/{jreleaser-tag}/jreleaser-{jreleaser-effective-version}.zip[jreleaser-{jreleaser-effective-version}.zip]
+&lt;a href="https://github.com/jreleaser/jreleaser/releases/download/{jreleaser-tag}/jreleaser-{jreleaser-effective-version}.zip"&gt;jreleaser-{jreleaser-effective-version}.zip&lt;/a&gt;
+----
+
+== Build
+
+The following names are related to the current build
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                 | Description
+| commitShortHash     | head commit hash abbreviated to 7 characters
+| commitFullHash      | head commit hash
+| timestamp           | current timestamp with RFC3339 format
+| basedir             | the base directory where JReleaser is invoked
+| baseOutputDirectory | the base output directory (by default, "target" in Maven, "build" in Gradle, "out" in CLI)
+| outputDirectory     | JReleaser's output directory (always ends with "jreleaser")
+| checksumDirectory   | directory where checksums are found
+| signaturesDirectory | directory where signatures are found
+| assembleDirectory   | directory where assembled distributions are found
+| artifactsDirectory  | directory where transformed artifacts are found
+| prepareDirectory    | base directory for preparing distributions
+| packageDirectory    | base directory for packaging distributions
+|===
+
+== Environment
+
+All environment variables are accessible with the `Env.` prefix, for example an environment variable named `JAVA_OPTS`
+becomes `{{Env.JAVA_OPTS}}`.
+
+Additionally, every key/value from `environment.properties` becomes available
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+environment:
+  properties:
+    foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[environment]
+  properties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "environment": {
+    "properties": {
+      "foo": "bar"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <environment>
+    <properties>
+      <foo>bar</foo>
+    </properties>
+  </environment>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  environment {
+    properties.put('foo', 'bar')
+  }
+}
+----
+--
+====
+
+The key `foo` becomes `{{foo}}` and will be evaluated to the String `bar`.
+
+== Project
+
+The following names are related to xref:reference:project.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                      | Description
+| projectName              | the project name
+| projectStereotype        | the project stereotype
+| projectNameCapitalized   | the project name, capitalized, hyphens replaced by spaces.
+| projectVersion           | the project version
+| projectEffectiveVersion  | the project effective version
+| projectVersionMajor      | the major number of the project's version (semver)
+| projectVersionMinor      | the minor number (if any) of the project's version (semver, calver)
+| projectVersionPatch      | the patch number (if any) of the project's version (semver)
+| projectVersionTag        | the tag (if any) of the project's version (semver)
+| projectVersionNumber     | the version number (no build, no tag) of the project's version (semver, java_runtime, java_module)
+| projectVersionOptional   | the optional part (if any) of the project's version (java_runtime)
+| projectVersionPrerelease | the prerelease part (if any) of the project's version (java_runtime, java_module)
+| projectVersionBuild      | the build part (if any) of the project's version (semver, java_runtime, java_module)
+| projectVersionYear       | the year part of the project's version (calver)
+| projectVersionMonth      | the month part (if any) of the project's version (calver)
+| projectVersionDay        | the day part (if any) of the project's version (calver)
+| projectVersionWeek       | the week part (if any) of the project's version (calver)
+| projectVersionMicro      | the micro part (if any) of the project's version (calver)
+| projectVersionModifier   | the modifier part of the project's version (calver)
+| projectDescription       | the project description
+| projectLongDescription   | the project long description
+| projectLinkHomepage      | link to the project's website
+| projectLinkDocumentation | link to the project's documentation
+| projectLinkLicense       | link to the project's license
+| projectLinkBugTracker    | link to the project's issue tracker
+| projectLinkVcsBrowser    | link to the project's source control
+| projectLinkFaq           | link to the project's FAQ
+| projectLinkHelp          | link to the project's help page
+| projectLinkDonation      | link to the project's donations page
+| projectLinkTranslate     | link to the project's translations page
+| projectLinkContact       | link to the project's contact page
+| projectLinkContribute    | link to the project's contribution page
+| projectLicense           | the project license, typically an SPDX identifier
+| projectInceptionYear     | year when the project started
+| projectCopyright         | the project copyright notice
+| projectVendor            | the project's vendor (if any)
+| projectAuthorsBySpace    | space separated list of author names
+| projectAuthorsByComma    | comma separated list of author names
+| projectTagsBySpace       | space separate list of project tags
+| projectTagsByComma       | comma separate list of project tags
+| projectJavaGroupId       | the project groupId (Maven coordinates)
+| projectJavaArtifactId    | the project artifactId (Maven coordinates)
+| projectJavaVersion       | the project Java version (full)
+| projectJavaVersionMajor  | the project Java version (major)
+| projectJavaVersionMinor  | the project Java version (minor)
+| projectJavaVersionPatch  | the project Java version (patch)
+| projectJavaVersionTag    | the project Java version (tag)
+| projectJavaVersionBuild  | the project Java version (build)
+| projectJavaMainClass     | the main class launched by the executable script launcher
+|===
+
+There are convenient variants of the project's version formatted with underscores (`_`) and dashes (`-`) instead of
+dots (`.`). These variants are:
+
+ - projectVersionWithUnderscores
+ - projectVersionWithDashes
+ - projectEffectiveVersionWithUnderscores
+ - projectEffectiveVersionWithDashes
+ - projectVersionNumberWithUnderscores
+ - projectVersionNumberWithDashes
+
+Which would resolve to the following, assuming `project.snapshot.label` was set to `{{projectVersionNumber}}.EarlyAccess`.
+
+[%header, width="100%"]
+|===
+| Key                                    | Version
+| projectVersion                         | 1.2.3-TAG
+| projectVersionWithUnderscores          | 1_2_3_TAG
+| projectVersionWithDashes               | 1-2-3-TAG
+| projectEffectiveVersionWithUnderscores | 1_2_3_EarlyAccess
+| projectEffectiveVersionWithDashes      | 1-2-3-EarlyAccess
+| projectVersionNumberWithUnderscores    | 1_2_3
+| projectVersionNumberWithDashes         | 1-2-3
+|===
+
+The value of `projectEffectiveVersion` is calculated as follows:
+
+* if the project is snapshot the value becomes "`early-access`". `projectVersion` remains unchanged.
+* if the project is release the value is the same as `projectVersion`.
+
+Additionally, every key/value from `project.extraProperties` is mapped with `project` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  extraProperties:
+    # Key will be capitalized and prefixed
+    # with `project`, i.e, `projectFoo`.
+    foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  # Key will be capitalized and prefixed
+  # with `project`, i.e, `projectFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "extraProperties": {
+      // Key will be capitalized and prefixed
+      // with `project`, i.e, `projectFoo`.
+      "foo": "bar"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <project>
+    <extraProperties>
+      <!--
+        Key will be capitalized and prefixed
+        with `project`, i.e, `projectFoo`.
+      -->
+      <foo>bar</foo>
+    </extraProperties>
+  </project>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    // Key will be capitalized and prefixed
+    // with `project`, i.e, `projectFoo`.
+    extraProperties.put('foo', 'bar')
+  }
+}
+----
+--
+====
+
+Additionally, every key/value from `project.java.extraProperties` is mapped with `java` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  java:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `java`, i.e, `javaFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "java": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <project>
+    <java>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `java`, i.e, `javaFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </java>
+  </project>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    java {
+      // Key will be capitalized and prefixed
+      // with `java`, i.e, `javaFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Platform
+
+The following names are related to detected OS/Platform settings
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                | Description
+| osName             | normalized value of System.getProperty("os.name")
+| osArch             | normalized value of System.getProperty("os.arch")
+| osVersion          | value of System.getProperty("os.version")
+| osPlatform         | combination of `${osName}-${osArch}`
+| osPlatformReplaced | `osPlatform` after xref:platform.adoc[platform] replacements have been applied
+|===
+
+== Release
+
+The following names are related to xref:reference:release/index.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                   | Description
+| repoHost              | the Git host, i.e. "github.com"
+| repoOwner             | the owner of the Git repository
+| repoName              | the name of the Git repository
+| repoBranch            | the branch on which the release is made
+| tagName               | the tag being release, defaults to `v{{projectVersion}}`
+| previousTagName       | the tag to compare the release tag to, defaults to the previous tag
+| releaseName           | the release name, defaults to `Release {{tagName}}`
+| milestoneName         | the milestone name/title, defaults to `{{tagName}}`
+| repoCanonicalName     | the canonical name of the repository, `{{repoOwner}}/{{repoName}}`
+| repoUrl               | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| repoCloneUrl          | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| commitsUrl            | the URL to find commits
+| srcUrl                | the URL to find a file in the repository
+| releaseNotesUrl       | the URL pointing to the release
+| latestReleaseUrl      | the URL pointing to latest release
+| issueTrackerUrl       | the URL of the issue tracker
+| reverseRepoHost       | reversed Git host, i.e. "com.github"
+| changelogChanges      | formatted commit changes
+| changelogContributors | list of unique names of all commit contributors
+| changelog             | full changelog contents
+|===
+
+The value of `tagName` is calculated as follows:
+
+* if the project is snapshot the value becomes "`early-access`".
+* if the project is release the value remains unchanged.
+
+== Distribution
+
+The following names are related to xref:reference:distributions.adoc[]
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                           | Description
+| distributionName              | the name of the distribution
+| distributionStereotype        | the stereotype of the distribution
+| distributionExecutableName    | the name of the executable without extension
+| distributionExecutableUnix    | the name of the executable with unix extension
+| distributionExecutableWindows | the name of the executable with windows extension
+| distributionTagsBySpace       | space separate list of distribution tags
+| distributionTagsByComma       | comma separate list of distribution tags
+| distributionJavaGroupId       | the distribution groupId (Maven coordinates)
+| distributionJavaArtifactId    | the distribution artifactId (Maven coordinates)
+| distributionJavaVersion       | the distribution Java version (full)
+| distributionJavaVersionMajor  | the distribution Java version (major)
+| distributionJavaVersionMinor  | the distribution Java version (minor)
+| distributionJavaVersionPatch  | the distribution Java version (patch)
+| distributionJavaVersionTag    | the distribution Java version (tag)
+| distributionJavaVersionBuild  | the distribution Java version (build)
+| distributionJavaMainClass     | the main class launched by the executable script launcher
+|===
+
+Additionally, every key/value from `distribution.<name>.extraProperties` is mapped with `distribution` as key prefix
+and the capitalized key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+distributions:
+  app:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `distribution`, i.e, `distributionFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  # Key will be capitalized and prefixed
+  # with `distribution`, i.e, `distributionFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `distribution`, i.e, `distributionFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `distribution`, i.e, `distributionFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </app>
+  </distributions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      // Key will be capitalized and prefixed
+      // with `distribution`, i.e, `distributionFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+Additionally, every key/value from `distribution.<name>.java.extraProperties` is mapped with `java` as key prefix
+and the capitalized key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+distributions:
+  app:
+    java:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `java`, i.e, `javaFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[distributions.app]
+  # Key will be capitalized and prefixed
+  # with `java`, i.e, `javaFoo`.
+  java.extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "distributions": {
+    "app": {
+      "java": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `java`, i.e, `javaFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <distributions>
+    <app>
+      <java>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `java`, i.e, `javaFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </java>
+    </app>
+  </distributions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  distributions {
+    app {
+      java {
+        // Key will be capitalized and prefixed
+        // with `java`, i.e, `javaFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Artifact
+
+The following names identify an artifact without explicit `platform`
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                      | Description
+| artifactUrl              | the URL required to download the artifact
+| artifactChecksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
+| artifactFile             | the name of the artifact file
+| artifactFileName         | the name of the artifact file without extension
+| artifactFileExtension    | the extension of the artifact's file
+| artifactFileFormat       | the extension without the leading dot
+| artifactSize             | the size (in bytes) of the artifact file
+| artifactName             | matches artifactId (GAV coordinates)
+| artifactVersion          | matches version (GAV coordinates)
+| artifactPlatform         | the artifact's platform (if any)
+| artifactPlatformReplaced | the artifact's replaced platform (if any)
+| artifactOs               | the os component of the artifact's platform (if any)
+| artifactArch             | the arch component of the artifact's platform (if any)
+|===
+
+The following names match an artifact without explicit `platform` when xref:reference:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                               | Description
+| artifactDownloadUrl               | the URL required to download the artifact
+| artifactDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifactDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
+The following names match the first artifact in a distribution
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                  | Description
+| distributionUrl                      | the URL required to download the artifact
+| distributionSize                     | the size (in bytes) of the artifact file
+| distributionChecksum${SHA}           | the matching checksum of the artifact's file, per configured algorithm
+| distributionArtifactFile             | the name of the artifact file
+| distributionArtifactFileName         | the name of the artifact file without extension
+| distributionArtifactFileExtension    | the extension of the artifact's file
+| distributionArtifactFileFormat       | the extension without the leading dot
+| distributionArtifactSize             | the size (in bytes) of the artifact file
+| distributionArtifactName             | matches artifactId (GAV coordinates)
+| distributionArtifactVersion          | matches version (GAV coordinates)
+| distributionArtifactPlatform         | the artifact's platform (if any)
+| distributionArtifactPlatformReplaced | the artifact's replaced platform (if any)
+| distributionArtifactOs               | the os component of the artifact's platform (if any)
+| distributionArtifactArch             | the arch component of the artifact's platform (if any)
+|===
+
+The following names match the first artifact in a distribution when xref:reference:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                   | Description
+| distributionDownloadUrl               | the URL required to download the artifact
+| distributionDownload${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| distributionDownload${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
+Additional names become available when the artifact defines a `platform`
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                         | Description
+| artifact${Platform}Url                      | the URL required to download the artifact
+| artifact${Platform}Checksum${SHA}           | the matching checksum of the artifact's file, per configured algorithm
+| artifact${Platform}File                     | the name of the artifact file
+| artifact${Platform}FileName                 | the name of the artifact file without extension
+| artifact${Platform}FileExtension            | the extension of the artifact's file
+| artifact${Platform}FileFormat               | the extension without the leading dot
+| artifact${Platform}Size                     | the size (in bytes) of the artifact file
+| artifact${Platform}Name                     | matches artifactId (GAV coordinates)
+| artifact${Platform}Version                  | matches version (GAV coordinates)
+| artifact${Platform}Platform                 | the artifact's platform (if any)
+| artifact${Platform}PlatformReplaced         | the artifact's replaced platform (if any)
+| artifact${Platform}Os                       | the os component of the artifact's platform (if any)
+| artifact${Platform}Arch                     | the arch component of the artifact's platform (if any)
+| artifact${PlatformReplaced}Url              | the URL required to download the artifact
+| artifact${PlatformReplaced}Checksum${SHA}   | the matching checksum of the artifact's file, per configured algorithm
+| artifact${PlatformReplaced}File             | the name of the artifact file
+| artifact${PlatformReplaced}FileName         | the name of the artifact file without extension
+| artifact${PlatformReplaced}FileExtension    | the extension of the artifact's file
+| artifact${PlatformReplaced}FileFormat       | the extension without the leading dot
+| artifact${PlatformReplaced}Size             | the size (in bytes) of the artifact file
+| artifact${PlatformReplaced}Name             | matches artifactId (GAV coordinates)
+| artifact${PlatformReplaced}Version          | matches version (GAV coordinates)
+| artifact${PlatformReplaced}Platform         | the artifact's platform (if any)
+| artifact${PlatformReplaced}PlatformReplaced | the artifact's replaced platform (if any)
+| artifact${PlatformReplaced}Os               | the os component of the artifact's platform (if any)
+| artifact${PlatformReplaced}Arch             | the arch component of the artifact's platform (if any)
+|===
+
+Additional names become available when the artifact defines a `platform` and xref:reference:upload/index.adoc[uploaders]
+are configured
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                                  | Description
+| artifact${Platform}DownloadUrl                       | the URL required to download the artifact
+| artifact${Platform}Download${Type}Url                | the URL required to download the artifact, matching the typed uploader
+| artifact${Platform}Download${Type}${Name}Url         | the URL required to download the artifact, matching the typed and named uploader
+| artifact${PlatformReplaced}DownloadUrl               | the URL required to download the artifact
+| artifact${PlatformReplaced}Download${Type}Url        | the URL required to download the artifact, matching the typed uploader
+| artifact${PlatformReplaced}Download${Type}${Name}Url | the URL required to download the artifact, matching the typed and named uploader
+|===
+
+Additionally, every key/value from `artifact.extraProperties` is mapped with `artifact` as key prefix for the first
+artifact, `artifact{{Platform}}`, and `artifact{{PlatformReplaced}}` for all artifacts, and the capitalized key.
+
+Thus, for artifacts defined as
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+checksum:
+  algorithms:
+    - MD5
+    - SHA-256
+
+distributions:
+  app:
+    artifacts:
+      - path: path/to/{{distributionName}}-{{projectVersion}}.zip
+        extraProperties:
+          main: true
+      - path: path/to/{{distributionName}}-{{projectVersion}}-mac.zip
+        platform: osx-aarch_64
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[checksum]
+  algorithms = ["MD5", "SHA-256"]
+
+pass:[[[distributions.app.artifact]]]
+  path: "path/to/{{distributionName}}-{{projectVersion}}.zip"
+  extraProperties.main = true
+
+pass:[[[distributions.app.artifact]]]
+  path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
+  platform = "osx-aarch_64"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "checksums": {
+    "algorithms": [
+      "MD5",
+      "SHA-256"
+    ]
+  },
+
+  "distributions": {
+    "app": {
+      "artifacts": [
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}.zip",
+          "extraProperties":
+          {
+            "main": true
+          }
+        },
+        {
+          "path": "path/to/{{distributionName}}-{{projectVersion}}-mac.zip",
+          "platform": "osx-aarch_64"
+        }
+      ],
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <checksum>
+    <algorithms>
+      <algorithm>MD5</algorithm>
+      <algorithm>SHA-256</algorithm>
+    </algorithms>
+  </checksum>
+  <distributions>
+    <app>
+      <artifacts>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}.zip</path>
+          <extraProperties>
+            <main>true</main>
+          </extraProperties>
+        </artifact>
+        <artifact>
+          <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
+          <platform>osx-aarch_64</platform>
+        </artifact>
+      </artifacts>
+    </app>
+  </distributions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  checksum {
+    algorithm('MD5')
+    algorithm('SHA-256')
+  }
+  distributions {
+    app {
+      artifact {
+        path = "path/to/${project.name}-${project.version}.zip"
+        extraProperties.put("main", true)
+      }
+      artifact {
+        path = "path/to/${project.name}-${project.version}-mac.zip"
+        platform = 'osx-aarch_64'
+      }
+    }
+  }
+}
+----
+--
+====
+
+The following names will be calculated:
+
+*1st artifact*
+
+* artifactUrl
+* artifactChecksumMd5
+* artifactChecksumSha256
+* artifactFile: `${project.name}-${project.version}.zip`
+* artifactFileName: `${project.name}-${project.version}`
+* artifactFileExtension: `.zip`
+* artifactFileFormat: `zip`
+* artifactName: `${project.name}`
+* artifactVersion: `${project.version}`
+* artifactSize
+* artifactMain: true
+* distributionUrl
+* distributionSize
+* distributionChecksumMd5
+* distributionChecksumSha256
+* distributionArtifactFile: `${project.name}-${project.version}.zip`
+* distributionArtifactFileName: `${project.name}-${project.version}`
+* distributionArtifactFileExtension: `.zip`
+* distributionArtifactFileFormat: `zip`
+* distributionArtifactName: `${project.name}`
+* distributionArtifactVersion: `${project.version}`
+* distributionArtifactSize
+
+*Platform specific artifact*
+
+* artifactOsxAarch64Url
+* artifactOsxAarch64ChecksumMd5
+* artifactOsxAarch64ChecksumSha256
+* artifactOsxAarch64File: `${project.name}-${project.version}.zip`
+* artifactOsxAarch64FileName: `${project.name}-${project.version}`
+* artifactOsxAarch64FileExtension: `.zip`
+* artifactOsxAarch64FileFormat: `zip`
+* artifactOsxAarch64Name: `${project.name}`
+* artifactOsxAarch64Version: `${project.version}`
+* artifactOsxAarch64Platform: `osx-aarch_64`
+* artifactOsxAarch64Os: `osx`
+* artifactOsxAarch64Arch: `aarch_64`
+* artifactOsxAarch64Size
+
+== Artifactory
+
+The following names are related to the xref:reference:upload/artifactory.adoc[] uploader
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named Artifactory instance
+|===
+
+Every key/value from `artifactory.extraProperties` is mapped with `artifactory` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+upload:
+  artifactory:
+    app:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `artifactory`, i.e, `artifactoryFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[upload.artifactory.app]
+  # Key will be capitalized and prefixed
+  # with `artifactory`, i.e, `artifactoryFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "upload": {
+    "artifactory": {
+      "app": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `artifactory`, i.e, `artifactoryFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <artifactory>
+      <app>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `artifactory`, i.e, `artifactoryFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </app>
+    </artifactory>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  upload {
+    artifactory {
+      app {
+        // Key will be capitalized and prefixed
+        // with `artifactory`, i.e, `artifactoryFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+== AppImage
+
+The following names are related to xref:reference:packagers/appimage.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                                  | Description
+| appImageRepoOwner                    | the owner of the Git repository
+| appImageRepoName                     | the name of the Git repository
+| appImageComponentId                  | the component id
+| appImageCategories                   | the list of categories
+| appImageDeveloperName                | the developer name
+| appImageRequiresTerminal             | boolean indicating if the project requires terminal access
+| appImageReleases                     | list of releases
+| appImageUrls                         | list of links
+| appImageScreenshots                  | list of screenshots
+| appImageIcons                        | list of icons
+| appImageDistributionUrl              | the URL required to download the artifact
+| appImageDistributionArtifactFile     | the name of the artifact file
+| appImageDistributionArtifactFileName | the name of the artifact file without extension
+|===
+
+== Asdf
+
+The following names are related to xref:reference:packagers/asdf.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                              | Description
+| asdfDistributionUrl              | the URL required to download the artifact
+| asdfDistributionArtifactFile     | the name of the artifact file
+| asdfDistributionArtifactFileName | the name of the artifact file without extension
+|===
+
+
+== Brew
+
+The following names are related to xref:reference:packagers/homebrew.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                  | Description
+| brewTapRepoOwner     | owner of the tap repository URL, defaults to `${release.owner}`
+| brewTapRepoName      | name of the tap repository URL, defaults to `homebrew-tap`
+| brewTapName          | short name of the tap repository URL, defaults to `tap`
+| brewTapRepoUrl       | the tap repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| brewTapRepoCloneUrl  | the tap repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| brewFormulaName      | the formula name. Defaults to `{{projectNameCapitalized}}`
+| brewDependencies     | a map of key/value pairs
+| brewHashLivecheck    | if custom livecheck instructions were specified
+| brewLivecheck        | a list of strings for the livecheck block
+| brewCaskName         | the cask name
+| brewCaskDisplayName  | value for the cask's `desc` field
+| brewCaskHasPkg       | if the cask contains a `.pkg` artifact
+| brewCaskPkgName      | value for the cask's `pkg` field
+| brewCaskHasApp       | if the cask contains a `.dmg` artifact
+| brewCaskAppName      | value for the cask's `app` field
+| brewCaskHasUninstall | if the cask defines a `uninstall` section
+| brewCaskUninstall    | the `uninstall` section
+| brewCaskHasZap       | if the cask defines a `zap` section
+| brewCaskZap          | the `zap` section
+| brewCaskHasAppcast   | if the cask defines an `appcast` URL
+| brewCaskAppcast      | the `appcast` url
+| brewCaskHasBinary    | if the cask contains a `.zip` artifact
+|===
+
+Additionally, every key/value from `brew.extraProperties` is mapped with `brew` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  brew:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `brew`, i.e, `brewFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.brew]
+  # Key will be capitalized and prefixed
+  # with `brew`, i.e, `brewFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "brew": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `brew`, i.e, `brewFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <brew>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `brew`, i.e, `brewFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </brew>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    brew {
+      // Key will be capitalized and prefixed
+      // with `brew`, i.e, `brewFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Chocolatey
+
+The following names are related to xref:reference:packagers/chocolatey.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                          | Description
+| chocolateyPackageName        | the name of the Chocolatey package. Defaults to `${distribution.name}`
+| chocolateyUsername           | the name of the Chocolatey username
+| chocolateyTitle              | the title to use in the spec
+| chocolateyIconUrl            | the icon URL
+| chocolateyBucketRepoUrl      | the bucket repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| chocolateyBucketRepoCloneUrl | the bucket clone repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| chocolateyPackageSourceUrl   | URL where the spec may be found
+|===
+
+Additionally, every key/value from `chocolatey.extraProperties` is mapped with `chocolatey` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  chocolatey:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `chocolatey`, i.e, `chocolateyFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.chocolatey]
+  # Key will be capitalized and prefixed
+  # with `chocolatey`, i.e, `chocolateyFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "chocolatey": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `chocolatey`, i.e, `chocolateyFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <chocolatey>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `chocolatey`, i.e, `chocolateyFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </chocolatey>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    chocolatey {
+      // Key will be capitalized and prefixed
+      // with `chocolatey`, i.e, `chocolateyFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Docker
+
+The following names are related to xref:reference:packagers/docker.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key             | Description
+| dockerBaseImage | the base Docker image
+| dockerLabels    | a list of formatted labels
+| dockerSpecName  | the name of the current Docker spec
+|===
+
+Additionally, every key/value from `docker.extraProperties` is mapped with `docker` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  docker:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `docker`, i.e, `dockerFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.docker]
+  # Key will be capitalized and prefixed
+  # with `docker`, i.e, `dockerFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "docker": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `docker`, i.e, `dockerFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <docker>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `docker`, i.e, `dockerFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </docker>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    docker {
+      // Key will be capitalized and prefixed
+      // with `docker`, i.e, `dockerFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Discord
+
+The following names are related to xref:reference:announce/discord.adoc[].
+
+Every key/value from `discord.extraProperties` is mapped with `discord` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  discord:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `discord`, i.e, `discordFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.discord]
+  # Key will be capitalized and prefixed
+  # with `discord`, i.e, `discordFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "discord": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `discord`, i.e, `discordFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <discord>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `discord`, i.e, `discordFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </discord>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    discord {
+      // Key will be capitalized and prefixed
+      // with `discord`, i.e, `discordFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Discourse
+
+The following names are related to xref:reference:announce/discourse.adoc[].
+
+Every key/value from `discourse.extraProperties` is mapped with `discourse` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  discourse:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `discourse`, i.e, `discourseFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.discourse]
+  # Key will be capitalized and prefixed
+  # with `discourse`, i.e, `discourseFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "discourse": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `discourse`, i.e, `discourseFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <discourse>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `discourse`, i.e, `discourseFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </discourse>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    discourse {
+      // Key will be capitalized and prefixed
+      // with `discourse`, i.e, `discourseFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== GitHub Discussions
+
+The following names are related to xref:reference:announce/discussions.adoc[].
+
+Every key/value from `discussions.extraProperties` is mapped with `discussions` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  discussions:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `discussions`, i.e, `discussionsFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.discussions]
+  # Key will be capitalized and prefixed
+  # with `discussions`, i.e, `discussionsFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "discussions": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `discussions`, i.e, `discussionsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <discussions>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `discussions`, i.e, `discussionsFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </discussions>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    discussions {
+      // Key will be capitalized and prefixed
+      // with `discussions`, i.e, `discussionsFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Gitter
+
+The following names are related to xref:reference:announce/gitter.adoc[].
+
+Every key/value from `gitter.extraProperties` is mapped with `gitter` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  gitter:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `gitter`, i.e, `gitterFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.gitter]
+  # Key will be capitalized and prefixed
+  # with `gitter`, i.e, `gitterFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "gitter": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `gitter`, i.e, `gitterFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <gitter>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `gitter`, i.e, `gitterFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </gitter>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    gitter {
+      // Key will be capitalized and prefixed
+      // with `gitter`, i.e, `gitterFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== GoogleChat
+
+The following names are related to xref:reference:announce/google-chat.adoc[].
+
+Every key/value from `googleChat.extraProperties` is mapped with `googleChat` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  googleChat:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `googleChat`, i.e, `googleChatFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.googleChat]
+  # Key will be capitalized and prefixed
+  # with `googleChat`, i.e, `googleChatFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "googleChat": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `googleChat`, i.e, `googleChatFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <googleChat>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `googleChat`, i.e, `googleChatFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </googleChat>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    googleChat {
+      // Key will be capitalized and prefixed
+      // with `googleChat`, i.e, `googleChatFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Http
+
+The following names are related to the xref:reference:upload/http.adoc[] uploader.
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named Http instance
+|===
+
+Every key/value from `http.extraProperties` is mapped with `http` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+upload:
+  http:
+    app:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `http`, i.e, `httpFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[upload.http.app]
+  # Key will be capitalized and prefixed
+  # with `http`, i.e, `httpFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "upload": {
+    "http": {
+      "app": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `http`, i.e, `httpFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <http>
+      <app>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `http`, i.e, `httpFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </app>
+    </http>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  upload {
+    http {
+      app {
+        // Key will be capitalized and prefixed
+        // with `http`, i.e, `httpFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  http:
+    myHttp:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `http`, i.e, `httpFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.http.myHttp]
+  # Key will be capitalized and prefixed
+  # with `http`, i.e, `httpFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "http": {
+      "myHttp": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `http`, i.e, `httpFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <http>
+      <myHttp>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `http`, i.e, `httpFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </myHttp>
+    </http>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    http {
+      myHttp {
+        // Key will be capitalized and prefixed
+        // with `http`, i.e, `httpFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+== JBang
+
+The following names are related to xref:reference:packagers/jbang.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                      | Description
+| jbangCatalogRepoUrl      | the catalog repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| jbangCatalogRepoCloneUrl | the catalog repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| jbangAliasName           | the name of the jbang alias, `{{distributionExecutableName}}` or `{{distributionExecutableName}}-snapshot`
+| jbangScriptName          | the name of the jbang script file, `{{distributionExecutableName}}` or `{{distributionExecutableName}}_snapshot`
+| jbangDistributionGA     a| calculated Maven coordinates for link:https://jitpack.io[]
+
+single:: `{{reverseRepoHost}}.{{repoOwner}}:{{distributionArtifactId}` +
+multi:: `{{reverseRepoHost}}.{{repoOwner}}.{{repoName}}:{{distributionArtifactId}`
+|===
+
+Additionally, every key/value from `jbang.extraProperties` is mapped with `jbang` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  jbang:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `jbang`, i.e, `jbangFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.jbang]
+  # Key will be capitalized and prefixed
+  # with `jbang`, i.e, `jbangFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "jbang": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `jbang`, i.e, `jbangFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <jbang>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `jbang`, i.e, `jbangFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </jbang>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    jbang {
+      // Key will be capitalized and prefixed
+      // with `jbang`, i.e, `jbangFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Macports
+
+The following names are related to xref:reference:packagers/macports.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                            | Description
+| macportsPackageName            | the name of the Macports package. Defaults to `${distribution.name}`
+| macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| macportsRevision               | the port revision number
+| macportsCategories             | categories separated by space
+| macportsMaintainers            | formatted maintainers, one per line
+| macportsDistributionUrl        | the download URL without the artifact file name
+| macportsDistname               | the artifact file name
+| macportsJavaVersion            | the Java version required by the port
+|===
+
+Additionally, every key/value from `macports.extraProperties` is mapped with `macports` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  macports:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `macports`, i.e, `macportsFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.macports]
+  # Key will be capitalized and prefixed
+  # with `macports`, i.e, `macportsFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "macports": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `macports`, i.e, `macportsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <macports>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `macports`, i.e, `macportsFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </macports>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    macports {
+      // Key will be capitalized and prefixed
+      // with `macports`, i.e, `macportsFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Mail
+
+The following names are related to xref:reference:announce/mail.adoc[].
+
+Every key/value from `mail.extraProperties` is mapped with `mail` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  mail:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `mail`, i.e, `mailFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.mail]
+  # Key will be capitalized and prefixed
+  # with `mail`, i.e, `mailFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "mail": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `mail`, i.e, `mailFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <mail>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `mail`, i.e, `mailFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </mail>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    mail {
+      // Key will be capitalized and prefixed
+      // with `mail`, i.e, `mailFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Mastodon
+
+The following names are related to xref:reference:announce/mastodon.adoc[].
+
+Every key/value from `mastodon.extraProperties` is mapped with `mastodon` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  mastodon:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `mastodon`, i.e, `mastodonFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.mastodon]
+  # Key will be capitalized and prefixed
+  # with `mastodon`, i.e, `mastodonFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "mastodon": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `mastodon`, i.e, `mastodonFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <mastodon>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `mastodon`, i.e, `mastodonFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </mastodon>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    mastodon {
+      // Key will be capitalized and prefixed
+      // with `mastodon`, i.e, `mastodonFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Mattermost
+
+The following names are related to xref:reference:announce/mattermost.adoc[].
+
+Every key/value from `mattermost.extraProperties` is mapped with `mattermost` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  mattermost:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `mattermost`, i.e, `mattermostFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.mattermost]
+  # Key will be capitalized and prefixed
+  # with `mattermost`, i.e, `mattermostFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "mattermost": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `mattermost`, i.e, `mattermostFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <mattermost>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `mattermost`, i.e, `mattermostFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </mattermost>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    mattermost {
+      // Key will be capitalized and prefixed
+      // with `mattermost`, i.e, `mattermostFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== S3
+
+The following names are related to the xref:reference:upload/s3.adoc[] uploader.
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key          | Description
+| uploaderName | resolves to the named S3 instance
+|===
+
+Every key/value from `s3.extraProperties` is mapped with `s3` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+upload:
+  s3:
+    app:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `s3`, i.e, `s3Foo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[upload.s3.app]
+  # Key will be capitalized and prefixed
+  # with `s3`, i.e, `s3Foo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "upload": {
+    "s3": {
+      "app": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `s3`, i.e, `s3Foo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <upload>
+    <s3>
+      <app>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `s3`, i.e, `s3Foo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </app>
+    </s3>
+  </upload>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  upload {
+    s3 {
+      app {
+        // Key will be capitalized and prefixed
+        // with `s3`, i.e, `s3Foo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Scoop
+
+The following names are related to xref:reference:packagers/scoop.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                       | Description
+| scoopPackageName          | the name of the Scoop package. Defaults to `${distribution.executable}`
+| scoopBucketRepoUrl        | the bucket repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| scoopBucketRepoCloneUrl   | the bucket repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| scoopCheckverUrl          | the URL used to check for a release version
+| scoopAutoupdateUrl        | the URL pattern used to update the package
+| scoopAutoupdateExtractDir | name of the extraction dir used by autoupdate
+|===
+
+Additionally, every key/value from `scoop.extraProperties` is mapped with `scoop` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  scoop:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `scoop`, i.e, `scoopFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.scoop]
+  # Key will be capitalized and prefixed
+  # with `scoop`, i.e, `scoopFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "scoop": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `scoop`, i.e, `scoopFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <scoop>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `scoop`, i.e, `scoopFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </scoop>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    scoop {
+      // Key will be capitalized and prefixed
+      // with `scoop`, i.e, `scoopFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Sdkman
+
+The following names are related to both xref:reference:announce/sdkman.adoc[] announcer and
+xref:reference:packagers/sdkman.adoc[] packager.
+
+Every key/value from `sdkman.extraProperties` is mapped with `sdkman` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  sdkman:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `sdkman`, i.e, `sdkmanFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.sdkman]
+  # Key will be capitalized and prefixed
+  # with `sdkman`, i.e, `sdkmanFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "sdkman": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `sdkman`, i.e, `sdkmanFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <sdkman>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `sdkman`, i.e, `sdkmanFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </sdkman>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    sdkman {
+      // Key will be capitalized and prefixed
+      // with `sdkman`, i.e, `sdkmanFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Slack
+
+The following names are related to xref:reference:announce/slack.adoc[].
+
+Every key/value from `slack.extraProperties` is mapped with `slack` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  slack:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `slack`, i.e, `slackFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.slack]
+  # Key will be capitalized and prefixed
+  # with `slack`, i.e, `slackFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "slack": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `slack`, i.e, `slackFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <slack>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `slack`, i.e, `slackFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </slack>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    slack {
+      // Key will be capitalized and prefixed
+      // with `slack`, i.e, `slackFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Smtp
+
+The following names are related to xref:reference:announce/smtp.adoc[].
+
+Every key/value from `smtp.extraProperties` is mapped with `smtp` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  smtp:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `smtp`, i.e, `smtpFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.smtp]
+  # Key will be capitalized and prefixed
+  # with `smtp`, i.e, `smtpFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "smtp": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `smtp`, i.e, `smtpFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <smtp>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `smtp`, i.e, `smtpFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </smtp>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    smtp {
+      // Key will be capitalized and prefixed
+      // with `smtp`, i.e, `smtpFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Snap
+
+The following names are related to xref:reference:packagers/snap.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                  | Description
+| snapPackageName      | the name of the Snap package. Defaults to `${distribution.name}`
+| snapRepoUrl          | the snap repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| snapRepoCloneUrl     | the snap repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| snapBase             | the snap base
+| snapGrade            | the snap grade
+| snapConfinement      | the snap confinement
+| snapHasPlugs         | a boolean, when there snap defines plugs
+| snapPlugs            | a list of `Plugs`
+| snapHasSlots         | a boolean, when the snap defines slots
+| snapSlots            | a list of `Slots`
+| snapHasLocalPlugs    | a boolean, when the snap defines plug names
+| snapLocalPlugs       | a list of plug names
+| snapHasLocalSlots    | a boolean, when the snap defines slot names
+| snapLocalSlots       | a list of slot names
+| snapHasArchitectures | a boolean, when the snap defines architectures
+| snapArchitectures    | a list of architectures
+|===
+
+A `Plug` defines the following fields
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key        | Description
+| name       | the plug's name
+| attributes | a map of key/value attributes
+|===
+
+A `Slot` defines the following fields
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key        | Description
+| name       | the slot's name
+| attributes | a map of key/value attributes
+| reads      | a list of read names
+| writes     | a list of write names
+| hasReads   | a boolean, when the slot defines reads
+| hasWrites  | a boolean, when the slot defines writes
+|===
+
+An `Architecture` defines the following fields
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key         | Description
+| buildOn     | a list of archs for build-on
+| runOn       | a list of archs for run-on
+| hasRunOn    | a boolean, when the architecture defines runOn
+| IgnoreError | a boolean, when the architecture ignores build errors
+|===
+
+Additionally, every key/value from `snap.extraProperties` is mapped with `snap` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  snap:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `snap`, i.e, `snapFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.snap]
+  # Key will be capitalized and prefixed
+  # with `snap`, i.e, `snapFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "snap": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `snap`, i.e, `snapFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <snap>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `snap`, i.e, `snapFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </snap>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    snap {
+      // Key will be capitalized and prefixed
+      // with `snap`, i.e, `snapFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Spec
+
+The following names are related to xref:reference:packagers/spec.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                        | Description
+| specPackageName            | the name of the Spec. Defaults to `${distribution.name}`
+| specRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
+| specRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
+| specRelease                | the release number
+| specRequires               | package requires as a List
+| specDirectories            | List of directories to be created
+| specBinaries               | List of binary files to be installed
+| specFiles                  | List of files to be installed
+|===
+
+Additionally, every key/value from `spec.extraProperties` is mapped with `spec` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  spec:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `spec`, i.e, `specFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.spec]
+  # Key will be capitalized and prefixed
+  # with `spec`, i.e, `specFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "spec": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `spec`, i.e, `specFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <packagers>
+    <spec>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `spec`, i.e, `specFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </spec>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    spec {
+      // Key will be capitalized and prefixed
+      // with `spec`, i.e, `specFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Teams
+
+The following names are related to xref:reference:announce/teams.adoc[].
+
+Every key/value from `teams.extraProperties` is mapped with `teams` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  teams:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `teams`, i.e, `teamsFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.teams]
+  # Key will be capitalized and prefixed
+  # with `teams`, i.e, `teamsFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "teams": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `teams`, i.e, `teamsFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <teams>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `teams`, i.e, `teamsFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </teams>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    teams {
+      // Key will be capitalized and prefixed
+      // with `teams`, i.e, `teamsFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Telegram
+
+The following names are related to xref:reference:announce/telegram.adoc[].
+
+Every key/value from `telegram.extraProperties` is mapped with `telegram` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  telegram:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `telegram`, i.e, `telegramFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.telegram]
+  # Key will be capitalized and prefixed
+  # with `telegram`, i.e, `telegramFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "telegram": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `telegram`, i.e, `telegramFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <telegram>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `telegram`, i.e, `telegramFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </telegram>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    telegram {
+      // Key will be capitalized and prefixed
+      // with `telegram`, i.e, `telegramFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Twitter
+
+The following names are related to xref:reference:announce/twitter.adoc[].
+
+Every key/value from `twitter.extraProperties` is mapped with `twitter` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  twitter:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `twitter`, i.e, `twitterFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.twitter]
+  # Key will be capitalized and prefixed
+  # with `twitter`, i.e, `twitterFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "twitter": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `twitter`, i.e, `twitterFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <twitter>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `twitter`, i.e, `twitterFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </twitter>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    twitter {
+      // Key will be capitalized and prefixed
+      // with `twitter`, i.e, `twitterFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Webhooks
+
+The following names are related to xref:reference:announce/webhooks.adoc[].
+
+Every key/value from `webhooks.extraProperties` is mapped with `webhook` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  webhooks:
+    myWebhook:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `webhook`, i.e, `webhookFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.webhooks.myWebhook]
+  # Key will be capitalized and prefixed
+  # with `webhook`, i.e, `webhookFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "myWebhook": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `webhook`, i.e, `webhookFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <myWebhook>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `webhook`, i.e, `webhookFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </myWebhook>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      myWebhook {
+        // Key will be capitalized and prefixed
+        // with `webhook`, i.e, `webhookFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Zulip
+
+The following names are related to xref:reference:announce/zulip.adoc[].
+
+Every key/value from `zulip.extraProperties` is mapped with `zulip` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+announce:
+  zulip:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `zulip`, i.e, `zulipFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[announce.zulip]
+  # Key will be capitalized and prefixed
+  # with `zulip`, i.e, `zulipFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "announce": {
+    "zulip": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `zulip`, i.e, `zulipFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros"]
+----
+<jreleaser>
+  <announce>
+    <zulip>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `zulip`, i.e, `zulipFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </zulip>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  announce {
+    zulip {
+      // Key will be capitalized and prefixed
+      // with `zulip`, i.e, `zulipFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+

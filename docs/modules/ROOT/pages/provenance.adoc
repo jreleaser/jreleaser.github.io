@@ -1,0 +1,51 @@
+= Provenance
+
+== PGP
+
+All release artifacts are signed with PGP. Follow these instructions to verify artifacts against their signatures.
+
+ * Download the link:http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf1d5f6a91c86b0702cd0734bccc55c5167419adb[public key].
+ Save it as `jreleaser.asc`.
+ * Verify the fingerprint matches the following:
+
+[source,sh]
+[subs="attributes"]
+----
+$ gpg --show-keys jreleaser.asc
+pub   rsa4096 2021-02-10 [SC] [expires: 2031-02-08]
+      F1D5F6A91C86B0702CD0734BCCC55C5167419ADB
+uid                      Andres Almiray &lt;aalmiray@********.com&gt;
+sub   rsa4096 2021-02-10 [E] [expires: 2031-02-08]
+----
+ * Import the key with `gpg --import jreleaser.asc`.
+ * Verify the chosen artifact with:
+
+[source,sh]
+[subs="attributes"]
+----
+$ gpg --verify jreleaser-{jreleaser-effective-version}.zip.asc jreleaser-{jreleaser-effective-version}.zip
+gpg: Signature made Tue Dec 13 06:51:49 2022 CET
+gpg:                using RSA key CCC55C5167419ADB
+gpg: Good signature from "Andres Almiray &lt;aalmiray@********.com&gt;" [ultimate]
+----
+
+== SLSA
+
+Starting with `v1.4.0` JReleaser provides link:https://slsa.dev[SLSA] provenance for all release artifacts.
+Follow these instructions to verify artifacts.
+
+ * Install or build the link:https://github.com/slsa-framework/slsa-verifier[slsa-verifier] binary.
+ * Download link:https://github.com/jreleaser/jreleaser/releases/download/{jreleaser-tag}/jreleaser-all-{jreleaser-effective-version}.intoto.jsonl[jreleaser-all-{jreleaser-effective-version}.intoto.jsonl].
+ * Download the binary or binary files you'd like to verify.
+ * Run the verifier against the binary. For example:
+
+[source,sh]
+[subs="attributes"]
+----
+$ slsa-verifier verify-artifact jreleaser-{jreleaser-effective-version}.zip \
+   --provenance-path jreleaser-all-{jreleaser-effective-version}.intoto.jsonl \
+   --source-uri github.com/jreleaser/jreleaser
+Verified signature against tlog entry index 8865454 at URL: https://rekor.sigstore.dev/api/v1/log/entries/24296fb24b8ad77acceaa92d35076867e961260048db8f9ee7726329e5a14ae3a6cfd678aeacad11
+Verified build using builder https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@refs/tags/v1.4.0 at commit caa516c7c52ca72a352f97e4153334080f8b7f43
+PASSED: Verified SLSA provenance
+----

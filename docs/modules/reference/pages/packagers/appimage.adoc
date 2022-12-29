@@ -1,0 +1,667 @@
+= AppImage
+:tool_id:       appImage
+:tool_name:     appImage
+:tool_env_var:  APPIMAGE
+:tool_tap:      repository
+:tool_tap_name: duke-appimage
+:tool_manifest: appdata
+:tool_package:  ${distribution.name}
+
+link:https://docs.appimage.org/packaging-guide/overview.html[AppImage] provides a way for upstream developers to provide 
+“native” binaries for Linux users just the same way they could do for other operating systems. 
+
+We recommend reading the link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html[Upstream Metadata] documentation
+as AppImage depends on it.
+
+The following artifact extensions are supported by this packager:
+
+* `.tgz`
+* `.txz`
+* `.tar.gz`
+* `.tar.xz`
+* `.tar`
+* `.zip`
+
+== Distribution Support
+
+[%header, cols="<,^"]
+|===
+| Distribution                                  | Supported
+| xref:concepts:distributions/binary.adoc[]         | {icon_req_y}
+| xref:concepts:distributions/flat-binary.adoc[]    | {icon_req_y}
+| xref:concepts:distributions/java-binary.adoc[]    | {icon_req_y}
+| xref:concepts:distributions/jlink.adoc[]          | {icon_req_y}
+| xref:concepts:distributions/native-image.adoc[]   | {icon_req_y}
+| xref:concepts:distributions/native-package.adoc[] | {icon_req_n}
+| xref:concepts:distributions/single-jar.adoc[]     | {icon_req_y}
+|===
+
+WARNING: Publication of snapshots is *not* allowed.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # Unique identifier for this component.
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+    # icon:exclamation-triangle[]
+    componentId: com.acme.app
+
+    # The categories this software component is associated with
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+    # icon:exclamation-triangle[]
+    categories:
+      - Development
+
+    # Represent the developers or project responsible for development of the project.
+    # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+    # Defaults to the project's authors separated by comma.
+    # icon:icon:dot-circle[]
+    developerName: Duke
+
+    # Indicates if the executable requires access to the terminal.
+    # Defaults to true if the distribution's stereotype is `CLI`.
+    # icon:icon:dot-circle[]
+    requestTerminal: false
+
+    # Releases to be skipped from the list of releases.
+    # Values may be either an exact version match or a regex.
+    # icon:icon:dot-circle[]
+    skipReleases:
+      - 1.2.3
+      - .*-.*
+
+    # A list of screenshots.
+    # If undefined, defaults to `${project.screenshots}`.
+    # icon:dot-circle[]
+    screenshots:
+        # Publicly available URL. PNG format is preferred.
+        # icon:exclamation-triangle[] icon:file-alt[]
+      - url: pass:[https://acme.com/app.png]
+        # The type of image.
+        # Valid values are [`SOURCE`, `THUMBNAIL`].
+        # Defaults to `SOURCE`.
+        # icon:dot-circle[]
+        type: THUMBNAIL
+        # Marks this screenshot as the primary one.
+        # Only a single screenshot may be set as primary.
+        # icon:dot-circle[]
+        primary: true
+        # A description of the image.
+        # Should be no more than 100 characters long.
+        # icon:dot-circle[]
+        caption: App in action
+        # Image width in pixels.
+        # Required if type = `THUMBNAIL`.
+        # icon:dot-circle[]
+        width: 250
+        # Image height in pixels.
+        # Required if type = `THUMBNAIL`.
+        # icon:dot-circle[]
+        height: 250
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[] icon:file-alt[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+          foo: bar
+
+    # A list of icons.
+    # If undefined, defaults to `${project.icons}`.
+    # icon:dot-circle[]
+    icons:
+        # Publicly available URL. PNG format is preferred.
+        # icon:exclamation-triangle[] icon:file-alt[]
+      - url: pass:[https://acme.com/app.png]
+        # Marks this icon as the primary one.
+        # Only a single icon may be set as primary.
+        # icon:dot-circle[]
+        primary: true
+        # Image width in pixels.
+        # icon:exclamation-triangle[]
+        width: 250
+        # Image height in pixels.
+        # icon:exclamation-triangle[]
+        height: 250
+        # Additional properties used when evaluating templates.
+        # icon:dot-circle[] icon:file-alt[]
+        extraProperties:
+          # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+          foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # Unique identifier for this component.
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+  # icon:exclamation-triangle[]
+  componentId = "com.acme.app"
+
+  # The categories this software component is associated with
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+  # icon:exclamation-triangle[]
+  categories = ["Development"]
+
+  # Represent the developers or project responsible for development of the project.
+  # See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+  # Defaults to the project's authors separated by comma.
+  # icon:icon:dot-circle[]
+  developerName = "Duke"
+
+  # Indicates if the executable requires access to the terminal.
+  # Defaults to true if the distribution's stereotype is `CLI`.
+  # icon:icon:dot-circle[]
+  requestTerminal = false
+
+  # Releases to be skipped from the list of releases.
+  # Values may be either an exact version match or a regex.
+  # icon:icon:dot-circle[]
+  skipReleases = ["1.2.3", ".*-.*"]
+
+  # A list of screenshots.
+  # If undefined, defaults to `${project.screenshots}`.
+  # icon:dot-circle[]
+  pass:[[][packagers.{tool_id}.screenshots]]
+    # Publicly available URL. PNG format is preferred.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    url = "pass:[https://acme.com/app.png]"
+    # The type of image.
+    # Valid values are [`SOURCE`, `THUMBNAIL`].
+    # Defaults to `SOURCE`.
+    # icon:dot-circle[]
+    type = "THUMBNAIL"
+    # Marks this screenshot as the primary one.
+    # Only a single screenshot may be set as primary.
+    # icon:dot-circle[]
+    primary = true
+    # A description of the image.
+    # Should be no more than 100 characters long.
+    # icon:dot-circle[]
+    caption = "App in action"
+    # Image width in pixels.
+    # Required if type = `THUMBNAIL`.
+    # icon:dot-circle[]
+    width = 250
+    # Image height in pixels.
+    # Required if type = `THUMBNAIL`.
+    # icon:dot-circle[]
+    height = 250
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+
+  # A list of icons.
+  # If undefined, defaults to `${project.icons}`.
+  # icon:dot-circle[]
+  pass:[[][packagers.{tool_id}.icons]]
+    # Publicly available URL. PNG format is preferred.
+    # icon:exclamation-triangle[] icon:file-alt[]
+    url = "pass:[https://acme.com/app.png]"
+    # Marks this icon as the primary one.
+    # Only a single icon may be set as primary.
+    # icon:dot-circle[]
+    primary = true
+    # Image width in pixels.
+    # icon:exclamation-triangle[]
+    width = 250
+    # Image height in pixels.
+    # icon:exclamation-triangle[]
+    height = 250
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties.foo = "bar"
+    # Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // Unique identifier for this component.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+      // icon:exclamation-triangle[]
+      "componentId": "com.acme.app",
+
+      // The categories this software component is associated with
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+      // icon:exclamation-triangle[]
+      "categories": [
+        "Development"
+      ],
+
+      // Represent the developers or project responsible for development of the project.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+      // Defaults to the project's authors separated by comma.
+      // icon:icon:dot-circle[]
+      "developerName": "Duke",
+
+      // Indicates if the executable requires access to the terminal.
+      // Defaults to true if the distribution's stereotype is `CLI`.
+      // icon:icon:dot-circle[]
+      "requestTerminal": false,
+
+      // Releases to be skipped from the list of releases.
+      // Values may be either an exact version match or a regex.
+      // icon:icon:dot-circle[]
+      "skipReleases": [
+        "1.2.3",
+        ".*-.*"
+      ],
+
+      // A list of screenshots.
+      // If undefined, defaults to `${project.screenshots}`.
+      // icon:dot-circle[]
+      screenshots: [
+        {
+          // Publicly available URL. PNG format is preferred.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "url": "pass:[https://acme.com/app.png]",
+          // The type of image.
+          // Valid values are [`SOURCE`, `THUMBNAIL`].
+          // Defaults to `SOURCE`.
+          // icon:dot-circle[]
+          "type": "THUMBNAIL",
+          // Marks this screenshot as the primary one.
+          // Only a single screenshot may be set as primary.
+          // icon:dot-circle[]
+          "primary": true,
+          // A description of the image.
+          // Should be no more than 100 characters long.
+          // icon:dot-circle[]
+          "caption": "App in action",
+          // Image width in pixels.
+          // Required if type = `THUMBNAIL`.
+          // icon:dot-circle[]
+          "width": 250,
+          // Image height in pixels.
+          // Required if type = `THUMBNAIL`.
+          // icon:dot-circle[]
+          "height": 250,
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[] icon:file-alt[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+            "foo": "bar"
+          }
+        }
+      ],
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icons: [
+        {
+          // Publicly available URL. PNG format is preferred.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "url": "pass:[https://acme.com/app.png]",
+          // Marks this icon as the primary one.
+          // Only a single icon may be set as primary.
+          // icon:dot-circle[]
+          "primary": true,
+          // Image width in pixels.
+          // icon:exclamation-triangle[]
+          "width": 250,
+          // Image height in pixels.
+          // icon:exclamation-triangle[]
+          "height": 250,
+          // Additional properties used when evaluating templates.
+          // icon:dot-circle[] icon:file-alt[]
+          "extraProperties": {
+            // Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+            "foo": "bar"
+          }
+        }
+      ]
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        Unique identifier for this component.
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[<id>]
+        icon:exclamation-triangle[]
+      -->
+      <componentId>com.acme.app</componentId>
+
+      <!--
+        The categories this software component is associated with
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[<categories>]
+        icon:exclamation-triangle[]
+      -->
+      <categories>
+        <category>Development</category>
+      </categories>
+
+      <!--
+        Represent the developers or project responsible for development of the project.
+        See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[<developer_name>]
+        Defaults to the project's authors separated by comma.
+        icon:icon:dot-circle[]
+      -->
+      <developerName>Duke</developerName>
+
+      <!--
+        Indicates if the executable requires access to the terminal.
+        Defaults to true if the distribution's stereotype is `CLI`.
+        icon:icon:dot-circle[]
+      -->
+      <requestTerminal>false</requestTerminal>
+
+      <!--
+        Releases to be skipped from the list of releases.
+        Values may be either an exact version match or a regex.
+        icon:icon:dot-circle[]
+      -->
+      <skipReleases>
+        <skipRelease>1.2.3</skipRelease>
+        <skipRelease>.*-.*</skipRelease>
+      </skipReleases>
+
+      <!--
+        A list of screenshots.
+        If undefined, defaults to `${project.screenshots}`.
+        icon:dot-circle[]
+      -->
+      <screenshots>
+        <screenshot>
+          <!--
+            Publicly available URL. PNG format is preferred.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <url>pass:[https://acme.com/app.png]</url>
+          <!--
+            The type of image.
+            Valid values are [`SOURCE`, `THUMBNAIL`].
+            Defaults to `SOURCE`.
+            icon:dot-circle[]
+          -->
+          <type>THUMBNAIL</type>
+          <!--
+            Marks this screenshot as the primary one.
+            Only a single screenshot may be set as primary.
+            icon:dot-circle[]
+          -->
+          <primary>true</primary>
+          <!--
+            A description of the image.
+            Should be no more than 100 characters long.
+            icon:dot-circle[]
+          -->
+          <caption>App in action</caption>
+          <!--
+            Image width in pixels.
+            Required if type = `THUMBNAIL`.
+            icon:dot-circle[]
+          -->
+          <width>250</width>
+          <!--
+            Image height in pixels.
+            Required if type = `THUMBNAIL`.
+            icon:dot-circle[]
+          -->
+          <height>250</height>
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `screenshot`, i.e, `screenshotFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </screenshot>
+      </screenshots>
+
+      <!--
+        A list of icons.
+        If undefined, defaults to `${project.icons}`.
+        icon:dot-circle[]
+      -->
+      <icons>
+        <icon>
+          <!--
+            Publicly available URL. PNG format is preferred.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <url>pass:[https://acme.com/app.png]</url>
+          <!--
+            Marks this icon as the primary one.
+            Only a single icon may be set as primary.
+            icon:dot-circle[]
+          -->
+          <primary>true</primary>>
+          <!--
+            Image width in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <width>250</width>
+          <!--
+            Image height in pixels.
+            icon:exclamation-triangle[]
+          -->
+          <height>250</height>
+          <!--
+            Additional properties used when evaluating templates.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <extraProperties>
+            <!--
+              Key will be capitalized and prefixed with `icon`, i.e, `iconFoo`.
+            -->
+            <foo>bar</foo>
+          </extraProperties>
+        </icon>
+      </icons>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="attributes,+macros"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // Unique identifier for this component.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-id-generic[&lt;id&gt;]
+      // icon:exclamation-triangle[]
+      componentId = 'com.acme.app'
+
+      // The categories this software component is associated with
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-categories[&lt;categories&gt;]
+      // icon:exclamation-triangle[]
+      category('Development')
+
+      // Represent the developers or project responsible for development of the project.
+      // See link:https://freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-developer_name[&lt;developer_name&gt;]
+      // Defaults to the project's authors separated by comma.
+      // icon:icon:dot-circle[]
+      developerName = 'Duke'
+
+      // Indicates if the executable requires access to the terminal.
+      // Defaults to true if the distribution's stereotype is `CLI`.
+      // icon:icon:dot-circle[]
+      requestTerminal = false
+
+      // Releases to be skipped from the list of releases.
+      // Values may be either an exact version match or a regex.
+      // icon:icon:dot-circle[]
+      skipRelease('1.2.3')
+      skipRelease('.*-.*')
+
+      // A list of screenshots.
+      // If undefined, defaults to `${project.screenshots}`.
+      // icon:dot-circle[]
+      screenshot {
+        // Publicly available URL. PNG format is preferred.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://acme.com/app.png]'
+        // The type of image.
+        // Valid values are [`SOURCE`, `THUMBNAIL`].
+        // Defaults to `SOURCE`.
+        // icon:dot-circle[]
+        screenshotType = THUMBNAIL
+        // Marks this screenshot as the primary one.
+        // Only a single screenshot may be set as primary.
+        // icon:dot-circle[]
+        primary = true
+        // A description of the image.
+        // Should be no more than 100 characters long.
+        // icon:dot-circle[]
+        caption = 'App in action'
+        // Image width in pixels.
+        // Required if type = `THUMBNAIL`.
+        // icon:dot-circle[]
+        width = 250
+        // Image height in pixels.
+        // Required if type = `THUMBNAIL`.
+        // icon:dot-circle[]
+        height = 250
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `screenshot`, i.e, `screenshot`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+      }
+
+      // A list of icons.
+      // If undefined, defaults to `${project.icons}`.
+      // icon:dot-circle[]
+      icon {
+        // Publicly available URL. PNG format is preferred.
+        // icon:exclamation-triangle[] icon:file-alt[]
+        url = 'pass:[https://acme.com/app.png]'
+        // Marks this icon as the primary one.
+        // Only a single icon may be set as primary.
+        // icon:dot-circle[]
+        primary = true
+        // Image width in pixels.
+        // icon:exclamation-triangle[]
+        width = 250
+        // Image height in pixels.
+        // icon:exclamation-triangle[]
+        height = 250
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `icon`, i.e, `icon`.
+        // icon:dot-circle[] icon:file-alt[]
+        extraProperties.put('foo', 'bar')
+      }
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
+
+== Icon
+
+You must define at least one icon. A square (128x128 pixels) image in PNG format is preferred.
+
+== Skip Artifacts
+
+If there is more than one matching artifact in a given distribution you may add a `skipAppImage` extra property to the target
+artifact to mark it as skipped for packaging with AppImage.
+
+== Skip Screenshots
+
+You may add a `skipAppImage` extra property to a target screenshot to mark it as skipped for packaging with AppImage.
+
+== Skip Icons
+
+You may add a `skipAppImage` extra property to a target icon to mark it as skipped for packaging with AppImage.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/appimage`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `.github/workflows/release.yml.tpl`
+* `icons/app.png`
+* `cli-app.desktop.tpl`
+* `cli-appdata.xml.tpl`
+* `create-appimage.sh.tpl`
+* `desktop-app.desktop.tpl`
+* `desktop-appdata.xml.tpl`
+* `jreleaser.yml.tpl`
+* `README-github.adoc.tpl`
+* `VERSION.tpl`
+* `launcher.tpl` (only for distributions of type xref:concepts:distributions/single-jar.adoc[])
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+xref:tools:jreleaser-cli.adoc#_template[{icon_cli_s} template],
+xref:tools:jreleaser-maven.adoc#_jreleasertemplate[{icon_maven_s} jreleaser:template],
+xref:tools:jreleaser-gradle.adoc#_jreleasertemplate[{icon_gradle_s} jreleaserTemplate],
+xref:tools:jreleaser-ant.adoc#_jreleaser_template[{icon_ant_s} jreleaser-template]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex

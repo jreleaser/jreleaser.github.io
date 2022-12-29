@@ -17,7 +17,7 @@ Executes a JReleaser workflow as a Maven plugin.
 
 == Configuration
 
-JReleaser may be configured using the Maven DSL shown at xref:configuration:index.adoc[]. Alternatively, an external
+JReleaser may be configured using the Maven DSL shown at xref:reference:index.adoc[]. Alternatively, an external
 configuration file may be used if the `<configFile>` field or `jreleaser.config.file` property is set.
 
 === Defaults
@@ -57,10 +57,21 @@ The value of `project.java.version` will be determined following these expressio
 
 The following settings may also be specified via environment variables
 
+[options="header", cols="3*"]
 |===
-| Setting | Environment Variable         | Default
-|         | JRELEASER_DEFAULT_GIT_REMOTE | origin
+| Setting                 | Environment Variable              | Default
+|                         | JRELEASER_BASEDIR                 | <current-execution-directory>
+| <dryrun>                | JRELEASER_DRY_RUN                 | false
+| <strict>                | JRELEASER_STRICT                  | false
+| <gitRootSearch>         | JRELEASER_GIT_ROOT_SEARCH         | false
+| <selectCurrentPlatform> | JRELEASER_SELECT_CURRENT_PLATFORM | false
+| <selectPlatforms>       | JRELEASER_SELECT_PLATFORMS        | <empty-string>
+| <rejectPlatforms>       | JRELEASER_REJECT_PLATFORMS        | <empty-string>
+|                         | JRELEASER_DEFAULT_GIT_REMOTE      | origin
 |===
+
+`JRELEASER_SELECT_PLATFORMs` and `JRELEASER_REJECT_PLATFORMs` may define a command separated list of values such as
+`osx-x86_64,linux-x86_64`.
 
 == Goals
 
@@ -69,6 +80,31 @@ should happen in your build.
 
 The following MOJOs are provided:
 
+=== jreleaser:init
+
+Create a jreleaser config file.
+
+Available parameters:
+
+ * format +
+   Configuration file format +
+   Type: String +
+   User property: `jreleaser.init.format`
+
+ * outputDirectory (Default: ${project.basedir}) +
+   Type: File +
+   User property: `jreleaser.output.directory`
+
+ * overwrite +
+   Overwrite existing files. +
+   Type: boolean +
+   User property: `jreleaser.init.overwrite`
+
+ * skip +
+   Skip execution. +
+   Type: boolean +
+   User property: `jreleaser.init.skip`
+
 === jreleaser:config
 
 Display current configuration.
@@ -76,54 +112,64 @@ Display current configuration.
 Available parameters:
 
  * announce +
-    Display announce configuration. +
-    Type: boolean +
-    User property: `jreleaser.config.announce`
+   Display announce configuration. +
+   Type: boolean +
+   User property: `jreleaser.config.announce`
 
  * assembly +
-    Display assembly configuration. +
-    Type: boolean +
-    User property: `jreleaser.config.assembly`
+   Display assembly configuration. +
+   Type: boolean +
+   User property: `jreleaser.config.assembly`
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * changelog +
-    Display changelog configuration. +
-    Type: boolean +
-    User property: `jreleaser.config.changelog`
+   Display changelog configuration. +
+   Type: boolean +
+   User property: `jreleaser.config.changelog`
 
  * download +
-    Display download configuration. +
-    Type: boolean +
-    User property: `jreleaser.config.download`
+   Display download configuration. +
+   Type: boolean +
+   User property: `jreleaser.config.download`
 
  * full +
-    Display full configuration. +
-    Type: boolean +
-    User property: `jreleaser.config.full`
+   Display full configuration. +
+   Type: boolean +
+   User property: `jreleaser.config.full`
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
+
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
 
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
-    Skip execution. +
-    Type: boolean +
-    User property: `jreleaser.config.skip`
+   Skip execution. +
+   Type: boolean +
+   User property: `jreleaser.config.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:template
 
@@ -135,6 +181,16 @@ Available parameters:
    The name of the announcer +
    Type: String +
    User property: `jreleaser.announcer.name`
+
+ * assemblerName +
+   The name of the assembler +
+   Type: String +
+   User property: `jreleaser.assembler.name`
+
+ * assemblerType +
+   The type of the assembler +
+   Type: String +
+   User property: `jreleaser.assembler.type`
 
  * distributionName +
    The name of the distribution +
@@ -177,9 +233,9 @@ Downloads assets.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -187,29 +243,29 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDownloaderNames +
-     Exclude an downloader by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.downloader.names
+   Exclude an downloader by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.downloader.names
 
  * excludedDownloaders +
-     Exclude an downloader by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.downloaders
+   Exclude an downloader by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.downloaders
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDownloaderNames +
-     Include an downloader by name. +
-     Type: String[] +
-     User property: jreleaser.downloader.names
+   Include an downloader by name. +
+   Type: String[] +
+   User property: jreleaser.downloader.names
 
  * includedDownloaders +
-     Include an downloader by type. +
-     Type: String[] +
-     User property: jreleaser.downloaders
+   Include an downloader by type. +
+   Type: String[] +
+   User property: jreleaser.downloaders
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
@@ -220,6 +276,11 @@ Available parameters:
    Type: boolean +
    User property: `jreleaser.download.skip`
 
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
+
 === jreleaser:assemble
 
 Assemble all distributions.
@@ -227,53 +288,63 @@ Assemble all distributions.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * excludedAssemblers +
-     Exclude an assembler. +
-     Type: String[] +
-     User property: jreleaser.excluded.assemblers
+   Exclude an assembler. +
+   Type: String[] +
+   User property: jreleaser.excluded.assemblers
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedAssemblers +
-     Include an assembler. +
-     Type: String[] +
-     User property: jreleaser.assemblers
+   Include an assembler. +
+   Type: String[] +
+   User property: jreleaser.assemblers
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.assemble.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:changelog
 
@@ -282,14 +353,14 @@ Calculate the changelog.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
@@ -300,6 +371,11 @@ Available parameters:
    Type: boolean +
    User property: `jreleaser.changelog.skip`
 
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
+
 === jreleaser:checksum
 
 Calculate checksums.
@@ -307,43 +383,53 @@ Calculate checksums.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.checksum.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:sign
 
@@ -352,43 +438,53 @@ Sign release artifacts.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.sign.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:deploy
 
@@ -397,9 +493,9 @@ Deploys all staged artifacts.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -407,48 +503,43 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDeployers +
-     Exclude a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployers
+   Exclude a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployers
 
  * excludedDeployerNames +
-     Exclude a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployer.names
+   Exclude a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployer.names
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDeployers +
-     Include a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.deployers
+   Include a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.deployers
 
  * includedDeployerNames +
-     Include a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.deployer.names
+   Include a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.deployer.names
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
- * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
-
- * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
-
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.deploy.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:upload
 
@@ -457,9 +548,9 @@ Uploads all artifacts.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -467,58 +558,68 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedUploaderNames +
-     Exclude an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploader.names
+   Exclude an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploader.names
 
  * excludedUploaders +
-     Exclude an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploaders
+   Exclude an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploaders
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedUploaderNames +
-     Include an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.uploader.names
+   Include an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.uploader.names
 
  * includedUploaders +
-     Include an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.uploaders
+   Include an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.uploaders
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.upload.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:release
 
@@ -527,9 +628,9 @@ Create or update a release.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -537,79 +638,89 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDeployers +
-     Exclude a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployers
+   Exclude a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployers
 
  * excludedDeployerNames +
-     Exclude a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployer.names
-     User property: jreleaser.excluded.deployer.names
+   Exclude a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployer.names
+   User property: jreleaser.excluded.deployer.names
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedUploaderNames +
-     Exclude an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploader.names
+   Exclude an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploader.names
 
  * excludedUploaders +
-     Exclude an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploaders
+   Exclude an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploaders
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDeployers +
-     Include a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.deployers
+   Include a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.deployers
 
  * includedDeployerNames +
-     Include a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.deployer.names
+   Include a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.deployer.names
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedUploaderNames +
-     Include an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.uploader.names
+   Include an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.uploader.names
 
  * includedUploaders +
-     Include an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.uploaders
+   Include an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.uploaders
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.release.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:prepare
 
@@ -618,9 +729,9 @@ Prepare all distributions.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * distributionName +
    The name of the distribution. +
@@ -633,53 +744,58 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedPackagers +
-     Exclude a packager. +
-     Type: String[] +
-     User property: jreleaser.excluded.packagers
+   Exclude a packager. +
+   Type: String[] +
+   User property: jreleaser.excluded.packagers
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedPackagers +
-     Include a packager. +
-     Type: String[] +
-     User property: jreleaser.packagers
+   Include a packager. +
+   Type: String[] +
+   User property: jreleaser.packagers
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.prepare.skip`
 
- * toolName +
-   The name of the tool. +
-   Type: String +
-   User property: `jreleaser.tool.name`
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:package
 
@@ -688,9 +804,9 @@ Package all distributions.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * distributionName +
    The name of the distribution. +
@@ -703,53 +819,58 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedPackagers +
-     Exclude a packager. +
-     Type: String[] +
-     User property: jreleaser.excluded.packagers
+   Exclude a packager. +
+   Type: String[] +
+   User property: jreleaser.excluded.packagers
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedPackagers +
-     Include a packager. +
-     Type: String[] +
-     User property: jreleaser.packagers
+   Include a packager. +
+   Type: String[] +
+   User property: jreleaser.packagers
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.package.skip`
 
- * toolName +
-   The name of the tool. +
-   Type: String +
-   User property: `jreleaser.tool.name`
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:publish
 
@@ -758,9 +879,9 @@ Publish all distributions.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * distributionName +
    The name of the distribution. +
@@ -773,53 +894,58 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedPackagers +
-     Exclude a packager. +
-     Type: String[] +
-     User property: jreleaser.excluded.packagers
+   Exclude a packager. +
+   Type: String[] +
+   User property: jreleaser.excluded.packagers
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedPackagers +
-     Include a packager. +
-     Type: String[] +
-     User property: jreleaser.packagers
+   Include a packager. +
+   Type: String[] +
+   User property: jreleaser.packagers
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.publish.skip`
 
- * toolName +
-   The name of the tool. +
-   Type: String +
-   User property: `jreleaser.tool.name`
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:announce
 
@@ -828,9 +954,9 @@ Announce a release.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -838,9 +964,9 @@ Available parameters:
    User property: `jreleaser.dry.run`
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedAnnouncers +
    Include an announcer. +
@@ -851,20 +977,15 @@ Available parameters:
    Type: File +
    User property: `jreleaser.output.directory`
 
- * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
-
- * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
-
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.announce.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:full-release
 
@@ -873,9 +994,9 @@ Perform a full release.
 Available parameters:
 
  * configFile +
-    External configuration file. +
-    Type: File +
-    User property: `jreleaser.config.file`
+   External configuration file. +
+   Type: File +
+   User property: `jreleaser.config.file`
 
  * dryrun +
    Skips remote operations. +
@@ -888,39 +1009,39 @@ Available parameters:
    User property: `jreleaser.excluded.announcers`
 
  * excludedDeployers +
-     Exclude a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployers
+   Exclude a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployers
 
  * excludedDeployerNames +
-     Exclude a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.deployer.names
+   Exclude a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.deployer.names
 
  * excludedDistributions +
-     Exclude a distribution. +
-     Type: String[] +
-     User property: jreleaser.excluded.distributions
+   Exclude a distribution. +
+   Type: String[] +
+   User property: jreleaser.excluded.distributions
 
  * excludedPackagers +
-     Exclude a packager. +
-     Type: String[] +
-     User property: jreleaser.excluded.packagers
+   Exclude a packager. +
+   Type: String[] +
+   User property: jreleaser.excluded.packagers
 
  * excludedUploaderNames +
-     Exclude an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploader.names
+   Exclude an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploader.names
 
  * excludedUploaders +
-     Exclude an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.excluded.uploaders
+   Exclude an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.excluded.uploaders
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * includedAnnouncers +
    Include an announcer. +
@@ -928,53 +1049,63 @@ Available parameters:
    User property: `jreleaser.announcers`
 
  * includedDeployers +
-     Include a deployer by type. +
-     Type: String[] +
-     User property: jreleaser.deployers
+   Include a deployer by type. +
+   Type: String[] +
+   User property: jreleaser.deployers
 
  * includedDeployerNames +
-     Include a deployer by name. +
-     Type: String[] +
-     User property: jreleaser.deployer.names
+   Include a deployer by name. +
+   Type: String[] +
+   User property: jreleaser.deployer.names
 
  * includedDistributions +
-     Include a distribution. +
-     Type: String[] +
-     User property: jreleaser.distributions
+   Include a distribution. +
+   Type: String[] +
+   User property: jreleaser.distributions
 
  * includedPackagers +
-     Include a packager. +
-     Type: String[] +
-     User property: jreleaser.packagers
+   Include a packager. +
+   Type: String[] +
+   User property: jreleaser.packagers
 
  * includedUploaderNames +
-     Include an uploader by name. +
-     Type: String[] +
-     User property: jreleaser.uploader.names
+   Include an uploader by name. +
+   Type: String[] +
+   User property: jreleaser.uploader.names
 
  * includedUploaders +
-     Include an uploader by type. +
-     Type: String[] +
-     User property: jreleaser.uploaders
+   Include an uploader by type. +
+   Type: String[] +
+   User property: jreleaser.uploaders
 
  * outputDirectory (Default: ${project.build.directory}/jreleaser) +
    Type: File +
    User property: `jreleaser.output.directory`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * skip +
    Skip execution. +
    Type: boolean +
    User property: `jreleaser.full.release.skip`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
 === jreleaser:auto-config-release
 
@@ -1033,9 +1164,9 @@ Available parameters:
    User property: `jreleaser.files`
 
  * gitRootSearch +
-    Searches for the Git root. +
-    Type: boolean +
-    User property: `jreleaser.git.root.search`
+   Searches for the Git root. +
+   Type: boolean +
+   User property: `jreleaser.git.root.search`
 
  * globs +
    Input file(s) to be uploaded (as globs). +
@@ -1121,15 +1252,20 @@ Available parameters:
    Type: String +
    User property: `jreleaser.release.name`
 
+ * rejectPlatforms +
+   Activates paths not matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.reject.platforms
+
  * selectCurrentPlatform +
-    Activates paths matching the current platform. +
-    Type: boolean +
-    User property: jreleaser.select.current.platform
+   Activates paths matching the current platform. +
+   Type: boolean +
+   User property: jreleaser.select.current.platform
 
  * selectPlatforms +
-    Activates paths matching the given platform. +
-    Type: String[] +
-    User property: jreleaser.select.platform
+   Activates paths matching the given platform. +
+   Type: String[] +
+   User property: jreleaser.select.platforms
 
  * signing +
    Sign files. +
@@ -1145,6 +1281,11 @@ Available parameters:
    Skip tagging the release. +
    Type: boolean +
    User property: `jreleaser.skip.tag`
+
+ * strict +
+   Enable strict mode. +
+   Type: boolean +
+   User property: `jreleaser.strict`
 
  * tagName +
    The release tag. +
@@ -1165,3 +1306,7 @@ Available parameters:
    Git username. +
    Type: String +
    User property: `jreleaser.username`
+
+=== jreleaser:json-schema
+
+Generate JSON schema.

@@ -1,0 +1,47 @@
+= Flat Binary
+
+Distributions of this type provide a platform specific native binary, as a consequence you *must* specify a platform value
+for each one of their artifacts.
+
+Distributions of this type only provide a single executable binary with no additional files. Should you require more than
+oone file then have a look at the xref:distributions/binary.adoc[] distribution.
+
+== Creating a Distribution
+
+You can use any tool/language at your disposal to create binary executables.
+
+== Packager Support
+
+[%header, cols="<,^"]
+|===
+| Packager                                   | Supported
+| xref:reference:packagers/appimage.adoc[]   | {icon_req_y}
+| xref:reference:packagers/asdf.adoc[]       | {icon_req_y}
+| xref:reference:packagers/chocolatey.adoc[] | {icon_req_n}
+| xref:reference:packagers/docker.adoc[]     | {icon_req_y}
+| xref:reference:packagers/flatpak.adoc[]    | {icon_req_y}
+| xref:reference:packagers/homebrew.adoc[]   | {icon_req_y}
+| xref:reference:packagers/jbang.adoc[]      | {icon_req_n}
+| xref:reference:packagers/macports.adoc[]   | {icon_req_y}
+| xref:reference:packagers/scoop.adoc[]      | {icon_req_y}
+| xref:reference:packagers/sdkman.adoc[]     | {icon_req_n}
+| xref:reference:packagers/snap.adoc[]       | {icon_req_y}
+| xref:reference:packagers/spec.adoc[]       | {icon_req_y}
+|===
+
+== Universal Binaries
+
+Binary distributions are expected to deliver platform specific binaries thus every artifact must have a value set for their
+respective `platform` property. However, it's possible to skip validating this setting by defining an extra property named
+`universal`, like it's shown in the following snippet:
+
+[source,yaml]
+----
+distributions:
+  app:
+    type: FLAT_BINARY
+    artifacts:
+      - path: target/distributions/{{distributionName}}/{{distributionName}}-{{projectVersion}}
+        extraProperties:
+            universal: true
+----

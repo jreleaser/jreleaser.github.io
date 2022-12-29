@@ -26,17 +26,28 @@ the `lib` folder. Create this folder if there is none. Add the following element
 
 == Configuration
 
-JReleaser must be configured using the YAML, TOML, or JSON DSLs shown at xref:configuration:index.adoc[].
+JReleaser must be configured using the YAML, TOML, or JSON DSLs shown at xref:reference:index.adoc[].
 
 == Environment Variables
 
 The following settings may also be specified via environment variables
 
+[options="header", cols="3*"]
 |===
-| Setting   | Environment Variable         | Default
-| outputDir | JRELEASER_OUTPUT_DIRECTORY   | out
-|           | JRELEASER_DEFAULT_GIT_REMOTE | origin
+| Setting               | Environment Variable              | Default
+| basedir               | JRELEASER_BASEDIR                 | <current-execution-directory>
+| outputDir             | JRELEASER_OUTPUT_DIRECTORY        | out
+| dryrun                | JRELEASER_DRY_RUN                 | false
+| strict                | JRELEASER_STRICT                  | false
+| gitRootSearch         | JRELEASER_GIT_ROOT_SEARCH         | false
+| selectCurrentPlatform | JRELEASER_SELECT_CURRENT_PLATFORM | false
+| selectPlatforms       | JRELEASER_SELECT_PLATFORMS        | <empty-string>
+| rejectPlatforms       | JRELEASER_REJECT_PLATFORMS        | <empty-string>
+|                       | JRELEASER_DEFAULT_GIT_REMOTE      | origin
 |===
+
+`JRELEASER_SELECT_PLATFORMs` and `JRELEASER_REJECT_PLATFORMs` may define a command separated list of values such as
+`osx-x86_64,linux-x86_64`.
 
 == Tasks
 
@@ -52,7 +63,7 @@ Type:: String
 Default value:: <none>
 Property:: jreleaser.format
 Required:: true
-Description:: Configuration file format. Currently supported formats are: `yml`, `toml`, `json`.
+Description:: Configuration file format. Currently supported formats are: `yml`, `json`, and `toml`.
 
 *overwrite*
 [horizontal]
@@ -132,6 +143,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -160,6 +181,16 @@ Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
 
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
+
 === jreleaser-template
 
 Generate a tool/announcer template.
@@ -181,6 +212,26 @@ Default value:: <none>
 Property:: jreleaser.announcer.name
 Required:: false
 Description:: The name of the announcer to be used.
+
+---
+
+*assemblerName*
+[horizontal]
+Type:: String
+Default value:: <none>
+Property:: jreleaser.assembler.name
+Required:: false
+Description:: The name of the assembler to be used.
+
+---
+
+*assemblerType*
+[horizontal]
+Type:: String
+Default value:: <none>
+Property:: jreleaser.assembler.type
+Required:: false
+Description:: The type of the assembler to be used.
 
 ---
 
@@ -320,6 +371,16 @@ Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
 
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
+
 === jreleaser-assemble
 
 Assemble all distributions.
@@ -380,6 +441,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -407,6 +478,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-changelog
 
@@ -439,6 +520,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-checksum
 
@@ -482,6 +573,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -509,6 +610,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-sign
 
@@ -552,6 +663,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -579,6 +700,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-deploy
 
@@ -648,28 +779,6 @@ Property:: jreleaser.outputdir
 Required:: false
 Description:: Overwrites existing template files.
 
----
-
-*selectCurrentPlatform*
-[horizontal]
-Type:: boolean
-Default value:: false
-Property:: jreleaser.select.current.platform
-Required:: false
-Description:: Activates paths matching the current platform.
-
----
-
-*selectPlatforms*
-[horizontal]
-Type:: List<String>
-Default value:: []
-Property::
-Required:: false
-Description:: Activates paths matching the given platform.
-
----
-
 *skip*
 [horizontal]
 Type:: boolean
@@ -677,6 +786,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-upload
 
@@ -748,6 +867,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -775,6 +904,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 ---
 
@@ -900,6 +1039,16 @@ Description:: Overwrites existing template files.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -927,6 +1076,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 ---
 
@@ -1006,6 +1165,16 @@ Description:: Name of the packagers to include.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -1033,6 +1202,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-package
 
@@ -1094,6 +1273,16 @@ Description:: Name of the packagers to include.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -1121,6 +1310,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-publish
 
@@ -1182,6 +1381,16 @@ Description:: Name of the packagers to include.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -1209,6 +1418,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-announce
 
@@ -1262,26 +1481,6 @@ Description:: Overwrites existing template files.
 
 ---
 
-*selectCurrentPlatform*
-[horizontal]
-Type:: boolean
-Default value:: false
-Property:: jreleaser.select.current.platform
-Required:: false
-Description:: Activates paths matching the current platform.
-
----
-
-*selectPlatforms*
-[horizontal]
-Type:: List<String>
-Default value:: []
-Property::
-Required:: false
-Description:: Activates paths matching the given platform.
-
----
-
 *skip*
 [horizontal]
 Type:: boolean
@@ -1289,6 +1488,16 @@ Default value:: false
 Property:: jreleaser.skip
 Required:: false
 Description:: Skips execution of this task.
+
+---
+
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
 
 === jreleaser-full-release
 
@@ -1432,6 +1641,16 @@ Description:: Name of the packagers to include.
 
 ---
 
+*rejectPlatforms*
+[horizontal]
+Type:: List<String>
+Default value:: []
+Property::
+Required:: false
+Description:: Activates paths not matching the given platform.
+
+---
+
 *selectCurrentPlatform*
 [horizontal]
 Type:: boolean
@@ -1462,6 +1681,16 @@ Description:: Skips execution of this task.
 
 ---
 
+*strict*
+[horizontal]
+Type:: boolean
+Default value:: false
+Property:: jreleaser.strict
+Required:: false
+Description:: Enable strict mode.
+
+---
+
 *uploaderNames*
 [horizontal]
 Type:: List<String>
@@ -1477,3 +1706,7 @@ Type:: List<String>
 Default value:: <none>
 Required:: false
 Description:: Types of uploaders to include.
+
+=== jreleaser-json-schema
+
+Generate JSON schema.

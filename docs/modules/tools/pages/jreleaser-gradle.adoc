@@ -17,18 +17,27 @@ plugins {
 
 == Configuration
 
-JReleaser may be configured using the Gradle DSL shown at xref:configuration:index.adoc[]. Alternatively, an external
+JReleaser may be configured using the Gradle DSL shown at xref:reference:index.adoc[]. Alternatively, an external
 configuration file may be used if the `configFile` field property is set in the `jreleaser` extension.
 
 The following properties may also be set on the `jreleaser` configuration instance:
 
-[options="header", cols="5*"]
+[options="header", cols="4*"]
 |===
-| Name          | Type        | Required | Default Value | Description
-| dryrun        | boolean     | no       | false         | Skips remote operations.
-| gitRootSearch | boolean     | no       | false         | Searches for the git root
-| configFile    | RegularFile | no       |               | External configuration file
+| Setting               | Type        | Environment Variable              | Default
+| basedir               | boolean     | JRELEASER_BASEDIR                 | <current-execution-directory>
+| dryrun                | boolean     | JRELEASER_DRY_RUN                 | false
+| strict                | boolean     | JRELEASER_STRICT                  | false
+| gitRootSearch         | boolean     | JRELEASER_GIT_ROOT_SEARCH         | false
+| selectCurrentPlatform | boolean     | JRELEASER_SELECT_CURRENT_PLATFORM | false
+| selectPlatform        | String      | JRELEASER_SELECT_PLATFORMS        | <empty-string>
+| rejectPlatform        | String      | JRELEASER_REJECT_PLATFORMS        | <empty-string>
+| configFile            | RegularFile |                                   |
+|                       | String      | JRELEASER_DEFAULT_GIT_REMOTE      | origin
 |===
+
+`JRELEASER_SELECT_PLATFORMs` and `JRELEASER_REJECT_PLATFORMs` may define a command separated list of values such as
+`osx-x86_64,linux-x86_64`.
 
 === Defaults
 
@@ -89,6 +98,32 @@ if that were not to be the case then you may download the files and register the
 
 The following tasks are provided:
 
+=== jreleaserInit
+
+[source]
+----
+Path
+     :jreleaserInit
+
+Type
+     JReleaserInitTask (org.jreleaser.gradle.plugin.tasks.JReleaserInitTask)
+
+Options
+     --format                Configuration file format (REQUIRED).
+
+     --overwrite             Overwrite existing files (OPTIONAL).
+
+Description
+     Create a jreleaser config file
+
+Group
+     JReleaser
+----
+
+Currently supported formats are: `yml`, `json`, and `toml`.
+
+The file will be generated at the current directory.
+
 === jreleaserConfig
 
 [source]
@@ -106,17 +141,21 @@ Options
 
      --changelog                Display changelog configuration (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
-
      --download                 Display download configuration (OPTIONAL).
+
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --full                     Display full configuration (OPTIONAL).
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Outputs current JReleaser configuration
@@ -137,6 +176,10 @@ Type
 
 Options
      --announcer-name        The name of the announcer (OPTIONAL).
+
+     --assembler-name        The name of the assembler (OPTIONAL).
+
+     --assembler-type        The type of the assembler (OPTIONAL).
 
      --distribution-name     The name of the distribution (OPTIONAL).
 
@@ -176,13 +219,15 @@ Options
 
      --downloader                Include an downloader by type (OPTIONAL).
 
-     --dry-run                   Skip remote operations (OPTIONAL).
+     --dryrun                    Skip remote operations (OPTIONAL).
 
      --exclude-downloader-name   Exclude an downloader by name (OPTIONAL).
 
      --exclude-downloader        Exclude an downloader by type (OPTIONAL).
 
      --git-root-search           Searches for the Git root (OPTIONAL).
+
+     --strict                    Enable strict mode (OPTIONAL).
 
 Description
      Downloads assets
@@ -206,7 +251,7 @@ Options
 
      --distribution             The name of the distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-assembler        Exclude an assembler (OPTIONAL).
 
@@ -214,9 +259,13 @@ Options
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Assemble all distributions
@@ -234,6 +283,9 @@ Path
 
 Type
      JReleaserChangelogTask (org.jreleaser.gradle.plugin.tasks.JReleaserChangelogTask)
+
+Options:
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Calculate changelogs
@@ -255,15 +307,19 @@ Type
 Options
      --distribution             The name of the distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Calculate checksums
@@ -285,15 +341,19 @@ Type
 Options
      --distribution             The name of the distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Signs a release
@@ -317,7 +377,7 @@ Options
 
      --deployer-name             Include a deployer by name (OPTIONAL).
 
-     --dry-run                   Skip remote operations (OPTIONAL).
+     --dryrun                    Skip remote operations (OPTIONAL).
 
      --exclude-deployer          Exclude a deployer by type (OPTIONAL).
 
@@ -325,9 +385,7 @@ Options
 
      --git-root-search           Searches for the Git root (OPTIONAL).
 
-     --select-current-platform   Activates paths matching the current platform (OPTIONAL).
-
-     --select-platform           Activates paths matching the given platform (OPTIONAL).
+     --strict                    Enable strict mode (OPTIONAL).
 
 Description
      Deploys all staged artifacts
@@ -349,7 +407,7 @@ Type
 Options
      --distribution              The name of the distribution (OPTIONAL).
 
-     --dry-run                   Skip remote operations (OPTIONAL).
+     --dryrun                    Skip remote operations (OPTIONAL).
 
      --exclude-distribution      Exclude a distribution (OPTIONAL).
 
@@ -359,9 +417,13 @@ Options
 
      --git-root-search           Searches for the Git root (OPTIONAL).
 
+     --reject-platform           Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform   Activates paths matching the current platform (OPTIONAL).
 
      --select-platform           Activates paths matching the given platform (OPTIONAL).
+
+     --strict                    Enable strict mode (OPTIONAL).
 
      --uploader-name             Include an uploader by name (OPTIONAL).
 
@@ -391,7 +453,7 @@ Options
 
      --distribution             The name of the distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-deployer          Exclude a deployer by type (OPTIONAL).
 
@@ -405,9 +467,13 @@ Options
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
      --uploader                 Include an uploader by type (OPTIONAL).
 
@@ -432,7 +498,7 @@ Type
 Options
      --distribution             Include a distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
@@ -442,9 +508,13 @@ Options
 
      --packager                 Include a packager (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Prepares all distributions
@@ -466,7 +536,7 @@ Type
 Options
      --distribution             Include a distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
@@ -476,9 +546,13 @@ Options
 
      --packager                 Include a packager (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Packages all distributions
@@ -500,7 +574,7 @@ Type
 Options
      --distribution             Include a distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
@@ -510,9 +584,13 @@ Options
 
      --packager                 Include a packager (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Publishes all distributions
@@ -534,15 +612,13 @@ Type
 Options
      --announcer                Include an announcer (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-announcer        Exclude an announcer (OPTIONAL).
 
      --git-root-search          Searches for the Git root (OPTIONAL).
 
-     --select-current-platform  Activates paths matching the current platform (OPTIONAL).
-
-     --select-platform          Activates paths matching the given platform (OPTIONAL).
+     --strict                   Enable strict mode (OPTIONAL).
 
 Description
      Announces a release
@@ -570,7 +646,7 @@ Options
 
      --distribution             Include a distribution (OPTIONAL).
 
-     --dry-run                  Skip remote operations (OPTIONAL).
+     --dryrun                   Skip remote operations (OPTIONAL).
 
      --exclude-announcer        Exclude an announcer (OPTIONAL).
 
@@ -590,9 +666,13 @@ Options
 
      --packager                 Include a packager (OPTIONAL).
 
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform  Activates paths matching the current platform (OPTIONAL).
 
      --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
 
      --uploader                 Include an uploader by type (OPTIONAL).
 
@@ -632,7 +712,7 @@ Options
 
      --draft                           If the release is a draft (OPTIONAL).
 
-     --dry-run                         Skip remote operations (OPTIONAL).
+     --dryrun                          Skip remote operations (OPTIONAL).
 
      --file                            Input file(s) to be uploaded (OPTIONAL).
 
@@ -672,6 +752,8 @@ Options
 
      --signing                         Sign files (OPTIONAL).
 
+     --reject-platform                 Activates paths not matching the given platform (OPTIONAL).
+
      --select-current-platform         Activates paths matching the current platform (OPTIONAL).
 
      --select-platform                 Activates paths matching the given platform (OPTIONAL).
@@ -679,6 +761,8 @@ Options
      --skip-release                    Skip creating a release (OPTIONAL).
 
      --skip-tag                        Skip tagging the release (OPTIONAL).
+
+     --strict                          Enable strict mode (OPTIONAL).
 
      --tag-name                        The release tga (OPTIONAL).
 
@@ -690,6 +774,23 @@ Options
 
 Description
      Creates or updates a release with auto-config enabled
+
+Group
+     JReleaser
+----
+
+=== jreleaserJsonSchema
+
+[source]
+----
+Path
+     :jreleaserJsonSchema
+
+Type
+     JReleaserJsonSchemaTask (org.jreleaser.gradle.plugin.tasks.JReleaserJsonSchemaTask)
+
+Description
+    Generate JSON schema.
 
 Group
      JReleaser
