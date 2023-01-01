@@ -717,6 +717,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Publishing to Maven Central</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>Maven Central is the defacto artifact repository for JVM based projects. Anyone can publish artifacts to it as long as
 they follow the rules. Follow this <a href="https://central.sonatype.org/publish/publish-guide/">guide</a> to register an account.
@@ -724,8 +726,18 @@ You also must comply with all <a href="https://central.sonatype.org/publish/requ
 otherwise deployment will fail. Fortunately JReleaser can verify many of those requirements before any artifacts are
 deployed.</p>
 </div>
-<div class="paragraph">
-<p>Before continuing make sure that all artifacts to be deployed have been <a href="staging-artifacts.html" class="xref page">staged</a>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Before continuing make sure that all artifacts to be deployed have been <a href="staging-artifacts.html" class="xref page">staged</a>.
+Missing this step will make the deployment phase fail!
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Maven Central requires artifacts to be signed with PGP. The <a href="../../reference/deploy/maven/nexus2.html" class="xref page">Nexus2</a> deployer
@@ -927,6 +939,248 @@ file:</p>
 <p><code>JRELEASER_NEXUS2_MAVEN_CENTRAL_PASSWORD</code> or  <code>JRELEASER_NEXUS2_PASSWORD</code></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_maven_example"><a class="anchor" href="#_maven_example"></a>Maven Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following <code>pom.xml</code> shows the minimum required configuration</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 <a href="http://maven.apache.org/xsd/maven-4.0.0.xsd"" class="bare">http://maven.apache.org/xsd/maven-4.0.0.xsd"</a> xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.acme&lt;/groupId&gt;
+    &lt;artifactId&gt;app&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+
+    &lt;name&gt;app&lt;/name&gt;
+    &lt;description&gt;Sample application&lt;/description&gt;
+    &lt;url&gt;<a href="https://github.com/aalmiray/app&lt;/url&gt" class="bare">https://github.com/aalmiray/app&lt;/url&gt</a>;
+    &lt;inceptionYear&gt;2021&lt;/inceptionYear&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;maven.compiler.release&gt;11&lt;/maven.compiler.release&gt;
+    &lt;/properties&gt;
+
+    &lt;licenses&gt;
+        &lt;license&gt;
+            &lt;name&gt;Apache-2.0&lt;/name&gt;
+            &lt;url&gt;<a href="https://spdx.org/licenses/Apache-2.0.html&lt;/url&gt" class="bare">https://spdx.org/licenses/Apache-2.0.html&lt;/url&gt</a>;
+            &lt;distribution&gt;repo&lt;/distribution&gt;
+        &lt;/license&gt;
+    &lt;/licenses&gt;
+
+    &lt;developers&gt;
+        &lt;developer&gt;
+            &lt;id&gt;aalmiray&lt;/id&gt;
+            &lt;name&gt;Andres Almiray&lt;/name&gt;
+        &lt;/developer&gt;
+    &lt;/developers&gt;
+
+    &lt;scm&gt;
+        &lt;connection&gt;scm:git:https://github.com/aalmiray/app.git&lt;/connection&gt;
+        &lt;developerConnection&gt;scm:git:https://github.com/aalmiray/app.git&lt;/developerConnection&gt;
+        &lt;url&gt;<a href="https://github.com/aalmiray/app.git&lt;/url&gt" class="bare">https://github.com/aalmiray/app.git&lt;/url&gt</a>;
+        &lt;tag&gt;HEAD&lt;/tag&gt;
+    &lt;/scm&gt;
+
+    &lt;build&gt;
+        &lt;pluginManagement&gt;
+            &lt;plugins&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;3.0.0&lt;/version&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;3.10.1&lt;/version&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;3.2.0&lt;/version&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                    &lt;artifactId&gt;maven-sources-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;3.2.1&lt;/version&gt;
+                &lt;/plugin&gt;
+                &lt;plugin&gt;
+                    &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+                    &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
+                    &lt;version&gt;1.4.0&lt;/version&gt;
+                &lt;/plugin&gt;
+            &lt;/plugins&gt;
+        &lt;/pluginManagement&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
+                &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;jreleaser&gt;
+                        &lt;signing&gt;
+                            &lt;active&gt;ALWAYS&lt;/active&gt;
+                            &lt;armored&gt;true&lt;/armored&gt;
+                        &lt;/signing&gt;
+                      &lt;deploy&gt;
+                          &lt;maven&gt;
+                              &lt;nexus2&gt;
+                                  &lt;maven-central&gt;
+                                      &lt;active&gt;ALWAYS&lt;/active&gt;
+                                      &lt;url&gt;<a href="https://s01.oss.sonatype.org/service/local&lt;/url&gt" class="bare">https://s01.oss.sonatype.org/service/local&lt;/url&gt</a>;
+                                      &lt;closeRepository&gt;true&lt;/closeRepository&gt;
+                                      &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
+                                      &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
+                                  &lt;/maven-central&gt;
+                              &lt;/nexus2&gt;
+                          &lt;/maven&gt;
+                      &lt;/deploy&gt;
+                    &lt;/jreleaser&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;publication&lt;/id&gt;
+            &lt;build&gt;
+                &lt;plugins&gt;
+                    &lt;plugin&gt;
+                        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                        &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
+                        &lt;executions&gt;
+                            &lt;execution&gt;
+                                &lt;id&gt;attach-javadocs&lt;/id&gt;
+                                &lt;goals&gt;
+                                    &lt;goal&gt;jar&lt;/goal&gt;
+                                &lt;/goals&gt;
+                                &lt;configuration&gt;
+                                    &lt;attach&gt;true&lt;/attach&gt;
+                                &lt;/configuration&gt;
+                            &lt;/execution&gt;
+                        &lt;/executions&gt;
+                    &lt;/plugin&gt;
+                    &lt;plugin&gt;
+                        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                        &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;
+                        &lt;executions&gt;
+                            &lt;execution&gt;
+                                &lt;id&gt;attach-sources&lt;/id&gt;
+                                &lt;goals&gt;
+                                    &lt;goal&gt;jar&lt;/goal&gt;
+                                &lt;/goals&gt;
+                                &lt;configuration&gt;
+                                    &lt;attach&gt;true&lt;/attach&gt;
+                                &lt;/configuration&gt;
+                            &lt;/execution&gt;
+                        &lt;/executions&gt;
+                    &lt;/plugin&gt;
+                &lt;/plugins&gt;
+            &lt;/build&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Store secrets in <a href="../../reference/environment.html" class="xref page">~/.jreleaser/config.toml</a>. The TOML format is chosen as it allows multiline
+strings which are required for defining both public and secret keys. You may opt instead to use the YAML format in which
+case be aware of indentation or use environment variables.</p>
+</div>
+<div class="listingblock">
+<div class="title">~/.jreleaser/config.toml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">JRELEASER_GPG_PASSPHRASE = "&lt;your-pgp-passphrase&gt;"
+
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+&lt;contents-of-your-public-key&gt;
+
+-----END PGP PUBLIC KEY BLOCK-----"""
+
+JRELEASER_GPG_SECRET_KEY="""-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+&lt;contents-of-your-private-key&gt;
+
+-----END PGP PRIVATE KEY BLOCK-----"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may export public and private keys with the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ gpg --output public.pgp --armor --export username@email
+$ gpg --output private.pgp --armor --export-secret-key username@email</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you do not wish to configure public and private keys in the secrets configuration file you may directly refer to the
+exported key files, in which case signing configuration should be updated to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+    &lt;signing&gt;
+      &lt;active&gt;ALWAYS&lt;/active&gt;
+      &lt;armored&gt;true&lt;/armored&gt;
+      &lt;mode&gt;FILE&lt;/mode&gt;
+      &lt;publicKey&gt;path/to/public.pgp&lt;/publicKey&gt;
+      &lt;secretKey&gt;path/to/private.pgp&lt;/secretKey&gt;
+    &lt;/signing&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+DO NOT commit public and private key files to source control!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once all configuration is in place you may execute the following commands:</p>
+</div>
+<div class="paragraph">
+<p>1) Verify release &amp; deploy configuration</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ mvn jreleaser:config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2) Stage all artifacts to a local directory</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ mvn -Ppublication deploy -DaltDeploymentRepository=local::file:./target/staging-deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3) Deploy and release</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ mvn jreleaser:full-release</code></pre>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>
