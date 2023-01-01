@@ -8,7 +8,8 @@ You also must comply with all link:https://central.sonatype.org/publish/requirem
 otherwise deployment will fail. Fortunately JReleaser can verify many of those requirements before any artifacts are
 deployed.
 
-Before continuing make sure that all artifacts to be deployed have been xref:maven/staging-artifacts.adoc[staged].
+IMPORTANT: Before continuing make sure that all artifacts to be deployed have been xref:maven/staging-artifacts.adoc[staged].
+Missing this step will make the deployment phase fail!
 
 Maven Central requires artifacts to be signed with PGP. The xref:reference:deploy/maven/nexus2.adoc[] deployer
 automatically enables `applyMavenCentralRules` when the publication url contains `oss.sonatype.org`. This setting
@@ -164,3 +165,224 @@ file:
 - `JRELEASER_GPG_PASSPHRASE`
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_USERNAME` or  `JRELEASER_NEXUS2_USERNAME`
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_PASSWORD` or  `JRELEASER_NEXUS2_PASSWORD`
+
+== Maven Example
+
+The following `pom.xml` shows the minimum required configuration
+
+.pom.xml
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.acme</groupId>
+    <artifactId>app</artifactId>
+    <version>1.0.0</version>
+
+    <name>app</name>
+    <description>Sample application</description>
+    <url>https://github.com/aalmiray/app</url>
+    <inceptionYear>2021</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://spdx.org/licenses/Apache-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>aalmiray</id>
+            <name>Andres Almiray</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/aalmiray/app.git</connection>
+        <developerConnection>scm:git:https://github.com/aalmiray/app.git</developerConnection>
+        <url>https://github.com/aalmiray/app.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-sources-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jreleaser</groupId>
+                    <artifactId>jreleaser-maven-plugin</artifactId>
+                    <version>{jreleaser-version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jreleaser</groupId>
+                <artifactId>jreleaser-maven-plugin</artifactId>
+                <configuration>
+                    <jreleaser>
+                        <signing>
+                            <active>ALWAYS</active>
+                            <armored>true</armored>
+                        </signing>
+                      <deploy>
+                          <maven>
+                              <nexus2>
+                                  <maven-central>
+                                      <active>ALWAYS</active>
+                                      <url>{deployer_url}</url>
+                                      <closeRepository>true</closeRepository>
+                                      <releaseRepository>true</releaseRepository>
+                                      <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                  </maven-central>
+                              </nexus2>
+                          </maven>
+                      </deploy>
+                    </jreleaser>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>publication</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
+----
+
+Store secrets in xref:reference:environment.adoc[~/.jreleaser/config.toml]. The TOML format is chosen as it allows multiline
+strings which are required for defining both public and secret keys. You may opt instead to use the YAML format in which
+case be aware of indentation or use environment variables.
+
+.~/.jreleaser/config.toml
+[source,toml]
+----
+JRELEASER_GPG_PASSPHRASE = "<your-pgp-passphrase>"
+
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+<contents-of-your-public-key>
+
+-----END PGP PUBLIC KEY BLOCK-----"""
+
+JRELEASER_GPG_SECRET_KEY="""-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+<contents-of-your-private-key>
+
+-----END PGP PRIVATE KEY BLOCK-----"""
+----
+
+You may export public and private keys with the following commands:
+
+[source]
+----
+$ gpg --output public.pgp --armor --export username@email
+$ gpg --output private.pgp --armor --export-secret-key username@email
+----
+
+If you do not wish to configure public and private keys in the secrets configuration file you may directly refer to the
+exported key files, in which case signing configuration should be updated to the following:
+
+[source,xml]
+[subs="attributes,verbatim,+macros"]
+----
+<jreleaser>
+    <signing>
+      <active>ALWAYS</active>
+      <armored>true</armored>
+      <mode>FILE</mode>
+      <publicKey>path/to/public.pgp</publicKey>
+      <secretKey>path/to/private.pgp</secretKey>
+    </signing>
+</jreleaser>
+----
+
+WARNING: DO NOT commit public and private key files to source control!
+
+Once all configuration is in place you may execute the following commands:
+
+1) Verify release & deploy configuration
+
+[source]
+----
+$ mvn jreleaser:config
+----
+
+2) Stage all artifacts to a local directory
+
+[source]
+----
+$ mvn -Ppublication deploy -DaltDeploymentRepository=local::file:./target/staging-deploy
+----
+
+3) Deploy and release
+
+[source]
+----
+$ mvn jreleaser:full-release
+----
