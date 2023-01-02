@@ -24,6 +24,10 @@ You have the option to close and release the staged repository automatically rig
 repository open and perform close and release operations using the UI. You must login into Sonatype OSSRH using your
 Sonatype account to do so.
 
+NOTE: We recommend setting `releaseRepository` to `false` for the first time. This lets you review staged artifacts in the
+Sonatype UI. You'll have to perform a manual release on the UI. Once you're happy with the settings and the release is
+successful you may switch this property to `true`.
+
 CAUTION: As described https://central.sonatype.org/publish/release/#login-into-ossrh[here], Sonatype projects created
 before February 2021 may need to use "{deployer_old_url}" instead of "{deployer_url}". Using incorrect url may cause
 a 'Could not find a staging profile matching ...' error.
@@ -166,9 +170,9 @@ file:
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_USERNAME` or  `JRELEASER_NEXUS2_USERNAME`
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_PASSWORD` or  `JRELEASER_NEXUS2_PASSWORD`
 
-== Maven Example
+== Maven
 
-The following `pom.xml` shows the minimum required configuration
+The following `pom.xml` file shows the minimum required configuration
 
 .pom.xml
 [source,xml]
@@ -322,6 +326,8 @@ case be aware of indentation or use environment variables.
 .~/.jreleaser/config.toml
 [source,toml]
 ----
+JRELEASER_NEXUS2_USERNAME = "<your-sonatype-account-username>"
+JRELEASER_NEXUS2_PASSWORD = "<your-sonatype-account-password>"
 JRELEASER_GPG_PASSPHRASE = "<your-pgp-passphrase>"
 
 JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -385,4 +391,160 @@ $ mvn -Ppublication deploy -DaltDeploymentRepository=local::file:./target/stagin
 [source]
 ----
 $ mvn jreleaser:full-release
+----
+
+== Gradle
+
+The following `build.gradle` file shows the minimum required configuration
+
+.build.gradle
+[source,groovy]
+[subs="+macros,attributes"]
+----
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jreleaser' version '{jreleaser-version}'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.acme'
+            artifactId = 'app'
+
+            from components.java
+
+            pom {
+                name = 'app'
+                description = 'Sample application'
+                url = 'https://github.com/aalmiray/app'
+                inceptionYear = '2021'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://spdx.org/licenses/Apache-2.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'aalmiray'
+                        name = 'Andres Almiray'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/aalmiray/app.git'
+                    developerConnection = 'scm:git:ssh://github.com/aalmiray/app.git'
+                    url = 'http://github.com/aalmiray/app'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            nexus2 {
+                'maven-central' {
+                    active = 'ALWAYS'
+                    url = 'https://s01.oss.sonatype.org/service/local'
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+        }
+    }
+}
+----
+
+Store secrets in xref:reference:environment.adoc[~/.jreleaser/config.toml]. The TOML format is chosen as it allows multiline
+strings which are required for defining both public and secret keys. You may opt instead to use the YAML format in which
+case be aware of indentation or use environment variables.
+
+.~/.jreleaser/config.toml
+[source,toml]
+----
+JRELEASER_NEXUS2_USERNAME = "<your-sonatype-account-username>"
+JRELEASER_NEXUS2_PASSWORD = "<your-sonatype-account-password>"
+JRELEASER_GPG_PASSPHRASE = "<your-pgp-passphrase>"
+
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+<contents-of-your-public-key>
+
+-----END PGP PUBLIC KEY BLOCK-----"""
+
+JRELEASER_GPG_SECRET_KEY="""-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+<contents-of-your-private-key>
+
+-----END PGP PRIVATE KEY BLOCK-----"""
+----
+
+You may export public and private keys with the following commands:
+
+[source]
+----
+$ gpg --output public.pgp --armor --export username@email
+$ gpg --output private.pgp --armor --export-secret-key username@email
+----
+
+If you do not wish to configure public and private keys in the secrets configuration file you may directly refer to the
+exported key files, in which case signing configuration should be updated to the following:
+
+.build.gradle
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+        mode = 'FILE'
+        publicKey = 'path/to/public.pgp'
+        secreteKey = 'path/to/private.pgp'
+    }
+}
+----
+
+WARNING: DO NOT commit public and private key files to source control!
+
+Once all configuration is in place you may execute the following commands:
+
+1) Verify release & deploy configuration
+
+[source]
+----
+$ ./gradlew jreleaserConfig
+----
+
+2) Stage all artifacts to a local directory
+
+[source]
+----
+$ ./gradlew publish
+----
+
+3) Deploy and release
+
+[source]
+----
+$ ./gradlew jreleaserFullRelease
 ----

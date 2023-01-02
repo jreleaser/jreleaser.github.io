@@ -7,7 +7,7 @@ such as a `-sources.jar` and `-javadoc.jar`.
 
 == Maven
 
-The following pom.xml shows the minimum set of XML elements required in a POM for publication to Maven Central, as well
+The following `pom.xml` file shows the minimum set of XML elements required in a POM for publication to Maven Central, as well
 as plugin configuration to generate all required artifacts.
 
 .pom.xml
@@ -154,4 +154,109 @@ target/staging-deploy/
             ├── maven-metadata.xml
             ├── maven-metadata.xml.md5
             └── maven-metadata.xml.sha1
+----
+
+== Gradle
+
+The following `build.gradle` file shows the minimum configuration required for publication to Maven Central
+
+.build.gradle
+[source,groovy]
+[subs="+macros,attributes"]
+----
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jreleaser' version '{jreleaser-version}'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.acme'
+            artifactId = 'app'
+
+            from components.java
+
+            pom {
+                name = 'app'
+                description = 'Sample application'
+                url = 'https://github.com/aalmiray/app'
+                inceptionYear = '2021'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://spdx.org/licenses/Apache-2.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'aalmiray'
+                        name = 'Andres Almiray'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/aalmiray/app.git'
+                    developerConnection = 'scm:git:ssh://github.com/aalmiray/app.git'
+                    url = 'http://github.com/aalmiray/app'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+----
+
+Invoke the following command to stage artifacts to a local directory
+
+[source]
+----
+$ ./gradlew publish
+----
+
+Resulting in the following file structure
+
+[source]
+
+----
+build/staging-deploy/
+└── com
+    └── acme
+        └── app
+            ├── 1.0.0
+            │   ├── app-1.0.0-javadoc.jar
+            │   ├── app-1.0.0-javadoc.jar.md5
+            │   ├── app-1.0.0-javadoc.jar.sha1
+            │   ├── app-1.0.0-javadoc.jar.sha256
+            │   ├── app-1.0.0-javadoc.jar.sha512
+            │   ├── app-1.0.0-sources.jar
+            │   ├── app-1.0.0-sources.jar.md5
+            │   ├── app-1.0.0-sources.jar.sha1
+            │   ├── app-1.0.0-sources.jar.sha256
+            │   ├── app-1.0.0-sources.jar.sha512
+            │   ├── app-1.0.0.jar
+            │   ├── app-1.0.0.jar.md5
+            │   ├── app-1.0.0.jar.sha1
+            │   ├── app-1.0.0.jar.sha256
+            │   ├── app-1.0.0.jar.sha512
+            │   ├── app-1.0.0.pom
+            │   ├── app-1.0.0.pom.md5
+            │   ├── app-1.0.0.pom.sha1
+            │   ├── app-1.0.0.pom.sha256
+            │   └── app-1.0.0.pom.sha512
+            ├── maven-metadata.xml
+            ├── maven-metadata.xml.md5
+            ├── maven-metadata.xml.sha1
+            ├── maven-metadata.xml.sha256
+            └── maven-metadata.xml.sha512
 ----
