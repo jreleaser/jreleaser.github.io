@@ -765,6 +765,20 @@ performs the following tasks:</p>
 repository open and perform close and release operations using the UI. You must login into Sonatype OSSRH using your
 Sonatype account to do so.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We recommend setting <code>releaseRepository</code> to <code>false</code> for the first time. This lets you review staged artifacts in the
+Sonatype UI. You&#8217;ll have to perform a manual release on the UI. Once you&#8217;re happy with the settings and the release is
+successful you may switch this property to <code>true</code>.
+</td>
+</tr>
+</table>
+</div>
 <div class="admonitionblock caution">
 <table>
 <tr>
@@ -943,10 +957,10 @@ file:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_maven_example"><a class="anchor" href="#_maven_example"></a>Maven Example</h2>
+<h2 id="_maven"><a class="anchor" href="#_maven"></a>Maven</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following <code>pom.xml</code> shows the minimum required configuration</p>
+<p>The following <code>pom.xml</code> file shows the minimum required configuration</p>
 </div>
 <div class="listingblock">
 <div class="title">pom.xml</div>
@@ -1100,7 +1114,9 @@ case be aware of indentation or use environment variables.</p>
 <div class="listingblock">
 <div class="title">~/.jreleaser/config.toml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">JRELEASER_GPG_PASSPHRASE = "&lt;your-pgp-passphrase&gt;"
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">JRELEASER_NEXUS2_USERNAME = "&lt;your-sonatype-account-username&gt;"
+JRELEASER_NEXUS2_PASSWORD = "&lt;your-sonatype-account-password&gt;"
+JRELEASER_GPG_PASSPHRASE = "&lt;your-pgp-passphrase&gt;"
 
 JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -1178,6 +1194,181 @@ DO NOT commit public and private key files to source control!
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ mvn jreleaser:full-release</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gradle"><a class="anchor" href="#_gradle"></a>Gradle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following <code>build.gradle</code> file shows the minimum required configuration</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jreleaser' version '1.4.0'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.acme'
+            artifactId = 'app'
+
+            from components.java
+
+            pom {
+                name = 'app'
+                description = 'Sample application'
+                url = 'https://github.com/aalmiray/app'
+                inceptionYear = '2021'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://spdx.org/licenses/Apache-2.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'aalmiray'
+                        name = 'Andres Almiray'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/aalmiray/app.git'
+                    developerConnection = 'scm:git:ssh://github.com/aalmiray/app.git'
+                    url = 'http://github.com/aalmiray/app'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+    deploy {
+        maven {
+            nexus2 {
+                'maven-central' {
+                    active = 'ALWAYS'
+                    url = 'https://s01.oss.sonatype.org/service/local'
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Store secrets in <a href="../../reference/environment.html" class="xref page">~/.jreleaser/config.toml</a>. The TOML format is chosen as it allows multiline
+strings which are required for defining both public and secret keys. You may opt instead to use the YAML format in which
+case be aware of indentation or use environment variables.</p>
+</div>
+<div class="listingblock">
+<div class="title">~/.jreleaser/config.toml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">JRELEASER_NEXUS2_USERNAME = "&lt;your-sonatype-account-username&gt;"
+JRELEASER_NEXUS2_PASSWORD = "&lt;your-sonatype-account-password&gt;"
+JRELEASER_GPG_PASSPHRASE = "&lt;your-pgp-passphrase&gt;"
+
+JRELEASER_GPG_PUBLIC_KEY="""-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+&lt;contents-of-your-public-key&gt;
+
+-----END PGP PUBLIC KEY BLOCK-----"""
+
+JRELEASER_GPG_SECRET_KEY="""-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+&lt;contents-of-your-private-key&gt;
+
+-----END PGP PRIVATE KEY BLOCK-----"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may export public and private keys with the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ gpg --output public.pgp --armor --export username@email
+$ gpg --output private.pgp --armor --export-secret-key username@email</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you do not wish to configure public and private keys in the secrets configuration file you may directly refer to the
+exported key files, in which case signing configuration should be updated to the following:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+        mode = 'FILE'
+        publicKey = 'path/to/public.pgp'
+        secreteKey = 'path/to/private.pgp'
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+DO NOT commit public and private key files to source control!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once all configuration is in place you may execute the following commands:</p>
+</div>
+<div class="paragraph">
+<p>1) Verify release &amp; deploy configuration</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ ./gradlew jreleaserConfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2) Stage all artifacts to a local directory</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ ./gradlew publish</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3) Deploy and release</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ ./gradlew jreleaserFullRelease</code></pre>
 </div>
 </div>
 </div>
