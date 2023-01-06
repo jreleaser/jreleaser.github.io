@@ -134,6 +134,11 @@ include::partial$packagers/yaml/tap.adoc[]
         # icon:exclamation-triangle[] if `serverName != DEFAULT`.
         server: pass:[https://myregistry.com]
 
+        # Expect login/lougout to be carried out by external means.
+        # Defaults to `false`.
+        # icon:dot-circle[]
+        externalLogin: false
+
         # The user that can publish images.
         # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
         # environment variable must be defined.
@@ -237,6 +242,11 @@ include::partial$packagers/toml/tap.adoc[]
     # The address of the docker registry.
     # icon:exclamation-triangle[] if `serverName != DEFAULT`.
     server = "pass:[https://myregistry.com]"
+
+    # Expect login/lougout to be carried out by external means.
+    # Defaults to `false`.
+    # icon:dot-circle[]
+    externalLogin = false
 
     # The user that can publish images.
     # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
@@ -361,6 +371,11 @@ include::partial$packagers/json/tap.adoc[]
           // The address of the docker registry.
           // icon:exclamation-triangle[] if `serverName != DEFAULT`.
           "server": "pass:[https://myregistry.com]",
+
+          // Expect login/lougout to be carried out by external means.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          "externalLogin": false,
 
           // The user that can publish images.
           // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
@@ -518,6 +533,13 @@ include::partial$packagers/maven/tap.adoc[]
           <server>pass[https: myregistry.com]</server>
 
           <!--
+            Expect login/lougout to be carried out by external means.
+            Defaults to `false`.
+            icon:dot-circle[]
+          -->
+          <externalLogin>false</externalLogin>
+
+          <!--
             The user that can publish images.
             If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
             environment variable must be defined.
@@ -635,6 +657,11 @@ include::partial$packagers/gradle/tap.adoc[]
           // The address of the docker registry.
           // icon:exclamation-triangle[] if `serverName != DEFAULT`.
           server = 'pass:[https://myregistry.com]'
+
+          // Expect login/lougout to be carried out by external means.
+          // Defaults to `false`.
+          // icon:dot-circle[]
+          externalLogin = false
 
           // The user that can publish images.
           // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
@@ -1051,6 +1078,12 @@ This generates two different images:
    `jreleaser-standalone-<version>-linux.zip` because of the matching platform.
  * `jreleaser/jreleaser-alpine:<tag>` with `alpine:latest` as base image. Packages
    `jreleaser-standalone-<version>-linux_musl.zip` because of the matching platform.
+
+== External Login
+
+In some cases it may recommended to perform login/lougout operations outside of JReleaser, for example using the
+https://github.com/docker/login-action[] when running inside GitHub actions. When this is the case set the value of
+`externalLogin` to `true` for the given registry or registries.
 
 == Skip Artifacts
 
