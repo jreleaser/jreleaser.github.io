@@ -31,6 +31,12 @@ signing:
   # icon:dot-circle[]
   armored: true
 
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  verify: false
+
   # How should GPG keys be handled.
   # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
   # Defaults to `MEMORY`.
@@ -158,6 +164,12 @@ TOML::
   # icon:dot-circle[]
   armored = true
 
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # icon:dot-circle[]
+  verify = false
+
   # How should GPG keys be handled.
   # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
   # Defaults to `MEMORY`.
@@ -284,6 +296,12 @@ JSON::
     // Defaults to `false`.
     // icon:dot-circle[]
     "armored": true,
+
+    // Verify signature files.
+    // If `false` then `publicKey` may be ommitted.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    "verify": false,
 
     // How should GPG keys be handled.
     // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
@@ -425,6 +443,14 @@ Maven::
       icon:dot-circle[]
     -->
     <armored>true</armored>
+
+    <!--
+      Verify signature files.
+      If `false` then `publicKey` may be ommitted.
+      Defaults to `true`.
+      icon:dot-circle[]
+    -->
+    <verify>false</verify>
 
     <!--
       How should GPG keys be handled.
@@ -595,6 +621,12 @@ jreleaser {
     // icon:dot-circle[]
     armored = true
 
+    // Verify signature files.
+    // If `false` then `publicKey` may be ommitted.
+    // Defaults to `true`.
+    // icon:dot-circle[]
+    verify = false
+
     // How should GPG keys be handled.
     // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
     // Defaults to `MEMORY`.
@@ -741,3 +773,10 @@ The public cosing key file will automatically be uploaded as a release asset.
 
 Distributions and Artifacts may define an extra property that may stop them from being signed. The name of this property
 must match `skipSigning` and be set to `true`. Setting this property on a distribution skips all of its artifacts.
+
+== Skip Signature Verification
+
+If the `verify` property is set to `false` then no signature verification will be performed, in which case you may ommit
+setting a value for `publicKey` as well.
+
+NOTE: `COSIGN` mode does require both `publicKeyFile` and `privateKeyFile` regardless of the value set in `verify`.
