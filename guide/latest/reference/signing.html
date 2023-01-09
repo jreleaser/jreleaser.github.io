@@ -729,7 +729,7 @@
     <a class="version" href="../../early-access/reference/signing.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/signing.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/reference/pages/signing.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -805,6 +805,12 @@ signing:
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   armored: true
+
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  verify: false
 
   # How should GPG keys be handled.
   # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
@@ -931,6 +937,12 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   armored = true
 
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  verify = false
+
   # How should GPG keys be handled.
   # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
   # Defaults to `MEMORY`.
@@ -1055,6 +1067,12 @@ signing:
     // Defaults to `false`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "armored": true,
+
+    // Verify signature files.
+    // If `false` then `publicKey` may be ommitted.
+    // Defaults to `true`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "verify": false,
 
     // How should GPG keys be handled.
     // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
@@ -1194,6 +1212,14 @@ signing:
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;armored&gt;true&lt;/armored&gt;
+
+    &lt;!--
+      Verify signature files.
+      If `false` then `publicKey` may be ommitted.
+      Defaults to `true`.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;verify&gt;false&lt;/verify&gt;
 
     &lt;!--
       How should GPG keys be handled.
@@ -1361,6 +1387,12 @@ signing:
     // Defaults to `false`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     armored = true
+
+    // Verify signature files.
+    // If `false` then `publicKey` may be ommitted.
+    // Defaults to `true`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    verify = false
 
     // How should GPG keys be handled.
     // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
@@ -1546,6 +1578,27 @@ will generate a key pair for you and store them in <code>$JRELEASER_USER_HOME</c
 <div class="paragraph">
 <p>Distributions and Artifacts may define an extra property that may stop them from being signed. The name of this property
 must match <code>skipSigning</code> and be set to <code>true</code>. Setting this property on a distribution skips all of its artifacts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_signature_verification"><a class="anchor" href="#_skip_signature_verification"></a>Skip Signature Verification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the <code>verify</code> property is set to <code>false</code> then no signature verification will be performed, in which case you may ommit
+setting a value for <code>publicKey</code> as well.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>COSIGN</code> mode does require both <code>publicKeyFile</code> and <code>privateKeyFile</code> regardless of the value set in <code>verify</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
