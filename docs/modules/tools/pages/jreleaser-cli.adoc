@@ -20,7 +20,7 @@ Commands:
   env                  Display environment variable names.
   init                 Create a jreleaser config file.
   config               Display current configuration.
-  template             Generate a packager/announcer template.
+  template             Generate or eval templates.
   download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
@@ -163,7 +163,7 @@ JReleaser must be configured using the YAML, TOML, or JSON DSLs shown at xref:re
 
 The following commands are supported:
 
-=== Env
+=== env
 
 [source]
 ----
@@ -268,12 +268,34 @@ If `--basedir` is undefined then the command assumes it's the same directory tha
 [source]
 ----
 $ jreleaser template -h
+Generate or eval templates.
+
+Usage: jreleaser template [-hV] [-D=<key=value>]... [COMMAND]
+
+Options:
+  -D=<key=value>    Sets a System property. Repeatable.
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
+
+Commands:
+  generate  Generate a packager/announcer template.
+  eval      Evaluate a template or templates.
+
+Documentation found at https://jreleaser.org
+----
+
+=== template generate
+
+[source]
+----
+$ jreleaser template generate -h
 Generate a packager/announcer template.
 
-Usage: jreleaser template [-ghioqVw] [-sn] [-b=<basedir>] [-od=<outputdir>]
-                          [-D=<key=value>]... ([-a=<announcer>] |
-                          [-st=<assembler-type> -s=<assembler-name>] |
-                          [-d=<distribution> -p=<packager> [-dt=<type>]])
+Usage: jreleaser template generate [-ghioqVw] [-sn] [-b=<basedir>]
+                                   [-od=<outputdir>] [-D=<key=value>]...
+                                   ([-a=<announcer>] | [-st=<assembler-type>
+                                   -s=<assembler-name>] | [-d=<distribution>
+                                   -p=<packager> [-dt=<type>]])
 
 Options:
   -b, --basedir=<basedir>   Base directory.
@@ -326,6 +348,70 @@ The value of `--distribution-type` must match any of the available
 xref:concepts:distributions/index.adoc[distribution types].
 
 The value of `--packager` must match any of the available xref:reference:packagers/index.adoc[].
+
+=== template eval
+
+[source]
+----
+$ jreleaser template eval
+Evaluate a template or templates.
+
+Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict]
+                               [-b=<basedir>] [-c=<configFile>]
+                               [-od=<outputdir>]
+                               --target-directory=<targetDirectory>
+                               [-D=<key=value>]... [-P=<key=value>]...
+                               [-rp=<platform>]... [-sp=<platform>]...
+                               [--announce | -a | --changelog | -d]
+                               (--input-file=<inputFile> |
+                               --input-directory=<inputDirectory>)
+
+Options:
+  -a, --assembly            Eval model in assembly configuration.
+      --announce            Eval model in announce configuration.
+  -b, --basedir=<basedir>   Base directory.
+  -c, --config-file=<configFile>
+                            The config file.
+      --changelog           Eval model in changelog configuration.
+  -d, --download            Eval model in download configuration.
+  -D=<key=value>            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+      --input-directory=<inputDirectory>
+                            A directory with input templates.
+      --input-file=<inputFile>
+                            An input template file.
+  -o, --overwrite           Overwrite existing files.
+      -od, --output-directory=<outputdir>
+                            Output directory.
+  -P, --set-property=<key=value>
+                            Sets the value of a property. Repeatable.
+  -q, --quiet               Log errors only.
+      -rp, --reject-platform=<platform>
+                            Activates paths not matching the given platform.
+                              Repeatable.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=<platform>
+                            Activates paths matching the given platform.
+                              Repeatable.
+      --strict              Enable strict mode.
+      --target-directory=<targetDirectory>
+                            Directory where evaluated template(s) will be
+                              placed.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org
+----
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
+found at the current directory.
+
+If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
 === download
 
