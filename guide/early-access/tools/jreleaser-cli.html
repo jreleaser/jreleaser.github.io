@@ -766,7 +766,7 @@ Commands:
   env                  Display environment variable names.
   init                 Create a jreleaser config file.
   config               Display current configuration.
-  template             Generate a packager/announcer template.
+  template             Generate or eval templates.
   download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
@@ -957,7 +957,7 @@ uncompress and copy to the desired location.</p>
 <p>The following commands are supported:</p>
 </div>
 <div class="sect2">
-<h3 id="_env"><a class="anchor" href="#_env"></a>Env</h3>
+<h3 id="_env"><a class="anchor" href="#_env"></a>env</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser env -h
@@ -1068,12 +1068,35 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template -h
+Generate or eval templates.
+
+Usage: jreleaser template [-hV] [-D=&lt;key=value&gt;]... [COMMAND]
+
+Options:
+  -D=&lt;key=value&gt;    Sets a System property. Repeatable.
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
+
+Commands:
+  generate  Generate a packager/announcer template.
+  eval      Evaluate a template or templates.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_template_generate"><a class="anchor" href="#_template_generate"></a>template generate</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template generate -h
 Generate a packager/announcer template.
 
-Usage: jreleaser template [-ghioqVw] [-sn] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... ([-a=&lt;announcer&gt;] |
-                          [-st=&lt;assembler-type&gt; -s=&lt;assembler-name&gt;] |
-                          [-d=&lt;distribution&gt; -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
+Usage: jreleaser template generate [-ghioqVw] [-sn] [-b=&lt;basedir&gt;]
+                                   [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
+                                   ([-a=&lt;announcer&gt;] | [-st=&lt;assembler-type&gt;
+                                   -s=&lt;assembler-name&gt;] | [-d=&lt;distribution&gt;
+                                   -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
 
 Options:
   -b, --basedir=&lt;basedir&gt;   Base directory.
@@ -1133,6 +1156,73 @@ the value of <code>--assembler-name</code> must match any of the available <a hr
 </div>
 <div class="paragraph">
 <p>The value of <code>--packager</code> must match any of the available <a href="../reference/packagers/index.html" class="xref page">Packagers</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_template_eval"><a class="anchor" href="#_template_eval"></a>template eval</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template eval
+Evaluate a template or templates.
+
+Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict]
+                               [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
+                               [-od=&lt;outputdir&gt;]
+                               --target-directory=&lt;targetDirectory&gt;
+                               [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                               [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                               [--announce | -a | --changelog | -d]
+                               (--input-file=&lt;inputFile&gt; |
+                               --input-directory=&lt;inputDirectory&gt;)
+
+Options:
+  -a, --assembly            Eval model in assembly configuration.
+      --announce            Eval model in announce configuration.
+  -b, --basedir=&lt;basedir&gt;   Base directory.
+  -c, --config-file=&lt;configFile&gt;
+                            The config file.
+      --changelog           Eval model in changelog configuration.
+  -d, --download            Eval model in download configuration.
+  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
+  -g, --debug               Set log level to debug.
+      -grs, --git-root-search
+                            Searches for the Git root.
+  -h, --help                Show this help message and exit.
+  -i, --info                Set log level to info.
+      --input-directory=&lt;inputDirectory&gt;
+                            A directory with input templates.
+      --input-file=&lt;inputFile&gt;
+                            An input template file.
+  -o, --overwrite           Overwrite existing files.
+      -od, --output-directory=&lt;outputdir&gt;
+                            Output directory.
+  -P, --set-property=&lt;key=value&gt;
+                            Sets the value of a property. Repeatable.
+  -q, --quiet               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;
+                            Activates paths not matching the given platform.
+                              Repeatable.
+      -scp, --select-current-platform
+                            Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;
+                            Activates paths matching the given platform.
+                              Repeatable.
+      --strict              Enable strict mode.
+      --target-directory=&lt;targetDirectory&gt;
+                            Directory where evaluated template(s) will be
+                              placed.
+  -V, --version             Print version information and exit.
+  -w, --warn                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|toml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 </div>
 <div class="sect2">
