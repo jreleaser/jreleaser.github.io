@@ -758,6 +758,11 @@
 </dd>
 </dl>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -812,7 +817,7 @@ upload:
       # Enables or disables the uploader.
       # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active: ALWAYS
 
       # Defines the connection timeout in seconds.
@@ -856,10 +861,8 @@ upload:
       host: gitlab.com
 
       # Token with write access to the repository.
-      # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      token: __DO_NOT_SET_HERE__
+      token: __USE_ENVIRONMENT_VARIABLE__
 
       # The package name to use.
       # If unspecified, will use the uploader's name.
@@ -887,7 +890,7 @@ upload:
   # Enables or disables the uploader.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Defines the connection timeout in seconds.
@@ -930,10 +933,8 @@ upload:
   host = "gitlab.com"
 
   # Token with write access to the repository.
-  # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  token = "__DO_NOT_SET_HERE__"
+  token = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The package name to use.
   # If unspecified, will use the uploader's name.
@@ -966,7 +967,7 @@ upload:
         // Enables or disables the uploader.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "active": "ALWAYS",
 
         // Defines the connection timeout in seconds.
@@ -1011,10 +1012,8 @@ upload:
         "host": "gitlab.com",
 
         // Token with write access to the repository.
-        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__",
+        "token": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The package name to use.
         // If unspecified, will use the uploader's name.
@@ -1057,7 +1056,7 @@ upload:
           Enables or disables the distribution.
           Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `NEVER`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1122,11 +1121,9 @@ upload:
 
         &lt;!--
            Token with write access to the repository.
-           If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-           environment variable must be defined.
            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+        &lt;token&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/token&gt;
 
         &lt;!--
            The package name to use.
@@ -1169,7 +1166,7 @@ upload:
         // Enables or disables the uploader.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active = 'ALWAYS'
 
         // Defines the connection timeout in seconds.
@@ -1212,10 +1209,8 @@ upload:
         host = 'gitlab.com'
 
         // Token with write access to the repository.
-        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        token = '__DO_NOT_SET_HERE__'
+        token = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The package name to use.
         // If unspecified, will use the uploader's name.
@@ -1242,61 +1237,98 @@ upload:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_host"><a class="anchor" href="#_host"></a>Host</h2>
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may set the host in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the GitLab server will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.</p>
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.gitlab.${name}.active<br>
+  jreleaser.upload.gitlab.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_GITLAB_${name}_ACTIVE<br>
+  JRELEASER_UPLOAD_GITLAB_ACTIVE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_GITLAB_NAME_HOST</code>. If your instance is named <code>production</code>,
-you can store the host in the environment variable <code>JRELEASER_GITLAB_PRODUCTION_HOST</code>. The name will be
-transformed to uppercase.</p>
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
 </div>
-<div class="paragraph">
-<p>If a configured host is found in the configuration file, then the environment variable is not used at all.</p>
-</div>
-<div class="paragraph">
-<p>Alternatives to <code>JRELEASER_GITLAB_NAME_HOST</code> are (in order):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITLAB_NAME_HOST</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_HOST</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_token"><a class="anchor" href="#_token"></a>Token</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The password will be stored in an environment variable. The configured name of the GitLab server will
-be used. This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_GITLAB_NAME_TOKEN</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_GITLAB_PRODUCTION_TOKEN</code>. The name will be
-transformed to uppercase.</p>
-</div>
-<div class="paragraph">
-<p>Alternatives to <code>JRELEASER_GITLAB_NAME_TOKEN</code> are (in order):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITLAB_NAME_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_TOKEN</code></p>
-</li>
-</ul>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
