@@ -1,10 +1,15 @@
 = Homebrew
 :tool_id:       brew
 :tool_name:     Homebrew
-:tool_env_var:  HOMEBREW
 :tool_tap:      tap
 :tool_tap_name: homebrew-tap
 :tool_manifest: formula
+:packager_sys_key: brew
+:packager_env_key: BREW
+:tap_sys_key:      tap
+:tap_env_key:      TAP
+:tap_basename_sys: homebrew
+:tap_basename_env: HOMEBREW
 
 The `brew` section specifies how the formula should be created. You can check the
 link:https://docs.brew.sh/How-to-Create-and-Maintain-a-Tap.md[Homebrew documentation] and the
@@ -37,6 +42,8 @@ The following artifact extensions are supported by this packager for creating ca
 |===
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -614,6 +621,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ====
 
 IMPORTANT: Formula names must be unique!
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 

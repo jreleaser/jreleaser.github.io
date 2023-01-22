@@ -1,11 +1,16 @@
 = Snap
 :tool_id:       snap
 :tool_name:     Snap
-:tool_env_var:  SNAP
 :tool_tap:      snap
 :tool_tap_name: app-snap
 :tool_manifest: manifest
 :tool_package:  ${distribution.name}
+:packager_sys_key: snap
+:packager_env_key: SNAP
+:tap_sys_key:      snap
+:tap_env_key:      SNAP
+:tap_basename_sys: snap
+:tap_basename_env: SNAP
 
 link:http://snapcraft.io[Snaps] are a new packaging format, that will let you publish your project directly to the
 Ubuntu store. From there it will be installable in all the link:https://snapcraft.io/docs/core/install[supported Linux distros],
@@ -44,6 +49,8 @@ WARNING: Publication of snapshots is *not* allowed.
 
 IMPORTANT: Building local snaps requires `snapcraft` to be pre-installed. JReleaser will not install it nor its
 dependencies. If you rather package and push on CI then set `remoteBuild` to `true`.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -669,6 +676,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 

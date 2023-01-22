@@ -1,9 +1,13 @@
 = Discourse
-:announcer_id:   discourse
-:announcer_name: Discourse
+:announcer_id:      discourse
+:announcer_name:    Discourse
+:announcer_sys_key: discourse
+:announcer_env_key: DISCOURSE
 
 Posts a message to a link:https://www.discourse.org/[Discourse] server. You must procure a username and apiKey to use
 this announcer.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -31,7 +35,7 @@ include::partial$announce/yaml/common-head.adoc[]
     # If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    apiKey: __DO_NOT_SET_HERE__
+    apiKey: __USE_ENVIRONMENT_VARIABLE__
 
     # The categoryName where the message will be sent to
     # If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
@@ -78,7 +82,7 @@ include::partial$announce/toml/common-head.adoc[]
   # If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  apiKey = "__DO_NOT_SET_HERE__"
+  apiKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The categoryName where the message will be sent to
   # If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
@@ -125,7 +129,7 @@ include::partial$announce/json/common-head.adoc[]
       // If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "apiKey": "__DO_NOT_SET_HERE__",
+      "apiKey": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The categoryName where the message will be sent to
       // If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
@@ -179,7 +183,7 @@ include::partial$announce/maven/common-head.adoc[]
         environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <apiKey>__DO_NOT_SET_HERE__</apiKey>
+      <apiKey>__USE_ENVIRONMENT_VARIABLE__</apiKey>
 
       <!--
         The categoryName where the message will be sent to
@@ -235,7 +239,7 @@ include::partial$announce/gradle/common-head.adoc[]
       // If left unspecified, the `JRELEASER_DISCOURSE_API_KEY`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      apiKey = '__DO_NOT_SET_HERE__'
+      apiKey = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The categoryName where the message will be sent to
       // If left unspecified, the `JRELEASER_DISCOURSE_CATEGORY_NAME`
@@ -264,6 +268,29 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| username
+| jreleaser.announce.{announcer_sys_key}.username +
+  jreleaser.{announcer_sys_key}.username
+| JRELEASER_ANNOUNCE_{announcer_env_key}_USERNAME +
+  JRELEASER_{announcer_env_key}_USERNAME
+| apiKey
+| jreleaser.announce.{announcer_sys_key}.api.key +
+  jreleaser.{announcer_sys_key}.api.key
+| JRELEASER_ANNOUNCE_{announcer_env_key}_API_KEY +
+  JRELEASER_{announcer_env_key}_API_KEY
+| category
+| jreleaser.announce.{announcer_sys_key}.category +
+  jreleaser.{announcer_sys_key}.category
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CATEGORY +
+  JRELEASER_{announcer_env_key}_CATEGORY
+|===
 
 == Templates
 

@@ -2,6 +2,12 @@
 :assembler_id:   jpackage
 :java-assembler: true
 :platform:       true
+:assembler_sys_key: jpackge
+:assembler_env_key: JPACKAGE
+:group_sys_key: assemble
+:group_env_key: ASSEMBLE
+:actor_sys_key: {assembler_sys_key}
+:actor_env_key: {assembler_env_key}
 
 Creates platform installers with the link:https://docs.oracle.com/en/java/javase/17/jpackage/packaging-overview.html[jpackage]
 tool.
@@ -10,6 +16,8 @@ IMPORTANT: You need JDK 16 or greater to use `jpackage`. You may configure the x
 xref:tools:jdks-gradle.adoc[] to downloads JDKs.
 
 WARNING: You may either set the `jlink` property or the `runtimeImages` property but not both.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -1702,6 +1710,16 @@ include::partial$assemble/gradle/common-footer.adoc[]
 --
 ====
 
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
 == JDK
 
 The path for `jdk` must exist in the file system. You may use the
@@ -1748,7 +1766,7 @@ project:
 assemble:
   jlink:
     app-jlink:
-      active: always
+      active: ALWAYS
       exported: false
       executable: app
       jdeps:
@@ -1759,7 +1777,7 @@ assemble:
         path: 'target/app-{{projectVersion}}.jar'
   jpackage:
     app:
-      active: always
+      active: ALWAYS
       exported: true
       jlink: app-jlink
       linux:
@@ -1812,7 +1830,7 @@ project:
 assemble:
   jpackage:
     app:
-      active: always
+      active: ALWAYS
       exported: true
       runtimeImages:
         - path: path/to/runtime-image-osx

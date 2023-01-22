@@ -1,9 +1,13 @@
 = Telegram
-:announcer_id:   telegram
-:announcer_name: Telegram
+:announcer_id:      telegram
+:announcer_name:    Telegram
+:announcer_sys_key: telegram
+:announcer_env_key: TELEGRAM
 
 Posts a message to a link:https://mattermost.com/[Telegram] chat. You must create a link:https://core.telegram.org/bots[Bot]
 for this announcer to work. You must also obtain the `chatId` for the particular chat/channel where the message will be sent.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -18,16 +22,12 @@ YAML::
 include::partial$announce/yaml/common-head.adoc[]
 
     # The token associated with a Telegram bot.
-    # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    token: __DO_NOT_SET_HERE__
+    token: __USE_ENVIRONMENT_VARIABLE__
 
     # The identifier of the chat where announcemnts will be posted.
-    # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    chatId: __DO_NOT_SET_HERE__
+    chatId: __USE_ENVIRONMENT_VARIABLE__
 
     # The announcement message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -50,16 +50,12 @@ TOML::
 include::partial$announce/toml/common-head.adoc[]
 
   # The token associated with a Telegram bot.
-  # If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
+  token = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The identifier of the chat where announcemnts will be posted.
-  # If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  chatId = "__DO_NOT_SET_HERE__"
+  chatId = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -82,16 +78,12 @@ JSON::
 include::partial$announce/json/common-head.adoc[]
 
       // The token associated with a Telegram bot.
-      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "token": "__DO_NOT_SET_HERE__",
+      "token": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The identifier of the chat where announcemnts will be posted.
-      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "chatId": "__DO_NOT_SET_HERE__",
+      "chatId": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -116,18 +108,15 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The token associated with a Telegram bot.
-        If left unspecified, the `JRELEASER_TELEGRAM_TOKEN` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <token>__DO_NOT_SET_HERE__</token>
+      <token>__USE_ENVIRONMENT_VARIABLE__</token>
 
       <!--
         The identifier of the chat where announcemnts will be posted.
-        If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
-        environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <chatId>__DO_NOT_SET_HERE__</chatId>
+      <chatId>__USE_ENVIRONMENT_VARIABLE__</chatId>
 
       <!--
         The announcement message.
@@ -155,16 +144,12 @@ Gradle::
 include::partial$announce/gradle/common-head.adoc[]
 
       // The token associated with a Telegram bot.
-      // If left unspecified, the `JRELEASER_TELEGRAM_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      token = '__DO_NOT_SET_HERE__'
+      token = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The identifier of the chat where announcemnts will be posted.
-      // If left unspecified, the `JRELEASER_TELEGRAM_CHAT_ID`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      chatId = '__DO_NOT_SET_HERE__'
+      chatId = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -182,6 +167,24 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| token
+| jreleaser.announce.{announcer_sys_key}.token +
+  jreleaser.{announcer_sys_key}.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_TOKEN +
+  JRELEASER_{announcer_env_key}_TOKEN
+| chatId
+| jreleaser.announce.{announcer_sys_key}.chat.id +
+  jreleaser.{announcer_sys_key}.chat.id
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CHAT_ID +
+  JRELEASER_{announcer_env_key}_CHAT_ID
+|===
 
 == Templates
 

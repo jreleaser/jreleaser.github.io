@@ -1,10 +1,14 @@
 = Webhooks
+:announcer_sys_key: webhooks
+:announcer_env_key: WEBHOOKS
 :default-message: 🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}
 
 Posts a message to a service that supports incoming webhooks.
 
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the corresponding environment variable over explicitly setting a value in the configuration DSL.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -27,7 +31,7 @@ announce:
       # Enable or disable this announcer.
       # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
-      # icon:dot-circle[]
+      # icon:dot-circle[] icon:eye-slash[]
       active: ALWAYS
 
       # Defines the connection timeout in seconds.
@@ -46,11 +50,9 @@ announce:
         # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
         foo: bar
 
-      # The webhook associated with a specific Gitter room.
-      # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
-      # environment variable must be defined.
+      # The incoming webhook URL.
       # icon:exclamation-triangle[] icon:eye-slash[]
-      webhook: __DO_NOT_SET_HERE__
+      webhook: __USE_ENVIRONMENT_VARIABLE__
 
       # The announcement message.
       # Review the available xref:reference:name-templates.adoc[].
@@ -88,7 +90,7 @@ TOML::
   # Enable or disable this announcer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # icon:dot-circle[]
+  # icon:dot-circle[] icon:eye-slash[]
   active = "ALWAYS"
 
   # Defines the connection timeout in seconds.
@@ -106,11 +108,9 @@ TOML::
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `webhook`, i.e, `webhookFoo`.
 
-  # The webhook associated with a specific Gitter room.
-  # If left unspecified, the `JRELEASER_${name}_WEBHOOK`
-  # environment variable must be defined.
+  # The incoming webhook URL.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  webhook = "__DO_NOT_SET_HERE__"
+  webhook = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -153,7 +153,7 @@ JSON::
         // Enable or disable this announcer.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // icon:dot-circle[]
+        // icon:dot-circle[] icon:eye-slash[]
         "active": "ALWAYS",
 
         // Defines the connection timeout in seconds.
@@ -173,11 +173,9 @@ JSON::
           "foo": "bar"
         },
 
-        // The webhook associated with a specific Gitter room.
-        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
-        // environment variable must be defined.
+        // The incoming webhook URL.
         // icon:exclamation-triangle[] icon:eye-slash[]
-        "webhook": "__DO_NOT_SET_HERE__",
+        "webhook": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The announcement message.
         // Review the available xref:reference:name-templates.adoc[].
@@ -232,7 +230,7 @@ Maven::
           Enable or disable this announcer.
           Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `NEVER`.
-          icon:dot-circle[]
+          icon:dot-circle[] icon:eye-slash[]
         -->
         <active>ALWAYS</active>
 
@@ -262,11 +260,10 @@ Maven::
         </extraProperties>
 
         <!--
-          The webhook associated with a specific Gitter room.
-          If left unspecified, the `JRELEASER_${name}_WEBHOOK` environment variable must be defined.
+          The incoming webhook URL.
           icon:exclamation-triangle[] icon:eye-slash[]
         -->
-        <webhook>__DO_NOT_SET_HERE__</webhook>
+        <webhook>__USE_ENVIRONMENT_VARIABLE__</webhook>
 
         <!--
           The announcement message.
@@ -321,7 +318,7 @@ jreleaser {
         // Enable or disable this announcer.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // icon:dot-circle[]
+        // icon:dot-circle[] icon:eye-slash[]
         active = 'ALWAYS'
 
         // Defines the connection timeout in seconds.
@@ -339,11 +336,9 @@ jreleaser {
         // icon:dot-circle[] icon:file-alt[]
         extraProperties.put('foo', 'bar')
 
-        // The webhook associated with a specific Gitter room.
-        // If left unspecified, the `JRELEASER_${name}_WEBHOOK`
-        // environment variable must be defined.
+        // The incoming webhook URL.
         // icon:exclamation-triangle[] icon:eye-slash[]
-        webhook = '__DO_NOT_SET_HERE__'
+        webhook = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The announcement message.
         // Review the available xref:reference:name-templates.adoc[].
@@ -375,6 +370,25 @@ jreleaser {
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.announce.{announcer_sys_key}.${name}.active +
+  jreleaser.announce.{announcer_sys_key}.active
+| JRELEASER_ANNOUNCE_{announcer_env_key}_${name}_ACTIVE +
+  JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| webhook
+| jreleaser.announce.webhooks.{announcer_sys_key}.${name}.webhook +
+  jreleaser.{announcer_sys_key}.webhook
+| JRELEASER_ANNOUNCE_WEBHOOKS_{announcer_env_key}_${name}_WEBHOOK +
+  JRELEASER_{announcer_env_key}_WEBHOOK
+|===
+
+include::partial$envvars-footer.adoc[]
 
 == Templates
 

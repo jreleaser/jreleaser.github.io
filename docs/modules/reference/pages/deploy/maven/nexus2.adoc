@@ -1,16 +1,19 @@
 = Nexus2
 :deployer_id:   nexus2
 :deployer_name: Nexus2
-:prefix:        NEXUS2
 :deployer_url:  pass:[https://s01.oss.sonatype.org/service/local]
 :deployer_snapshot_url: pass:[https://s01.oss.sonatype.org/content/repositories/snapshot]
 :default_auth:  BASIC
+:deployer_sys_key: nexus2
+:deployer_env_key: NEXUS2
 
 Deploys staged artifacts to link:https://help.sonatype.com/repomanager2[Sonatype {deployer_name} Repository Manager] instance.
 
 NOTE: You may use this deployer to publish releases to link:https://search.maven.org/[Maven Central].
 
 IMPORTANT: This feature *does not* support deploying artifacts other than JARs and POMs to a Maven compatible repository.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -25,8 +28,6 @@ YAML::
 include::partial$deploy/maven/yaml/common-head.adoc[]
 
         # URL where the {deployer_name} snapshots are enabled.
-        # If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
-        # environment variable must be defined.
         # icon:exclamation-triangle[] icon:eye-slash[]
         snapshotUrl: {deployer_snapshot_url}
 
@@ -60,8 +61,6 @@ TOML::
 include::partial$deploy/maven/toml/common-head.adoc[]
 
  # URL where the {deployer_name} snapshots are enabled.
- # If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
- # environment variable must be defined.
  # icon:exclamation-triangle[] icon:eye-slash[]
  snapshotUrl = "{deployer_snapshot_url}"
 
@@ -95,8 +94,6 @@ JSON::
 include::partial$deploy/maven/json/common-head.adoc[]
 
           // URL where the {deployer_name} snapshots are enabled.
-          // If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
-          // environment variable must be defined.
           // icon:exclamation-triangle[] icon:eye-slash[]
           "snapshotUrl": "{deployer_snapshot_url}",
 
@@ -132,8 +129,6 @@ include::partial$deploy/maven/maven/common-head.adoc[]
 
           <!--
             URL where the {deployer_name} snapshots are enabled.
-            If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
-            environment variable must be defined.
             icon:exclamation-triangle[] icon:eye-slash[]
           -->
           <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
@@ -177,8 +172,6 @@ Gradle::
 include::partial$deploy/maven/gradle/common-head.adoc[]
 
           // URL where the {deployer_name} snapshots are enabled.
-          // If left unspecified, the `JRELEASER_{prefix}_${name}_SNAPSHOT_URL`
-          // environment variable must be defined.
           // icon:exclamation-triangle[] icon:eye-slash[]
           snapshotUrl = '{deployer_snapshot_url}'
 
@@ -206,48 +199,24 @@ include::partial$deploy/maven/gradle/common-footer.adoc[]
 --
 ====
 
-== Url
+include::partial$envvars-header.adoc[]
 
-You may set the url in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the {deployer_name} instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$deploy/maven/envvars.adoc[]
+| snapshotUrl
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.snapshot.url +
+  jreleaser.deploy.maven.{deployer_sys_key}.snapshot.url +
+  jreleaser.{deployer_sys_key}.${name}.snapshot.url +
+  jreleaser.{deployer_sys_key}.snapshot.url
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_SNAPSHOT_URL +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_SNAPSHOT_URL +
+  JRELEASER_{deployer_env_key}_${name}_SNAPSHOT_URL +
+  JRELEASER_{deployer_env_key}_SNAPSHOT_URL
+|===
 
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_URL`. If your instance is named `production`,
-you can store the host in the environment variable `JRELEASER_{prefix}_PRODUCTION_URL`. The name will be
-transformed to uppercase.
-
-== SnapshotUrl
-
-You may set the snapshot url in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the {deployer_name} instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_SNAPSHOT_URL`. If your instance is named `foo`,
-you can store the host in the environment variable `JRELEASER_{prefix}_FOO_SNAPSHOT_URL`. The name will be
-transformed to uppercase.
-
-== Username
-
-The configured username needs to be authenticated against the {deployer_name} instance.
-
-You may set the username set in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the {deployer_name} instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_USERNAME`. If your instance is named `production`,
-you can store the username in the environment variable `JRELEASER_{prefix}_PRODUCTION_USERNAME`. The name will be
-transformed to uppercase.
-
-If a configured username is found in the configuration file, then the environment variable is not used at all.
-
-== Password
-
-The password will be stored in an environment variable. The configured name of the {deployer_name} instance will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_PASSWORD`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_{prefix}_PRODUCTION_PASSWORD`. The name will be
-transformed to uppercase.
+include::partial$envvars-footer.adoc[]
 
 == Example
 
@@ -263,7 +232,7 @@ deploy:
   maven:
     {deployer_id}:
       app:
-        active: always
+        active: ALWAYS
         url: {deployer_url}
         closeRepository: true
         releaseRepository: true

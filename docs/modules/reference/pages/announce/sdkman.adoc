@@ -1,13 +1,17 @@
 = Sdkman
-:tool_id:        sdkman
-:announcer_id:   sdkman
-:announcer_name: Sdkman
+:tool_id:           sdkman
+:announcer_id:      sdkman
+:announcer_name:    Sdkman
+:announcer_sys_key: sdkman
+:announcer_env_key: SDKMAN
 
 Publishes a release to link:https://sdkman.io[Sdkman]. Please follow the instructions at
 link:https://sdkman.io/vendors[] to register your project as a candidate and obtain publishing credentials.
 
 NOTE: If this announcer is enabled but no xref:reference:packagers/sdkman.adoc[] packager is active in a distribution
 then the whole project will be released and announced.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -42,16 +46,12 @@ include::partial$announce/yaml/common-head.adoc[]
     downloadUrl: pass:[https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}]
 
     # The consumer key for publishing to Sdkman.
-    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    consumerKey: __DO_NOT_SET_HERE__
+    consumerKey: __USE_ENVIRONMENT_VARIABLE__
 
     # The consumer token for publishing to Sdkman.
-    # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    consumerToken: __DO_NOT_SET_HERE__
+    consumerToken: __USE_ENVIRONMENT_VARIABLE__
 ----
 --
 TOML::
@@ -83,16 +83,12 @@ include::partial$announce/toml/common-head.adoc[]
   command = "MAJOR"
 
   # The consumer key for publishing to Sdkman.
-  # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  consumerKey = "__DO_NOT_SET_HERE__"
+  consumerKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The consumer token for publishing to Sdkman.
-  # If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  consumerToken = "__DO_NOT_SET_HERE__"
+  consumerToken = "__USE_ENVIRONMENT_VARIABLE__"
 ----
 --
 JSON::
@@ -124,16 +120,12 @@ include::partial$announce/json/common-head.adoc[]
       "command": "MAJOR",
 
       // The consumer key for publishing to Sdkman.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "consumerKey": "__DO_NOT_SET_HERE__",
+      "consumerKey": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The consumer token for publishing to Sdkman.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "consumerToken": "__DO_NOT_SET_HERE__"
+      "consumerToken": "__USE_ENVIRONMENT_VARIABLE__"
 include::partial$announce/json/common-footer.adoc[]
 ----
 --
@@ -175,19 +167,15 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The consumer key for publishing to Sdkman.
-        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-        environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <consumerKey>__DO_NOT_SET_HERE__</consumerKey>
+      <consumerKey>__USE_ENVIRONMENT_VARIABLE__</consumerKey>
 
       <!--
         The consumer token for publishing to Sdkman.
-        If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-        environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <consumerToken>__DO_NOT_SET_HERE__</consumerToken>
+      <consumerToken>__USE_ENVIRONMENT_VARIABLE__</consumerToken>
 include::partial$announce/maven/common-footer.adoc[]
 ----
 --
@@ -220,20 +208,34 @@ include::partial$announce/gradle/common-head.adoc[]
       command = 'MAJOR'
 
       // The consumer key for publishing to Sdkman.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      consumerKey = '__DO_NOT_SET_HERE__'
+      consumerKey = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The consumer token for publishing to Sdkman.
-      // If left unspecified, the `JRELEASER_SDKMAN_CONSUMER_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      consumerToken = '__DO_NOT_SET_HERE__'
+      consumerToken = '__USE_ENVIRONMENT_VARIABLE__'
 include::partial$announce/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property      | System Property                               | Environment Variable
+| active        | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| consumerKey
+| jreleaser.announce.{announcer_sys_key}.consumer.key +
+  jreleaser.{announcer_sys_key}.consumer.key
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CONSUMER_KEY +
+  JRELEASER_{announcer_env_key}_CONSUMER_KEY
+| consumerToken
+| jreleaser.announce.{announcer_sys_key}.consumer.token +
+  jreleaser.{announcer_sys_key}.consumer.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CONSUMER_TOKEN +
+  JRELEASER_{announcer_env_key}_CONSUMER_TOKEN
+|===
 
 == Requirements
 
@@ -254,4 +256,3 @@ Supported platform values are:
 * `linux`.
 
 include::partial$packagers/downloadUrl.adoc[]
-

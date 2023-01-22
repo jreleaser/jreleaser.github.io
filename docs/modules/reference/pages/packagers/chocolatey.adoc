@@ -1,11 +1,16 @@
 = Chocolatey
 :tool_id:       chocolatey
 :tool_name:     Chocolatey
-:tool_env_var:  CHOCOLATEY
 :tool_tap:      bucket
 :tool_tap_name: chocolatey-bucket
 :tool_manifest: manifest
 :tool_package:  ${distribution.name}
+:packager_sys_key: chocolatey
+:packager_env_key: CHOCOLATEY
+:tap_sys_key:      bucket
+:tap_env_key:      BUCKET
+:tap_basename_sys: chocolatey
+:tap_basename_env: CHOCOLATEY
 
 Publishes packages to link:https://chocolatey.org[].
 
@@ -33,6 +38,8 @@ Local publication of packages requires running on Windows, have `powershell` and
 If you rather package and push on CI then set `remoteBuild` to `true`.
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -65,10 +72,8 @@ include::partial$packagers/yaml/package-name.adoc[]
     username: duke
 
     # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    apiKey: __DO_NOT_SET_HERE__
+    apiKey: __USE_ENVIRONMENT_VARIABLE__
 
     # The source to push the package to.
     # If left unspecified, will use `pass:[https://push.chocolatey.org/]`.
@@ -118,10 +123,8 @@ include::partial$packagers/toml/package-name.adoc[]
   username = "duke"
 
   # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  apiKey = "__DO_NOT_SET_HERE__"
+  apiKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The source to push the package to.
   # If left unspecified, will use `pass:[https://push.chocolatey.org/]`.
@@ -171,10 +174,8 @@ include::partial$packagers/json/package-name.adoc[]
       "username": "duke",
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "apiKey": "__DO_NOT_SET_HERE__",
+      "apiKey": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The source to push the package to.
       // If left unspecified, will use `pass:[https://push.chocolatey.org/]`.
@@ -230,11 +231,9 @@ include::partial$packagers/maven/package-name.adoc[]
 
       <!--
         The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
-        environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <apiKey>__DO_NOT_SET_HERE__</apiKey>
+      <apiKey>__USE_ENVIRONMENT_VARIABLE__</apiKey>
 
       <!--
         The source to push the package to.
@@ -293,10 +292,8 @@ include::partial$packagers/gradle/package-name.adoc[]
       username = 'duke'
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_CHOCOLATEY_API_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      apiKey = '__DO_NOT_SET_HERE__'
+      apiKey = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The source to push the package to.
       // If left unspecified, will use `pass:[https://push.chocolatey.org/]`.
@@ -321,6 +318,34 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+| apiKey
+| jreleaser.distributions.${name}.{packager_sys_key}.api.key +
+  jreleaser.chocolatey.api.key
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_API_KEY +
+  JRELEASER_CHOCOLATEY_API_KEY
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 

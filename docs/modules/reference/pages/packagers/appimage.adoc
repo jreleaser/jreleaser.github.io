@@ -1,11 +1,16 @@
 = AppImage
 :tool_id:       appImage
 :tool_name:     appImage
-:tool_env_var:  APPIMAGE
 :tool_tap:      repository
 :tool_tap_name: duke-appimage
 :tool_manifest: appdata
 :tool_package:  ${distribution.name}
+:packager_sys_key: appimage
+:packager_env_key: APPIMAGE
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: appimage
+:tap_basename_env: APPIMAGE
 
 link:https://docs.appimage.org/packaging-guide/overview.html[AppImage] provides a way for upstream developers to provide 
 “native” binaries for Linux users just the same way they could do for other operating systems. 
@@ -37,6 +42,8 @@ The following artifact extensions are supported by this packager:
 |===
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -605,6 +612,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 

@@ -3,6 +3,12 @@
 :archive!:
 :java-assembler: true
 :platform:       true
+:assembler_sys_key: jlink
+:assembler_env_key: JLINK
+:group_sys_key: assemble
+:group_env_key: ASSEMBLE
+:actor_sys_key: {assembler_sys_key}
+:actor_env_key: {assembler_env_key}
 
 Creates a Java Runtime image using link:https://docs.oracle.com/en/java/javase/11/tools/jlink.html[{assembler_id}].
 
@@ -11,6 +17,8 @@ same matching major version.
 
 IMPORTANT: You have to install additional JDKs to enable cross-platform images. JReleaser will *not* install these JDKs
 for you. You may configure the xref:tools:jdks-maven.adoc[] or the xref:tools:jdks-gradle.adoc[] to downloads JDKs.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -641,7 +649,7 @@ here's how the format may be changed for archives that target Linux platforms:
 assemble:
   jlink:
     app:
-      active: always
+      active: ALWAYS
       targetJdks:
         - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
           platform: 'osx-x86_64'
@@ -659,6 +667,16 @@ assemble:
 
 Supported values for the `archiveFormat` property are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TBZ2`, `TGZ`, `TXZ`], with `ZIP` being the
 default if left unspecified.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 == JDKs
 

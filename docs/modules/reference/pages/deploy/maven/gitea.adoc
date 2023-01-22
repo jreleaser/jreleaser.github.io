@@ -1,9 +1,10 @@
 = Gitea
 :deployer_id:   gitea
 :deployer_name: Gitea
-:prefix:        GITEA
 :deployer_url:  pass:[https://codeberg.org/api/packages/{{owner}}/maven]
 :default_auth:  BEARER
+:deployer_sys_key: gitea
+:deployer_env_key: GITEA
 
 Deploys staged artifacts to a Gitea instance via its
 link:https://docs.gitea.io/en-us/packages/maven/[Maven Packages] option.
@@ -12,6 +13,8 @@ IMPORTANT: This feature *does not* support deploying artifacts other than JARs a
 If you need to upload any other binaries then check the xref:reference:upload/gitea.adoc[{deployer_name} Uploader].
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -68,50 +71,15 @@ include::partial$deploy/maven/gradle/common-footer.adoc[]
 --
 ====
 
-== Url
+include::partial$envvars-header.adoc[]
 
-You may set the url in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the {deployer_name} instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$deploy/maven/envvars.adoc[]
+|===
 
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_URL`. If your instance is named `production`,
-you can store the host in the environment variable `JRELEASER_{prefix}_PRODUCTION_URL`. The name will be
-transformed to uppercase.
-
-== Username
-
-The configured username needs to be authenticated against the {deployer_name} instance.
-
-You may set the username set in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the {deployer_name} instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_USERNAME`. If your instance is named `production`,
-you can store the username in the environment variable `JRELEASER_{prefix}_PRODUCTION_USERNAME`. The name will be
-transformed to uppercase.
-
-If a configured username is found in the configuration file, then the environment variable is not used at all.
-
-Alternatives to `JRELEASER_{prefix}_NAME_USERNAME` are (in order):
-
-* `JRELEASER_{prefix}_NAME_USERNAME`
-* `JRELEASER_{prefix}_USERNAME`
-
-== Password
-
-The password will be stored in an environment variable. The configured name of the Gitea server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_{prefix}_NAME_PASSWORD`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_{prefix}_PRODUCTION_PASSWORD`. The name will be
-transformed to uppercase.
-
-Alternatives to `JRELEASER_{prefix}_NAME_PASSWORD` are (in order):
-
-* `JRELEASER_{prefix}_NAME_PASSWORD`
-* `JRELEASER_{prefix}_NAME_TOKEN`
-* `JRELEASER_{prefix}_PASSWORD`
-* `JRELEASER_{prefix}_TOKEN`
+include::partial$envvars-footer.adoc[]
 
 == Example
 
@@ -127,7 +95,7 @@ deploy:
   maven:
     {deployer_id}:
       app:
-        active: always
+        active: ALWAYS
         url: {deployer_url}
         stagingRepositories:
           - target/staging-deploy

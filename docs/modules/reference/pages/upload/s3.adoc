@@ -1,12 +1,20 @@
 = AWS S3
 :uploader_id:   s3
 :uploader_name: AWS S3
+:uploader_sys_key: s3
+:uploader_env_key: S3
+:group_sys_key: upload
+:group_env_key: UPLOAD
+:actor_sys_key: {uploader_sys_key}
+:actor_env_key: {uploader_env_key}
 
 Uploads artifacts, files, and signatures to an {uploader_name} bucket.
 
 .Prerequisites:
 
  * An AWS account with S3 access.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -21,51 +29,35 @@ YAML::
 include::partial$upload/yaml/common-head.adoc[]
 
       # The region where the S3 bucket is located.
-      # If left unspecified, the `JRELEASER_S3_${name}_REGION`
-      # environment variable must be defined.
       # icon:exclamation-triangle[] icon:eye-slash[]
       region: us-east-2
 
       # The name of the bucket.
-      # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-      # environment variable must be defined.
       # icon:exclamation-triangle[] icon:eye-slash[]
       bucket: releases
 
       # The artifact path within the bucket.
-      # If left unspecified, the `JRELEASER_S3_${name}_PATH`
-      # environment variable may be defined.
       # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
       path: '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       # Custom download URL.
-      # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-      # environment variable may be defined.
       # Required if a custom endpoint is defined.
       # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
       downloadUrl: 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]'
 
       # The accessKeyId required for authorization.
-      # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-      # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
-      accessKeyId: __DO_NOT_SET_HERE__
+      accessKeyId: __USE_ENVIRONMENT_VARIABLE__
 
       # The secretKey required for authorization.
-      # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-      # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
-      secretKey: __DO_NOT_SET_HERE__
+      secretKey: __USE_ENVIRONMENT_VARIABLE__
 
       # The AWS sessionToken when you use temporal credentials.
-      # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-      # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
-      sessionToken: __DO_NOT_SET_HERE__
+      sessionToken: __USE_ENVIRONMENT_VARIABLE__
       
       # The endpoint to use for S3 service in case some other S3 compatible service is used.
-      # If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-      # environment variable may be defined.
       # icon:dot-circle[] icon:eye-slash[]
       endpoint: 's3.{{region}}.example.com'
       
@@ -85,51 +77,35 @@ TOML::
 include::partial$upload/toml/common-head.adoc[]
 
   # The region where the S3 bucket is located.
-  # If left unspecified, the `JRELEASER_S3_${name}_REGION`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   region = "us-east-2"
 
   # The name of the bucket.
-  # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
   bucket = "releases"
 
   # The artifact path within the bucket.
-  # If left unspecified, the `JRELEASER_S3_${name}_PATH`
-  # environment variable may be defined.
   # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
   path = "{{projectName}}/{{tagName}}/{{artifactFile}}"
 
   # Custom download URL.
-  # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-  # environment variable may be defined.
   # Required if a custom endpoint is defined.
   # icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
   downloadUrl = "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]"
 
   # The accessKeyId required for authorization.
-  # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-  # environment variable must be defined.
   # icon:dot-circle[] icon:eye-slash[]
-  accessKeyId = "__DO_NOT_SET_HERE__"
+  accessKeyId = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The secretKey required for authorization..
-  # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-  # environment variable must be defined.
+  # The secretKey required for authorization.
   # icon:dot-circle[] icon:eye-slash[]
-  secretKey = "__DO_NOT_SET_HERE__"
+  secretKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The AWS sessionToken when you use temporal credentials.
-  # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-  # environment variable must be defined.
   # icon:dot-circle[] icon:eye-slash[]
-  sessionToken = "__DO_NOT_SET_HERE__"
+  sessionToken = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The endpoint to use for S3 service in case some other S3 compatible service is used.
-  # If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-  # environment variable may be defined.
   # icon:dot-circle[] icon:eye-slash[]
   endpoint = "s3.{{region}}.example.com"
 
@@ -148,51 +124,35 @@ JSON::
 include::partial$upload/json/common-head.adoc[]
 
         // The region where the S3 bucket is located.
-        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
-        // environment variable must be defined.
         // icon:exclamation-triangle[] icon:eye-slash[]
         "region": "us-east-2",
 
         // The name of the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-        // environment variable must be defined.
         // icon:exclamation-triangle[] icon:eye-slash[]
         "bucket": "releases",
 
         // The artifact path within the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
-        // environment variable may be defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         "path": "{{projectName}}/{{tagName}}/{{artifactFile}}",
 
         // Custom download URL.
-        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-        // environment variable may be defined.
         // Required if a custom endpoint is defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         "downloadUrl": "pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]",
 
         // The accessKeyId required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        "accessKeyId": "__DO_NOT_SET_HERE__",
+        "accessKeyId": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The secretKey required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        "secretKey": "__DO_NOT_SET_HERE__",
+        "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The AWS sessionToken when you use temporal credentials.
-        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        "sessionToken": "__DO_NOT_SET_HERE__",
+        "sessionToken": "__USE_ENVIRONMENT_VARIABLE__",
         
         // The endpoint to use for S3 service in case some other S3 compatible service is used.
-        // If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-        // environment variable may be defined.
         // icon:dot-circle[] icon:eye-slash[]
         "endpoint": "s3.{{region}}.example.com",
         
@@ -215,31 +175,24 @@ include::partial$upload/maven/common-head.adoc[]
 
         <!--
           The region where the S3 bucket is located.
-          If left unspecified, the `JRELEASER_S3_${name}_REGION`
-          environment variable must be defined.
           icon:exclamation-triangle[] icon:eye-slash[]
         -->
         <region>us-east-2</region>
 
         <!--
           The name of the bucket.
-          If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-          environment variable must be defined.
           icon:exclamation-triangle[] icon:eye-slash[]
         -->
         <bucket>releases</bucket>
 
         <!--
-          If left unspecified, the `JRELEASER_S3_${name}_PATH`
-          environment variable may be defined.
+          The artifact path within the bucket.
           icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         -->
         <path>{{projectName}}/{{tagName}}/{{artifactFile}}</path>
 
         <!--
           Custom download URL.
-          If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-          environment variable may be defined.
           Required if a custom endpoint is defined.
           icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         -->
@@ -247,32 +200,24 @@ include::partial$upload/maven/common-head.adoc[]
 
         <!--
           The accessKeyId required for authorization.
-          If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-          environment variable must be defined.
           icon:dot-circle[] icon:eye-slash[]
         -->
-        <accessKeyId>__DO_NOT_SET_HERE__</accessKeyId>
+        <accessKeyId>__USE_ENVIRONMENT_VARIABLE__</accessKeyId>
 
         <!--
           The secretKey required for authorization.
-          If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-          environment variable must be defined.
           icon:dot-circle[] icon:eye-slash[]
         -->
-        <secretKey>__DO_NOT_SET_HERE__</secretKey>
+        <secretKey>__USE_ENVIRONMENT_VARIABLE__</secretKey>
 
         <!--
           The AWS sessionToken when you use temporal credentials.
-          If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-          environment variable must be defined.
           icon:dot-circle[] icon:eye-slash[]
         -->
-        <sessionToken>__DO_NOT_SET_HERE__</sessionToken>
+        <sessionToken>__USE_ENVIRONMENT_VARIABLE__</sessionToken>
         
         <!--
           The endpoint to use for S3 service in case some other S3 compatible service is used.
-          If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-          environment variable may be defined.
           icon:dot-circle[] icon:eye-slash[]
         -->
         <endpoint>s3.{{region}}.example.com</endpoint>
@@ -297,51 +242,35 @@ Gradle::
 include::partial$upload/gradle/common-head.adoc[]
 
         // The region where the S3 bucket is located.
-        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
-        // environment variable must be defined.
         // icon:exclamation-triangle[] icon:eye-slash[]
         region = 'us-east-2'
 
         // The name of the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-        // environment variable must be defined.
         // icon:exclamation-triangle[] icon:eye-slash[]
         bucket = 'releases'
 
         // The artifact path within the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
-        // environment variable may be defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         path = '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
         // Custom download URL.
-        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-        // environment variable may be defined.
         // Required if a custom endpoint is defined.
         // icon:dot-circle[] icon:file-alt[] icon:eye-slash[]
         downloadUrl = 'pass:[https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}]'
 
         // The accessKeyId required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        accessKeyId = '__DO_NOT_SET_HERE__'
+        accessKeyId = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The secretKey required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        secretKey = '__DO_NOT_SET_HERE__'
+        secretKey = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The AWS sessionToken when you use temporal credentials.
-        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        sessionToken = '__DO_NOT_SET_HERE__'
+        sessionToken = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The endpoint to use for S3 service in case some other S3 compatible service is used.
-        // If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-        // environment variable may be defined.
         // icon:dot-circle[] icon:eye-slash[]
         endpoint = 's3.{{region}}.example.com'
 
@@ -353,6 +282,88 @@ include::partial$upload/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+| region
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.region +
+  jreleaser.{group_sys_key}.{actor_sys_key}.region +
+  jreleaser.{actor_sys_key}.${name}.region +
+  jreleaser.{actor_sys_key}.region
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_REGION +
+  JRELEASER_{group_env_key}_{actor_env_key}_REGION +
+  JRELEASER_{actor_env_key}_${name}_REGION +
+  JRELEASER_{actor_env_key}_REGION
+| bucket
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.bucket +
+  jreleaser.{group_sys_key}.{actor_sys_key}.bucket +
+  jreleaser.{actor_sys_key}.${name}.bucket +
+  jreleaser.{actor_sys_key}.bucket
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_BUCKET +
+  JRELEASER_{group_env_key}_{actor_env_key}_BUCKET +
+  JRELEASER_{actor_env_key}_${name}_BUCKET +
+  JRELEASER_{actor_env_key}_BUCKET
+| accessKeyId
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.access.key.id +
+  jreleaser.{group_sys_key}.{actor_sys_key}.access.key.id +
+  jreleaser.{actor_sys_key}.${name}.access.key.id +
+  jreleaser.{actor_sys_key}.access.key.id
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_ACCESS_KEY_ID +
+  JRELEASER_{group_env_key}_{actor_env_key}_ACCESS_KEY_ID +
+  JRELEASER_{actor_env_key}_${name}_ACCESS_KEY_ID +
+  JRELEASER_{actor_env_key}_ACCESS_KEY_ID
+| secretKey
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.secret.key +
+  jreleaser.{group_sys_key}.{actor_sys_key}.secret.key +
+  jreleaser.{actor_sys_key}.${name}.secret.key +
+  jreleaser.{actor_sys_key}.secret.key
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_SECRET_KEY +
+  JRELEASER_{group_env_key}_{actor_env_key}_SECRET_KEY +
+  JRELEASER_{actor_env_key}_${name}_SECRET_KEY +
+  JRELEASER_{actor_env_key}_SECRET_KEY
+| sessionToken
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.session.token +
+  jreleaser.{group_sys_key}.{actor_sys_key}.session.token +
+  jreleaser.{actor_sys_key}.${name}.session.token +
+  jreleaser.{actor_sys_key}.session.token
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_SESSION_TOKEN +
+  JRELEASER_{group_env_key}_{actor_env_key}_SESSION_TOKEN +
+  JRELEASER_{actor_env_key}_${name}_SESSION_TOKEN +
+  JRELEASER_{actor_env_key}_SESSION_TOKEN
+| path
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.path +
+  jreleaser.{group_sys_key}.{actor_sys_key}.path +
+  jreleaser.{actor_sys_key}.${name}.path +
+  jreleaser.{actor_sys_key}.path
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_PATH +
+  JRELEASER_{group_env_key}_{actor_env_key}_PATH +
+  JRELEASER_{actor_env_key}_${name}_PATH +
+  JRELEASER_{actor_env_key}_PATH
+| downloadUrl
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.download.url +
+  jreleaser.{group_sys_key}.{actor_sys_key}.download.url +
+  jreleaser.{actor_sys_key}.${name}.download.url +
+  jreleaser.{actor_sys_key}.download.url
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_DOWNLOAD_URL +
+  JRELEASER_{group_env_key}_{actor_env_key}_DOWNLOAD_URL +
+  JRELEASER_{actor_env_key}_${name}_DOWNLOAD_URL +
+  JRELEASER_{actor_env_key}_DOWNLOAD_URL
+| endpoint
+| jreleaser.{group_sys_key}.{actor_sys_key}.${name}.endpoint +
+  jreleaser.{group_sys_key}.{actor_sys_key}.endpoint +
+  jreleaser.{actor_sys_key}.${name}.endpoint +
+  jreleaser.{actor_sys_key}.endpoint
+| JRELEASER_{group_env_key}_{actor_env_key}_${name}_ENDPOINT +
+  JRELEASER_{group_env_key}_{actor_env_key}_ENDPOINT +
+  JRELEASER_{actor_env_key}_${name}_ENDPOINT +
+  JRELEASER_{actor_env_key}_ENDPOINT
+|===
+
+include::partial$envvars-footer.adoc[]
 
 == DownloadUrl
 
@@ -373,7 +384,7 @@ the default path within the bucket. This **does not** work for custom endpoints.
 upload:
   s3:
     app:
-      active: always
+      active: ALWAYS
 
 distributions:
   app:
@@ -393,35 +404,6 @@ respectively while `app-1.0.0.tar.gz` and `app-1.0.0.tar.gz.asc` will be uploade
 JReleaser uses the link:http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html[DefaultAWSCredentialsProviderChain]
  to look up the AWS credentials. If you want to override the credentials feel free to set `accessKeyId` and `secretKey`
  and (optionally depends on configuration) `sessionToken`. If these properties are set then JReleaser will ignore `DefaultAWSCredentialsProviderChain`.
-
-== AccessKeyId
-
-The accessKeyId will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_S3_NAME_ACCESS_KEY_ID`. If your instance is named `production`,
-you can store the accessKeyId in the environment variable `JRELEASER_S3_PRODUCTION_ACCESS_KEY_ID`. The name will be
-transformed to uppercase.
-
-If a configured accessKeyId is found in the configuration file, then the environment variable is not used at all.
-
-== SecretKey
-
-The secretKey will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_S3_NAME_SECRET_KEY`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_S3_PRODUCTION_SECRET_KEY`. The name will be
-transformed to uppercase.
-
-== SessionToken
-
-The sessionToken will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_S3_NAME_SESSION_TOKEN`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_S3_PRODUCTION_SESSION_TOKEN`. The name will be
-transformed to uppercase.
 
 == Skip Upload
 

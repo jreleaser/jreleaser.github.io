@@ -1,6 +1,8 @@
 = Slack
-:announcer_id:   slack
-:announcer_name: Slack
+:announcer_id:      slack
+:announcer_name:    Slack
+:announcer_sys_key: slack
+:announcer_env_key: SLACK
 
 Posts a message to link:https://slack.com/[Slack]. You must provide either a bot or a personal token with the following
 scopes set:
@@ -18,6 +20,8 @@ scopes set:
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the `JRELEASER_SLACK_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
+== Configuration
+
 include::partial$legend.adoc[]
 
 [tabs]
@@ -31,16 +35,12 @@ YAML::
 include::partial$announce/yaml/common-head.adoc[]
 
     # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_SLACK_TOKEN`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    token: __DO_NOT_SET_HERE__
+    token: __USE_ENVIRONMENT_VARIABLE__
 
-    # The webhook associated with a specific Discord room.
-    # If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
-    # environment variable must be defined.
+    # The webhook associated with a specific Slack channel.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    webhook: __DO_NOT_SET_HERE__
+    webhook: __USE_ENVIRONMENT_VARIABLE__
 
     # The channel where the message will be sent to
     # Defaults to `#announce`.
@@ -68,16 +68,12 @@ TOML::
 include::partial$announce/toml/common-head.adoc[]
 
   # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_SLACK_TOKEN`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
+  token = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The webhook associated with a specific Discord room.
-  # If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
-  # environment variable must be defined.
+  # The webhook associated with a specific Slack channel.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  webhook = "__DO_NOT_SET_HERE__"
+  webhook = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The channel where the message will be sent to
   # Defaults to `#announce`.
@@ -105,16 +101,12 @@ JSON::
 include::partial$announce/json/common-head.adoc[]
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_SLACK_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "token": "__DO_NOT_SET_HERE__",
+      "token": "__USE_ENVIRONMENT_VARIABLE__",
 
-      // The webhook associated with a specific Discord room.
-      // If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
-      // environment variable must be defined.
+      // The webhook associated with a specific Slack channel.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "webhook": "__DO_NOT_SET_HERE__",
+      "webhook": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The channel where the message will be sent to
       // Defaults to `#announce`.
@@ -144,17 +136,15 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_SLACK_TOKEN` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <token>__DO_NOT_SET_HERE__</token>
+      <token>__USE_ENVIRONMENT_VARIABLE__</token>
 
       <!--
-        The webhook associated with a specific Discord room.
-        If left unspecified, the `JRELEASER_SLACK_WEBHOOK` environment variable must be defined.
+        The webhook associated with a specific Slack channel.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <webhook>__DO_NOT_SET_HERE__</webhook>
+      <webhook>__USE_ENVIRONMENT_VARIABLE__</webhook>
 
       <!--
         The channel where the message will be sent to
@@ -189,16 +179,12 @@ Gradle::
 include::partial$announce/gradle/common-head.adoc[]
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_SLACK_TOKEN`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      token = '__DO_NOT_SET_HERE__'
+      token = '__USE_ENVIRONMENT_VARIABLE__'
 
-      // The webhook associated with a specific Discord room.
-      // If left unspecified, the `JRELEASER_SLACK_WEBHOOK`
-      // environment variable must be defined.
+      // The webhook associated with a specific Slack channel.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      webhook = '__DO_NOT_SET_HERE__'
+      webhook = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The channel where the message will be sent to
       // Defaults to `#announce`.
@@ -221,6 +207,20 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| token
+| jreleaser.announce.{announcer_sys_key}.token +
+  jreleaser.{announcer_sys_key}.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_TOKEN +
+  JRELEASER_{announcer_env_key}_TOKEN
+include::partial$announce/webhook-envvars.adoc[]
+|===
 
 == Templates
 

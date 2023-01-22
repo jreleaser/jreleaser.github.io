@@ -1,14 +1,21 @@
 = Article
 :tool_id:       article
 :tool_name:     Article
-:tool_env_var:  ARTICLE
 :tool_tap:      repository
 :tool_tap_name: duke-docs
 :tool_manifest: templates
+:announcer_sys_key: article
+:announcer_env_key: ARTICLE
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: article
+:tap_basename_env: ARTICLE
 
 Processes file templates suitable for publication as {tool_id}s, blogs, pages, etc.
 
 Processed files may be uploaded to a Git repository of your choosing.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -27,7 +34,7 @@ announce:
     # Enable or disable this announcer.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     active: ALWAYS
 
     # Directory with file templates.
@@ -66,7 +73,7 @@ TOML::
   # Enable or disable this announcer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # icon:dot-circle[]
+  # icon:dot-circle[] icon:eye-slash[]
   active = "ALWAYS"
 
   # Directory with file templates.
@@ -107,7 +114,7 @@ JSON::
       // Enable or disable this announcer.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       "active": "ALWAYS",
 
       // Directory with file templates.
@@ -161,7 +168,7 @@ Maven::
         Enable or disable this announcer.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
-        icon:dot-circle[]
+        icon:dot-circle[] icon:eye-slash[]
       -->
       <active>ALWAYS</active>
 
@@ -218,7 +225,7 @@ jreleaser {
       // Enable or disable this announcer.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       active = 'ALWAYS'
 
       // Directory with file templates.
@@ -249,6 +256,74 @@ include::partial$packagers/gradle/tap.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| {tap_sys_key}.active
+| jreleaser.announce.{announcer_sys_key}.{tap_sys_key}.active
+| JRELEASER_ANNOUNCE_{announcer_env_key}_{tap_env_key}_ACTIVE
+| {tap_sys_key}.username
+| jreleaser.announce.{announcer_sys_key}.{tap_sys_key}.username +
+  jreleaser.{tap_basename_sys}.github.username +
+  jreleaser.{tap_basename_sys}.gitlab.username +
+  jreleaser.{tap_basename_sys}.gitea.username +
+  jreleaser.{tap_basename_sys}.codeberg.username +
+  jreleaser.github.username +
+  jreleaser.gitlab.username +
+  jreleaser.gitea.username +
+  jreleaser.codeberg.username
+| JRELEASER_ANNOUNCE_{announcer_env_key}_{tap_env_key}_USERNAME +
+  JRELEASER_{tap_basename_env}_GITHUB_USERNAME +
+  JRELEASER_{tap_basename_env}_GITLAB_USERNAME +
+  JRELEASER_{tap_basename_env}_GITEA_USERNAME +
+  JRELEASER_{tap_basename_env}_CODEBERG_USERNAME +
+  JRELEASER_GITHUB_USERNAME +
+  JRELEASER_GITLAB_USERNAME +
+  JRELEASER_GITEA_USERNAME +
+  JRELEASER_CODEBERG_USERNAME
+| {tap_sys_key}.token
+| jreleaser.announce.{announcer_sys_key}.{tap_sys_key}.token +
+  jreleaser.{tap_basename_sys}.github.token +
+  jreleaser.{tap_basename_sys}.gitlab.token +
+  jreleaser.{tap_basename_sys}.gitea.token +
+  jreleaser.{tap_basename_sys}.codeberg.token +
+  jreleaser.github.token +
+  jreleaser.gitlab.token +
+  jreleaser.gitea.token +
+  jreleaser.codeberg.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_{tap_env_key}_TOKEN +
+  JRELEASER_{tap_basename_env}_GITHUB_TOKEN +
+  JRELEASER_{tap_basename_env}_GITLAB_TOKEN +
+  JRELEASER_{tap_basename_env}_GITEA_TOKEN +
+  JRELEASER_{tap_basename_env}_CODEBERG_TOKEN +
+  JRELEASER_GITHUB_TOKEN +
+  JRELEASER_GITLAB_TOKEN +
+  JRELEASER_GITEA_TOKEN +
+  JRELEASER_CODEBERG_TOKEN
+| {tap_sys_key}.branch
+| jreleaser.announce.{announcer_sys_key}.{tap_sys_key}.branch +
+  jreleaser.{tap_basename_sys}.github.branch +
+  jreleaser.{tap_basename_sys}.gitlab.branch +
+  jreleaser.{tap_basename_sys}.gitea.branch +
+  jreleaser.{tap_basename_sys}.codeberg.branch +
+  jreleaser.github.branch +
+  jreleaser.gitlab.branch +
+  jreleaser.gitea.branch +
+  jreleaser.codeberg.branch
+| JRELEASER_ANNOUNCE_{announcer_env_key}_{tap_env_key}_BRANCH +
+  JRELEASER_{tap_basename_env}_GITHUB_BRANCH +
+  JRELEASER_{tap_basename_env}_GITLAB_BRANCH +
+  JRELEASER_{tap_basename_env}_GITEA_BRANCH +
+  JRELEASER_{tap_basename_env}_CODEBERG_BRANCH +
+  JRELEASER_GITHUB_BRANCH +
+  JRELEASER_GITLAB_BRANCH +
+  JRELEASER_GITEA_BRANCH +
+  JRELEASER_CODEBERG_BRANCH
+|===
 
 == Example
 
@@ -284,7 +359,7 @@ distributions:
 
 announce:
   article:
-    active: always
+    active: ALWAYS
     repository:
       name: docs
     files:

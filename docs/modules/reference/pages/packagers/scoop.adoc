@@ -1,11 +1,16 @@
 = Scoop
 :tool_id:       scoop
 :tool_name:     Scoop
-:tool_env_var:  SCOOP
 :tool_tap:      bucket
 :tool_tap_name: scoop-duke
 :tool_manifest: manifest
 :tool_package:  ${distribution.executable}
+:packager_sys_key: scoop
+:packager_env_key: SCOOP
+:tap_sys_key:      bucket
+:tap_env_key:      BUCKET
+:tap_basename_sys: scoop
+:tap_basename_env: SCOOP
 
 JReleaser can generate and publish a _Scoop App Manifest_ into a repository that you have access to.
 
@@ -32,6 +37,8 @@ The following artifact extensions are supported by this packager:
 |===
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -181,6 +188,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 --
 ====
 
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
 include::partial$packagers/token.adoc[]
 
 include::partial$packagers/downloadUrl.adoc[]
@@ -229,10 +259,6 @@ Your users can then install your app by doing:
 scoop bucket add duke https://github.com/duke/scoop-duke.git
 scoop install app
 ----
-
-IMPORTANT: GitLab does not yet offer an URL that resolves to a latest release. You may need to adapt the value of
-`checkverUrl` or update the tool template by removing that section.
-Keep an eye on link:https://gitlab.com/gitlab-org/gitlab/-/issues/16821[].
 
 == Skip Artifacts
 

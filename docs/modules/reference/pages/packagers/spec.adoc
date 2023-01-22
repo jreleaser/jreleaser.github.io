@@ -1,11 +1,16 @@
 = Spec
 :tool_id:       spec
 :tool_name:     Spec
-:tool_env_var:  SPEC
 :tool_tap:      repository
 :tool_tap_name: duke-spec
 :tool_manifest: spec
 :tool_package:  ${distribution.name}
+:packager_sys_key: spec
+:packager_env_key: SPEC
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: spec
+:tap_basename_env: SPEC
 
 JReleaser can generate and publish a link:https://rpm-packaging-guide.github.io/[RPM Spec] file and publish it to
 a repository that you have access to.
@@ -38,6 +43,8 @@ The following artifact extensions are supported by this packager:
 |===
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -187,6 +194,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 

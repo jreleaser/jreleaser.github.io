@@ -1,9 +1,13 @@
 = Zulip
-:announcer_id:   zulip
-:announcer_name: Zulip
+:announcer_id:      zulip
+:announcer_name:    Zulip
+:announcer_sys_key: zulip
+:announcer_env_key: ZULIP
 
 Posts a message to a link:https://zulip.com/[Zulip] server. You must procure an account and apiKey to use
 this announcer.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -18,18 +22,16 @@ YAML::
 include::partial$announce/yaml/common-head.adoc[]
 
     # The Zulip account (typically an email address) to use.
-    # icon:exclamation-triangle[]
+    # icon:exclamation-triangle[] icon:eye-slash[]
     account: pass:[announce-bot@my.zulipchat.com]
 
     # The Zulip server endpoint.
-    # icon:exclamation-triangle[]
+    # icon:exclamation-triangle[] icon:eye-slash[]
     apiHost: pass:[https://my.zulipchat.com/api/v1]
 
     # The ApiKey associated with the given account.
-    # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    apiKey: __DO_NOT_SET_HERE__
+    apiKey: __USE_ENVIRONMENT_VARIABLE__
 
     # The channel where the message will be sent to
     # Defaults to `announce`.
@@ -62,18 +64,16 @@ TOML::
 include::partial$announce/toml/common-head.adoc[]
 
   # The Zulip account (typically an email address) to use.
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] icon:eye-slash[]
   account = "pass:[announce-bot@my.zulipchat.com]"
 
   # The Zulip server endpoint.
-  # icon:exclamation-triangle[]
+  # icon:exclamation-triangle[] icon:eye-slash[]
   apiHost = "pass:[https://my.zulipchat.com/api/v1]"
 
   # The ApiKey associated with the given account.
-  # If left unspecified, the `JRELEASER_ZULIP_API_KEY`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  apiKey = "__DO_NOT_SET_HERE__"
+  apiKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The channel where the message will be sent to
   # Defaults to `announce`.
@@ -106,18 +106,16 @@ JSON::
 include::partial$announce/json/common-head.adoc[]
 
       // The Zulip account (typically an email address) to use.
-      // icon:exclamation-triangle[]
+      // icon:exclamation-triangle[] icon:eye-slash[]
       "account": "pass:[announce-bot@my.zulipchat.com]",
 
       // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
+      // icon:exclamation-triangle[] icon:eye-slash[]
       "apiHost": "pass:[https://my.zulipchat.com/api/v1]",
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "apiKey": "__DO_NOT_SET_HERE__",
+      "apiKey": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The channel where the message will be sent to
       // Defaults to `announce`.
@@ -152,23 +150,21 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The Zulip account (typically an email address) to use.
-        icon:exclamation-triangle[]
+        icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <account>pass:[announce-bot@my.zulipchat.com]</account>
 
       <!--
         The Zulip server endpoint.
-        icon:exclamation-triangle[]
+        icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <apiHost>pass:[https://my.zulipchat.com/api/v1]</apiHost>
 
       <!--
         The ApiKey associated with the given account.
-        If left unspecified, the `JRELEASER_ZULIP_API_KEY`
-        environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <apiKey>__DO_NOT_SET_HERE__</apiKey>
+      <apiKey>__USE_ENVIRONMENT_VARIABLE__</apiKey>
 
       <!--
         The channel where the message will be sent to
@@ -210,18 +206,16 @@ Gradle::
 include::partial$announce/gradle/common-head.adoc[]
 
       // The Zulip account (typically an email address) to use.
-      // icon:exclamation-triangle[]
+      // icon:exclamation-triangle[] icon:eye-slash[]
       account = 'pass:[announce-bot@my.zulipchat.com]'
 
       // The Zulip server endpoint.
-      // icon:exclamation-triangle[]
+      // icon:exclamation-triangle[] icon:eye-slash[]
       apiHost = 'pass:[https://my.zulipchat.com/api/v1]'
 
       // The ApiKey associated with the given account.
-      // If left unspecified, the `JRELEASER_ZULIP_API_KEY`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      apiKey = '__DO_NOT_SET_HERE__'
+      apiKey = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The channel where the message will be sent to
       // Defaults to `announce`.
@@ -249,6 +243,29 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+| account
+| jreleaser.announce.{announcer_sys_key}.account +
+  jreleaser.{announcer_sys_key}.account
+| JRELEASER_ANNOUNCE_{announcer_env_key}_ACCOUNT +
+  JRELEASER_{announcer_env_key}_ACCOUNT
+| apiKey
+| jreleaser.announce.{announcer_sys_key}.api.key +
+  jreleaser.{announcer_sys_key}.api.key
+| JRELEASER_ANNOUNCE_{announcer_env_key}_API_KEY +
+  JRELEASER_{announcer_env_key}_API_KEY
+| apiHost
+| jreleaser.announce.{announcer_sys_key}.api.host +
+  jreleaser.{announcer_sys_key}.api.host
+| JRELEASER_ANNOUNCE_{announcer_env_key}_API_HOST +
+  JRELEASER_{announcer_env_key}_API_HOST
+|===
 
 == Templates
 

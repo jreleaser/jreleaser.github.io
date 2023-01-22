@@ -1,11 +1,19 @@
 = GitLab
 :uploader_id:   gitlab
 :uploader_name: GITLAB
+:uploader_sys_key: gitlab
+:uploader_env_key: GITLAB
+:group_sys_key: upload
+:group_env_key: UPLOAD
+:actor_sys_key: {uploader_sys_key}
+:actor_env_key: {uploader_env_key}
 
 Uploads artifacts, files, and signatures to a GitLab instance via its
 link:https://docs.gitlab.com/ee/user/packages/generic_packages/index.html[Packages] option.
 
 NOTE:: Only **generic** packages are supported at the moment.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -24,10 +32,8 @@ include::partial$upload/yaml/common-head.adoc[]
       host: gitlab.com
 
       # Token with write access to the repository.
-      # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-      # environment variable must be defined.
       # icon:dot-circle[] icon:eye-slash[]
-      token: __DO_NOT_SET_HERE__
+      token: __USE_ENVIRONMENT_VARIABLE__
 
       # The package name to use.
       # If unspecified, will use the uploader's name.
@@ -57,10 +63,8 @@ include::partial$upload/toml/common-head.adoc[]
   host = "gitlab.com"
 
   # Token with write access to the repository.
-  # If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-  # environment variable must be defined.
   # icon:dot-circle[] icon:eye-slash[]
-  token = "__DO_NOT_SET_HERE__"
+  token = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The package name to use.
   # If unspecified, will use the uploader's name.
@@ -90,10 +94,8 @@ include::partial$upload/json/common-head.adoc[]
         "host": "gitlab.com",
 
         // Token with write access to the repository.
-        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        "token": "__DO_NOT_SET_HERE__",
+        "token": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The package name to use.
         // If unspecified, will use the uploader's name.
@@ -127,11 +129,9 @@ include::partial$upload/maven/common-head.adoc[]
 
         <!--
            Token with write access to the repository.
-           If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-           environment variable must be defined.
            icon:dot-circle[] icon:eye-slash[]
         -->
-        <token>__DO_NOT_SET_HERE__</token>
+        <token>__USE_ENVIRONMENT_VARIABLE__</token>
 
         <!--
            The package name to use.
@@ -168,10 +168,8 @@ include::partial$upload/gradle/common-head.adoc[]
         host = 'gitlab.com'
 
         // Token with write access to the repository.
-        // If left unspecified, the `JRELEASER_GITLAB_${name}_TOKEN`
-        // environment variable must be defined.
         // icon:dot-circle[] icon:eye-slash[]
-        token = '__DO_NOT_SET_HERE__'
+        token = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The package name to use.
         // If unspecified, will use the uploader's name.
@@ -191,36 +189,15 @@ include::partial$upload/gradle/common-footer.adoc[]
 --
 ====
 
-== Host
+include::partial$envvars-header.adoc[]
 
-You may set the host in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the GitLab server will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+|===
 
-The name of the environment variable will be `JRELEASER_GITLAB_NAME_HOST`. If your instance is named `production`,
-you can store the host in the environment variable `JRELEASER_GITLAB_PRODUCTION_HOST`. The name will be
-transformed to uppercase.
-
-If a configured host is found in the configuration file, then the environment variable is not used at all.
-
-Alternatives to `JRELEASER_GITLAB_NAME_HOST` are (in order):
-
-* `JRELEASER_GITLAB_NAME_HOST`
-* `JRELEASER_GITLAB_HOST`
-
-== Token
-
-The password will be stored in an environment variable. The configured name of the GitLab server will
-be used. This means that the name per configured instance needs to be unique.
-
-The name of the environment variable will be `JRELEASER_GITLAB_NAME_TOKEN`. If your instance is named `production`,
-you need to store the secret in the environment variable `JRELEASER_GITLAB_PRODUCTION_TOKEN`. The name will be
-transformed to uppercase.
-
-Alternatives to `JRELEASER_GITLAB_NAME_TOKEN` are (in order):
-
-* `JRELEASER_GITLAB_NAME_TOKEN`
-* `JRELEASER_GITLAB_TOKEN`
+include::partial$envvars-footer.adoc[]
 
 == UploadUrl
 

@@ -1,11 +1,16 @@
 = Docker
 :tool_id:       docker
 :tool_name:     Docker
-:tool_env_var:  DOCKER
 :tool_tap:      repository
 :tool_tap_name: app-docker
 :tool_manifest: Dockerfile
 :docker:        true
+:packager_sys_key: docker
+:packager_env_key: DOCKER
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: docker
+:tap_basename_env: DOCKER
 
 Creates link:https://www.docker.com/[Docker] images.
 
@@ -33,6 +38,8 @@ JReleaser will not install these tools.
 
 NOTE: `docker.io` will be set as default registry (with "DEFAULT" as name) if no registries are configured. The chosen
 username will be set to match the Git username.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -140,17 +147,13 @@ include::partial$packagers/yaml/tap.adoc[]
         externalLogin: false
 
         # The user that can publish images.
-        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-        # environment variable must be defined.
         # Defaults to the same username as the release repository.
         # icon:dot-circle[] icon:eye-slash[]
         username: duke
 
         # Password for login into the registry
-        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-        # environment variable must be defined.
         # icon:dot-circle[] icon:eye-slash[]
-        password: __DO_NOT_SET_HERE__
+        password: __USE_ENVIRONMENT_VARIABLE__
 
         # The name of the repository
         # Defaults to the same owner as the release repository.
@@ -249,17 +252,13 @@ include::partial$packagers/toml/tap.adoc[]
     externalLogin = false
 
     # The user that can publish images.
-    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-    # environment variable must be defined.
     # Defaults to the same username as the release repository.
     # icon:dot-circle[] icon:eye-slash[]
     username = "duke"
 
     # Password for login into the registry
-    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-    # environment variable must be defined.
     # icon:dot-circle[] icon:eye-slash[]
-    password = "__DO_NOT_SET_HERE__"
+    password = "__USE_ENVIRONMENT_VARIABLE__"
 
     # The name of the repository
     # Defaults to the same owner as the release repository.
@@ -378,17 +377,13 @@ include::partial$packagers/json/tap.adoc[]
           "externalLogin": false,
 
           // The user that can publish images.
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-          // environment variable must be defined.
           // Defaults to the same username as the release repository.
           // icon:dot-circle[] icon:eye-slash[]
           "username": "duke",
 
           // Password for login into the registry
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-          // environment variable must be defined.
           // icon:dot-circle[] icon:eye-slash[]
-          "password": "__DO_NOT_SET_HERE__",
+          "password": "__USE_ENVIRONMENT_VARIABLE__",
 
           // The name of the repository
           // Defaults to the same owner as the release repository.
@@ -541,8 +536,6 @@ include::partial$packagers/maven/tap.adoc[]
 
           <!--
             The user that can publish images.
-            If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-            environment variable must be defined.
             Defaults to the same username as the release repository.
             icon:dot-circle[] icon:eye-slash[]
           -->
@@ -550,11 +543,9 @@ include::partial$packagers/maven/tap.adoc[]
 
           <!--
             Password for login into the registry
-            If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-            environment variable must be defined.
             icon:dot-circle[] icon:eye-slash[]
           -->
-          <password>__DO_NOT_SET_HERE__</password>
+          <password>__USE_ENVIRONMENT_VARIABLE__</password>
 
           <!--
             The name of the repository
@@ -664,17 +655,13 @@ include::partial$packagers/gradle/tap.adoc[]
           externalLogin = false
 
           // The user that can publish images.
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-          // environment variable must be defined.
           // Defaults to the same username as the release repository.
           // icon:dot-circle[] icon:eye-slash[]
           username = 'duke'
 
           // Password for login into the registry
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-          // environment variable must be defined.
           // icon:dot-circle[] icon:eye-slash[]
-          password = '__DO_NOT_SET_HERE__'
+          password = '__USE_ENVIRONMENT_VARIABLE__'
 
           // The name of the repository
           // Defaults to the same owner as the release repository.
@@ -686,6 +673,47 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+| registry.username
+| jreleaser.distributions.${name}.{packager_sys_key}.${serverName}.username +
+  jreleaser.{tap_basename_sys}.${serverName}.username +
+  jreleaser.github.username +
+  jreleaser.gitlab.username +
+  jreleaser.gitea.username +
+  jreleaser.codeberg.username
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${serverName}_USERNAME +
+  JRELEASER_{tap_basename_env}_${serverName}_USERNAME +
+  JRELEASER_GITHUB_USERNAME +
+  JRELEASER_GITLAB_USERNAME +
+  JRELEASER_GITEA_USERNAME +
+  JRELEASER_CODEBERG_USERNAME
+| registry.password
+| jreleaser.distributions.${name}.{packager_sys_key}.${serverName}.password +
+  jreleaser.{tap_basename_sys}.${serverName}.password
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${serverName}_PASSWORD +
+  JRELEASER_{tap_basename_env}_${serverName}_PASSWORD
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 
@@ -1003,7 +1031,7 @@ environment:
 assemble:
   jlink:
     jreleaser-standalone:
-      active: always
+      active: ALWAYS
       java:
         version: 11
         mainClass: 'org.jreleaser.cli.Main'
@@ -1037,7 +1065,7 @@ distributions:
   jreleaser-standalone:
     docker:
       # inherited by specs
-      active: always
+      active: ALWAYS
       # inherited by specs
       registries:
         - serverName: DEFAULT

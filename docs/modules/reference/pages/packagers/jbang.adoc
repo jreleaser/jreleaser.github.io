@@ -1,10 +1,15 @@
 = JBang
 :tool_id:       jbang
 :tool_name:     JBang
-:tool_env_var:  JBANG
 :tool_tap:      catalog
 :tool_tap_name: jbang-catalog
 :tool_manifest: catalog
+:packager_sys_key: jbang
+:packager_env_key: JBANG
+:tap_sys_key:      catalog
+:tap_env_key:      CATALOG
+:tap_basename_sys: jbang
+:tap_basename_env: JBANG
 
 Unleash the power of Java with link:https://github.com/jbangdev/jbang[jbang]. You can publish distributions as JBang
 catalogs.
@@ -27,6 +32,8 @@ Publications of snapshots is supported, in which case executables will bear the 
 | xref:concepts:distributions/native-package.adoc[] | {icon_req_n}
 | xref:concepts:distributions/single-jar.adoc[]     | {icon_req_y}
 |===
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -155,6 +162,31 @@ The following property names have additional meaning
 | reverseDomain   | reversed custom link:https://jitpack.io/docs/#custom-domain-name[domain name]
 |===
 
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
+== Example
+
 Assuming the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
 a `app.java` file in the `duke/jbang-catalog` repository:
 
@@ -214,7 +246,6 @@ public class app_snapshot {
     }
 }
 ----
-
 
 include::partial$packagers/token.adoc[]
 

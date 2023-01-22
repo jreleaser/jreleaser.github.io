@@ -1,6 +1,8 @@
 = Teams
-:announcer_id:   teams
-:announcer_name: Teams
+:announcer_id:      teams
+:announcer_name:    Teams
+:announcer_sys_key: teams
+:announcer_env_key: TEAMS
 
 WARNING: This announcer has been deprecated in `v1.4.0` and will be removed in `v2.0.0`. Use xref:reference:announce/webhooks.adoc[]
 instead as shown xref:reference:announce/webhooks.adoc#_teams[here].
@@ -17,6 +19,8 @@ Posts a message to a link:https://www.microsoft.com/en-ww/microsoft-teams[Teams]
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the `JRELEASER_TEAMS_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
+== Configuration
+
 include::partial$legend.adoc[]
 
 [tabs]
@@ -30,10 +34,8 @@ YAML::
 include::partial$announce/yaml/common-head.adoc[]
 
     # The webhook associated with a specific Teams room.
-    # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    webhook: __DO_NOT_SET_HERE__
+    webhook: __USE_ENVIRONMENT_VARIABLE__
 
     # Path to a template file that contains the message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -51,10 +53,8 @@ TOML::
 include::partial$announce/toml/common-head.adoc[]
 
   # The webhook associated with a specific Teams room.
-  # If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  webhook = "__DO_NOT_SET_HERE__"
+  webhook = "__USE_ENVIRONMENT_VARIABLE__"
 
   # Path to a template file that contains the message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -72,10 +72,8 @@ JSON::
 include::partial$announce/json/common-head.adoc[]
 
       // The webhook associated with a specific Teams room.
-      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "webhook": "__DO_NOT_SET_HERE__",
+      "webhook": "__USE_ENVIRONMENT_VARIABLE__",
 
       // Path to a template file that contains the message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -95,10 +93,9 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The webhook associated with a specific Teams room.
-        If left unspecified, the `JRELEASER_TEAMS_WEBHOOK` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <webhook>__DO_NOT_SET_HERE__</webhook>
+      <webhook>__USE_ENVIRONMENT_VARIABLE__</webhook>
 
       <!--
         Path to a template file that contains the message.
@@ -119,10 +116,8 @@ Gradle::
 include::partial$announce/gradle/common-head.adoc[]
 
       // The webhook associated with a specific Teams room.
-      // If left unspecified, the `JRELEASER_TEAMS_WEBHOOK`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      webhook = '__DO_NOT_SET_HERE__'
+      webhook = '__USE_ENVIRONMENT_VARIABLE__'
 
       // Path to a template file that contains the message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -136,6 +131,15 @@ include::partial$announce/gradle/common-footer.adoc[]
 
 The message must follow the link:https://docs.microsoft.com/en-us/outlook/actionable-messages/adaptive-card[Adaptive Card]
 format.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+include::partial$announce/webhook-envvars.adoc[]
+|===
 
 == Templates
 

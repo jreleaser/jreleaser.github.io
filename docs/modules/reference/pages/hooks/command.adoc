@@ -2,6 +2,8 @@
 
 Defines command or script hooks to be executed before or after a JReleaser step.
 
+== Configuration
+
 include::partial$legend.adoc[]
 
 [tabs]
@@ -17,7 +19,7 @@ hooks:
   # Enable or disable all hooks.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `ALWAYS`.
-  # icon:dot-circle[]
+  # icon:dot-circle[] icon:eye-slash[]
   active: ALWAYS
 
   # icon:dot-circle[]
@@ -25,7 +27,7 @@ hooks:
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     active: ALWAYS
 
     # The type of hook
@@ -40,7 +42,7 @@ hooks:
         # Enable or disable this hook.
         # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         # Defaults to `ALWAYS`.
-        # icon:dot-circle[]
+        # icon:dot-circle[] icon:eye-slash[]
         active: ALWAYS
 
         # The command to be invoked.
@@ -65,7 +67,7 @@ TOML::
   # Enable or disable all hooks.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `ALWAYS`.
-  # icon:dot-circle[]
+  # icon:dot-circle[] icon:eye-slash[]
   active = "ALWAYS"
 
   # icon:dot-circle[]
@@ -73,7 +75,7 @@ TOML::
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
-    # icon:dot-circle[]
+    # icon:dot-circle[] icon:eye-slash[]
     active = "ALWAYS"
 
     # The type of hook
@@ -88,7 +90,7 @@ TOML::
       # Enable or disable this hook.
       # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `ALWAYS`.
-      # icon:dot-circle[]
+      # icon:dot-circle[] icon:eye-slash[]
       active = "ALWAYS"
 
       # The command to be invoked.
@@ -113,7 +115,7 @@ JSON::
     // Enable or disable all hooks.
     // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     // Defaults to `ALWAYS`.
-    // icon:dot-circle[]
+    // icon:dot-circle[] icon:eye-slash[]
     "active": "ALWAYS",
 
     // icon:dot-circle[]
@@ -121,7 +123,7 @@ JSON::
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       "active": "ALWAYS",
 
       // The type of hook
@@ -137,7 +139,7 @@ JSON::
           // Enable or disable this hook.
           // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           // Defaults to `ALWAYS`.
-          // icon:dot-circle[]
+          // icon:dot-circle[] icon:eye-slash[]
           "active": "ALWAYS",
 
           // The command to be invoked.
@@ -172,7 +174,7 @@ Maven::
       Enable or disable all hooks.
       Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       Defaults to `ALWAYS`.
-      icon:dot-circle[]
+      icon:dot-circle[] icon:eye-slash[]
     -->
     <active>ALWAYS</active>
 
@@ -184,7 +186,7 @@ Maven::
         Enable or disable all before, success, and failure hooks.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `ALWAYS`.
-        icon:dot-circle[]
+        icon:dot-circle[] icon:eye-slash[]
       -->
       <active>ALWAYS</active>
 
@@ -205,7 +207,7 @@ Maven::
             Enable or disable this hook.
             Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
             Defaults to `ALWAYS`.
-            icon:dot-circle[]
+            icon:dot-circle[] icon:eye-slash[]
           -->
           <active>ALWAYS</active>
 
@@ -242,7 +244,7 @@ jreleaser {
     // Enable or disable all hooks.
     // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     // Defaults to `ALWAYS`.
-    // icon:dot-circle[]
+    // icon:dot-circle[] icon:eye-slash[]
     active = 'ALWAYS'
 
     // icon:dot-circle[]
@@ -250,7 +252,7 @@ jreleaser {
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
-      // icon:dot-circle[]
+      // icon:dot-circle[] icon:eye-slash[]
       active: ALWAYS
 
       // The type of hook
@@ -265,7 +267,7 @@ jreleaser {
         // Enable or disable this hook.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `ALWAYS`.
-        // icon:dot-circle[]
+        // icon:dot-circle[] icon:eye-slash[]
         active = 'ALWAYS'
 
         // The command to be invoked.
@@ -286,8 +288,42 @@ jreleaser {
 --
 ====
 
-NOTE: When not explicitly set, the value of `active` may be resolved from an environment variable `JRELEASER_HOOKS_COMMAND_ACTIVE`
-or from a system property `jreleaser.hooks.command.active`. The system property takes precedence over the environment variable.
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.hooks.command.active
+| JRELEASER_HOOKS_COMMAND_ACTIVE
+|===
+
+**Before hooks**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.hooks.command.before.${index}.active
+| JRELEASER_HOOKS_COMMAND_BEFORE_${index}_ACTIVE
+|===
+
+**Success hooks**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.hooks.command.success.${index}.active
+| JRELEASER_HOOKS_COMMAND_SUCCESS_${index}_ACTIVE
+|===
+
+**Failure hooks**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.hooks.command.failure.${index}.active
+| JRELEASER_HOOKS_COMMAND_FAILURE_${index}_ACTIVE
+|===
 
 == Step Names
 
@@ -299,6 +335,7 @@ The following step names may be used when filtering hooks:
 * `checksum`
 * `sign`
 * `upload`
+* `deploy`
 * `release`
 * `prepare`
 * `package`

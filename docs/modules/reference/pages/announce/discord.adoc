@@ -1,6 +1,8 @@
 = Discord
-:announcer_id:   discord
-:announcer_name: discord
+:announcer_id:      discord
+:announcer_name:    discord
+:announcer_sys_key: discord
+:announcer_env_key: DISCORD
 
 WARNING: This announcer has been deprecated in `v1.4.0` and will be removed in `v2.0.0`. Use xref:reference:announce/webhooks.adoc[]
 instead as shown xref:reference:announce/webhooks.adoc#_discord[here].
@@ -16,6 +18,8 @@ Posts a message to a link:https://discord.com/[Discord] room. You must create a 
 
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the `JRELEASER_DISCORD_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -33,7 +37,7 @@ include::partial$announce/yaml/common-head.adoc[]
     # If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
     # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    webhook: __DO_NOT_SET_HERE__
+    webhook: __USE_ENVIRONMENT_VARIABLE__
 
     # The announcement message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -59,7 +63,7 @@ include::partial$announce/toml/common-head.adoc[]
   # If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
   # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  webhook = "__DO_NOT_SET_HERE__"
+  webhook = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -85,7 +89,7 @@ include::partial$announce/json/common-head.adoc[]
       // If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "webhook": "__DO_NOT_SET_HERE__",
+      "webhook": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -113,7 +117,7 @@ include::partial$announce/maven/common-head.adoc[]
         If left unspecified, the `JRELEASER_DISCORD_WEBHOOK` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <webhook>__DO_NOT_SET_HERE__</webhook>
+      <webhook>__USE_ENVIRONMENT_VARIABLE__</webhook>
 
       <!--
         The announcement message.
@@ -144,7 +148,7 @@ include::partial$announce/gradle/common-head.adoc[]
       // If left unspecified, the `JRELEASER_DISCORD_WEBHOOK`
       // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      webhook = '__DO_NOT_SET_HERE__'
+      webhook = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -162,6 +166,15 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+include::partial$announce/webhook-envvars.adoc[]
+|===
 
 == Templates
 

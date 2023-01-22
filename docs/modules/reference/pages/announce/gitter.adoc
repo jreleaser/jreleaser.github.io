@@ -1,6 +1,8 @@
 = Gitter
-:announcer_id:   gitter
-:announcer_name: Gitter
+:announcer_id:      gitter
+:announcer_name:    Gitter
+:announcer_sys_key: gitter
+:announcer_env_key: GITTER
 
 WARNING: This announcer has been deprecated in `v1.4.0` and will be removed in `v2.0.0`. Use xref:reference:announce/webhooks.adoc[]
 instead as shown xref:reference:announce/webhooks.adoc#_gitter[here].
@@ -16,6 +18,8 @@ Posts a message to a link:https://gitter.im/[Gitter] room. You must create a cus
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the `JRELEASER_GITTER_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
+== Configuration
+
 include::partial$legend.adoc[]
 
 [tabs]
@@ -29,10 +33,8 @@ YAML::
 include::partial$announce/yaml/common-head.adoc[]
 
     # The webhook associated with a specific Gitter room.
-    # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
-    # environment variable must be defined.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    webhook: __DO_NOT_SET_HERE__
+    webhook: __USE_ENVIRONMENT_VARIABLE__
 
     # The announcement message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -55,10 +57,8 @@ TOML::
 include::partial$announce/toml/common-head.adoc[]
 
   # The webhook associated with a specific Gitter room.
-  # If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
-  # environment variable must be defined.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  webhook = "__DO_NOT_SET_HERE__"
+  webhook = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -81,10 +81,8 @@ JSON::
 include::partial$announce/json/common-head.adoc[]
 
       // The webhook associated with a specific Gitter room.
-      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "webhook": "__DO_NOT_SET_HERE__",
+      "webhook": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -109,10 +107,9 @@ include::partial$announce/maven/common-head.adoc[]
 
       <!--
         The webhook associated with a specific Gitter room.
-        If left unspecified, the `JRELEASER_GITTER_WEBHOOK` environment variable must be defined.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <webhook>__DO_NOT_SET_HERE__</webhook>
+      <webhook>__USE_ENVIRONMENT_VARIABLE__</webhook>
 
       <!--
         The announcement message.
@@ -140,10 +137,8 @@ Gradle::
 include::partial$announce/gradle/common-head.adoc[]
 
       // The webhook associated with a specific Gitter room.
-      // If left unspecified, the `JRELEASER_GITTER_WEBHOOK`
-      // environment variable must be defined.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      webhook = '__DO_NOT_SET_HERE__'
+      webhook = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -161,6 +156,15 @@ include::partial$announce/gradle/common-footer.adoc[]
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property                               | Environment Variable
+| active   | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+include::partial$announce/webhook-envvars.adoc[]
+|===
 
 == Templates
 

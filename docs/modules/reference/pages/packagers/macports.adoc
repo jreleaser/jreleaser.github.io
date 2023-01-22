@@ -1,11 +1,16 @@
 = Macports
 :tool_id:       macports
 :tool_name:     Macports
-:tool_env_var:  MACPORTS
 :tool_tap:      repository
 :tool_tap_name: macports
 :tool_manifest: portfile
 :tool_package:  ${distribution.name}
+:packager_sys_key: macports
+:packager_env_key: MACPORTS
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: macports
+:tap_basename_env: MACPORTS
 
 JReleaser can generate and publish a link:https://www.macports.org/[Macports] Portfile into a repository that you have
 access to. This packager generates port file and publishes it to a repository of your choice, however it's your
@@ -36,6 +41,8 @@ The following artifact extensions are supported by this packager:
 |===
 
 WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
 
 include::partial$legend.adoc[]
 
@@ -218,6 +225,29 @@ include::partial$packagers/gradle/common-footer.adoc[]
 ----
 --
 ====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Property | System Property | Environment Variable
+| active
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
 
 include::partial$packagers/token.adoc[]
 
