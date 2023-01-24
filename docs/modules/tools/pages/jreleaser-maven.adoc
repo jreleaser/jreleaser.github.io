@@ -77,6 +77,46 @@ The following settings may also be specified via environment variables
 `JRELEASER_SELECT_PLATFORMs` and `JRELEASER_REJECT_PLATFORMs` may define a command separated list of values such as
 `osx-x86_64,linux-x86_64`.
 
+== Filtering Artifacts
+
+Many commands let you filter (include or exclude) artifacts using a combination of properties or environment variables.
+This filter capability allows you to test out a release configuration on a node where not all artifacts may be available.
+For example, when building on `linux-x86_64` while also having `osx-x86_64` and `windows-x86_64`.
+
+.Include only for the current platform
+
+Use the `JRELEASER_SELECT_CURRENT_PLATFORM` environment variable or the `jreleaser.select.current.platform` property.
+
+[source]
+----
+$ JRELEASER_SELECT_CURRENT_PLATFORM mvn jreleaser-checksum
+$ mvn jreleaser-checksum -Djreleaser.select.current.platform=true
+----
+
+.Include a specific platform
+
+Use the `JRELEASER_SELECT_PLATFORMS` environment variable or the `jreleaser.select.platforms` property, i.e,
+
+[source]
+----
+$ JRELEASER_SELECT_PLATFORMS=osx-x86_64 mvn jreleaser-checksum
+$ mvn jreleaser-checksum --Djreleaser.select.platforms=osx-x86_64
+----
+
+Every artifact whose platform property *does not* match the given platform will end up filtered out.
+
+.Exclude a specific platform
+
+Use the `JRELEASER_REJECT_PLATFORMS` environment variable or the `jreleaser.reject.platforms` property, i.e,
+
+[source]
+----
+$ JRELEASER_REJECT_PLATFORMS=windows-x86_64 mvn jreleaser-checksum
+$ mvn jreleaser-checksum -Djreleaser.reject.platforms=windows-x86_64
+----
+
+Every artifact whose platform property *matches* the given platform will end up filtered out.
+
 == Goals
 
 None of the exposed MOJOs are bound to a specific life-cycle phase, letting you decide when and how that
