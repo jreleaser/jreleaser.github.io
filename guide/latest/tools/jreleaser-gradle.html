@@ -735,7 +735,7 @@
     <a class="version" href="../../early-access/tools/jreleaser-gradle.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/tools/pages/jreleaser-gradle.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/tools/pages/jreleaser-gradle.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -860,6 +860,52 @@ configuration file may be used if the <code>configFile</code> field property is 
 <div class="paragraph">
 <p><code>JRELEASER_SELECT_PLATFORMs</code> and <code>JRELEASER_REJECT_PLATFORMs</code> may define a command separated list of values such as
 <code>osx-x86_64,linux-x86_64</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_filtering_artifacts"><a class="anchor" href="#_filtering_artifacts"></a>Filtering Artifacts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many commands let you filter (include or exclude) artifacts using a combination of task flags or environment variables.
+This filter capability allows you to test out a release configuration on a node where not all artifacts may be available.
+For example, when building on <code>linux-x86_64</code> while also having <code>osx-x86_64</code> and <code>windows-x86_64</code>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Include only for the current platform</div>
+<p>Use the <code>JRELEASER_SELECT_CURRENT_PLATFORM</code> environment variable or the <code>--select-current-platform</code> task flag.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ JRELEASER_SELECT_CURRENT_PLATFORM gradle jreleaserChecksum
+$ gradle jreleaserChecksum --select-current-platform</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Include a specific platform</div>
+<p>Use the <code>JRELEASER_SELECT_PLATFORMS</code> environment variable or the <code>--select-platform</code> task flag, i.e,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ JRELEASER_SELECT_PLATFORMS=osx-x86_64 gradle jreleaserChecksum
+$ gradle jreleaserChecksum --select-platform=osx-x86_64</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every artifact whose platform property <strong>does not</strong> match the given platform will end up filtered out.</p>
+</div>
+<div class="paragraph">
+<div class="title">Exclude a specific platform</div>
+<p>Use the <code>JRELEASER_REJECT_PLATFORMS</code> environment variable or the <code>--reject-platform</code> task flag, i.e,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ JRELEASER_REJECT_PLATFORMS=windows-x86_64 gradle jreleaserChecksum
+$ gradle jreleaserChecksumm --reject-platform=windows-x86_64</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every artifact whose platform property <strong>matches</strong> the given platform will end up filtered out.</p>
 </div>
 <div class="sect2">
 <h3 id="_defaults"><a class="anchor" href="#_defaults"></a>Defaults</h3>
