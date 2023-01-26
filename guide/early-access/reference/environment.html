@@ -751,9 +751,22 @@ update the external sources to produce a new release. Values may be read from a 
 environment variables, the file has precendence over the environment variables.</p>
 </div>
 <div class="paragraph">
-<p>By default, the external properties file should be located at <code>~/.jreleaser/config.properties</code> however you may change
+<p>By default, the external properties file should be located at <code>$HOME/.jreleaser/config.properties</code> however you may change
 that location by setting/changing the value of the <code>JRELEASER_USER_HOME</code> environment variable or using the block
-described next:</p>
+described in the next section.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On platforms that support the <a href="https://wiki.archlinux.org/index.php/XDG_Base_Directory#Specification">XDG-spec</a>
+JReleaser will check <code>$XDG_CONFIG_HOME/jreleaser</code> before <code>$JRELEASER_USER_HOME</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1242,6 +1255,85 @@ The uppercase variant has precedence over the lowercase variant. For example, th
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">jreleaser.github.token = 2ee1ce8ff570e0bOVEdrZvie8792058</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_env_files"><a class="anchor" href="#_env_files"></a>.env Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This format is similar to the <code>.properties</code> format described earlier.</p>
+</div>
+<div class="listingblock">
+<div class="title">.env</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">JRELEASER_GITHUB_TOKEN = b9df0920aefcbfa69f57c4f02bae4396</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>.env</code> files must be placed at the basedir of the
+project, must be named <code>.env</code>, and there can only be a single file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_precedence_order"><a class="anchor" href="#_precedence_order"></a>Precedence Order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Settings will be evaluated in the following order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Explicitly set in the corresponding DSL.</p>
+</li>
+<li>
+<p>Defaults coming from the build tool (<a href="../tools/jreleaser-maven.html#_defaults" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> Maven</a>,
+<a href="../tools/jreleaser-gradle.html#_defaults" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> Gradle</a>).</p>
+</li>
+<li>
+<p>Command flags.</p>
+</li>
+<li>
+<p>System properties.</p>
+</li>
+<li>
+<p>The running shell’s environment variables.</p>
+</li>
+<li>
+<p>Project configuration (<code>.env</code> file).</p>
+</li>
+<li>
+<p>User configuration (<code>$XDG_CONFIG_HOME/jreleaser</code>, <code>$JRELEASER_USER_HOME</code>, <code>$HOME/.jreleaser</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inspection"><a class="anchor" href="#_inspection"></a>Inspection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use the <code>env</code> command to display environment variable key names as resolved by the tool</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../tools/jreleaser-cli.html#_env" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> env</a></p>
+</li>
+<li>
+<p><a href="../tools/jreleaser-maven.html#_jreleaserenv" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:env</a></p>
+</li>
+<li>
+<p><a href="../tools/jreleaser-gradle.html#_jreleaserenv" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserEnv</a></p>
+</li>
+<li>
+<p><a href="../tools/jreleaser-ant.html#_jreleaser_env" class="xref page"><span class="image"><img src="../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-env</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll also find  these key names in the respective <code>trace.log</code> file.</p>
 </div>
 </div>
 </div>
