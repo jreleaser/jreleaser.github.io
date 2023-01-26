@@ -4,9 +4,12 @@ JReleaser can configure some of its fields from external sources. This allows ke
 update the external sources to produce a new release. Values may be read from a Java properties file or from
 environment variables, the file has precendence over the environment variables.
 
-By default, the external properties file should be located at `~/.jreleaser/config.properties` however you may change
+By default, the external properties file should be located at `$HOME/.jreleaser/config.properties` however you may change
 that location by setting/changing the value of the `JRELEASER_USER_HOME` environment variable or using the block
-described next:
+described in the next section.
+
+NOTE: On platforms that support the link:https://wiki.archlinux.org/index.php/XDG_Base_Directory#Specification[XDG-spec]
+JReleaser will check `$XDG_CONFIG_HOME/jreleaser` before `$JRELEASER_USER_HOME`.
 
 == Configuration
 
@@ -352,3 +355,41 @@ Or as:
 ----
 jreleaser.github.token = 2ee1ce8ff570e0bOVEdrZvie8792058
 ----
+
+== .env Files
+
+This format is similar to the `.properties` format described earlier.
+
+[source,properties]
+[subs="+macros"]
+..env
+----
+JRELEASER_GITHUB_TOKEN = b9df0920aefcbfa69f57c4f02bae4396
+----
+
+`.env` files must be placed at the basedir of the
+project, must be named `.env`, and there can only be a single file.
+
+== Precedence Order
+
+Settings will be evaluated in the following order:
+
+ * Explicitly set in the corresponding DSL.
+ * Defaults coming from the build tool (xref:tools:jreleaser-maven.adoc#_defaults[{icon_maven_s} Maven],
+   xref:tools:jreleaser-gradle.adoc#_defaults[{icon_gradle_s} Gradle]).
+ * Command flags.
+ * System properties.
+ * The running shell’s environment variables.
+ * Project configuration (`.env` file).
+ * User configuration (`$XDG_CONFIG_HOME/jreleaser`, `$JRELEASER_USER_HOME`, `$HOME/.jreleaser`).
+
+== Inspection
+
+Use the `env` command to display environment variable key names as resolved by the tool
+
+ * xref:tools:jreleaser-cli.adoc#_env[{icon_cli_s} env]
+ * xref:tools:jreleaser-maven.adoc#_jreleaserenv[{icon_maven_s} jreleaser:env]
+ * xref:tools:jreleaser-gradle.adoc#_jreleaserenv[{icon_gradle_s} jreleaserEnv]
+ * xref:tools:jreleaser-ant.adoc#_jreleaser_env[{icon_ant_s} jreleaser-env]
+
+You'll also find  these key names in the respective `trace.log` file.
