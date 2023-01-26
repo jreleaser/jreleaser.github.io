@@ -12,7 +12,7 @@ of files. Files resolved by Artifact and Glob types do not preserve directory st
 
 Artifacts have the following properties:
 
-* `path`. Defines the location of the file. Path may be relative or absolute. We recomend defining paths
+* `path`. Defines the location of the file. Path may be relative or absolute. We recommend defining paths
 that are relative to the `basedir` as much as possible, as that simplifies the setup on
 xref:continuous-integration:index.adoc[CI]. Its value may use xref:reference:name-templates.adoc[].
 This property is *required*.
@@ -24,9 +24,36 @@ This property is *optional*.
 * `platform`. Defines the OS specific platform for this file. Some xref:reference:assemble/index.adoc[assemblers]
 and xref:reference:packagers/index.adoc[packagers] require that artifacts define a platform.
 
+include::reference:partial$platform.adoc[]
+
 * `extraProperties`. Defines key/value pairs of metadata that's related to the artifact.
 
-include::reference:partial$platform.adoc[]
+=== Optional
+
+There may be times when artifacts are not be available for various reasons yet the release should continue without them.
+You may set an extra property named `optional` whose value resolves to `true` or `false`. Optional artifacts will be
+automatically skipped. You may use xref:reference:name-templates.adoc[name templates] with this property, for example
+
+[source,yaml]
+----
+environment:
+  properties:
+    # default value if property is not explicitly set
+    versionOpt: false
+
+files:
+  artifacts:
+    - path: 'target/resources/version.txt'
+      extraProperties:
+        optional: '{{versionOpt}}'
+----
+
+You may then execute a release and skip the given file by running the following command:
+
+[source,sh]
+----
+$ jreleaser release -PversionOpt=true
+----
 
 == Globs
 
