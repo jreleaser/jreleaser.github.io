@@ -736,7 +736,7 @@
     <a class="version" href="../../../early-access/reference/release/changelog.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/release/changelog.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/main/docs/modules/reference/pages/release/changelog.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -2000,7 +2000,8 @@ release:
 </div>
 <div class="paragraph">
 <p>Changelog formatting applies only to the automatically generated changelog, that is, formatting won&#8217;t occur if the <code>external</code>
-property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.</p>
+property is set. Please note that the <code>formatted</code> property must also be set. Format applies only to local commits at the moment,
+the use of labelers is highly encouraged.</p>
 </div>
 <div class="paragraph">
 <p>The <code>changelog.format</code> property accepts only the following name templates:</p>
@@ -3266,6 +3267,314 @@ JReleaser does not verify if a previous tag is already found in the full changel
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given a repository with the following commit information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 4df324c (HEAD -&gt; main, tag: v1.0.0, origin/main, origin/HEAD) chore: Update JReleaser configuration
+* 035c613 fix: Update JReleaser configuration
+* 19742db feat: Add arguments to Main class
+* b2f44ae fix: Use fetch-depth=0 when checking out on release
+* 420029a feat: Add Maven assembly descriptor
+* 91ce213 chore: Setup build &amp; release workflows
+* bcb9a13 feat: Add JReleaser configuration
+* 1294493 chore: Add Maven wrapper files
+* 75dab0f chore: Add sources
+* 532b93b chore: Add license file
+* 51c3234 Init repository</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plain"><a class="anchor" href="#_plain"></a>Plain</h3>
+<div class="paragraph">
+<p>Generate a plain changelog (no formatting) based on commit messages</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      enabled: true</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+4df324c chore: Update JReleaser configuration
+035c613 fix: Update JReleaser configuration
+19742db feat: Add arguments to Main class
+b2f44ae fix: Use fetch-depth=0 when checking out on release
+420029a feat: Add Maven assembly descriptor
+91ce213 chore: Setup build &amp; release workflows
+bcb9a13 feat: Add JReleaser configuration
+1294493 chore: Add Maven wrapper files
+75dab0f chore: Add sources
+532b93b chore: Add license file
+51c3234 Init repository</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_simple_format"><a class="anchor" href="#_simple_format"></a>Simple Format</h3>
+<div class="paragraph">
+<p>Generate the changelog using basic formatting rules</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+- 4df324c chore: Update JReleaser configuration (Andres Almiray)
+- 035c613 fix: Update JReleaser configuration (Andres Almiray)
+- 19742db feat: Add arguments to Main class (Andres Almiray)
+- b2f44ae fix: Use fetch-depth=0 when checking out on release (Andres Almiray)
+- 420029a feat: Add Maven assembly descriptor (Andres Almiray)
+- 91ce213 chore: Setup build &amp; release workflows (Andres Almiray)
+- bcb9a13 feat: Add JReleaser configuration (Andres Almiray)
+- 1294493 chore: Add Maven wrapper files (Andres Almiray)
+- 75dab0f chore: Add sources (Andres Almiray)
+- 532b93b chore: Add license file (Andres Almiray)
+- 51c3234 Init repository (Andres Almiray)
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_custom_content"><a class="anchor" href="#_custom_content"></a>Custom Content</h3>
+<div class="paragraph">
+<p>Generate the changelog with a custom content template</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      contentTemplate: src/jreleaser/templates/changelog.tpl</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">src/jreleaser/templates/changelog.tpl</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## {{releaseName}}
+
+{{changelogChanges}}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Release v1.0.0
+
+- 4df324c chore: Update JReleaser configuration (Andres Almiray)
+- 035c613 fix: Update JReleaser configuration (Andres Almiray)
+- 19742db feat: Add arguments to Main class (Andres Almiray)
+- b2f44ae fix: Use fetch-depth=0 when checking out on release (Andres Almiray)
+- 420029a feat: Add Maven assembly descriptor (Andres Almiray)
+- 91ce213 chore: Setup build &amp; release workflows (Andres Almiray)
+- bcb9a13 feat: Add JReleaser configuration (Andres Almiray)
+- 1294493 chore: Add Maven wrapper files (Andres Almiray)
+- 75dab0f chore: Add sources (Andres Almiray)
+- 532b93b chore: Add license file (Andres Almiray)
+- 51c3234 Init repository (Andres Almiray)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_preset"><a class="anchor" href="#_preset"></a>Preset</h3>
+<div class="paragraph">
+<p>Generate the changelog using the <code>conventional-commits</code> preset</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+## 🚀 Features
+- 19742db Add arguments to Main class
+- 420029a Add Maven assembly descriptor
+- bcb9a13 Add JReleaser configuration
+
+## 🐛 Fixes
+- 035c613 Update JReleaser configuration
+- b2f44ae Use fetch-depth=0 when checking out on release
+
+## 🧰 Tasks
+- 4df324c Update JReleaser configuration
+- 91ce213 Setup build &amp; release workflows
+- 1294493 Add Maven wrapper files
+- 75dab0f Add sources
+- 532b93b Add license file
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_custom_formatting_rules"><a class="anchor" href="#_custom_formatting_rules"></a>Custom Formatting Rules</h3>
+<div class="paragraph">
+<p>Apply your own categorization. May be combined with existing presets</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+      labelers:
+        - label: 'feature'
+          title: 'feat:'
+        - label: 'issue'
+          title: 'fix:'
+        - label: 'task'
+          title: 'chore:'
+      categories:
+        - title: '⭐️ Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🛠 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: 'feat: '
+        - search: 'fix: '
+        - search: 'chore: '</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+## ⭐️ Features
+- 19742db Add arguments to Main class
+- 420029a Add Maven assembly descriptor
+- bcb9a13 Add JReleaser configuration
+
+## 🛠 Tasks
+- 4df324c Update JReleaser configuration
+- 91ce213 Setup build &amp; release workflows
+- 1294493 Add Maven wrapper files
+- 75dab0f Add sources
+- 532b93b Add license file
+
+## ✅ Issues
+- 035c613 Update JReleaser configuration
+- b2f44ae Use fetch-depth=0 when checking out on release
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Andres Almiray ([@aalmiray](https://github.com/aalmiray))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_external_changelog"><a class="anchor" href="#_external_changelog"></a>External Changelog</h3>
+<div class="paragraph">
+<p>Configure any file as a changelog source.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+An external changelog is used "as is". Name templates won&#8217;t be resolved!
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      external: partial-changelog.md</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">partial-changelog.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Release v1.0.0
+
+We're pleased to announce v1.0.0 has been released.
+
+### New and noteworthy
+
+ * Feature A
+ * Feature b
+
+### Fixes
+
+ * Bug 1
+ * Bug 2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Release v1.0.0
+
+We're pleased to announce v1.0.0 has been released.
+
+### New and noteworthy
+
+ * Feature A
+ * Feature b
+
+### Fixes
+
+ * Bug 1
+ * Bug 2</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
