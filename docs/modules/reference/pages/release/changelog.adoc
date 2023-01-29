@@ -99,7 +99,8 @@ include::partial$release/gradle/common-footer.adoc[]
 You may define either `content` or `contentTemplate`, with the latter taking precedence over the former.
 
 Changelog formatting applies only to the automatically generated changelog, that is, formatting won't occur if the `external`
-property is set. Format applies only to local commits at the moment, the use of labelers is highly encouraged.
+property is set. Please note that the `formatted` property must also be set. Format applies only to local commits at the moment,
+the use of labelers is highly encouraged.
 
 The `changelog.format` property accepts only the following name templates:
 
@@ -543,4 +544,286 @@ does not exist then the generated changelog will be prepended at the beginning o
 NOTE: Changelog appending is only active when a project is not snapshot.
 
 IMPORTANT: JReleaser does not verify if a previous tag is already found in the full changelog before appending.
+
+== Examples
+
+Given a repository with the following commit information:
+
+[source,sh]
+----
+* 4df324c (HEAD -> main, tag: v1.0.0, origin/main, origin/HEAD) chore: Update JReleaser configuration
+* 035c613 fix: Update JReleaser configuration
+* 19742db feat: Add arguments to Main class
+* b2f44ae fix: Use fetch-depth=0 when checking out on release
+* 420029a feat: Add Maven assembly descriptor
+* 91ce213 chore: Setup build & release workflows
+* bcb9a13 feat: Add JReleaser configuration
+* 1294493 chore: Add Maven wrapper files
+* 75dab0f chore: Add sources
+* 532b93b chore: Add license file
+* 51c3234 Init repository
+----
+
+=== Plain
+
+Generate a plain changelog (no formatting) based on commit messages
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      enabled: true
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Changelog
+
+4df324c chore: Update JReleaser configuration
+035c613 fix: Update JReleaser configuration
+19742db feat: Add arguments to Main class
+b2f44ae fix: Use fetch-depth=0 when checking out on release
+420029a feat: Add Maven assembly descriptor
+91ce213 chore: Setup build & release workflows
+bcb9a13 feat: Add JReleaser configuration
+1294493 chore: Add Maven wrapper files
+75dab0f chore: Add sources
+532b93b chore: Add license file
+51c3234 Init repository
+----
+
+=== Simple Format
+
+Generate the changelog using basic formatting rules
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Changelog
+
+- 4df324c chore: Update JReleaser configuration (Andres Almiray)
+- 035c613 fix: Update JReleaser configuration (Andres Almiray)
+- 19742db feat: Add arguments to Main class (Andres Almiray)
+- b2f44ae fix: Use fetch-depth=0 when checking out on release (Andres Almiray)
+- 420029a feat: Add Maven assembly descriptor (Andres Almiray)
+- 91ce213 chore: Setup build & release workflows (Andres Almiray)
+- bcb9a13 feat: Add JReleaser configuration (Andres Almiray)
+- 1294493 chore: Add Maven wrapper files (Andres Almiray)
+- 75dab0f chore: Add sources (Andres Almiray)
+- 532b93b chore: Add license file (Andres Almiray)
+- 51c3234 Init repository (Andres Almiray)
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray
+----
+
+=== Custom Content
+
+Generate the changelog with a custom content template
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      contentTemplate: src/jreleaser/templates/changelog.tpl
+----
+
+.src/jreleaser/templates/changelog.tpl
+[source,md]
+----
+## {{releaseName}}
+
+{{changelogChanges}}
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Release v1.0.0
+
+- 4df324c chore: Update JReleaser configuration (Andres Almiray)
+- 035c613 fix: Update JReleaser configuration (Andres Almiray)
+- 19742db feat: Add arguments to Main class (Andres Almiray)
+- b2f44ae fix: Use fetch-depth=0 when checking out on release (Andres Almiray)
+- 420029a feat: Add Maven assembly descriptor (Andres Almiray)
+- 91ce213 chore: Setup build & release workflows (Andres Almiray)
+- bcb9a13 feat: Add JReleaser configuration (Andres Almiray)
+- 1294493 chore: Add Maven wrapper files (Andres Almiray)
+- 75dab0f chore: Add sources (Andres Almiray)
+- 532b93b chore: Add license file (Andres Almiray)
+- 51c3234 Init repository (Andres Almiray)
+----
+
+=== Preset
+
+Generate the changelog using the `conventional-commits` preset
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Changelog
+
+## 🚀 Features
+- 19742db Add arguments to Main class
+- 420029a Add Maven assembly descriptor
+- bcb9a13 Add JReleaser configuration
+
+## 🐛 Fixes
+- 035c613 Update JReleaser configuration
+- b2f44ae Use fetch-depth=0 when checking out on release
+
+## 🧰 Tasks
+- 4df324c Update JReleaser configuration
+- 91ce213 Setup build & release workflows
+- 1294493 Add Maven wrapper files
+- 75dab0f Add sources
+- 532b93b Add license file
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray
+----
+
+=== Custom Formatting Rules
+
+Apply your own categorization. May be combined with existing presets
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+      labelers:
+        - label: 'feature'
+          title: 'feat:'
+        - label: 'issue'
+          title: 'fix:'
+        - label: 'task'
+          title: 'chore:'
+      categories:
+        - title: '⭐️ Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🛠 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: 'feat: '
+        - search: 'fix: '
+        - search: 'chore: '
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Changelog
+
+## ⭐️ Features
+- 19742db Add arguments to Main class
+- 420029a Add Maven assembly descriptor
+- bcb9a13 Add JReleaser configuration
+
+## 🛠 Tasks
+- 4df324c Update JReleaser configuration
+- 91ce213 Setup build & release workflows
+- 1294493 Add Maven wrapper files
+- 75dab0f Add sources
+- 532b93b Add license file
+
+## ✅ Issues
+- 035c613 Update JReleaser configuration
+- b2f44ae Use fetch-depth=0 when checking out on release
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+- Andres Almiray ([@aalmiray](https://github.com/aalmiray))
+----
+
+=== External Changelog
+
+Configure any file as a changelog source.
+
+NOTE: An external changelog is used "as is". Name templates won't be resolved!
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      external: partial-changelog.md
+----
+
+.partial-changelog.md
+[source,md]
+----
+## Release v1.0.0
+
+We're pleased to announce v1.0.0 has been released.
+
+### New and noteworthy
+
+ * Feature A
+ * Feature b
+
+### Fixes
+
+ * Bug 1
+ * Bug 2
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Release v1.0.0
+
+We're pleased to announce v1.0.0 has been released.
+
+### New and noteworthy
+
+ * Feature A
+ * Feature b
+
+### Fixes
+
+ * Bug 1
+ * Bug 2
+----
 
