@@ -1,12 +1,16 @@
-= Telegram
-:announcer_id:      telegram
-:announcer_name:    Telegram
-:announcer_sys_key: telegram
-:announcer_env_key: TELEGRAM
+= Linkedin
+:announcer_id:      linkedin
+:announcer_name:    Linkedin
+:announcer_sys_key: linkedin
+:announcer_env_key: LINKEDIN
 
-Posts a message to a link:https://telegram.org/[Telegram] chat. You must create a link:https://core.telegram.org/bots[Bot]
-for this announcer to work. You must also obtain the `chatId` for the particular chat/channel where the message will be sent.
+Shares a post to link:https://linkedin.com/[Linkedin]. You must obtain an link:https://developer.linkedin.com/[Oauth access token]
+with the following permissions:
 
+ * r_emailaddress, 
+ * r_liteprofile, 
+ * w_member_social
+ 
 == Configuration
 
 include::partial$legend.adoc[]
@@ -21,13 +25,18 @@ YAML::
 ----
 include::partial$announce/yaml/common-head.adoc[]
 
-    # The token associated with a Telegram bot.
+    # The OAuth access token.
     # icon:exclamation-triangle[] icon:eye-slash[]
     token: __USE_ENVIRONMENT_VARIABLE__
 
-    # The identifier of the chat where announcemnts will be posted.
-    # icon:exclamation-triangle[] icon:eye-slash[]
-    chatId: __USE_ENVIRONMENT_VARIABLE__
+    # The URN identifying the actor that can post a share.
+    # icon:dot-circle[] icon:eye-slash[]
+    owner: __USE_ENVIRONMENT_VARIABLE__
+
+    # The post subject.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    subject: '{{projectNameCapitalized}} {{projectVersion}} released'
 
     # The announcement message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -36,9 +45,9 @@ include::partial$announce/yaml/common-head.adoc[]
 
     # Path to a template file that contains the message.
     # Review the available xref:reference:name-templates.adoc[].
-    # Defaults to `src/jreleaser/templates/telegram.tpl`.
+    # Defaults to `src/jreleaser/templates/linkedin.tpl`.
     # icon:dot-circle[]
-    messageTemplate: path/to/template/telegram.tpl
+    messageTemplate: path/to/template/linkedin.tpl
 ----
 --
 TOML::
@@ -49,13 +58,18 @@ TOML::
 ----
 include::partial$announce/toml/common-head.adoc[]
 
-  # The token associated with a Telegram bot.
+  # The OAuth access token.
   # icon:exclamation-triangle[] icon:eye-slash[]
   token = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The identifier of the chat where announcemnts will be posted.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  chatId = "__USE_ENVIRONMENT_VARIABLE__"
+  # The URN identifying the actor that can post a share.
+  # icon:dot-circle[] icon:eye-slash[]
+  owner = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # The post subject.
+  # Review the available xref:reference:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  subject = "{{projectNameCapitalized}} {{projectVersion}} released"
 
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
@@ -64,9 +78,9 @@ include::partial$announce/toml/common-head.adoc[]
 
   # Path to a template file that contains the message.
   # Review the available xref:reference:name-templates.adoc[].
-  # Defaults to `src/jreleaser/templates/telegram.tpl`.
+  # Defaults to `src/jreleaser/templates/linkedin.tpl`.
   # icon:dot-circle[]
-  messageTemplate = "path/to/template/telegram.tpl"
+  messageTemplate = "path/to/template/linkedin.tpl"
 ----
 --
 JSON::
@@ -77,13 +91,18 @@ JSON::
 ----
 include::partial$announce/json/common-head.adoc[]
 
-      // The token associated with a Telegram bot.
+      // The OAuth access token.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "token": "__USE_ENVIRONMENT_VARIABLE__",
 
-      // The identifier of the chat where announcemnts will be posted.
-      // icon:exclamation-triangle[] icon:eye-slash[]
-      "chatId": "__USE_ENVIRONMENT_VARIABLE__",
+      // The URN identifying the actor that can post a share.
+      // icon:dot-circle[] icon:eye-slash[]
+      "owner": "__USE_ENVIRONMENT_VARIABLE__",
+
+      // The post subject.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      "subject": "{{projectNameCapitalized}} {{projectVersion}} released"
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -92,9 +111,9 @@ include::partial$announce/json/common-head.adoc[]
 
       // Path to a template file that contains the message.
       // Review the available xref:reference:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/telegram.tpl`.
+      // Defaults to `src/jreleaser/templates/linkedin.tpl`.
       // icon:dot-circle[]
-      "messageTemplate": "path/to/template/telegram.tpl"
+      "messageTemplate": "path/to/template/linkedin.tpl"
 include::partial$announce/json/common-footer.adoc[]
 ----
 --
@@ -107,16 +126,23 @@ Maven::
 include::partial$announce/maven/common-head.adoc[]
 
       <!--
-        The token associated with a Telegram bot.
+        The OAuth access token.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <token>__USE_ENVIRONMENT_VARIABLE__</token>
 
       <!--
-        The identifier of the chat where announcemnts will be posted.
-        icon:exclamation-triangle[] icon:eye-slash[]
+        The URN identifying the actor that can post a share.
+        icon:dot-circle[] icon:eye-slash[]
       -->
-      <chatId>__USE_ENVIRONMENT_VARIABLE__</chatId>
+      <owner>__USE_ENVIRONMENT_VARIABLE__</owner>
+
+      <!--
+        The post subject.
+        Review the available xref:reference:name-templates.adoc[].
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <subject>{{projectNameCapitalized}} {{projectVersion}} released</subject>
 
       <!--
         The announcement message.
@@ -128,10 +154,10 @@ include::partial$announce/maven/common-head.adoc[]
       <!--
         Path to a template file that contains the message.
         Review the available xref:reference:name-templates.adoc[].
-        Defaults to `src/jreleaser/templates/telegram.tpl`.
+        Defaults to `src/jreleaser/templates/linkedin.tpl`.
         icon:dot-circle[]
       -->
-      <messageTemplate>path/to/template/telegram.tpl</messageTemplate>
+      <messageTemplate>path/to/template/linkedin.tpl</messageTemplate>
 include::partial$announce/maven/common-footer.adoc[]
 ----
 --
@@ -143,13 +169,18 @@ Gradle::
 ----
 include::partial$announce/gradle/common-head.adoc[]
 
-      // The token associated with a Telegram bot.
+      // The OAuth access token.
       // icon:exclamation-triangle[] icon:eye-slash[]
       token = '__USE_ENVIRONMENT_VARIABLE__'
 
-      // The identifier of the chat where announcemnts will be posted.
-      // icon:exclamation-triangle[] icon:eye-slash[]
-      chatId = '__USE_ENVIRONMENT_VARIABLE__'
+      // The URN identifying the actor that can post a share.
+      // icon:dot-circle[] icon:eye-slash[]
+      owner = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // The post subject.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      subject = '{{projectNameCapitalized}} {{projectVersion}} released'
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -158,15 +189,17 @@ include::partial$announce/gradle/common-head.adoc[]
 
       // Path to a template file that contains the message.
       // Review the available xref:reference:name-templates.adoc[].
-      // Defaults to `src/jreleaser/templates/telegram.tpl`.
+      // Defaults to `src/jreleaser/templates/linkedin.tpl`.
       // icon:dot-circle[]
-      messageTemplate = 'path/to/template/telegram.tpl'
+      messageTemplate = 'path/to/template/linkedin.tpl'
 include::partial$announce/gradle/common-footer.adoc[]
 ----
 --
 ====
 
 You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+NOTE: Use `messageTemplate` to define a custom JSON payload.
 
 include::partial$envvars-header.adoc[]
 
@@ -176,15 +209,15 @@ include::partial$envvars-header.adoc[]
 2+| *active*
 | jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
 2+| *token*
-| jreleaser.announce.{announcer_sys_key}.token +
-  jreleaser.{announcer_sys_key}.token
-| JRELEASER_ANNOUNCE_{announcer_env_key}_TOKEN +
-  JRELEASER_{announcer_env_key}_TOKEN
-2+| *chatId*
-| jreleaser.announce.{announcer_sys_key}.chat.id +
-  jreleaser.{announcer_sys_key}.chat.id
-| JRELEASER_ANNOUNCE_{announcer_env_key}_CHAT_ID +
-  JRELEASER_{announcer_env_key}_CHAT_ID
+| jreleaser.announce.{announcer_sys_key}.access.token +
+  jreleaser.{announcer_sys_key}.access.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_ACCESS_TOKEN +
+  JRELEASER_{announcer_env_key}_ACCESS_TOKEN
+2+| *owner*
+| jreleaser.announce.{announcer_sys_key}.owner +
+  jreleaser.{announcer_sys_key}.owner
+| JRELEASER_ANNOUNCE_{announcer_env_key}_OWNER +
+  JRELEASER_{announcer_env_key}_OWNER
 |===
 
 == Templates
@@ -195,7 +228,7 @@ The default location for templates is:
 
 The following list shows the filenames that may be used to override default templates:
 
-* `telegram.tpl`
+* `linkedin.tpl`
 
 Templates may be initialized using the `template` command
 
