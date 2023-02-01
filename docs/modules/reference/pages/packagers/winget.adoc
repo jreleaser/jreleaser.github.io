@@ -1,0 +1,759 @@
+= Winget
+:tool_id:       winget
+:tool_name:     winget
+:tool_tap:      repository
+:tool_tap_name: winget-app
+:tool_manifest: manifest
+:tool_package:  ${distribution.name}
+:packager_sys_key: winget
+:packager_env_key: WINGET
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: winget
+:tap_basename_env: WINGET
+:app_url:         pass:[https://acme.com/app]
+:app_support_url: pass:[https://acme.com/app/support]
+:product_code_url: https://learn.microsoft.com/en-us/windows/win32/msi/productcode
+
+link:https://learn.microsoft.com/en-us/windows/package-manager/[Winget] is a comprehensive package manager solution that
+consists of a command line tool and set of services for installing applications on Windows 10 and Windows 11.
+
+JReleaser can generate and publish Winget manifests into a repository that you have access to. This packager generates
+a set fo files and publishes them to a repository of your choice, however it's your responsibility to update the official
+link:https://github.com/microsoft/winget-pkgs[Windows Package Manager Community Repository] with a PR of your own.
+
+The following artifact extensions are supported by this packager:
+
+* `.msi`
+
+== Distribution Support
+
+[%header, cols="<,^"]
+|===
+| Distribution                                      | Supported
+| xref:concepts:distributions/binary.adoc[]         | {icon_req_n}
+| xref:concepts:distributions/flat-binary.adoc[]    | {icon_req_n}
+| xref:concepts:distributions/java-binary.adoc[]    | {icon_req_n}
+| xref:concepts:distributions/jlink.adoc[]          | {icon_req_n}
+| xref:concepts:distributions/native-image.adoc[]   | {icon_req_n}
+| xref:concepts:distributions/native-package.adoc[] | {icon_req_y}
+| xref:concepts:distributions/single-jar.adoc[]     | {icon_req_n}
+|===
+
+WARNING: Publication of snapshots is *not* allowed.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # The default package meta-data locale.
+    # Defaults to `en-US`.
+    # icon:dot-circle[] icon:file-alt[]
+    defaultLocale: 'en-US'
+
+    # The package author.
+    # Defaults to `${project.author}`.
+    # icon:dot-circle[]
+    author: 'Duke'
+
+    # The most common package term.
+    # Defaults to `{{distributionExecutable}}`.
+    # icon:dot-circle[] icon:file-alt[]
+    moniker: app
+
+    # The installer minimum operating system version.
+    # Defaults to `10.0.0.0`.
+    # icon:dot-circle[]
+    minimumOsVersion: '10.0.0.0'
+
+    # ProductCode could be used for correlation of packages across sources.
+    # Defaults to `{{distributionName}} {{productVersion}}`.
+    # See {product_code_url}
+    # icon:dot-circle[] icon:file-alt[]
+    productCode: '{12345678-1234-1234-1234-123456789012}'
+
+    # List of additional package search terms.
+    # icon:dot-circle[]
+    tags:
+      - cli
+      - awesome
+
+    # icon:dot-circle[]
+    package:
+
+      # The package unique identifier.
+      # Defaults to `{{projectVendor}}.{{distributionName}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      identifier: 'Acme.app'
+
+      # The package version.
+      # Defaults to `{{distributionName}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      name: 'app'
+
+      # The package version.
+      # Defaults to `{{projectVersion}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      version: '1.2.3'
+
+      # The package home page.
+      # Defaults to `{{projectLinkHomepage}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      url: '{app_url}'
+
+    # icon:dot-circle[]
+    publisher:
+
+      # The publisher name.
+      # Defaults to `{{projectVendor}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      name: 'Acme'
+
+      # The publisher home page.
+      # Defaults to `{{projectLinkHomepage}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      url: {app_url}
+
+      # The publisher support page.
+      # Defaults to `{{projectLinkBugTracker}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      supportUrl: {app_support_url}
+
+    # icon:dot-circle[]
+    installer:
+
+      # Supported installer types.
+      # Valid values are [`MSI`].
+      # Defaults to `MSI`.
+      # icon:dot-circle[]
+      type: MSI
+
+      # Scope indicates if the installer is per user or per machine.
+      # Valid values are [`USER`, `MACHINE`].
+      # Defaults to `MACHINE`.
+      # icon:dot-circle[]
+      scope: MACHINE
+
+      # List of supported installer modes.
+      # Valid values are [`SILENT`, `SILENT_WITH_PROGRESS`, `INTERACTIVE`].
+      # Defaults to [`SILENT`, `SILENT_WITH_PROGRESS`].
+      # icon:dot-circle[]
+      modes:
+        - SILENT
+
+      # The upgrade method.
+      # Valid values are [`INSTALL`, `UNINSTALL_PREVIOUS`].
+      # Defaults to `INSTALL`.
+      # icon:dot-circle[]
+      upgradeBehavior: INSTALL
+
+      # Command or alias to run the package.
+      # Defaults to `{{distributionExecutable}}`.
+      # icon:dot-circle[] icon:file-alt[]
+      command: app
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # The default package meta-data locale.
+  # Defaults to `en-US`.
+  # icon:dot-circle[] icon:file-alt[]
+  defaultLocale = "en-US"
+
+  # The package author.
+  # Defaults to `${project.author}`.
+  # icon:dot-circle[]
+  author = "Duke"
+
+  # The most common package term.
+  # Defaults to `{{distributionExecutable}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  moniker: "app"
+
+  # The installer minimum operating system version.
+  # Defaults to `10.0.0.0`.
+  # icon:dot-circle[]
+  minimumOsVersion = "10.0.0.0"
+
+  # ProductCode could be used for correlation of packages across sources.
+  # Defaults to `{{distributionName}} {{productVersion}}`.
+  # See {product_code_url}
+  # icon:dot-circle[] icon:file-alt[]
+  productCode = "{12345678-1234-1234-1234-123456789012}"
+
+  # List of additional package search terms.
+  # icon:dot-circle[]
+  tags: = ["cli", "awesome"]
+
+  # The package unique identifier.
+  # Defaults to `{{projectVendor}}.{{distributionName}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  package.identifier = "Acme.app"
+
+  # The package version.
+  # Defaults to `{{distributionName}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  package.name = "app"
+
+  # The package version.
+  # Defaults to `{{projectVersion}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  package.version = "1.2.3"
+
+  # The package home page.
+  # Defaults to `{{projectLinkHomepage}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  package.url = "{app_url}"
+
+  # The publisher name.
+  # Defaults to `{{projectVendor}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  publisher.name = "Acme"
+
+  # The publisher home page.
+  # Defaults to `{{projectLinkHomepage}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  publisher.url: {app_url}
+
+  # The publisher support page.
+  # Defaults to `{{projectLinkBugTracker}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  publisher.supportUrl: {app_support_url}
+
+  # Supported installer types.
+  # Valid values are [`MSI`].
+  # Defaults to `MSI`.
+  # icon:dot-circle[]
+  installer.type = "MSI"
+
+  # Scope indicates if the installer is per user or per machine.
+  # Valid values are [`USER`, `MACHINE`].
+  # Defaults to `MACHINE`.
+  # icon:dot-circle[]
+  installer.scope = "MACHINE"
+
+  # List of supported installer modes.
+  # Valid values are [`SILENT`, `SILENT_WITH_PROGRESS`, `INTERACTIVE`].
+  # Defaults to [`SILENT`, `SILENT_WITH_PROGRESS`].
+  # icon:dot-circle[]
+  installer.modes = ["SILENT"]
+
+  # The upgrade method.
+  # Valid values are [`INSTALL`, `UNINSTALL_PREVIOUS`].
+  # Defaults to `INSTALL`.
+  # icon:dot-circle[]
+  installer.upgradeBehavior = "INSTALL"
+
+  # Command or alias to run the package.
+  # Defaults to `{{distributionExecutable}}`.
+  # icon:dot-circle[] icon:file-alt[]
+  installer.command = "app"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // The default package meta-data locale.
+      // Defaults to `en-US`.
+      // icon:dot-circle[] icon:file-alt[]
+      "defaultLocale": "en-US",
+
+      // The package author.
+      // Defaults to `${project.author}`.
+      // icon:dot-circle[]
+      "author": "Duke",
+
+      // The most common package term.
+      // Defaults to `{{distributionExecutable}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      "moniker": "app",
+
+      // The installer minimum operating system version.
+      // Defaults to `10.0.0.0`.
+      // icon:dot-circle[]
+      "minimumOsVersion": "10.0.0.0",
+
+      // ProductCode could be used for correlation of packages across sources.
+      // Defaults to `{{distributionName}} {{productVersion}}`.
+      // See {product_code_url}
+      // icon:dot-circle[] icon:file-alt[]
+      "productCode": "{12345678-1234-1234-1234-123456789012}",
+
+      // List of additional package search terms.
+      // icon:dot-circle[]
+      "tags": [
+        "cli",
+        "awesome"
+      ],
+
+      // icon:dot-circle[]
+      "package": {
+        // The package unique identifier.
+        // Defaults to `{{projectVendor}}.{{distributionName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "identifier": "Acme.app",
+
+        // The package version.
+        // Defaults to `{{distributionName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "name": "app",
+
+        // The package version.
+        // Defaults to `{{projectVersion}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "version": "1.2.3",
+
+        // The package home page.
+        // Defaults to `{{projectLinkHomepage}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "url": "{app_url}"
+      },
+
+      // icon:dot-circle[]
+      "publisher": {
+        // The publisher name.
+        // Defaults to `{{projectVendor}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "name": "Acme",
+
+        // The publisher home page.
+        // Defaults to `{{projectLinkHomepage}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "url": "{app_url}",
+
+        // The publisher support page.
+        // Defaults to `{{projectLinkBugTracker}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "supportUrl": "{app_support_url}"
+      },
+
+      // icon:dot-circle[]
+      "installer": {
+        // Supported installer types.
+        // Valid values are [`MSI`].
+        // Defaults to `MSI`.
+        // icon:dot-circle[]
+        "type": "MSI",
+
+        // Scope indicates if the installer is per user or per machine.
+        // Valid values are [`USER`, `MACHINE`].
+        // Defaults to `MACHINE`.
+        // icon:dot-circle[]
+        "scope": "MACHINE",
+
+        // List of supported installer modes.
+        // Valid values are [`SILENT`, `SILENT_WITH_PROGRESS`, `INTERACTIVE`].
+        // Defaults to [`SILENT`, `SILENT_WITH_PROGRESS`].
+        // icon:dot-circle[]
+        "modes": [
+          "SILENT"
+        ],
+
+        // The upgrade method.
+        // Valid values are [`INSTALL`, `UNINSTALL_PREVIOUS`].
+        // Defaults to `INSTALL`.
+        // icon:dot-circle[]
+        "upgradeBehavior": "INSTALL",
+
+        // Command or alias to run the package.
+        // Defaults to `{{distributionExecutable}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        "command": "app"
+      }
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        The default package meta-data locale.
+        Defaults to `en-US`.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <defaultLocale>en-US</defaultLocale>
+
+      <!--
+        The package author.
+        Defaults to `${project.author}`.
+        icon:dot-circle[]
+      -->
+      <author>Duke</author>
+
+      <!--
+        The most common package term.
+        Defaults to `{{distributionExecutable}}`.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <moniker>app</moniker>
+
+      <!--
+        The installer minimum operating system version.
+        Defaults to `10.0.0.0`.
+        icon:dot-circle[]
+      -->
+      <minimumOsVersion>10.0.0.0</minimumOsVersion>
+
+        ProductCode could be used for correlation of packages across sources.
+        Defaults to `{{distributionName}} {{productVersion}}`.
+        See {product_code_url}
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <productCode>{12345678-1234-1234-1234-123456789012}</productCode>
+
+      <!--
+        List of additional package search terms.
+        icon:dot-circle[]
+      -->
+      <tags>
+        <tag>cli</tag>
+        <tag>awesome</tag>
+      </tags>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <package>
+        <!--
+          The package unique identifier.
+          Defaults to `{{projectVendor}}.{{distributionName}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <identifier>Acme.app</identifier>
+
+        <!--
+          The package version.
+          Defaults to `{{distributionName}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <name>app</name>
+
+        <!--
+          The package version.
+          Defaults to `{{projectVersion}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <version>1.2.3</version>
+
+        <!--
+          The package home page.
+          Defaults to `{{projectLinkHomepage}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <url>{app_url}</url>
+      </package>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <publisher>
+        <!--
+          The publisher name.
+          Defaults to `{{projectVendor}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <name>Acme</name>
+
+        <!--
+          The publisher home page.
+          Defaults to `{{projectLinkHomepage}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <url>{app_url}</url>
+
+        <!--
+          The publisher support page.
+          Defaults to `{{projectLinkBugTracker}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <supportUrl>{app_support_url}</supportUrl>
+      </publisher>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <installer>
+        <!--
+          Supported installer types.
+          Valid values are [`MSI`].
+          Defaults to `MSI`.
+          icon:dot-circle[]
+        -->
+        <type>MSI</type>
+
+        <!--
+          Scope indicates if the installer is per user or per machine.
+          Valid values are [`USER`, `MACHINE`].
+          Defaults to `MACHINE`.
+          icon:dot-circle[]
+        -->
+        <scope>MACHINE</scope>
+
+        <!--
+          List of supported installer modes.
+          Valid values are [`SILENT`, `SILENT_WITH_PROGRESS`, `INTERACTIVE`].
+          Defaults to [`SILENT`, `SILENT_WITH_PROGRESS`].
+          icon:dot-circle[]
+        -->
+        <modes>
+          </mode>SILENT</mode>
+        </modes>
+
+        <!--
+          The upgrade method.
+          Valid values are [`INSTALL`, `UNINSTALL_PREVIOUS`].
+          Defaults to `INSTALL`.
+          icon:dot-circle[]
+        -->
+        <upgradeBehavior>INSTALL</upgradeBehavior>
+
+        <!--
+          Command or alias to run the package.
+          Defaults to `{{distributionExecutable}}`.
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <command>app</command>
+      </installer>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // The default package meta-data locale.
+      // Defaults to `en-US`.
+      // icon:dot-circle[] icon:file-alt[]
+      defaultLocale = 'en-US'
+
+      // The package author.
+      // Defaults to `${project.author}`.
+      // icon:dot-circle[]
+      author = 'Duke'
+
+      // The most common package term.
+      // Defaults to `{{distributionExecutable}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      moniker = 'app'
+
+      // The installer minimum operating system version.
+      // Defaults to `10.0.0.0`.
+      // icon:dot-circle[]
+      minimumOsVersion = '10.0.0.0'
+
+      // ProductCode could be used for correlation of packages across sources.
+      // Defaults to `{{distributionName}} {{productVersion}}`.
+      // See {product_code_url}
+      // icon:dot-circle[] icon:file-alt[]
+      productCode = '{12345678-1234-1234-1234-123456789012}'
+
+      // List of additional package search terms.
+      // icon:dot-circle[]
+      tags = ['cli', 'awesome']
+
+      // icon:dot-circle[]
+      wingetPackage {
+        // The package unique identifier.
+        // Defaults to `{{projectVendor}}.{{distributionName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        identifier = 'Acme.app'
+
+        // The package version.
+        // Defaults to `{{distributionName}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        name = 'app'
+
+        // The package version.
+        // Defaults to `{{projectVersion}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        version = '1.2.3'
+
+        // The package home page.
+        // Defaults to `{{projectLinkHomepage}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        url = '{app_url}'
+      }
+
+      // icon:dot-circle[]
+      publisher {
+        // The publisher name.
+        // Defaults to `{{projectVendor}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        name = 'Acme'
+
+        // The publisher home page.
+        // Defaults to `{{projectLinkHomepage}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        url = '{app_url}'
+
+        // The publisher support page.
+        // Defaults to `{{projectLinkBugTracker}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        supportUrl = '{app_support_url}'
+      }
+
+      // icon:dot-circle[]
+      installer {
+        // Supported installer types.
+        // Valid values are [`MSI`].
+        // Defaults to `MSI`.
+        // icon:dot-circle[]
+        type = 'MSI'
+
+        // Scope indicates if the installer is per user or per machine.
+        // Valid values are [`USER`, `MACHINE`].
+        // Defaults to `MACHINE`.
+        // icon:dot-circle[]
+        scope = 'MACHINE'
+
+        // List of supported installer modes.
+        // Valid values are [`SILENT`, `SILENT_WITH_PROGRESS`, `INTERACTIVE`].
+        // Defaults to [`SILENT`, `SILENT_WITH_PROGRESS`].
+        // icon:dot-circle[]
+        modes = ['SILENT']
+
+        // The upgrade method.
+        // Valid values are [`INSTALL`, `UNINSTALL_PREVIOUS`].
+        // Defaults to `INSTALL`.
+        // icon:dot-circle[]
+        upgradeBehavior = 'INSTALL'
+
+        // Command or alias to run the package.
+        // Defaults to `{{distributionExecutable}}`.
+        // icon:dot-circle[] icon:file-alt[]
+        command = 'app'
+      }
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *active*
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *active*
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
+include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
+
+== Additional Locale Files
+
+You may configure additional locale files other than the default. Place them in the same directory as the configured
+`templateDirectory` (default is `src/jreleaser/distributions/<distribution-name>/winget`) using the following naming
+convention: `locale.<value>.yaml.tpl`, where `<value>` is a valid locale identifier. For example, adding a locale file
+for `fr-FR` results in a file named `locale.fr-FR.yaml.tpl`.
+
+== Skip Artifacts
+
+If there is more than one matching artifact in a given distribution you may add a `skipWinget` extra property to the target
+artifact to mark it as skipped for packaging with winget.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/winget`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `installer.yaml.tpl`
+* `locale.yaml.tpl`
+* `version.yaml.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+ * xref:tools:jreleaser-cli.adoc#_template_generate[{icon_cli_s} template generate]
+ * xref:tools:jreleaser-maven.adoc#_jreleasertemplate_generate[{icon_maven_s} jreleaser:template-generate]
+ * xref:tools:jreleaser-gradle.adoc#_jreleasertemplategenerate[{icon_gradle_s} jreleaserTemplategGenerate]
+ * xref:tools:jreleaser-ant.adoc#_jreleaser_template_generate[{icon_ant_s} jreleaser-template-generate]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex
