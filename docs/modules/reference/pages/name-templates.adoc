@@ -491,6 +491,105 @@ The value of `tagName` is calculated as follows:
 * if the project is snapshot the value becomes "`early-access`".
 * if the project is release the value remains unchanged.
 
+== Changelog
+
+Every key/value from `changelog.extraProperties` is mapped with `changelog` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+release:
+  github:
+    changelog:
+      extraProperties:
+        # Key will be capitalized and prefixed
+        # with `changelog`, i.e, `changelogFoo`.
+        foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[release.github]
+  # Key will be capitalized and prefixed
+  # with `changelog`, i.e, `changelogFoo`.
+  changelog.extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "release": {
+    "github": {
+      "changelog": {
+        "extraProperties": {
+          // Key will be capitalized and prefixed
+          // with `changelog`, i.e, `changelogFoo`.
+          "foo": "bar"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <release>
+    <github>
+      <changelog>
+        <extraProperties>
+          <!--
+            Key will be capitalized and prefixed
+            with `changelog`, i.e, `changelogFoo`.
+          -->
+          <foo>bar</foo>
+        </extraProperties>
+      </changelog>
+    </github>
+  </release>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  release {
+    github {
+      changelog {
+        // Key will be capitalized and prefixed
+        // with `changelog`, i.e, `changelogFoo`.
+        extraProperties.put('foo', 'bar')
+      }
+    }
+  }
+}
+----
+--
+====
+
 == Distribution
 
 The following names are related to xref:reference:distributions.adoc[]
