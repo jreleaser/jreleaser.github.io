@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -1000,7 +1003,13 @@ release:
         - search: '\[chore\]\s'
           replace: ''
         - search: '/CVE-(\d{4})-(\d+)/g'
-          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'</code></pre>
+          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+        foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -1210,7 +1219,12 @@ release:
 
   [[release.github.changelog.replacers]]
     search = "/CVE-(\d{4})-(\d+)/g"
-    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"</code></pre>
+    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  changelog.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -1444,8 +1458,15 @@ release:
             "search": "/CVE-(\d{4})-(\d+)/g",
             "replace": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
           }
-        ]
-      },
+        ],
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+          "foo": "bar"
+        },
+      }
     }
   }
 }</code></pre>
@@ -1761,6 +1782,17 @@ release:
             &lt;replace&gt;https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2&lt;/replace&gt;
           &lt;/replacer&gt;
         &lt;/replacers&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
       &lt;/changelog&gt;
     &lt;/github&gt;
   &lt;/release&gt;
@@ -1989,6 +2021,11 @@ release:
           search = '/CVE-(\d{4})-(\d+)/g'
           replace = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
         }
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
       }
     }
   }
