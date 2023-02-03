@@ -2500,6 +2500,10 @@ Use the <code>key</code> value to match a category and change its settings.
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Scoped commits may be categorized as well by defining an extra property named <code>categorizeScopes</code> with
+a <code>true</code> value.</p>
+</div>
 <div class="sect3">
 <h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
 <div class="paragraph">
@@ -3318,7 +3322,7 @@ JReleaser does not verify if a previous tag is already found in the full changel
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 4df324c (HEAD -&gt; main, tag: v1.0.0, origin/main, origin/HEAD) chore: Update JReleaser configuration
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 4df324c (HEAD -&gt; main) chore: Update JReleaser configuration
 * 035c613 fix: Update JReleaser configuration
 * 19742db feat: Add arguments to Main class
 * b2f44ae fix: Use fetch-depth=0 when checking out on release
@@ -3613,6 +3617,89 @@ We're pleased to announce v1.0.0 has been released.
 
  * Bug 1
  * Bug 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_categorized_scopes"><a class="anchor" href="#_categorized_scopes"></a>Categorized Scopes</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>conventional-commits</code> preset must be configured.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Given a repository with the following commit information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 86c03d0 (HEAD -&gt; main) build(release): Update JReleaser configuration
+* 072c519 fix(release): Update JReleaser configuration
+* 865592a feat(core): Add arguments to Main class
+* 54e0199 build(release): Use fetch-depth=0 when checking out on release
+* a8c6140 build(assembly): Add Maven assembly descriptor
+* 25789a7 build(release): Setup build &amp; release workflows
+* fa0d451 feat(release): Add JReleaser configuration
+* 5c18c47 build: Add Maven wrapper files
+* 4cc2751 build: Add sources
+* d751ebe build: Add license file
+* 51c3234 Init repository</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      extraProperties:
+        categorizeScopes: true</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+## 🚀 Features
+**core**
+- 865592a Add arguments to Main class
+
+**release**
+- fa0d451 Add JReleaser configuration
+
+## 🐛 Fixes
+**release**
+- 072c519 Update JReleaser configuration
+
+## 🛠  Build
+**assembly**
+- a8c6140 Add Maven assembly descriptor
+
+**release**
+- 86c03d0 Update JReleaser configuration
+- 54e0199 Use fetch-depth=0 when checking out on release
+- 25789a7 Setup build &amp; release workflows
+
+**unscoped**
+- 5c18c47 Add Maven wrapper files
+- 4cc2751 Add sources
+- d751ebe Add license file
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray</code></pre>
 </div>
 </div>
 </div>
