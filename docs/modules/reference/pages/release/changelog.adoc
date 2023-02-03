@@ -290,6 +290,9 @@ ea65d99 (core) Add missing checks in loader
 
 NOTE: Use the `key` value to match a category and change its settings.
 
+Scoped commits may be categorized as well by defining an extra property named `categorizeScopes` with
+a `true` value.
+
 ==== Example
 
 The following configuration
@@ -551,7 +554,7 @@ Given a repository with the following commit information:
 
 [source,sh]
 ----
-* 4df324c (HEAD -> main, tag: v1.0.0, origin/main, origin/HEAD) chore: Update JReleaser configuration
+* 4df324c (HEAD -> main) chore: Update JReleaser configuration
 * 035c613 fix: Update JReleaser configuration
 * 19742db feat: Add arguments to Main class
 * b2f44ae fix: Use fetch-depth=0 when checking out on release
@@ -827,3 +830,73 @@ We're pleased to announce v1.0.0 has been released.
  * Bug 2
 ----
 
+=== Categorized Scopes
+
+NOTE: The `conventional-commits` preset must be configured.
+
+Given a repository with the following commit information:
+
+[source,sh]
+----
+* 86c03d0 (HEAD -> main) build(release): Update JReleaser configuration
+* 072c519 fix(release): Update JReleaser configuration
+* 865592a feat(core): Add arguments to Main class
+* 54e0199 build(release): Use fetch-depth=0 when checking out on release
+* a8c6140 build(assembly): Add Maven assembly descriptor
+* 25789a7 build(release): Setup build & release workflows
+* fa0d451 feat(release): Add JReleaser configuration
+* 5c18c47 build: Add Maven wrapper files
+* 4cc2751 build: Add sources
+* d751ebe build: Add license file
+* 51c3234 Init repository
+----
+
+[source,yml]
+----
+release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      extraProperties:
+        categorizeScopes: true
+----
+
+.out/jreleaser/release/CHANGELOG.md
+[source,md]
+----
+## Changelog
+
+## 🚀 Features
+**core**
+- 865592a Add arguments to Main class
+
+**release**
+- fa0d451 Add JReleaser configuration
+
+## 🐛 Fixes
+**release**
+- 072c519 Update JReleaser configuration
+
+## 🛠  Build
+**assembly**
+- a8c6140 Add Maven assembly descriptor
+
+**release**
+- 86c03d0 Update JReleaser configuration
+- 54e0199 Use fetch-depth=0 when checking out on release
+- 25789a7 Setup build & release workflows
+
+**unscoped**
+- 5c18c47 Add Maven wrapper files
+- 4cc2751 Add sources
+- d751ebe Add license file
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray
+----
