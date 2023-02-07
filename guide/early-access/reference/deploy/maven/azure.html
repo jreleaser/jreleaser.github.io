@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gitlab :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/deploy/maven/gitlab.html">
+    <title>Azure :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/reference/deploy/maven/azure.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../../_/css/site-extra.css">
@@ -493,7 +493,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="artifactory.html">Artifactory</a>
   </li>
-  <li class="nav-item" data-depth="4">
+  <li class="nav-item is-current-page" data-depth="4">
     <a class="nav-link" href="azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -502,7 +502,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="github.html">Github</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="gitlab.html">Gitlab</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -736,29 +736,36 @@
     <li><a href="../../index.html">Reference</a></li>
     <li><a href="../index.html">Deploy</a></li>
     <li><a href="index.html">Maven</a></li>
-    <li><a href="gitlab.html">Gitlab</a></li>
+    <li><a href="azure.html">Azure</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../../latest/reference/deploy/maven/gitlab.html">latest</a>
-    <a class="version is-current" href="gitlab.html">early-access</a>
+    <a class="version is-missing" href="../../../../latest/index.html">latest</a>
+    <a class="version is-current" href="azure.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/gitlab.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/azure.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gitlab</h1>
+<h1 class="page">Azure</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploys staged artifacts to a Gitlab instance via its
-<a href="https://docs.gitlab.com/ee/user/packages/maven_repository/">Maven Packages</a> option.</p>
+<p>Deploys staged artifacts to <a href="https://dev.azure.com">Azure DevOps</a>.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites:</div>
+<ul>
+<li>
+<p>A user + password / token with grants to deploy packages.</p>
+</li>
+</ul>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -768,7 +775,6 @@
 </td>
 <td class="content">
 This feature <strong>does not</strong> support deploying artifacts other than JARs and POMs to a Maven compatible repository.
-If you need to upload any other binaries then check the <a href="../../upload/gitlab.html" class="xref page">Gitlab Uploader</a>.
 </td>
 </tr>
 </table>
@@ -843,7 +849,7 @@ deploy:
       version: 1.5.0
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    gitlab:
+    azure:
       # Deployers require a name.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app:
@@ -854,20 +860,20 @@ deploy:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active: ALWAYS
 
-        # URL where the Gitlab service is enabled.
-        # If left unspecified, the `JRELEASER_GITLAB_${name}_URL`
+        # URL where the Azure service is enabled.
+        # If left unspecified, the `JRELEASER_AZURE_${name}_URL`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        url: https://gitlab.com/api/v4/projects/12345678/packages/maven
+        url: https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1
 
         # The username required for authorization.
-        # If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
+        # If left unspecified, the `JRELEASER_AZURE_${name}_USERNAME`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username: __USE_ENVIRONMENT_VARIABLE__
 
-        # Password for login into the GITLAB service.
-        # If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
+        # Password for login into the AZURE service.
+        # If left unspecified, the `JRELEASER_AZURE_${name}_PASSWORD`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         password: __USE_ENVIRONMENT_VARIABLE__
@@ -876,9 +882,9 @@ deploy:
         # Supported values are [`NONE`, `BASIC`, `BEARER`].
         # `Basic` requires both username &amp; password.
         # `BEARER` requires a token (set as password).
-        # Defaults to `BEARER`.
+        # Defaults to `BASIC`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        authorization: BEARER
+        authorization: BASIC
 
         # Signs artifacts with the configured credentials.
         # The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -916,12 +922,8 @@ deploy:
         # Additional properties used when evaluating templates.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties:
-          # Key will be capitalized and prefixed with `gitlab`, i.e, `gitlabFoo`.
-          foo: bar
-
-        # The id of the GitLab repository.
-        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        projectIdentifier: 12345678</code></pre>
+          # Key will be capitalized and prefixed with `azure`, i.e, `azureFoo`.
+          foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -935,7 +937,7 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   pomchecker.version = "1.5.0"
 
-[deploy.maven.gitlab.app]
+[deploy.maven.azure.app]
 
   # Enables or disables the deployer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -943,15 +945,15 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
-  # URL where the Gitlab service is enabled.
+  # URL where the Azure service is enabled.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  url = "https://gitlab.com/api/v4/projects/12345678/packages/maven"
+  url = "https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1"
 
   # The username required for authorization.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # Password for login into the GITLAB service.
+  # Password for login into the AZURE service.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   password = "__USE_ENVIRONMENT_VARIABLE__"
 
@@ -959,9 +961,9 @@ deploy:
   # Supported values are [`NONE`, `BASIC`, `BEARER`].
   # `Basic` requires both username &amp; password.
   # `BEARER` requires a token (set as password).
-  # Defaults to `BEARER`.
+  # Defaults to `BASIC`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BEARER"
+  authorization = "BASIC"
 
   # Signs artifacts with the configured credentials.
   # The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -998,11 +1000,7 @@ deploy:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `gitlab`, i.e, `gitlabFoo`.
-
-  # The id of the GitLab repository.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  projectIdentifier = "12345678"</code></pre>
+  # Key will be capitalized and prefixed with `azure`, i.e, `azureFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -1021,7 +1019,7 @@ deploy:
       },
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "gitlab": {
+      "azure": {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         "app": {
@@ -1032,15 +1030,15 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "active": "ALWAYS",
 
-          // URL where the Gitlab service is enabled.
+          // URL where the Azure service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "url": "https://gitlab.com/api/v4/projects/12345678/packages/maven",
+          "url": "https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1",
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "username": "__USE_ENVIRONMENT_VARIABLE__",
 
-          // Password for login into the GITLAB service.
+          // Password for login into the AZURE service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "password": "__USE_ENVIRONMENT_VARIABLE__",
 
@@ -1048,9 +1046,9 @@ deploy:
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
           // `Basic` requires both username &amp; password.
           // `BEARER` requires a token (set as password).
-          // Defaults to `BEARER`.
+          // Defaults to `BASIC`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "authorization": "BEARER",
+          "authorization": "BASIC",
 
           // Signs artifacts with the configured credentials.
           // The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1086,14 +1084,10 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "readTimeout": 60,
 
-          // The id of the GitLab repository.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-          "projectIdentifier": "12345678",
-
           // Additional properties used when evaluating templates.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "extraProperties": {
-            // Key will be capitalized and prefixed with `gitlab`, i.e, `gitlabFoo`.
+            // Key will be capitalized and prefixed with `azure`, i.e, `azureFoo`.
             "foo": "bar"
           }
         }
@@ -1126,7 +1120,7 @@ deploy:
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;gitlab&gt;
+      &lt;azure&gt;
         &lt;!--
           Deployers require a name.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -1141,10 +1135,10 @@ deploy:
           &lt;active&gt;ALWAYS&lt;/active&gt;
 
           &lt;!--
-            URL where the Gitlab service is enabled.
+            URL where the Azure service is enabled.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;url&gt;https://gitlab.com/api/v4/projects/12345678/packages/maven&lt;/url&gt;
+          &lt;url&gt;https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1&lt;/url&gt;
 
           &lt;!--
             The username required for authorization.
@@ -1153,7 +1147,7 @@ deploy:
           &lt;username&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/username&gt;
 
           &lt;!--
-            Password for login into the GITLAB service.
+            Password for login into the AZURE service.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;password&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/password&gt;
@@ -1163,10 +1157,10 @@ deploy:
             Supported values are [`NONE`, `BASIC`, `BEARER`].
             `Basic` requires both username &amp; password.
             `BEARER` requires a token (set as password).
-            Defaults to `BEARER`.
+            Defaults to `BASIC`.
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
-          &lt;authorization&gt;BEARER&lt;/authorization&gt;
+          &lt;authorization&gt;BASIC&lt;/authorization&gt;
 
           &lt;!--
             Signs artifacts with the configured credentials.
@@ -1220,18 +1214,12 @@ deploy:
           --&gt;
           &lt;extraProperties&gt;
             &lt;!--
-              Key will be capitalized and prefixed with `gitlab`, i.e, `gitlabFoo`.
+              Key will be capitalized and prefixed with `azure`, i.e, `azureFoo`.
             --&gt;
             &lt;foo&gt;bar&lt;/foo&gt;
           &lt;/extraProperties&gt;
-
-        &lt;!--
-           The id of the GitLab repository.
-           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        --&gt;
-        &lt;projectIdentifier&gt;12345678&lt;/projectIdentifier&gt;
         &lt;/app&gt;
-      &lt;/gitlab&gt;
+      &lt;/azure&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1253,7 +1241,7 @@ deploy:
       }
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      gitlab {
+      azure {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         app {
@@ -1264,15 +1252,15 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           active = 'ALWAYS'
 
-          // URL where the Gitlab service is enabled.
+          // URL where the Azure service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          url = 'https://gitlab.com/api/v4/projects/12345678/packages/maven'
+          url = 'https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1'
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           username = '__USE_ENVIRONMENT_VARIABLE__'
 
-          // Password for login into the GITLAB service.
+          // Password for login into the AZURE service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           password = '__USE_ENVIRONMENT_VARIABLE__'
 
@@ -1280,9 +1268,9 @@ deploy:
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
           // `Basic` requires both username &amp; password.
           // `BEARER` requires a token (set as password).
-          // Defaults to `BEARER`.
+          // Defaults to `BASIC`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          authorization = 'BEARER'
+          authorization = 'BASIC'
 
           // Signs artifacts with the configured credentials.
           // The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1317,14 +1305,9 @@ deploy:
           readTimeout = 60
 
           // Additional properties used when evaluating templates.
-          // Key will be capitalized and prefixed with `gitlab`, i.e, `gitlabFoo`.
+          // Key will be capitalized and prefixed with `azure`, i.e, `azureFoo`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           extraProperties.put('foo', 'bar')
-
-        // The id of the GitLab repository.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        projectIdentifier = '12345678'
-
         }
       }
     }
@@ -1360,57 +1343,57 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.active<br>
-  jreleaser.deploy.maven.gitlab.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_ACTIVE<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.azure.${name}.active<br>
+  jreleaser.deploy.maven.azure.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_AZURE_${name}_ACTIVE<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_ACTIVE</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>url</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.url<br>
-  jreleaser.deploy.maven.gitlab.url<br>
-  jreleaser.gitlab.${name}.url<br>
-  jreleaser.gitlab.url</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_URL<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_URL<br>
-  JRELEASER_GITLAB_${name}_URL<br>
-  JRELEASER_GITLAB_URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.azure.${name}.url<br>
+  jreleaser.deploy.maven.azure.url<br>
+  jreleaser.azure.${name}.url<br>
+  jreleaser.azure.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_AZURE_${name}_URL<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_URL<br>
+  JRELEASER_AZURE_${name}_URL<br>
+  JRELEASER_AZURE_URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>username</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.username<br>
-  jreleaser.deploy.maven.gitlab.username<br>
-  jreleaser.gitlab.${name}.username<br>
-  jreleaser.gitlab.username</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_USERNAME<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_USERNAME<br>
-  JRELEASER_GITLAB_${name}_USERNAME<br>
-  JRELEASER_GITLAB_USERNAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.azure.${name}.username<br>
+  jreleaser.deploy.maven.azure.username<br>
+  jreleaser.azure.${name}.username<br>
+  jreleaser.azure.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_AZURE_${name}_USERNAME<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_USERNAME<br>
+  JRELEASER_AZURE_${name}_USERNAME<br>
+  JRELEASER_AZURE_USERNAME</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>password</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.password<br>
-  jreleaser.deploy.maven.gitlab.${name}.token<br>
-  jreleaser.deploy.maven.gitlab.password<br>
-  jreleaser.deploy.maven.gitlab.token<br>
-  jreleaser.gitlab.${name}.password<br>
-  jreleaser.gitlab.${name}.token<br>
-  jreleaser.gitlab.password<br>
-  jreleaser.gitlab.token</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_TOKEN<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITLAB_TOKEN<br>
-  JRELEASER_GITLAB_${name}_PASSWORD<br>
-  JRELEASER_GITLAB_${name}_TOKEN<br>
-  JRELEASER_GITLAB_PASSWORD<br>
-  JRELEASER_GITLAB_TOKEN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.azure.${name}.password<br>
+  jreleaser.deploy.maven.azure.${name}.token<br>
+  jreleaser.deploy.maven.azure.password<br>
+  jreleaser.deploy.maven.azure.token<br>
+  jreleaser.azure.${name}.password<br>
+  jreleaser.azure.${name}.token<br>
+  jreleaser.azure.password<br>
+  jreleaser.azure.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_AZURE_${name}_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_${name}_TOKEN<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_AZURE_TOKEN<br>
+  JRELEASER_AZURE_${name}_PASSWORD<br>
+  JRELEASER_AZURE_${name}_TOKEN<br>
+  JRELEASER_AZURE_PASSWORD<br>
+  JRELEASER_AZURE_TOKEN</p></td>
 </tr>
 </tbody>
 </table>
@@ -1508,11 +1491,10 @@ such that:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy:
   maven:
-    gitlab:
+    azure:
       app:
         active: ALWAYS
-        url: https://gitlab.com/api/v4/projects/12345678/packages/maven
-        projectIdentifier: 12345678
+        url: https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1
         stagingRepositories:
           - target/staging-deploy</code></pre>
 </div>
@@ -1521,10 +1503,9 @@ such that:</p>
 <div class="tab-pane" aria-labelledby="tabset2_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.gitlab.app]
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.azure.app]
   active = "ALWAYS"
-  host = "https://gitlab.com/api/v4/projects/12345678/packages/maven"
-  projectIdentifier = "12345678"
+  url = "https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1"
   stagingRepositories = ["target/staging-deploy"]</code></pre>
 </div>
 </div>
@@ -1536,11 +1517,10 @@ such that:</p>
   "jreleaser": {
     "deploy": {
       "maven": {
-        "gitlab": {
+        "azure": {
           "app": {
             "active": "ALWAYS",
-            "host": "https://gitlab.com/api/v4/projects/12345678/packages/maven",
-            "projectIdentifier": "12345678",
+            "url": "https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1",
             "stagingRepositories": [
               "target/staging-deploy"
             ]
@@ -1559,14 +1539,13 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
   &lt;deploy&gt;
     &lt;maven&gt;
-      &lt;gitlab&gt;
+      &lt;azure&gt;
         &lt;app&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
-          &lt;host&gt;https://gitlab.com/api/v4/projects/12345678/packages/maven&lt;/host&gt;
-          &lt;projectIdentifier&gt;12345678&lt;/projectIdentifier&gt;
+          &lt;url&gt;https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1&lt;/url&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
         &lt;/app&gt;
-      &lt;/gitlab&gt;
+      &lt;/azure&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1579,11 +1558,10 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   deploy {
     maven {
-      gitlab {
+      azure {
         app {
           active = 'ALWAYS'
-          host = 'https://gitlab.com/api/v4/projects/12345678/packages/maven'
-          projectIdentifier = '12345678'
+          url = 'https://pkgs.dev.azure.com/duke/_packaging/duke/maven/v1'
           stagingRepository('target/staging-deploy')
         }
       }
