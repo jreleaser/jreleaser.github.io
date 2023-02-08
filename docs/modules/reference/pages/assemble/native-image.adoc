@@ -34,12 +34,6 @@ include::partial$assemble/yaml/common-head.adoc[]
       # icon:dot-circle[]
       executable: app
 
-      # Directory with file templates used to prepare the NativeImage assembler.
-      # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-      # If specified, path must exist.
-      # icon:dot-circle[]
-      templateDirectory: path/to/nativeImage/templates
-
       # Name of the generated image.
       # If left undefined, will use
       # ${assembler.executable}-${project.version}.
@@ -118,6 +112,8 @@ include::partial$assemble/yaml/common-head.adoc[]
           - '--bar'
 
 include::partial$assemble/yaml/common-java.adoc[]
+
+include::partial$assemble/yaml/common-assembler.adoc[]
 ----
 --
 TOML::
@@ -132,12 +128,6 @@ include::partial$assemble/toml/common-head.adoc[]
   # If left undefined, will use ${assembler.name}.
   # icon:dot-circle[]
   executable = "app"
-
-  # Directory with file templates used to prepare the NativeImage assembler.
-  # Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/nativeImage/templates"
 
   # Name of the generated image.
   # If left undefined, will use
@@ -209,6 +199,8 @@ include::partial$assemble/toml/common-head.adoc[]
     args = ["--bar]
 
 include::partial$assemble/toml/common-java.adoc[]
+
+include::partial$assemble/toml/common-assembler.adoc[]
 ----
 --
 JSON::
@@ -223,12 +215,6 @@ include::partial$assemble/json/common-head.adoc[]
         // If left undefined, will use ${assembler.name}.
         // icon:dot-circle[]
         "executable": "app",
-
-        // Directory with file templates used to prepare the NativeImage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-        // If specified, path must exist.
-        // icon:dot-circle[]
-        "templateDirectory": "path/to/nativeImage/templates",
 
         // Name of the generated image.
         // If left undefined, will use
@@ -315,6 +301,8 @@ include::partial$assemble/json/common-head.adoc[]
         },
 
 include::partial$assemble/json/common-java.adoc[]
+
+include::partial$assemble/json/common-assembler.adoc[]
 include::partial$assemble/json/common-footer.adoc[]
 ----
 --
@@ -332,14 +320,6 @@ include::partial$assemble/maven/common-head.adoc[]
           icon:dot-circle[]
         -->
         <executable>app</executable>
-
-        <!--
-          Directory with file templates used to prepare the NativeImage assembler.
-          Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-          If specified, path must exist.
-          icon:dot-circle[]
-        -->
-        <templateDirectory>path/to/brew/templates</templateDirectory>
 
         <!--
           Name of the generated image.
@@ -464,8 +444,10 @@ include::partial$assemble/maven/common-head.adoc[]
             <arg>--bar</arg>
           </args>
         </osx>
-            
+
 include::partial$assemble/maven/common-java.adoc[]
+
+include::partial$assemble/maven/common-assembler.adoc[]
 include::partial$assemble/maven/common-footer.adoc[]
 ----
 --
@@ -481,12 +463,6 @@ include::partial$assemble/gradle/common-head.adoc[]
         // If left undefined, will use ${assembler.name}.
         // icon:dot-circle[]
         executable = 'app'
-
-        // Directory with file templates used to prepare the NativeImage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/nativeImage`.
-        // If specified, path must exist.
-        // icon:dot-circle[]
-        templateDirectory = 'path/to/nativeImage/templates'
 
         // Name of the generated image.
         // If left undefined, will use
@@ -565,8 +541,10 @@ include::partial$assemble/gradle/common-head.adoc[]
           // icon:dot-circle[]
           arg('--bar')
         }
-            
+
 include::partial$assemble/gradle/common-java.adoc[]
+
+include::partial$assemble/gradle/common-assembler.adoc[]
 include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
@@ -581,6 +559,15 @@ include::partial$named-envvars/active.adoc[]
 |===
 
 include::partial$envvars-footer.adoc[]
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/assemblers/<distribution-name>/nativeImage`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
 
 == Graal JDKs
 
@@ -598,10 +585,4 @@ xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugi
 Executables may optionally be compressed with link:https://upx.github.io/[UPX]. You must define a version.
 JReleaser will check if a matching binary exists in the system or download a binary that matches the current
 platform.
-
-== Templates
-
-The default location for templates is:
-
-`src/jreleaser/assemblers/<distribution-name>/nativeImage`
 

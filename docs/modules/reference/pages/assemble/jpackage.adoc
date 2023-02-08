@@ -45,12 +45,6 @@ include::partial$assemble/yaml/common-head.adoc[]
       # icon:dot-circle[]
       verbose: true
 
-      # Directory with file templates used to prepare the Jpackage assembler.
-      # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-      # If specified, path must exist.
-      # icon:dot-circle[]
-      templateDirectory: path/to/jpackage/templates
-
       # Path to a runtime image created with jlink.
       # Must define a value for `platform`.
       # icon:dot-circle[] icon:file-alt[]
@@ -327,6 +321,8 @@ include::partial$assemble/yaml/common-head.adoc[]
         upgradeUuid: ba209999-0c6c-11d2-97cf-00c04f8eea45
 
 include::partial$assemble/yaml/common-java.adoc[]
+
+include::partial$assemble/yaml/common-assembler.adoc[]
 ----
 --
 TOML::
@@ -350,12 +346,6 @@ include::partial$assemble/toml/common-head.adoc[]
   # Defaults to `false`.
   # icon:dot-circle[]
   verbose = true
-
-  # Directory with file templates used to prepare the Jpackage assembler.
-  # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-  # If specified, path must exist.
-  # icon:dot-circle[]
-  templateDirectory = "path/to/jpackage/templates"
 
   # Path to a runtime image created with jlink.
   # Must define a value for `platform`.
@@ -627,6 +617,8 @@ include::partial$assemble/toml/common-head.adoc[]
     upgradeUuid = "ba209999-0c6c-11d2-97cf-00c04f8eea45"
 
 include::partial$assemble/toml/common-java.adoc[]
+
+include::partial$assemble/toml/common-assembler.adoc[]
 ----
 --
 JSON::
@@ -650,12 +642,6 @@ include::partial$assemble/json/common-head.adoc[]
         // Defaults to `false`.
         // icon:dot-circle[]
         "verbose": true,
-
-        // Directory with file templates used to prepare the Jpackage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-        // If specified, path must exist.
-        // icon:dot-circle[]
-        "templateDirectory": "path/to/jpackage/templates",
 
         // Path to a runtime image created with jlink.
         // Must define a value for `platform`.
@@ -948,6 +934,8 @@ include::partial$assemble/json/common-head.adoc[]
         },
 
 include::partial$assemble/json/common-java.adoc[]
+
+include::partial$assemble/json/common-assembler.adoc[]
 include::partial$assemble/json/common-footer.adoc[]
 ----
 --
@@ -978,14 +966,6 @@ include::partial$assemble/maven/common-head.adoc[]
           icon:dot-circle[]
         -->
         <verbose>true</verbose>
-
-        <!--
-          Directory with file templates used to prepare the Jpackage assembler.
-          Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-          If specified, path must exist.
-          icon:dot-circle[]
-        -->
-        <templateDirectory>path/to/jpackage/templates</templateDirectory>
 
         <!--
           Path to a runtime image created with jlink.
@@ -1385,6 +1365,8 @@ include::partial$assemble/maven/common-head.adoc[]
         </windows>
 
 include::partial$assemble/maven/common-java.adoc[]
+
+include::partial$assemble/maven/common-assembler.adoc[]
 include::partial$assemble/maven/common-footer.adoc[]
 ----
 --
@@ -1409,12 +1391,6 @@ include::partial$assemble/gradle/common-head.adoc[]
         // Defaults to `false`.
         // icon:dot-circle[]
         verbose = true
-        
-        // Directory with file templates used to prepare the Jpackage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-        // If specified, path must exist.
-        // icon:dot-circle[]
-        templateDirectory = 'path/to/jpackage/templates'
 
         // Path to a runtime image created with jlink.
         // Must define a value for `platform`.
@@ -1705,6 +1681,8 @@ include::partial$assemble/gradle/common-head.adoc[]
         }
 
 include::partial$assemble/gradle/common-java.adoc[]
+
+include::partial$assemble/gradle/common-assembler.adoc[]
 include::partial$assemble/gradle/common-footer.adoc[]
 ----
 --
@@ -1731,6 +1709,9 @@ xref:tools:jdks-gradle.adoc#_configuration_dsl[{icon_gradle_s} jdks-gradle-plugi
 The default location for templates is:
 
 `src/jreleaser/assemblers/<distribution-name>/jpackage`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
 
 == Examples
 
