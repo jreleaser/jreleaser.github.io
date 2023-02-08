@@ -889,12 +889,6 @@ assemble:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       verbose: true
 
-      # Directory with file templates used to prepare the Jpackage assembler.
-      # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-      # If specified, path must exist.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory: path/to/jpackage/templates
-
       # Path to a runtime image created with jlink.
       # Must define a value for `platform`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1221,8 +1215,21 @@ assemble:
           # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
           foo: bar
 
+
+      # Directory with file templates used to prepare the assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
+      # If specified, path must exist.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      templateDirectory: path/to/jpackage/templates
+
+      # List of template files to be skipped.
+      # Value may be an exact match or a regex.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipTemplates:
+        - README.md.tpl
+
       # Defines a list of additional files as globs.
-      # These files will be added to the assembled Zip file.
+      # These files will be added to the assembled archive.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       files:
           # The pattern to use.
@@ -1231,7 +1238,7 @@ assemble:
         - pattern: path/to/**/*.txt
 
       # Defines a list of additional files as filesets.
-      # These files will be added to the assembled Zip file.
+      # These files will be added to the assembled archive.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       fileSets:
           # The input directory to copy files from.
@@ -1318,12 +1325,6 @@ assemble:
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   verbose = true
-
-  # Directory with file templates used to prepare the Jpackage assembler.
-  # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-  # If specified, path must exist.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/jpackage/templates"
 
   # Path to a runtime image created with jlink.
   # Must define a value for `platform`.
@@ -1641,8 +1642,19 @@ assemble:
   java.extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `java`, i.e, `javaFoo`.
 
+  # Directory with file templates used to prepare the assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
+  # If specified, path must exist.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  templateDirectory = "path/to/jpackage/templates"
+
+  # List of template files to be skipped.
+  # Value may be an exact match or a regex.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipTemplates = [ "README.md.tpl" ]
+
   # Defines a list of additional files as globs.
-  # These files will be added to the assembled Zip file.
+  # These files will be added to the assembled archive.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.jpackage.app.files]]
     # The pattern to use.
@@ -1651,7 +1663,7 @@ assemble:
     pattern = "path/to/**/*.txt"
 
   # Defines a list of additional files as filesets.
-  # These files will be added to the assembled Zip file.
+  # These files will be added to the assembled archive.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.jpackage.app.fileSets]]
     # The input directory to copy files from.
@@ -1747,12 +1759,6 @@ assemble:
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "verbose": true,
-
-        // Directory with file templates used to prepare the Jpackage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-        // If specified, path must exist.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "templateDirectory": "path/to/jpackage/templates",
 
         // Path to a runtime image created with jlink.
         // Must define a value for `platform`.
@@ -2101,8 +2107,21 @@ assemble:
           }
         },
 
+        // Directory with file templates used to prepare the assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
+        // If specified, path must exist.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "templateDirectory": "path/to/jpackage/templates",
+
+        // List of template files to be skipped.
+        // Value may be an exact match or a regex.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "skipTemplates": [
+          "README.md.tpl"
+        ],
+
         // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "files": [
           {
@@ -2114,7 +2133,7 @@ assemble:
         ],
 
         // Defines a list of additional files as filesets.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "fileSets": [
           {
@@ -2244,14 +2263,6 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;verbose&gt;true&lt;/verbose&gt;
-
-        &lt;!--
-          Directory with file templates used to prepare the Jpackage assembler.
-          Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-          If specified, path must exist.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;templateDirectory&gt;path/to/jpackage/templates&lt;/templateDirectory&gt;
 
         &lt;!--
           Path to a runtime image created with jlink.
@@ -2732,8 +2743,25 @@ assemble:
         &lt;/java&gt;
 
         &lt;!--
+          Directory with file templates used to prepare the assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
+          If specified, path must exist.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;templateDirectory&gt;path/to/brew/templates&lt;/templateDirectory&gt;
+
+        &lt;!--
+          List of template files to be skipped.
+          Value may be an exact match or a regex.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;skipTemplates&gt;
+          &lt;skipTemplate&gt;README.md.tpl&lt;/skipTemplate&gt;
+        &lt;/skipTemplates&gt;
+
+        &lt;!--
           Defines a list of additional files as globs.
-          These files will be added to the assembled Zip file.
+          These files will be added to the assembled archive.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;files&gt;
@@ -2749,7 +2777,7 @@ assemble:
 
         &lt;!--
           Defines a list of additional files as filesets.
-          These files will be added to the assembled Zip file.
+          These files will be added to the assembled archive.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;fileSets&gt;
@@ -2871,12 +2899,6 @@ assemble:
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         verbose = true
-
-        // Directory with file templates used to prepare the Jpackage assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
-        // If specified, path must exist.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        templateDirectory = 'path/to/jpackage/templates'
 
         // Path to a runtime image created with jlink.
         // Must define a value for `platform`.
@@ -3219,8 +3241,19 @@ assemble:
           extraProperties.put('foo', 'bar')
         }
 
+        // Directory with file templates used to prepare the assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/jpackage`.
+        // If specified, path must exist.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        templateDirectory = 'path/to/jpackage/templates'
+
+        // List of template files to be skipped.
+        // Value may be an exact match or a regex.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        skipTemplate('README.md.tpl')
+
         // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         files {
           // The pattern to use.
@@ -3230,7 +3263,7 @@ assemble:
         }
 
         // Defines a list of additional files as filesets.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         fileSet {
           // The input directory to copy files from.
@@ -3384,6 +3417,32 @@ such that:</p>
 </div>
 <div class="paragraph">
 <p><code>src/jreleaser/assemblers/&lt;distribution-name&gt;/jpackage</code></p>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="xref page">Name Templates</a> substitution will take place.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_templates"><a class="anchor" href="#_skip_templates"></a>Skip Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may skip any template files by defining a set of skip rules in the <code>skipTemplates</code> property. For example, you may use
+any of these expressions to skip a template named <code>README.md.tpl</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>README.md.tpl</code>: matches the full template name</p>
+</li>
+<li>
+<p><code>README.md</code>: matches the transformed template name</p>
+</li>
+<li>
+<p><code>README.*</code>: matches using a regex</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
