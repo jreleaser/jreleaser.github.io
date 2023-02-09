@@ -1,0 +1,30 @@
+== Additional Files
+
+There are several ways to define additional files that may be handled by this assembler.
+
+=== Templates
+
+ * You may use xref:reference:name-templates.adoc[] inside the files to be copied.
+ * They retain directory structure that is, a template found at `${templateDirectory}/foo.txt.tpl` will be copied as
+   `foo.txt` while a template such as `${templateDirectory}/docs/bar.md.tpl` will be copied to `docs/bar.md`.
+
+=== FileSets
+
+ * May use globs or regexes to define files to be included from a starting directory.
+ * They retain directory structure.
+ * May rename the target parent directory.
+
+=== Files
+
+ * May use globs or regexes to define files to be included from a starting directory.
+ * They *do not* retain directory structure. Only filenames are copied.
+
+=== Artifacts
+
+ * They *do not* retain directory structure by default. An artifact with `path` set to `bin/launcher.sh` will be copied
+ to `launcher.sh`.
+ * May use the `transform` property to define the target path. An artifact with `path` set to `bin/launcher.sh`  and `transform`
+ set to `bin/{{projectName}}` will be copied to `bin/app` [assuming `projectName` resolves to `app`].
+ * May use the `platform` property to filter files per matching platform. An artifact with `platform` set to `windows-x86_64`
+   will only be copied when the matching platform is compatible with `windows-x86_64`.
+ * Artifacts without an explicit `platform` won't be filtered.
