@@ -1009,6 +1009,16 @@ assemble:
       skipTemplates:
         - README.md.tpl
 
+      # Defines a list of additional files as artifacts.
+      # These files will be added to the assembled archive.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      artifacts:
+        - path: path/to/file
+        - path: path/to/another_file
+          transform: path/inside/archive
+        - path: path/to/platform/specific/file
+          platform: osx-x86_64
+
       # Defines a list of additional files as globs.
       # These files will be added to the assembled archive.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1224,6 +1234,18 @@ assemble:
   # Value may be an exact match or a regex.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   skipTemplates = [ "README.md.tpl" ]
+
+  # Defines a list of additional files as artifacts.
+  # These files will be added to the assembled archive.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  [[assemble.nativeImage.app.artifacts]]
+    path = "path/to/file"
+  [[assemble.nativeImage.app.artifacts]]
+    path = "path/to/another_file"
+    transform = "path/inside/archive"
+  [[assemble.nativeImage.app.artifacts]]
+    path = "path/to/platform/specific/file"
+    platform = "osx-x86_64"
 
   # Defines a list of additional files as globs.
   # These files will be added to the assembled archive.
@@ -1476,6 +1498,23 @@ assemble:
         "skipTemplates": [
           "README.md.tpl"
         ],
+
+        // Defines a list of additional files as artifacts.
+        // These files will be added to the assembled archive.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "artifacts": [
+          {
+            "path": "path/to/file"
+          },
+          {
+            "path": "path/to/another_file",
+            "transform": "path/inside/archive"
+          },
+          {
+            "path": "path/to/platform/specific/file",
+            "platform": "osx-x86_64"
+          }
+        ]  ,
 
         // Defines a list of additional files as globs.
         // These files will be added to the assembled archive.
@@ -1831,6 +1870,25 @@ assemble:
         &lt;/skipTemplates&gt;
 
         &lt;!--
+          Defines a list of additional files as artifacts.
+          These files will be added to the assembled archive.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;artifacts&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/file&lt;/path&gt;
+          &lt;/artifact&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/another_file&lt;/path&gt;
+            &lt;transform&gt;path/inside/archive&lt;/transform&gt;
+          &lt;/artifact&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/platform/specific/file&lt;/path&gt;
+            &lt;platform&gt;osx-x86_64&lt;/platform&gt;
+          &lt;/artifact&gt;
+        &lt;/artifacts&gt;
+
+        &lt;!--
           Defines a list of additional files as globs.
           These files will be added to the assembled archive.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2104,10 +2162,25 @@ assemble:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         skipTemplate('README.md.tpl')
 
+        // Defines a list of additional files as artifacts.
+        // These files will be added to the assembled archive.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        artifact {
+          path = 'path/to/file'
+        }
+        artifact {
+          path = 'path/to/another_file'
+          transform = 'path/inside/archive'
+        }
+        artifact {
+          path = 'path/to/platform/specific/file'
+          platform = 'osx-x86_64'
+        }
+
         // Defines a list of additional files as globs.
         // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        files {
+        file {
           // The pattern to use.
           // May use glob or regex pattern syntax.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2318,6 +2391,79 @@ any of these expressions to skip a template named <code>README.md.tpl</code>:</p
 <p><code>README.*</code>: matches using a regex</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_files"><a class="anchor" href="#_additional_files"></a>Additional Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are several ways to define additional files that may be handled by this assembler.</p>
+</div>
+<div class="sect2">
+<h3 id="_templates_2"><a class="anchor" href="#_templates_2"></a>Templates</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You may use <a href="../name-templates.html" class="xref page">Name Templates</a> inside the files to be copied.</p>
+</li>
+<li>
+<p>They retain directory structure that is, a template found at <code>${templateDirectory}/foo.txt.tpl</code> will be copied as
+<code>foo.txt</code> while a template such as <code>${templateDirectory}/docs/bar.md.tpl</code> will be copied to <code>docs/bar.md</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filesets"><a class="anchor" href="#_filesets"></a>FileSets</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>May use globs or regexes to define files to be included from a starting directory.</p>
+</li>
+<li>
+<p>They retain directory structure.</p>
+</li>
+<li>
+<p>May rename the target parent directory.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_files"><a class="anchor" href="#_files"></a>Files</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>May use globs or regexes to define files to be included from a starting directory.</p>
+</li>
+<li>
+<p>They <strong>do not</strong> retain directory structure. Only filenames are copied.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_artifacts"><a class="anchor" href="#_artifacts"></a>Artifacts</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>They <strong>do not</strong> retain directory structure by default. An artifact with <code>path</code> set to <code>bin/launcher.sh</code> will be copied
+to <code>launcher.sh</code>.</p>
+</li>
+<li>
+<p>May use the <code>transform</code> property to define the target path. An artifact with <code>path</code> set to <code>bin/launcher.sh</code>  and <code>transform</code>
+set to <code>bin/{{projectName}}</code> will be copied to <code>bin/app</code> [assuming <code>projectName</code> resolves to <code>app</code>].</p>
+</li>
+<li>
+<p>May use the <code>platform</code> property to filter files per matching platform. An artifact with <code>platform</code> set to <code>windows-x86_64</code>
+will only be copied when the matching platform is compatible with <code>windows-x86_64</code>.</p>
+</li>
+<li>
+<p>Artifacts without an explicit <code>platform</code> won&#8217;t be filtered.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
