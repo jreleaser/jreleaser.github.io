@@ -480,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -779,6 +794,7 @@ Commands:
   download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
+  catalog              Catalog artifacts and files.
   checksum             Calculate checksums.
   sign                 Sign release artifacts.
   deploy               Deploy all staged artifacts.
@@ -1421,6 +1437,57 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_catalog"><a class="anchor" href="#_catalog"></a>catalog</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser catalog -h
+Catalog artifacts and files.
+
+Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[--distribution=&lt;distribution&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
+                         [[--exclude-distribution=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
+
+Options:
+  -b, --basedir=&lt;directory&gt;                   Base directory.
+  -c, --config-file=&lt;file&gt;                    The config file.
+  -D=&lt;key=value&gt;                              Sets a System property. 🔁
+  -g, --debug                                 Set log level to debug.
+      -grs, --git-root-search                 Searches for the Git root.
+  -h, --help                                  Show this help message and exit.
+  -i, --info                                  Set log level to info.
+      -od, --output-directory=&lt;directory&gt;     Output directory.
+  -P, --set-property=&lt;key=value&gt;              Sets the value of a property. 🔁
+  -q, --quiet                                 Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;       Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform         Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;       Activates paths matching the given platform. 🔁
+      --strict                                Enable strict mode.
+  -V, --version                               Print version information and exit.
+  -w, --warn                                  Set log level to warn.
+
+Include Filter:
+      --cataloger=&lt;cataloger&gt;                 Include a cataloger. 🔁
+      --distribution=&lt;distribution&gt;           Include a distribution. 🔁
+
+Exclude Filter:
+      --exclude-cataloger=&lt;cataloger&gt;         Exclude a cataloger. 🔁
+      --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|toml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
 <div class="sect2">
 <h3 id="_checksum"><a class="anchor" href="#_checksum"></a>checksum</h3>
 <div class="listingblock">
@@ -1632,8 +1699,9 @@ Upload all artifacts.
 
 Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
-                        [-sp=&lt;platform&gt;]... [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...] |
-                        [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...]]
+                        [-sp=&lt;platform&gt;]... [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...
+                        [--cataloger=&lt;cataloger&gt;]...] | [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
+                        [-xd=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -1655,11 +1723,13 @@ Options:
   -w, --warn                                       Set log level to warn.
 
 Include Filter:
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
   -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
       -un, --uploader-name=&lt;name&gt;                  Include an uploader by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
       -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
       -xu, --exclude-uploader=&lt;uploader&gt;           Exclude an uploader by type. 🔁
       -xun, --exclude-uploader-name=&lt;name&gt;         Exclude an uploader by name. 🔁
@@ -1741,8 +1811,9 @@ Create or update a release.
 Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
-                         [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] | [[-xd=&lt;distribution&gt;]... [-xy=&lt;deployer&gt;]...
-                         [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...] | [[--auto-config]
+                         [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]...
+                         [-xun=&lt;name&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...] | [[--auto-config]
                          [--project-name=&lt;name&gt;] [--project-version=&lt;version&gt;]
                          [--project-version-pattern=&lt;pattern&gt;] [--project-snapshot-pattern=&lt;pattern&gt;]
                          [--project-snapshot-label=&lt;label&gt;] [--project-snapshot-full-changelog]
@@ -1776,6 +1847,7 @@ Options:
   -w, --warn                                       Set log level to warn.
 
 Include Filter:
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
   -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
       -un, --uploader-name=&lt;name&gt;                  Include an uploader by name. 🔁
@@ -1783,6 +1855,7 @@ Include Filter:
       -yn, --deployer-name=&lt;name&gt;                  Include a deployer by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
       -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
       -xu, --exclude-uploader=&lt;uploader&gt;           Exclude an uploader by type. 🔁
       -xun, --exclude-uploader-name=&lt;name&gt;         Exclude an uploader by name. 🔁
@@ -2287,9 +2360,10 @@ Perform a full release.
 Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                               [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                               [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
-                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...]
-                              | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
-                              [-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]...]]
+                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...
+                              [--cataloger=&lt;cataloger&gt;]...] | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
+                              [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
+                              [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -2312,6 +2386,7 @@ Options:
 
 Include Filter:
   -a, --announcer=&lt;announcer&gt;                      Include an announcer. 🔁
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
   -p, --packager=&lt;packager&gt;                        Include a packager. 🔁
   -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
@@ -2320,6 +2395,7 @@ Include Filter:
       -yn, --deployer-name=&lt;name&gt;                  Include a deployer by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
       -xa, --exclude-announcer=&lt;announcer&gt;         Exclude an announcer. 🔁
       -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
       -xp, --exclude-packager=&lt;packager&gt;           Exclude a packager. 🔁

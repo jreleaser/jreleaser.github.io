@@ -480,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -792,11 +807,26 @@ The preferred option is to invoke <a href="#_full_release">Full Release</a> as i
 <h2 id="_download"><a class="anchor" href="#_download"></a>Download</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Downloads assets that may be used with assemblies. Assets may also be external templates to be consumed by packagers or
+<p>Downloads assets that may be used by assemblers. Assets may also be external templates to be consumed by packagers or
 announcers.</p>
 </div>
 <div class="paragraph">
-<p>This step must be invoked separately from the others.</p>
+<p>Configured with <a href="../reference/download/index.html" class="xref page">Download</a>.</p>
+</div>
+<div class="paragraph">
+<p>Downloaded assets will be placed at ${basedir}/out/jreleaser/download.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This step must be invoked separately from the others.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_download" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> download</a>,
@@ -810,11 +840,26 @@ announcers.</p>
 <h2 id="_assemble"><a class="anchor" href="#_assemble"></a>Assemble</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Assembles distributions such as Jlink and Native Image. Outputs will automatically configure/update matching named
-distributions for <a href="#_prepare">Prepare</a>, <a href="#_package">Package</a>, and <a href="#_publish">Publish</a>.</p>
+<p>Assembles <a href="distributions/index.html" class="xref page">distributions</a> such as <a href="distributions/jlink.html" class="xref page">Jlink</a> and <a href="distributions/java-binary.html" class="xref page">Java Binary</a>.
+Outputs will automatically configured/updated matching named distributions for <a href="#_prepare">Prepare</a>, <a href="#_package">Package</a>, and <a href="#_publish">Publish</a>.</p>
 </div>
 <div class="paragraph">
-<p>Given the nature of platform specific distributions this step must be invoked separately from the others.</p>
+<p>Configured with <a href="../reference/assemble/index.html" class="xref page">Assemble</a>.</p>
+</div>
+<div class="paragraph">
+<p>Assembled artifacts will be placed at ${basedir}/out/jreleaser/assemble.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Given the nature of platform specific distributions this step must be invoked separately from the others.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_assemble" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> assemble</a>,
@@ -829,7 +874,10 @@ distributions for <a href="#_prepare">Prepare</a>, <a href="#_package">Package</
 <div class="sectionbody">
 <div class="paragraph">
 <p>Creates the changelog, either by taking a supplemented external file or calculates it based on the last tag that matches
-the configuration.</p>
+the configuration. Configured inside a <a href="../reference/release/index.html" class="xref page">releaser</a> with <a href="../reference/release/changelog.html" class="xref page">Changelog</a>.</p>
+</div>
+<div class="paragraph">
+<p>Generated changelog will be placed at ${basedir}/out/jreleaser/release/CHANGELOG.md.</p>
 </div>
 <div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_changelog" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> changelog</a>,
@@ -840,17 +888,65 @@ the configuration.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_catalog"><a class="anchor" href="#_catalog"></a>Catalog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Catalogs (SBOMs) all input files. This includes all artifacts per distribution and every matching
+file configured in the <a href="../reference/files.html" class="xref page">Files</a> section.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All files must exist by the time Catalog is invoked, otherwise an error will occur.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This step is optional. Configured with <a href="../reference/catalog/index.html" class="xref page">Catalog</a>.</p>
+</div>
+<div class="paragraph">
+<p>Catalogs will be placed at <code>${basedir}/out/jreleaser/catalogs</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="../tools/jreleaser-cli.html#_catalog" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> catalog</a>,
+<a href="../tools/jreleaser-maven.html#_jreleasercatalog" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:catalog</a>,
+<a href="../tools/jreleaser-gradle.html#_jreleasercatalog" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserCatalog</a>,
+<a href="../tools/jreleaser-ant.html#_jreleaser_catalog" class="xref page"><span class="image"><img src="../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-catalog</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_checksum"><a class="anchor" href="#_checksum"></a>Checksum</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
-file configured in the <a href="../reference/files.html" class="xref page">Files</a> section.</p>
+file configured in the <a href="../reference/files.html" class="xref page">Files</a> section, plus archived <a href="../reference/catalog/index.html" class="xref page">catalogs</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All files must exist by the time Checksum is invoked, otherwise an error will occur.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>All files must exist by the time Checksum is invoked, otherwise an error will occur.</p>
+<p>Configured with <a href="../reference/checksum.html" class="xref page">Checksum</a>.</p>
 </div>
 <div class="paragraph">
 <p>Checksums will be placed at <code>${basedir}/out/jreleaser/checksums</code>.</p>
+</div>
+<div class="paragraph">
+<p>Depends on <a href="#_catalog">Catalog</a>.</p>
 </div>
 <div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_checksum" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> checksum</a>,
@@ -866,8 +962,10 @@ file configured in the <a href="../reference/files.html" class="xref page">Files
 <div class="paragraph">
 <p>Creates PGP signatures for all input files. This includes all artifacts per distribution and every matching
 file configured in the <a href="../reference/files.html" class="xref page">Files</a> section, plus the output file from the <a href="#_checksum">Checksum</a>
-step (<code>"checksums.txt"</code>). This step is optional and can be disabled if needed. Review the <a href="../reference/signing.html" class="xref page">Signing</a>
-section found in the configuration.</p>
+step (<code>"checksums.txt"</code>), and archived <a href="../reference/catalog/index.html" class="xref page">catalogs</a>.</p>
+</div>
+<div class="paragraph">
+<p>This step is optional. Configured  with <a href="../reference/signing.html" class="xref page">Signing</a>.</p>
 </div>
 <div class="paragraph">
 <p>Signatures will be placed at <code>${basedir}/out/jreleaser/signatures</code>.</p>
@@ -887,7 +985,10 @@ section found in the configuration.</p>
 <h2 id="_deploy"><a class="anchor" href="#_deploy"></a>Deploy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploys staged artifacts to the configured destinations. This step is optional.</p>
+<p>Deploys staged artifacts to the configured destinations.</p>
+</div>
+<div class="paragraph">
+<p>This step is optional. Configured with <a href="../reference/deploy/index.html" class="xref page">Deploy</a>.</p>
 </div>
 <div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_deploy" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> deploy</a>,
@@ -902,7 +1003,11 @@ section found in the configuration.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Uploads distribution artifacts and files to the configured destinations. This step uploads signatures (if enabled), all distribution
-artifacts, and every matching file configured in the <a href="../reference/files.html" class="xref page">Files</a> section. This step is optional.</p>
+artifacts, every matching file configured in the <a href="../reference/files.html" class="xref page">Files</a> section, plus archived
+<a href="../reference/catalog/index.html" class="xref page">catalogs</a>.</p>
+</div>
+<div class="paragraph">
+<p>This step is optional. Configured with <a href="../reference/upload/index.html" class="xref page">Upload</a>.</p>
 </div>
 <div class="paragraph">
 <p>Depends on <a href="#_sign">Sign</a>.</p>
@@ -920,8 +1025,12 @@ artifacts, and every matching file configured in the <a href="../reference/files
 <div class="sectionbody">
 <div class="paragraph">
 <p>Creates a release at the configured remote Git repository (see <a href="../reference/release/index.html" class="xref page">Release</a>). This step uploads
-all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
-<a href="../reference/files.html" class="xref page">Files</a> section. Automatically calculates a changelog &amp; tags the release.</p>
+all checksums, signatures (if enabled), all distribution artifacts, every matching file configured in the
+<a href="../reference/files.html" class="xref page">Files</a> section, plus archived <a href="../reference/catalog/index.html" class="xref page">catalogs</a>. Automatically calculates
+a changelog &amp; tags the release.</p>
+</div>
+<div class="paragraph">
+<p>Configured with <a href="../reference/release/index.html" class="xref page">Release</a>.</p>
 </div>
 <div class="paragraph">
 <p>Depends on <a href="#_deploy">Deploy</a>, <a href="#_upload">Upload</a>.</p>
@@ -942,6 +1051,9 @@ all checksums, signatures (if enabled), all distribution artifacts, and every ma
 These files will be generated from templates existing in your project at a configured location (the <code>templateDirectory</code> of
 each packager) and default templates bundled in the JReleaser distribution. These template files rely on
 <a href="../reference/name-templates.html" class="xref page">Name Templates</a> to parameterize their contents.</p>
+</div>
+<div class="paragraph">
+<p>Configured with <a href="../reference/packagers/index.html" class="xref page">Packagers</a>.</p>
 </div>
 <div class="paragraph">
 <p>Prepared files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
@@ -967,7 +1079,10 @@ Other packagers do not require additional customization of the prepared files an
 matching prepared directory to their respective package directory.</p>
 </div>
 <div class="paragraph">
-<p>Packaged files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/prepared</code>.</p>
+<p>Configured with <a href="../reference/packagers/index.html" class="xref page">Packagers</a>.</p>
+</div>
+<div class="paragraph">
+<p>Packaged files will be placed at <code>${basedir}/out/jreleaser/${distributionName}/${packager}/package</code>.</p>
 </div>
 <div class="paragraph">
 <p>Depends on <a href="#_prepare">Prepare</a>.</p>
@@ -989,10 +1104,13 @@ this means creating or updating a "hombrew-tap" repository, for <a href="../refe
 creating or merging a "jbang-catalog" repository.</p>
 </div>
 <div class="paragraph">
+<p>Configured with <a href="../reference/packagers/index.html" class="xref page">Packagers</a>.</p>
+</div>
+<div class="paragraph">
 <p>Depends on <a href="#_package">Package</a>.</p>
 </div>
 <div class="paragraph">
-<p>Does not explicitly depend on <a href="#_release">Release</a> however some packagers such as Snap require downloading distribution files
+<p>Does not explicitly depend on <a href="#_release">Release</a>. However, some packagers such as Snap require downloading distribution files
 to locally build a snap.</p>
 </div>
 <div class="paragraph">
@@ -1010,6 +1128,9 @@ to locally build a snap.</p>
 <p>Announces the release to different media such as <a href="../reference/announce/twitter.html" class="xref page">Twitter</a> or
 <a href="../reference/announce/zulip.html" class="xref page">Zulip</a>. <a href="../reference/announce/sdkman.html" class="xref page">Sdkman</a> requires that distribution
 files had been released.</p>
+</div>
+<div class="paragraph">
+<p>Configured with <a href="../reference/announce/index.html" class="xref page">Announce</a>.</p>
 </div>
 <div class="paragraph">
 <p>Depends on <a href="#_changelog">Changelog</a>.</p>
@@ -1032,6 +1153,9 @@ files had been released.</p>
 <ul>
 <li>
 <p><a href="#_changelog">Changelog</a></p>
+</li>
+<li>
+<p><a href="#_catalog">Catalog</a></p>
 </li>
 <li>
 <p><a href="#_checksum">Checksum</a></p>
