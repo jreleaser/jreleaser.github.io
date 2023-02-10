@@ -1,0 +1,160 @@
+= Syft
+:cataloger_id:   syft
+:cataloger_name: Syft
+:cataloger_sys_key: syft
+:cataloger_env_key: SYFT
+
+Generates SBOMs using link:https://github.com/anchore/syft[Syft]. Multiple formats may be used at the same time.
+
+Catalogs may be xref:checksum.adoc[checksumed] and xref:signing.adoc[signed] when packed.
+
+Individual and/or packed catalogs may be xref:upload/index.adoc[uploaded] and xref:release/index.adoc[released].
+
+WARNING: Snapshots are *not* allowed.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$catalog/sbom/yaml/common-head.adoc[]
+
+        # Version of tool to use.
+        # If unspecified, will use {syft-version}.
+        # icon:dot-circle[]
+        version: 0.70.0
+
+        # Target SBOM format(s).
+        # If unspecified, [`SPDX_JSON`].
+        # icon:dot-circle[]
+        formats:
+          - SPDX_JSON
+          - CYCLONEDX_JSON
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$catalog/sbom/toml/common-head.adoc[]
+
+  # Version of tool to use.
+  # If unspecified, will use {syft-version}.
+  # icon:dot-circle[]
+  version = "0.70.0"
+
+  # Target SBOM format(s).
+  # If unspecified, [`SPDX_JSON`].
+  # icon:dot-circle[]
+  formats = ["SPDX_JSON", "CYCLONEDX_JSON"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$catalog/sbom/json/common-head.adoc[]
+
+          // Version of tool to use.
+          // If unspecified, will use {syft-version}.
+          // icon:dot-circle[]
+          "version": "0.70.0",
+
+          // Target SBOM format(s).
+          // If unspecified, [`SPDX_JSON`].
+          // icon:dot-circle[]
+          "formats": [
+            "SPDX_JSON",
+            "CYCLONEDX_JSON"
+          ]
+include::partial$catalog/sbom/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$catalog/sbom/maven/common-head.adoc[]
+
+          <!--
+            Version of tool to use.
+            If unspecified, will use {syft-version}.
+            icon:dot-circle[]
+          -->
+          <version>0.70.0</version>
+
+          <!--
+            Target SBOM format(s).
+            If unspecified, [`SPDX_JSON`].
+            icon:dot-circle[]
+          -->
+          <formats>
+            <format>SPDX_JSON</format>
+            <format>CYCLONEDX_JSON</format>
+          </formats>
+include::partial$catalog/sbom/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$catalog/sbom/gradle/common-head.adoc[]
+
+          // Version of tool to use.
+          // If unspecified, will use {syft-version}.
+          // icon:dot-circle[]
+          version = '0.70.0'
+
+          // Target SBOM format(s).
+          // If unspecified, [`SPDX_JSON`].
+          // icon:dot-circle[]
+          format('SPDX_JSON')
+          format('CYCLONEDX_JSON')
+include::partial$catalog/sbom/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+include::partial$catalog/sbom/envvars.adoc[]
+|===
+
+== Formats
+
+The {cataloger_name} cataloger supports the following formats:
+
+ - `SYFT_JSON`
+ - `CYCLONEDX_XML`
+ - `CYCLONEDX_JSON`
+ - `GITHUB_JSON`
+ - `SPDX_JSON`
+ - `TABLE`
+ - `TEXT`
+
+== Skip Cataloging
+
+Distributions and artifacts may define extra properties that may stop them from being cataloged. These properties must
+conform to the following rules:
+
+* `skipSbom`: skipped from all catalogers.
+* `skipSbomSyft`: skipped from this cataloger.

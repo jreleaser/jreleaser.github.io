@@ -17,10 +17,14 @@ The following sections describe these steps:
 
 == Download
 
-Downloads assets that may be used with assemblies. Assets may also be external templates to be consumed by packagers or
+Downloads assets that may be used by assemblers. Assets may also be external templates to be consumed by packagers or
 announcers.
 
-This step must be invoked separately from the others.
+Configured with xref:reference:download/index.adoc[].
+
+Downloaded assets will be placed at ${basedir}/out/jreleaser/download.
+
+NOTE: This step must be invoked separately from the others.
 
 xref:tools:jreleaser-cli.adoc#_download[{icon_cli_s} download],
 xref:tools:jreleaser-maven.adoc#_jreleaserdownload[{icon_maven_s} jreleaser:download],
@@ -29,10 +33,14 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_download[{icon_ant_s} jreleaser-downloa
 
 == Assemble
 
-Assembles distributions such as Jlink and Native Image. Outputs will automatically configure/update matching named
-distributions for xref:_prepare[], xref:_package[], and xref:_publish[].
+Assembles xref:distributions/index.adoc[distributions] such as xref:distributions/jlink.adoc[] and xref:distributions/java-binary.adoc[].
+Outputs will automatically configured/updated matching named distributions for xref:_prepare[], xref:_package[], and xref:_publish[].
 
-Given the nature of platform specific distributions this step must be invoked separately from the others.
+Configured with xref:reference:assemble/index.adoc[].
+
+Assembled artifacts will be placed at ${basedir}/out/jreleaser/assemble.
+
+NOTE: Given the nature of platform specific distributions this step must be invoked separately from the others.
 
 xref:tools:jreleaser-cli.adoc#_assemble[{icon_cli_s} assemble],
 xref:tools:jreleaser-maven.adoc#_jreleaserassemble[{icon_maven_s} jreleaser:assemble],
@@ -42,21 +50,43 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_assemble[{icon_ant_s} jreleaser-assembl
 == Changelog
 
 Creates the changelog, either by taking a supplemented external file or calculates it based on the last tag that matches
-the configuration.
+the configuration. Configured inside a xref:reference:release/index.adoc[releaser] with xref:reference:release/changelog.adoc[].
+
+Generated changelog will be placed at ${basedir}/out/jreleaser/release/CHANGELOG.md.
 
 xref:tools:jreleaser-cli.adoc#_changelog[{icon_cli_s} changelog],
 xref:tools:jreleaser-maven.adoc#_jreleaserchangelog[{icon_maven_s} jreleaser:changelog],
 xref:tools:jreleaser-gradle.adoc#_jreleaserchangelog[{icon_gradle_s} jreleaserChangelog],
 xref:tools:jreleaser-ant.adoc#_jreleaser_changelog[{icon_ant_s} jreleaser-changelog]
 
+== Catalog
+
+Catalogs (SBOMs) all input files. This includes all artifacts per distribution and every matching
+file configured in the xref:reference:files.adoc[] section.
+
+IMPORTANT: All files must exist by the time Catalog is invoked, otherwise an error will occur.
+
+This step is optional. Configured with xref:reference:catalog/index.adoc[].
+
+Catalogs will be placed at `${basedir}/out/jreleaser/catalogs`.
+
+xref:tools:jreleaser-cli.adoc#_catalog[{icon_cli_s} catalog],
+xref:tools:jreleaser-maven.adoc#_jreleasercatalog[{icon_maven_s} jreleaser:catalog],
+xref:tools:jreleaser-gradle.adoc#_jreleasercatalog[{icon_gradle_s} jreleaserCatalog],
+xref:tools:jreleaser-ant.adoc#_jreleaser_catalog[{icon_ant_s} jreleaser-catalog]
+
 == Checksum
 
 Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
-file configured in the xref:reference:files.adoc[] section.
+file configured in the xref:reference:files.adoc[] section, plus archived xref:reference:catalog/index.adoc[catalogs].
 
-All files must exist by the time Checksum is invoked, otherwise an error will occur.
+IMPORTANT: All files must exist by the time Checksum is invoked, otherwise an error will occur.
+
+Configured with xref:reference:checksum.adoc[].
 
 Checksums will be placed at `${basedir}/out/jreleaser/checksums`.
+
+Depends on <<_catalog>>.
 
 xref:tools:jreleaser-cli.adoc#_checksum[{icon_cli_s} checksum],
 xref:tools:jreleaser-maven.adoc#_jreleaserchecksum[{icon_maven_s} jreleaser:checksum],
@@ -67,8 +97,9 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_checksum[{icon_ant_s} jreleaser-checksu
 
 Creates PGP signatures for all input files. This includes all artifacts per distribution and every matching
 file configured in the xref:reference:files.adoc[] section, plus the output file from the <<_checksum>>
-step (`"checksums.txt"`). This step is optional and can be disabled if needed. Review the xref:reference:signing.adoc[]
-section found in the configuration.
+step (`"checksums.txt"`), and archived xref:reference:catalog/index.adoc[catalogs].
+
+This step is optional. Configured  with xref:reference:signing.adoc[].
 
 Signatures will be placed at `${basedir}/out/jreleaser/signatures`.
 
@@ -81,18 +112,22 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_sign[{icon_ant_s} jreleaser-sign]
 
 == Deploy
 
-Deploys staged artifacts to the configured destinations. This step is optional.
+Deploys staged artifacts to the configured destinations.
+
+This step is optional. Configured with xref:reference:deploy/index.adoc[].
 
 xref:tools:jreleaser-cli.adoc#_deploy[{icon_cli_s} deploy],
 xref:tools:jreleaser-maven.adoc#_jreleaserdeploy[{icon_maven_s} jreleaser:deploy],
 xref:tools:jreleaser-gradle.adoc#_jreleaserdeploy[{icon_gradle_s} jreleaserDeploy],
 xref:tools:jreleaser-ant.adoc#_jreleaser_deploy[{icon_ant_s} jreleaser-deploy]
 
-
 == Upload
 
 Uploads distribution artifacts and files to the configured destinations. This step uploads signatures (if enabled), all distribution
-artifacts, and every matching file configured in the xref:reference:files.adoc[] section. This step is optional.
+artifacts, every matching file configured in the xref:reference:files.adoc[] section, plus archived 
+xref:reference:catalog/index.adoc[catalogs].
+
+This step is optional. Configured with xref:reference:upload/index.adoc[].
 
 Depends on <<_sign>>.
 
@@ -104,8 +139,11 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_upload[{icon_ant_s} jreleaser-upload]
 == Release
 
 Creates a release at the configured remote Git repository (see xref:reference:release/index.adoc[]). This step uploads
-all checksums, signatures (if enabled), all distribution artifacts, and every matching file configured in the
-xref:reference:files.adoc[] section. Automatically calculates a changelog & tags the release.
+all checksums, signatures (if enabled), all distribution artifacts, every matching file configured in the
+xref:reference:files.adoc[] section, plus archived xref:reference:catalog/index.adoc[catalogs]. Automatically calculates
+a changelog & tags the release.
+
+Configured with xref:reference:release/index.adoc[].
 
 Depends on <<_deploy>>, <<_upload>>.
 
@@ -120,6 +158,8 @@ Generates files required by xref:reference:packagers/index.adoc[] such as xref:r
 These files will be generated from templates existing in your project at a configured location (the `templateDirectory` of
 each packager) and default templates bundled in the JReleaser distribution. These template files rely on
 xref:reference:name-templates.adoc[] to parameterize their contents.
+
+Configured with xref:reference:packagers/index.adoc[].
 
 Prepared files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
 
@@ -137,7 +177,9 @@ packager may log into the Snapcraft store and publish a snap if its `remotebBuil
 Other packagers do not require additional customization of the prepared files and simply copy the files over from their
 matching prepared directory to their respective package directory.
 
-Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/prepared`.
+Configured with xref:reference:packagers/index.adoc[].
+
+Packaged files will be placed at `${basedir}/out/jreleaser/${distributionName}/${packager}/package`.
 
 Depends on <<_prepare>>.
 
@@ -152,9 +194,11 @@ Publishes packaged files to their respective destinations. For example, for xref
 this means creating or updating a "hombrew-tap" repository, for xref:reference:packagers/jbang.adoc[] this means
 creating or merging a "jbang-catalog" repository.
 
+Configured with xref:reference:packagers/index.adoc[].
+
 Depends on <<_package>>.
 
-Does not explicitly depend on <<_release>> however some packagers such as Snap require downloading distribution files
+Does not explicitly depend on <<_release>>. However, some packagers such as Snap require downloading distribution files
 to locally build a snap.
 
 xref:tools:jreleaser-cli.adoc#_publish[{icon_cli_s} publish],
@@ -168,6 +212,8 @@ Announces the release to different media such as xref:reference:announce/twitter
 xref:reference:announce/zulip.adoc[]. xref:reference:announce/sdkman.adoc[] requires that distribution
 files had been released.
 
+Configured with xref:reference:announce/index.adoc[].
+
 Depends on <<_changelog>>.
 
 xref:tools:jreleaser-cli.adoc#_announce[{icon_cli_s} announce],
@@ -180,6 +226,7 @@ xref:tools:jreleaser-ant.adoc#_jreleaser_announce[{icon_ant_s} jreleaser-announc
 Executes all steps in single session in the following order:
 
 * <<_changelog>>
+* <<_catalog>>
 * <<_checksum>>
 * <<_sign>>
 * <<_deploy>>

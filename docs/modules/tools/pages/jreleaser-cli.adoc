@@ -24,6 +24,7 @@ Commands:
   download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
+  catalog              Catalog artifacts and files.
   checksum             Calculate checksums.
   sign                 Sign release artifacts.
   deploy               Deploy all staged artifacts.
@@ -524,6 +525,52 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+== catalog
+
+[source]
+----
+$ jreleaser catalog -h
+Catalog artifacts and files.
+
+Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
+                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                         [[[--distribution=<distribution>]... [--cataloger=<cataloger>]...] |
+                         [[--exclude-distribution=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
+
+Options:
+  -b, --basedir=<directory>                   Base directory.
+  -c, --config-file=<file>                    The config file.
+  -D=<key=value>                              Sets a System property. 🔁
+  -g, --debug                                 Set log level to debug.
+      -grs, --git-root-search                 Searches for the Git root.
+  -h, --help                                  Show this help message and exit.
+  -i, --info                                  Set log level to info.
+      -od, --output-directory=<directory>     Output directory.
+  -P, --set-property=<key=value>              Sets the value of a property. 🔁
+  -q, --quiet                                 Log errors only.
+      -rp, --reject-platform=<platform>       Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform         Activates paths matching the current platform.
+      -sp, --select-platform=<platform>       Activates paths matching the given platform. 🔁
+      --strict                                Enable strict mode.
+  -V, --version                               Print version information and exit.
+  -w, --warn                                  Set log level to warn.
+
+Include Filter:
+      --cataloger=<cataloger>                 Include a cataloger. 🔁
+      --distribution=<distribution>           Include a distribution. 🔁
+
+Exclude Filter:
+      --exclude-cataloger=<cataloger>         Exclude a cataloger. 🔁
+      --exclude-distribution=<distribution>   Exclude a distribution. 🔁
+
+Documentation found at https://jreleaser.org
+----
+
+If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
+found at the current directory.
+
+If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
 === checksum
 
 [source]
@@ -703,8 +750,9 @@ Upload all artifacts.
 
 Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                        [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]... [-d=<distribution>]...] |
-                        [[-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...]]
+                        [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]... [-d=<distribution>]...
+                        [--cataloger=<cataloger>]...] | [[-xu=<uploader>]... [-xun=<name>]...
+                        [-xd=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -726,11 +774,13 @@ Options:
   -w, --warn                                       Set log level to warn.
 
 Include Filter:
+      --cataloger=<cataloger>                      Include a cataloger. 🔁
   -d, --distribution=<distribution>                Include a distribution. 🔁
   -u, --uploader=<uploader>                        Include an uploader by type. 🔁
       -un, --uploader-name=<name>                  Include an uploader by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=<cataloger>              Exclude a cataloger. 🔁
       -xd, --exclude-distribution=<distribution>   Exclude a distribution. 🔁
       -xu, --exclude-uploader=<uploader>           Exclude an uploader by type. 🔁
       -xun, --exclude-uploader-name=<name>         Exclude an uploader by name. 🔁
@@ -788,8 +838,9 @@ Create or update a release.
 Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                          [-sp=<platform>]... [[[-d=<distribution>]... [-y=<deployer>]... [-yn=<name>]...
-                         [-u=<uploader>]... [-un=<name>]...] | [[-xd=<distribution>]... [-xy=<deployer>]...
-                         [-xyn=<name>]... [-xu=<uploader>]... [-xun=<name>]...] | [[--auto-config]
+                         [-u=<uploader>]... [-un=<name>]... [--cataloger=<cataloger>]...] |
+                         [[-xd=<distribution>]... [-xy=<deployer>]... [-xyn=<name>]... [-xu=<uploader>]...
+                         [-xun=<name>]... [--exclude-cataloger=<cataloger>]...] | [[--auto-config]
                          [--project-name=<name>] [--project-version=<version>]
                          [--project-version-pattern=<pattern>] [--project-snapshot-pattern=<pattern>]
                          [--project-snapshot-label=<label>] [--project-snapshot-full-changelog]
@@ -823,6 +874,7 @@ Options:
   -w, --warn                                       Set log level to warn.
 
 Include Filter:
+      --cataloger=<cataloger>                      Include a cataloger. 🔁
   -d, --distribution=<distribution>                Include a distribution. 🔁
   -u, --uploader=<uploader>                        Include an uploader by type. 🔁
       -un, --uploader-name=<name>                  Include an uploader by name. 🔁
@@ -830,6 +882,7 @@ Include Filter:
       -yn, --deployer-name=<name>                  Include a deployer by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=<cataloger>              Exclude a cataloger. 🔁
       -xd, --exclude-distribution=<distribution>   Exclude a distribution. 🔁
       -xu, --exclude-uploader=<uploader>           Exclude an uploader by type. 🔁
       -xun, --exclude-uploader-name=<name>         Exclude an uploader by name. 🔁
@@ -1216,9 +1269,10 @@ Perform a full release.
 Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
                               [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                               [-sp=<platform>]... [[[-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]...
-                              [-un=<name>]... [-d=<distribution>]... [-p=<packager>]... [-a=<announcer>]...]
-                              | [[-xy=<deployer>]... [-xyn=<name>]... [-xu=<uploader>]... [-xun=<name>]...
-                              [-xd=<distribution>]... [-xp=<packager>]... [-xa=<announcer>]...]]
+                              [-un=<name>]... [-d=<distribution>]... [-p=<packager>]... [-a=<announcer>]...
+                              [--cataloger=<cataloger>]...] | [[-xy=<deployer>]... [-xyn=<name>]...
+                              [-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...
+                              [-xp=<packager>]... [-xa=<announcer>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1241,6 +1295,7 @@ Options:
 
 Include Filter:
   -a, --announcer=<announcer>                      Include an announcer. 🔁
+      --cataloger=<cataloger>                      Include a cataloger. 🔁
   -d, --distribution=<distribution>                Include a distribution. 🔁
   -p, --packager=<packager>                        Include a packager. 🔁
   -u, --uploader=<uploader>                        Include an uploader by type. 🔁
@@ -1249,6 +1304,7 @@ Include Filter:
       -yn, --deployer-name=<name>                  Include a deployer by name. 🔁
 
 Exclude Filter:
+      --exclude-cataloger=<cataloger>              Exclude a cataloger. 🔁
       -xa, --exclude-announcer=<announcer>         Exclude an announcer. 🔁
       -xd, --exclude-distribution=<distribution>   Exclude a distribution. 🔁
       -xp, --exclude-packager=<packager>           Exclude a packager. 🔁
