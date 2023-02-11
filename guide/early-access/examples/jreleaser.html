@@ -788,6 +788,14 @@ environment:
     skipJpackageResolver: true
     skipNativeImageResolver: true
 
+# Adjust changelog by adding file checksums
+hooks:
+  command:
+    success:
+      - cmd: 'java .github/scripts/adjust_changelog.java {{checksumDirectory}} {{outputDirectory}}/release/CHANGELOG.md'
+        filter:
+          includes: [ 'checksum' ]
+
 # General information about this project
 project:
   name: jreleaser
@@ -887,6 +895,7 @@ release:
         contributors:
           - 'GitHub'
           - 'allcontributors'
+          - 'dependabot'
       replacers:
         - search: 'i18n: '
         - search: 'deps: '
@@ -895,6 +904,14 @@ release:
 signing:
   active: ALWAYS
   armored: true
+
+# Generate SBOMs for all distributions and files
+catalog:
+  sbom:
+    syft:
+      active: ALWAYS
+      pack:
+        enabled: true
 
 # Deploy JARs and POMs to Maven Central
 deploy:
@@ -954,8 +971,6 @@ assemble:
           platform: 'osx-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
           platform: 'osx-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Linux32/{{jdkFilePrefix}}-linux_i686'
-          platform: 'linux-x86_32'
         - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
           platform: 'linux-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
@@ -964,8 +979,6 @@ assemble:
           platform: 'linux_musl-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
           platform: 'linux_musl-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Windows32/{{jdkFilePrefix}}-win_i686'
-          platform: 'windows-x86_32'
         - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
           platform: 'windows-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
@@ -1182,6 +1195,16 @@ distributions:
   # Name matches the assembled jpackage distribution
   jreleaser-installer:
     type: NATIVE_PACKAGE
+    winget:
+      active: RELEASE
+      package:
+        name: jreleaser
+      repository:
+        active: ALWAYS
+        commitMessage: 'jreleaser {{tagName}}'
+    executable:
+      name: jreleaser
+      windowsExtension: exe
     artifacts:
       # Transform the artifact name
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-x86_64.pkg'
@@ -1214,6 +1237,7 @@ files:
       extraProperties:
         skipChecksum: true
         skipSigning: true
+        skipSbom: true
     - path: plugins/jreleaser-ant-tasks/build/distributions/jreleaser-ant-tasks-{{projectVersion}}.zip
       transform: 'jreleaser-ant-tasks/jreleaser-ant-tasks-{{projectEffectiveVersion}}.zip'</code></pre>
 </div>
@@ -1235,14 +1259,12 @@ jreleaser-tool-provider-early-access.jar
 
 # binaries created by the Jlink assembler
 jreleaser-standalone-early-access-linux-aarch64.zip
-jreleaser-standalone-early-access-linux-x86_32.zip
 jreleaser-standalone-early-access-linux-x86_64.zip
 jreleaser-standalone-early-access-linux_musl-aarch64.zip
 jreleaser-standalone-early-access-linux_musl-x86_64.zip
 jreleaser-standalone-early-access-osx-aarch64.zip
 jreleaser-standalone-early-access-osx-x86_64.zip
 jreleaser-standalone-early-access-windows-aarch64.zip
-jreleaser-standalone-early-access-windows-x86_32.zip
 jreleaser-standalone-early-access-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
@@ -1256,6 +1278,9 @@ jreleaser-native-early-access-osx-x86_64.zip
 jreleaser-native-early-access-linux-x86_64.zip
 jreleaser-native-early-access-windows-x86_64.zip
 
+# sbom archive
+jreleaser-early-access-sboms.zip
+
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
@@ -1265,12 +1290,12 @@ jreleaser-early-access.zip.sha256
 # signatures
 checksums_rmd160.txt.asc
 checksums_sha256.txt.asc
+jreleaser-early-access-sboms.zip.asc
 jreleaser-early-access.tar.asc
 jreleaser-early-access.zip.asc
 jreleaser-ant-tasks-early-access.zip.asc
 jreleaser-tool-provider-early-access.jar.asc
 jreleaser-standalone-early-access-linux-aarch64.zip.asc
-jreleaser-standalone-early-access-linux-x86_32.zip.asc
 jreleaser-standalone-early-access-linux-x86_64.zip.asc
 jreleaser-standalone-early-access-linux_musl-aarch64.zip.asc
 jreleaser-standalone-early-access-linux_musl-x86_64.zip.asc
@@ -1284,7 +1309,6 @@ jreleaser-installer-early-access-1.x86_64.rpm.asc
 jreleaser-installer-early-access-windows-x86_64.msi.asc
 jreleaser-native-early-access-osx-x86_64.zip.asc
 jreleaser-native-early-access-linux-x86_64.zip.asc
-jreleaser-native-early-access-windows-x86_32.zip.asc
 jreleaser-native-early-access-windows-x86_64.zip.asc
 
 # additional files
@@ -1319,6 +1343,9 @@ VERSION</code></pre>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/jreleaser-snap" class="bare">https://github.com/jreleaser/jreleaser-snap</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jreleaser/jreleaser-winget" class="bare">https://github.com/jreleaser/jreleaser-winget</a></p>
 </li>
 <li>
 <p><a href="https://github.com/jreleaser/scoop-jreleaser" class="bare">https://github.com/jreleaser/scoop-jreleaser</a></p>
