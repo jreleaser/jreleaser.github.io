@@ -54,6 +54,13 @@ hooks:
         filter:
           includes: ['release']
           excludes: ['publish']
+
+        # Filters this hook based on the current platform.
+        # Use a `!` prefix to exclude a platform
+        # icon:dot-circle[]
+        platforms:
+          - linux
+          - !windows
 ----
 --
 TOML::
@@ -101,6 +108,11 @@ TOML::
       # icon:dot-circle[]
       filter.includes = ["release"]
       filter.excludes = ["publish"]
+
+      # Filters this hook based on the current platform.
+      # Use a `!` prefix to exclude a platform
+      # icon:dot-circle[]
+      platforms = ["linux", "!windows"]
 ----
 --
 JSON::
@@ -151,7 +163,15 @@ JSON::
           "filter": {
             "includes": ["release"],
             "excludes": ["publish"]
-          }
+          },
+
+          // Filters this hook based on the current platform.
+          // Use a `!` prefix to exclude a platform
+          // icon:dot-circle[]
+          "platforms": [
+            "linux",
+            "!windows"
+          ]
         }
       ]
     }
@@ -225,6 +245,16 @@ Maven::
             <includes>release</include>
             <excludes>publish</excludes>
           </filter>
+
+          <!--
+            Filters this hook based on the current platform.
+            Use a `!` prefix to exclude a platform
+            icon:dot-circle[]
+          -->
+          <platforms>
+            <platform>linux</platform>
+            <platform>!windows</platform>
+          </platforms>
         </commandHook>
       </before>
     </command>
@@ -280,6 +310,12 @@ jreleaser {
           includes = ["release"]
           excludes = ["publish"]
         }
+
+        // Filters this hook based on the current platform.
+        // Use a `!` prefix to exclude a platform
+        // icon:dot-circle[]
+        platform('linux')
+        platform('!windows')
       }
     }
   }
@@ -332,6 +368,7 @@ The following step names may be used when filtering hooks:
 * `download`
 * `assemble`
 * `changelog`
+* `catalog`
 * `checksum`
 * `sign`
 * `upload`
