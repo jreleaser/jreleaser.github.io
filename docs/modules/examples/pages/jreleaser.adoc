@@ -20,6 +20,14 @@ environment:
     skipJpackageResolver: true
     skipNativeImageResolver: true
 
+# Adjust changelog by adding file checksums
+hooks:
+  command:
+    success:
+      - cmd: 'java .github/scripts/adjust_changelog.java {{checksumDirectory}} {{outputDirectory}}/release/CHANGELOG.md'
+        filter:
+          includes: [ 'checksum' ]
+
 # General information about this project
 project:
   name: jreleaser
@@ -119,6 +127,7 @@ release:
         contributors:
           - 'GitHub'
           - 'allcontributors'
+          - 'dependabot'
       replacers:
         - search: 'i18n: '
         - search: 'deps: '
@@ -127,6 +136,14 @@ release:
 signing:
   active: ALWAYS
   armored: true
+
+# Generate SBOMs for all distributions and files
+catalog:
+  sbom:
+    syft:
+      active: ALWAYS
+      pack:
+        enabled: true
 
 # Deploy JARs and POMs to Maven Central
 deploy:
@@ -186,8 +203,6 @@ assemble:
           platform: 'osx-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
           platform: 'osx-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Linux32/{{jdkFilePrefix}}-linux_i686'
-          platform: 'linux-x86_32'
         - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
           platform: 'linux-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
@@ -196,8 +211,6 @@ assemble:
           platform: 'linux_musl-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
           platform: 'linux_musl-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Windows32/{{jdkFilePrefix}}-win_i686'
-          platform: 'windows-x86_32'
         - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
           platform: 'windows-x86_64'
         - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
@@ -414,6 +427,16 @@ distributions:
   # Name matches the assembled jpackage distribution
   jreleaser-installer:
     type: NATIVE_PACKAGE
+    winget:
+      active: RELEASE
+      package:
+        name: jreleaser
+      repository:
+        active: ALWAYS
+        commitMessage: 'jreleaser {{tagName}}'
+    executable:
+      name: jreleaser
+      windowsExtension: exe
     artifacts:
       # Transform the artifact name
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-x86_64.pkg'
@@ -446,6 +469,7 @@ files:
       extraProperties:
         skipChecksum: true
         skipSigning: true
+        skipSbom: true
     - path: plugins/jreleaser-ant-tasks/build/distributions/jreleaser-ant-tasks-{{projectVersion}}.zip
       transform: 'jreleaser-ant-tasks/jreleaser-ant-tasks-{{projectEffectiveVersion}}.zip'
 ----
@@ -466,14 +490,12 @@ jreleaser-tool-provider-{jreleaser-effective-version}.jar
 
 # binaries created by the Jlink assembler
 jreleaser-standalone-{jreleaser-effective-version}-linux-aarch64.zip
-jreleaser-standalone-{jreleaser-effective-version}-linux-x86_32.zip
 jreleaser-standalone-{jreleaser-effective-version}-linux-x86_64.zip
 jreleaser-standalone-{jreleaser-effective-version}-linux_musl-aarch64.zip
 jreleaser-standalone-{jreleaser-effective-version}-linux_musl-x86_64.zip
 jreleaser-standalone-{jreleaser-effective-version}-osx-aarch64.zip
 jreleaser-standalone-{jreleaser-effective-version}-osx-x86_64.zip
 jreleaser-standalone-{jreleaser-effective-version}-windows-aarch64.zip
-jreleaser-standalone-{jreleaser-effective-version}-windows-x86_32.zip
 jreleaser-standalone-{jreleaser-effective-version}-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
@@ -487,6 +509,9 @@ jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip
 jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip
 jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip
 
+# sbom archive
+jreleaser-{jreleaser-effective-version}-sboms.zip
+
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
@@ -496,12 +521,12 @@ jreleaser-{jreleaser-effective-version}.zip.sha256
 # signatures
 checksums_rmd160.txt.asc
 checksums_sha256.txt.asc
+jreleaser-{jreleaser-effective-version}-sboms.zip.asc
 jreleaser-{jreleaser-effective-version}.tar.asc
 jreleaser-{jreleaser-effective-version}.zip.asc
 jreleaser-ant-tasks-{jreleaser-effective-version}.zip.asc
 jreleaser-tool-provider-{jreleaser-effective-version}.jar.asc
 jreleaser-standalone-{jreleaser-effective-version}-linux-aarch64.zip.asc
-jreleaser-standalone-{jreleaser-effective-version}-linux-x86_32.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-linux-x86_64.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-linux_musl-aarch64.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-linux_musl-x86_64.zip.asc
@@ -515,7 +540,6 @@ jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm.asc
 jreleaser-installer-{jreleaser-effective-version}-windows-x86_64.msi.asc
 jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip.asc
 jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip.asc
-jreleaser-native-{jreleaser-effective-version}-windows-x86_32.zip.asc
 jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip.asc
 
 # additional files
@@ -532,6 +556,7 @@ Additionally, the following repositories will be updated with new packagers:
  * https://github.com/jreleaser/jreleaser-docker
  * https://github.com/jreleaser/jreleaser-macports
  * https://github.com/jreleaser/jreleaser-snap
+ * https://github.com/jreleaser/jreleaser-winget
  * https://github.com/jreleaser/scoop-jreleaser
  * https://github.com/flathub/org.jreleaser.cli
 
