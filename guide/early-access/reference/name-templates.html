@@ -969,8 +969,51 @@ also support templates. A template name can be used as <code>{{name}}</code></p>
 </table>
 <div class="paragraph">
 <p>The <code>f_release_download_url</code> function expects the name of a release asset and creates a link to said asset. The default
-format is Markdown. Use a prefix such as <code>md:</code>, <code>adoc:</code>, or <code>html:</code> to indicate a different format.</p>
+format is Markdown. Use a prefix such as <code>md:</code>, <code>adoc:</code>, or <code>html:</code> to indicate a different format. You may also set a
+different value for the link such that</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Input</th>
+<th class="tableblock halign-left valign-top">filename</th>
+<th class="tableblock halign-left valign-top">linkname</th>
+<th class="tableblock halign-left valign-top">format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">md</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bar:foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">md</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adoc:bar:foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adoc</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">html:foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">html</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>Example:</p>
 </div>
@@ -979,6 +1022,7 @@ format is Markdown. Use a prefix such as <code>md:</code>, <code>adoc:</code>, o
 <pre class="highlightjs highlight"><code class="language-none hljs">{{#f_now}}YYYY-MM-dd{{/f_now}}
 {{#f_dash}}1.2.3{{/f_dash}}
 {{#f_release_download_url}}jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
+{{#f_release_download_url}}asc:jreleaser-{{projectEffectiveVersion}}.zip.asc{{/f_release_download_url}}
 {{#f_release_download_url}}md:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
 {{#f_release_download_url}}adoc:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}
 {{#f_release_download_url}}html:jreleaser-{{projectEffectiveVersion}}.zip{{/f_release_download_url}}</code></pre>
@@ -992,6 +1036,7 @@ format is Markdown. Use a prefix such as <code>md:</code>, <code>adoc:</code>, o
 <pre class="highlightjs highlight"><code class="language-none hljs">2021-07-26
 1-2-3
 [jreleaser-early-access.zip](https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-early-access.zip)
+[asc](https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-early-access.zip.asc)
 [jreleaser-early-access.zip](https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-early-access.zip)
 link:https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-early-access.zip[jreleaser-early-access.zip]
 &lt;a href="https://github.com/jreleaser/jreleaser/releases/download/early-access/jreleaser-early-access.zip"&gt;jreleaser-early-access.zip&lt;/a&gt;</code></pre>
