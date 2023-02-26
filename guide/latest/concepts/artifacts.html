@@ -418,6 +418,9 @@
     <a class="nav-link" href="../reference/announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -776,7 +800,7 @@ of files. Files resolved by Artifact and Glob types do not preserve directory st
 <div class="ulist">
 <ul>
 <li>
-<p><code>path</code>. Defines the location of the file. Path may be relative or absolute. We recomend defining paths
+<p><code>path</code>. Defines the location of the file. Path may be relative or absolute. We recommend defining paths
 that are relative to the <code>basedir</code> as much as possible, as that simplifies the setup on
 <a href="../continuous-integration/index.html" class="xref page">CI</a>. Its value may use <a href="../reference/name-templates.html" class="xref page">Name Templates</a>.
 This property is <strong>required</strong>.</p>
@@ -789,9 +813,6 @@ This property is <strong>optional</strong>.</p>
 <li>
 <p><code>platform</code>. Defines the OS specific platform for this file. Some <a href="../reference/assemble/index.html" class="xref page">assemblers</a>
 and <a href="../reference/packagers/index.html" class="xref page">packagers</a> require that artifacts define a platform.</p>
-</li>
-<li>
-<p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the artifact.</p>
 </li>
 </ul>
 </div>
@@ -850,6 +871,43 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <div class="paragraph">
 <p>Platform detection may be overridden by defining an environment variable or a System property named
 <code>JRELEASER_PLATFORM_OVERRIDE</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the artifact.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_optional"><a class="anchor" href="#_optional"></a>Optional</h3>
+<div class="paragraph">
+<p>There may be times when artifacts are not be available for various reasons yet the release should continue without them.
+You may set an extra property named <code>optional</code> whose value resolves to <code>true</code> or <code>false</code>. Optional artifacts will be
+automatically skipped. You may use <a href="../reference/name-templates.html" class="xref page">name templates</a> with this property, for example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">environment:
+  properties:
+    # default value if property is not explicitly set
+    versionOpt: false
+
+files:
+  artifacts:
+    - path: 'target/resources/version.txt'
+      extraProperties:
+        optional: '{{versionOpt}}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may then execute a release and skip the given file by running the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ jreleaser release -PversionOpt=true</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -958,7 +1016,7 @@ Target JDKs are of type <code>artifact</code>.</p>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">assemble:
   jlink:
     app:
-      active: always
+      active: ALWAYS
       jdk:
         path: '{{oracleJdks}}/jdk-16_osx-x64/Contents/Home'
         platform: osx
@@ -1153,16 +1211,16 @@ Target JDKs are of type <code>artifact</code>.</p>
 │    ├── jreleaser
 │    │   └── build
 │    │       └── distributions
-│    │           └── jreleaser-1.4.0.zip
+│    │           └── jreleaser-1.5.0.zip
 │    └── jreleaser-tool-provider
 │        └── build
 │            └── libs
-│                └── jreleaser-tool-provider-1.4.0.jar
+│                └── jreleaser-tool-provider-1.5.0.jar
 └── plugins
     └── jreleaser-ant-tasks
         └── build
             └── distributions
-                └── jreleaser-ant-tasks-1.4.0.zip</code></pre>
+                └── jreleaser-ant-tasks-1.5.0.zip</code></pre>
 </div>
 </div>
 </div>

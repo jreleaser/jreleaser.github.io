@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -866,6 +890,11 @@ dependencies. If you rather package and push on CI then set <code>remoteBuild</c
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -916,7 +945,7 @@ packagers:
     # Enables or disables Snap.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active: ALWAYS
 
     # Let the release continue if the packager fails.
@@ -986,23 +1015,19 @@ packagers:
       tagName: '{{distributionName}} {{tagName}}'
 
       # The target branch to use.
-      # May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the snap.
-      # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-      # environment variable must be defined.
+      # Username used for authoring commits.
+      # Must have write access to the snap.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the snap.
-      # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      token: __DO_NOT_SET_HERE__
+      token: __USE_ENVIRONMENT_VARIABLE__
 
       # Message when committing to the snap.
       # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1120,7 +1145,7 @@ packagers:
   # Enables or disables Snap.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Let the release continue if the packager fails.
@@ -1186,23 +1211,19 @@ packagers:
   snap.tagName = "{{distributionName}} {{tagName}}"
 
   # The target branch to use.
-  # May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the snap.
-  # If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-  # environment variable must be defined.
+  # Username used for authoring commits.
+  # Must have write access to the snap.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   snap.username = "duke"
 
   # Password or OAuth token with write access to the snap.
-  # If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  snap.token = "__DO_NOT_SET_HERE__"
+  snap.token = "__USE_ENVIRONMENT_VARIABLE__"
 
   # Message when committing to the snap.
   # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1313,7 +1334,7 @@ packagers:
       // Enables or disables Snap.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "active": "ALWAYS",
 
       // Let the release continue if the packager fails.
@@ -1386,23 +1407,19 @@ packagers:
         "tagName": "{{distributionName}} {{tagName}}",
 
         // The target branch to use.
-        // May define a `JRELEASER_SNAP_${GIT}_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the snap.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-        // environment variable must be defined.
+        // Username used for authoring commits.
+        // Must have write access to the snap.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the snap.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__",
+        "token": "__USE_ENVIRONMENT_VARIABLE__",
 
         // Message when committing to the snap.
         // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1549,7 +1566,7 @@ packagers:
         Enables or disables Snap.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1653,16 +1670,14 @@ packagers:
 
         &lt;!--
           The target branch to use.
-          May define a `JRELEASER_SNAP_${GIT}_BRANCH`` environment variable instead.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the snap.
-          If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-          environment variable must be defined.
+          Username used for authoring commits.
+          Must have write access to the snap.
           Defaults to the same username as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1670,11 +1685,9 @@ packagers:
 
         &lt;!--
           Password or OAuth token with write access to the snap.
-          If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+        &lt;token&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/token&gt;
 
         &lt;!--
           Message when committing to the snap.
@@ -1848,7 +1861,7 @@ packagers:
       // Enables or disables Snap.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active = 'ALWAYS'
 
       // Let the release continue if the packager fails.
@@ -1917,23 +1930,19 @@ packagers:
         tagName = '{{distributionName}} {{tagName}}'
 
         // The target branch to use.
-        // May define a `JRELEASER_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the snap.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_USERNAME`
-        // environment variable must be defined.
+        // Username used for authoring commits.
+        // Must have write access to the snap.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the snap.
-        // If left unspecified, the `JRELEASER_SNAP_${GIT}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        token = '__DO_NOT_SET_HERE__'
+        token = '__USE_ENVIRONMENT_VARIABLE__'
 
         # Message when committing to the snap.
         # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -2051,6 +2060,202 @@ packagers:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<div class="paragraph">
+<p><strong>Inside <code>packagers</code> section</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.packagers.snap.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_PACKAGERS_SNAP_ACTIVE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Inside <code>distributions</code> section</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.snap.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_SNAP_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>snap.active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.snap.snap.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_SNAP_SNAP_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>snap.username</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.snap.snap.username<br>
+  jreleaser.snap.github.username<br>
+  jreleaser.snap.gitlab.username<br>
+  jreleaser.snap.gitea.username<br>
+  jreleaser.snap.codeberg.username<br>
+  jreleaser.github.username<br>
+  jreleaser.gitlab.username<br>
+  jreleaser.gitea.username<br>
+  jreleaser.codeberg.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_SNAP_SNAP_USERNAME<br>
+  JRELEASER_SNAP_GITHUB_USERNAME<br>
+  JRELEASER_SNAP_GITLAB_USERNAME<br>
+  JRELEASER_SNAP_GITEA_USERNAME<br>
+  JRELEASER_SNAP_CODEBERG_USERNAME<br>
+  JRELEASER_GITHUB_USERNAME<br>
+  JRELEASER_GITLAB_USERNAME<br>
+  JRELEASER_GITEA_USERNAME<br>
+  JRELEASER_CODEBERG_USERNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>snap.token</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.snap.snap.token<br>
+  jreleaser.snap.github.token<br>
+  jreleaser.snap.gitlab.token<br>
+  jreleaser.snap.gitea.token<br>
+  jreleaser.snap.codeberg.token<br>
+  jreleaser.github.token<br>
+  jreleaser.gitlab.token<br>
+  jreleaser.gitea.token<br>
+  jreleaser.codeberg.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_SNAP_SNAP_TOKEN<br>
+  JRELEASER_SNAP_GITHUB_TOKEN<br>
+  JRELEASER_SNAP_GITLAB_TOKEN<br>
+  JRELEASER_SNAP_GITEA_TOKEN<br>
+  JRELEASER_SNAP_CODEBERG_TOKEN<br>
+  JRELEASER_GITHUB_TOKEN<br>
+  JRELEASER_GITLAB_TOKEN<br>
+  JRELEASER_GITEA_TOKEN<br>
+  JRELEASER_CODEBERG_TOKEN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>snap.branch</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.snap.snap.branch<br>
+  jreleaser.snap.github.branch<br>
+  jreleaser.snap.gitlab.branch<br>
+  jreleaser.snap.gitea.branch<br>
+  jreleaser.snap.codeberg.branch<br>
+  jreleaser.github.branch<br>
+  jreleaser.gitlab.branch<br>
+  jreleaser.gitea.branch<br>
+  jreleaser.codeberg.branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_SNAP_SNAP_BRANCH<br>
+  JRELEASER_SNAP_GITHUB_BRANCH<br>
+  JRELEASER_SNAP_GITLAB_BRANCH<br>
+  JRELEASER_SNAP_GITEA_BRANCH<br>
+  JRELEASER_SNAP_CODEBERG_BRANCH<br>
+  JRELEASER_GITHUB_BRANCH<br>
+  JRELEASER_GITLAB_BRANCH<br>
+  JRELEASER_GITEA_BRANCH<br>
+  JRELEASER_CODEBERG_BRANCH</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_tokens"><a class="anchor" href="#_tokens"></a>Tokens</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
@@ -2060,46 +2265,10 @@ packagers:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The snap token environment variable must match with the chosen <a href="../release/index.html" class="xref page">Release</a> service that is, it must
-be one of:
+The snap token environment variable must match with the chosen <a href="../release/index.html" class="xref page">Release</a> service.
 </td>
 </tr>
 </table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_SNAP_GITHUB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_SNAP_GITLAB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_SNAP_GITEA_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_SNAP_CODEBERG_TOKEN</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If a matching token is not found then the releaser&#8217;s token will be used instead:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITHUB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITEA_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_CODEBERG_TOKEN</code></p>
-</li>
-</ul>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2255,11 +2424,21 @@ which case <a href="../name-templates.html" class="xref page">Name Templates</a>
 <div class="paragraph">
 <p>Templates may be initialized using the <code>template</code> command</p>
 </div>
-<div class="paragraph">
-<p><a href="../../tools/jreleaser-cli.html#_template" class="xref page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
-<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
-<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
-<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tools/jreleaser-cli.html#_template_generate" class="xref page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template generate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-maven.html#_jreleasertemplate_generate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template-generate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-gradle.html#_jreleasertemplategenerate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplategGenerate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-ant.html#_jreleaser_template_generate" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template-generate</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

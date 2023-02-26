@@ -418,6 +418,9 @@
     <a class="nav-link" href="../reference/announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -761,20 +785,22 @@ customizable options.
 Usage: jreleaser [-hV] [-D=&lt;key=value&gt;]... [COMMAND]
 
 Options:
-  -D=&lt;key=value&gt;    Sets a System property. Repeatable.
+  -D=&lt;key=value&gt;    Sets a System property. 🔁
   -h, --help        Show this help message and exit.
   -V, --version     Print version information and exit.
 
 Commands:
+  env                  Display environment variable names.
   init                 Create a jreleaser config file.
   config               Display current configuration.
-  template             Generate a packager/announcer template.
+  template             Generate or eval templates.
   download             Download assets.
   assemble             Assemble distributions.
   changelog            Calculate the changelog.
+  catalog              Catalog artifacts and files.
   checksum             Calculate checksums.
   sign                 Sign release artifacts.
-  deploy               Deploys all staged artifacts.
+  deploy               Deploy all staged artifacts.
   upload               Upload all artifacts.
   release              Create or update a release.
   prepare              Prepare all distributions.
@@ -861,6 +887,31 @@ Documentation found at https://jreleaser.org</code></pre>
 <p><code>JRELEASER_SELECT_PLATFORMs</code> and <code>JRELEASER_REJECT_PLATFORMs</code> may define a command separated list of values such as
 <code>osx-x86_64,linux-x86_64</code>.</p>
 </div>
+<div class="paragraph">
+<p>These additional environment variables are supported as well:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1005,28 +1056,44 @@ uncompress and copy to the desired location.</p>
 <p>The following commands are supported:</p>
 </div>
 <div class="sect2">
+<h3 id="_env"><a class="anchor" href="#_env"></a>env</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser env -h
+Display environment variable names.
+
+Usage: jreleaser env [-hV] [-D=&lt;key=value&gt;]...
+
+Options:
+  -D=&lt;key=value&gt;    Sets a System property. 🔁
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_init"><a class="anchor" href="#_init"></a>init</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser init -h
 Create a jreleaser config file.
 
-Usage: jreleaser init [-ghioqVw] [-b=&lt;basedir&gt;] [-f=&lt;format&gt;] [-od=&lt;outputdir&gt;]
-                      [-D=&lt;key=value&gt;]...
+Usage: jreleaser init [-ghioqVw] [-b=&lt;directory&gt;] [-f=&lt;format&gt;] [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]...
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -f, --format=&lt;format&gt;     Configuration file format.
-  -g, --debug               Set log level to debug.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-  -o, --overwrite           Overwrite existing files.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -q, --quiet               Log errors only.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                 Base directory.
+  -D=&lt;key=value&gt;                            Sets a System property. 🔁
+  -f, --format=&lt;format&gt;                     Configuration file format.
+  -g, --debug                               Set log level to debug.
+  -h, --help                                Show this help message and exit.
+  -i, --info                                Set log level to info.
+  -o, --overwrite                           Overwrite existing files.
+      -od, --output-directory=&lt;directory&gt;   Output directory.
+  -q, --quiet                               Log errors only.
+  -V, --version                             Print version information and exit.
+  -w, --warn                                Set log level to warn.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1045,42 +1112,32 @@ Documentation found at https://jreleaser.org</code></pre>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
-                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                        [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
-                        [-sp=&lt;platform&gt;]... [--announce | -a | --changelog | -d]
+Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                        [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                        [--announce | -a | --changelog | -d]
 
 Options:
-  -a, --assembly            Display assembly configuration.
-      --announce            Display announce configuration.
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-      --changelog           Display changelog configuration.
-  -d, --download            Display download configuration.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -f, --full                Display full configuration.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -a, --assembly                            Display assembly configuration.
+      --announce                            Display announce configuration.
+  -b, --basedir=&lt;directory&gt;                 Base directory.
+  -c, --config-file=&lt;file&gt;                  The config file.
+      --changelog                           Display changelog configuration.
+  -d, --download                            Display download configuration.
+  -D=&lt;key=value&gt;                            Sets a System property. 🔁
+  -f, --full                                Display full configuration.
+  -g, --debug                               Set log level to debug.
+      -grs, --git-root-search               Searches for the Git root.
+  -h, --help                                Show this help message and exit.
+  -i, --info                                Set log level to info.
+      -od, --output-directory=&lt;directory&gt;   Output directory.
+  -P, --set-property=&lt;key=value&gt;            Sets the value of a property. 🔁
+  -q, --quiet                               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;     Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform       Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;     Activates paths matching the given platform. 🔁
+      --strict                              Enable strict mode.
+  -V, --version                             Print version information and exit.
+  -w, --warn                                Set log level to warn.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1098,44 +1155,59 @@ found at the current directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template -h
-Generate a packager/announcer template.
+Generate or eval templates.
 
-Usage: jreleaser template [-ghioqVw] [-sn] [-b=&lt;basedir&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... ([-a=&lt;announcer&gt;] |
-                          [-st=&lt;assembler-type&gt; -s=&lt;assembler-name&gt;] |
-                          [-d=&lt;distribution&gt; -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
+Usage: jreleaser template [-hV] [-D=&lt;key=value&gt;]... [COMMAND]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -g, --debug               Set log level to debug.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-  -o, --overwrite           Overwrite existing files.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -q, --quiet               Log errors only.
-      -sn, --snapshot       Use snapshot templates.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -D=&lt;key=value&gt;    Sets a System property. 🔁
+  -h, --help        Show this help message and exit.
+  -V, --version     Print version information and exit.
+
+Commands:
+  generate  Generate a packager/announcer template.
+  eval      Evaluate a template or templates.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_template_generate"><a class="anchor" href="#_template_generate"></a>template generate</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template generate -h
+Generate a packager/announcer template.
+
+Usage: jreleaser template generate [-ghioqVw] [-sn] [-b=&lt;directory&gt;] [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]...
+                                   ([-a=&lt;announcer&gt;] | [-st=&lt;type&gt; -s=&lt;name&gt;] | [-d=&lt;distribution&gt;
+                                   -p=&lt;packager&gt; [-dt=&lt;type&gt;]])
+
+Options:
+  -b, --basedir=&lt;directory&gt;                 Base directory.
+  -D=&lt;key=value&gt;                            Sets a System property. 🔁
+  -g, --debug                               Set log level to debug.
+  -h, --help                                Show this help message and exit.
+  -i, --info                                Set log level to info.
+  -o, --overwrite                           Overwrite existing files.
+      -od, --output-directory=&lt;directory&gt;   Output directory.
+  -q, --quiet                               Log errors only.
+      -sn, --snapshot                       Use snapshot templates.
+  -V, --version                             Print version information and exit.
+  -w, --warn                                Set log level to warn.
 
 Announcer templates
-  -a, --announcer=&lt;announcer&gt;
-                            The name of the announcer.
+  -a, --announcer=&lt;announcer&gt;               The name of the announcer.
 
 Assembler templates
-  -s, --assembler-name=&lt;assembler-name&gt;
-                            The name of the assembler.
-      -st, --assembler-type=&lt;assembler-type&gt;
-                            The type of the assembler.
+  -s, --assembler-name=&lt;name&gt;               The name of the assembler.
+      -st, --assembler-type=&lt;type&gt;          The type of the assembler.
 
 Packager templates
-  -d, --distribution=&lt;distribution&gt;
-                            The name of the distribution.
-      -dt, --distribution-type=&lt;type&gt;
-                            The type of the distribution.
-                            Defaults to JAVA_BINARY.
-  -p, --packager=&lt;packager&gt; The name of the packager.
+  -d, --distribution=&lt;distribution&gt;         The name of the distribution.
+      -dt, --distribution-type=&lt;type&gt;       The type of the distribution.
+                                            Defaults to JAVA_BINARY.
+  -p, --packager=&lt;packager&gt;                 The name of the packager.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1166,49 +1238,88 @@ the value of <code>--assembler-name</code> must match any of the available <a hr
 </div>
 </div>
 <div class="sect2">
+<h3 id="_template_eval"><a class="anchor" href="#_template_eval"></a>template eval</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template eval
+Evaluate a template or templates.
+
+Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                               [-od=&lt;directory&gt;] --target-directory=&lt;directory&gt; [-D=&lt;key=value&gt;]...
+                               [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]... [--announce | -a |
+                               --changelog | -d] (--input-file=&lt;file&gt; | --input-directory=&lt;directory&gt;)
+
+Options:
+  -a, --assembly                            Eval model in assembly configuration.
+      --announce                            Eval model in announce configuration.
+  -b, --basedir=&lt;directory&gt;                 Base directory.
+  -c, --config-file=&lt;file&gt;                  The config file.
+      --changelog                           Eval model in changelog configuration.
+  -d, --download                            Eval model in download configuration.
+  -D=&lt;key=value&gt;                            Sets a System property. 🔁
+  -g, --debug                               Set log level to debug.
+      -grs, --git-root-search               Searches for the Git root.
+  -h, --help                                Show this help message and exit.
+  -i, --info                                Set log level to info.
+      --input-directory=&lt;directory&gt;         A directory with input templates.
+      --input-file=&lt;file&gt;                   An input template file.
+  -o, --overwrite                           Overwrite existing files.
+      -od, --output-directory=&lt;directory&gt;   Output directory.
+  -P, --set-property=&lt;key=value&gt;            Sets the value of a property. 🔁
+  -q, --quiet                               Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;     Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform       Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;     Activates paths matching the given platform. 🔁
+      --strict                              Enable strict mode.
+      --target-directory=&lt;directory&gt;        Directory where evaluated template(s) will be placed.
+  -V, --version                             Print version information and exit.
+  -w, --warn                                Set log level to warn.
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|toml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_download"><a class="anchor" href="#_download"></a>download</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser download -h
 Download assets.
 
-Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict]
-                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [[[-d=&lt;downloader&gt;]... [-dn=&lt;name&gt;]...] |
-                          [[-xd=&lt;downloader&gt;]... [-xdn=&lt;name&gt;]...]]
+Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-d=&lt;downloader&gt;]...
+                          [-dn=&lt;name&gt;]...] | [[-xd=&lt;downloader&gt;]... [-xdn=&lt;name&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                    Base directory.
+  -c, --config-file=&lt;file&gt;                     The config file.
+  -D=&lt;key=value&gt;                               Sets a System property. 🔁
+      --dry-run                                Skip remote operations.
+  -g, --debug                                  Set log level to debug.
+      -grs, --git-root-search                  Searches for the Git root.
+  -h, --help                                   Show this help message and exit.
+  -i, --info                                   Set log level to info.
+      -od, --output-directory=&lt;directory&gt;      Output directory.
+  -P, --set-property=&lt;key=value&gt;               Sets the value of a property. 🔁
+  -q, --quiet                                  Log errors only.
+      --strict                                 Enable strict mode.
+  -V, --version                                Print version information and exit.
+  -w, --warn                                   Set log level to warn.
 
 Include Filter:
-  -d, --downloader=&lt;downloader&gt;
-                            Include a downloader by type. Repeatable.
-      -dn, --downloader-name=&lt;name&gt;
-                            Include a downloader by name. Repeatable.
+  -d, --downloader=&lt;downloader&gt;                Include a downloader by type. 🔁
+      -dn, --downloader-name=&lt;name&gt;            Include a downloader by name. 🔁
 
 Exclude Filter:
-      -xd, --exclude-downloader=&lt;downloader&gt;
-                            Exclude a downloader by type. Repeatable.
-      -xdn, --exclude-downloader-name=&lt;name&gt;
-                            Exclude a downloader by name. Repeatable.
+      -xd, --exclude-downloader=&lt;downloader&gt;   Exclude a downloader by type. 🔁
+      -xdn, --exclude-downloader-name=&lt;name&gt;   Exclude a downloader by name. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1239,51 +1350,36 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
-                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                          [[[-s=&lt;assembler&gt;]... [-d=&lt;distribution&gt;]...] |
-                          [[-xs=&lt;assembler&gt;]... [-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                          [[[-s=&lt;assembler&gt;]... [-d=&lt;distribution&gt;]...] | [[-xs=&lt;assembler&gt;]...
+                          [-xd=&lt;distribution&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -s, --assembler=&lt;assembler&gt;
-                            Include an assembler. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -s, --assembler=&lt;assembler&gt;                      Include an assembler. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xs, --exclude-assembler=&lt;assembler&gt;
-                            Exclude an assembler. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xs, --exclude-assembler=&lt;assembler&gt;         Exclude an assembler. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1314,29 +1410,24 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict]
-                           [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                           [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                           [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                 Base directory.
+  -c, --config-file=&lt;file&gt;                  The config file.
+  -D=&lt;key=value&gt;                            Sets a System property. 🔁
+      --dry-run                             Skip remote operations.
+  -g, --debug                               Set log level to debug.
+      -grs, --git-root-search               Searches for the Git root.
+  -h, --help                                Show this help message and exit.
+  -i, --info                                Set log level to info.
+      -od, --output-directory=&lt;directory&gt;   Output directory.
+  -P, --set-property=&lt;key=value&gt;            Sets the value of a property. 🔁
+  -q, --quiet                               Log errors only.
+      --strict                              Enable strict mode.
+  -V, --version                             Print version information and exit.
+  -w, --warn                                Set log level to warn.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1349,6 +1440,57 @@ found at the current directory.</p>
 <p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_catalog"><a class="anchor" href="#_catalog"></a>catalog</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser catalog -h
+Catalog artifacts and files.
+
+Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[--distribution=&lt;distribution&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
+                         [[--exclude-distribution=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
+
+Options:
+  -b, --basedir=&lt;directory&gt;                   Base directory.
+  -c, --config-file=&lt;file&gt;                    The config file.
+  -D=&lt;key=value&gt;                              Sets a System property. 🔁
+  -g, --debug                                 Set log level to debug.
+      -grs, --git-root-search                 Searches for the Git root.
+  -h, --help                                  Show this help message and exit.
+  -i, --info                                  Set log level to info.
+      -od, --output-directory=&lt;directory&gt;     Output directory.
+  -P, --set-property=&lt;key=value&gt;              Sets the value of a property. 🔁
+  -q, --quiet                                 Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;       Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform         Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;       Activates paths matching the given platform. 🔁
+      --strict                                Enable strict mode.
+  -V, --version                               Print version information and exit.
+  -w, --warn                                  Set log level to warn.
+
+Include Filter:
+      --cataloger=&lt;cataloger&gt;                 Include a cataloger. 🔁
+      --distribution=&lt;distribution&gt;           Include a distribution. 🔁
+
+Exclude Filter:
+      --exclude-cataloger=&lt;cataloger&gt;         Exclude a cataloger. 🔁
+      --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+
+Documentation found at https://jreleaser.org</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--config-file</code> is undefined then the command assumes the file is named <code>jreleaser.[yml|toml|json]</code> and it&#8217;s
+found at the current directory.</p>
+</div>
+<div class="paragraph">
+<p>If <code>--basedir</code> is undefined then the command assumes it&#8217;s the same directory that contains the resolved config file.</p>
+</div>
 <div class="sect2">
 <h3 id="_checksum"><a class="anchor" href="#_checksum"></a>checksum</h3>
 <div class="listingblock">
@@ -1356,46 +1498,33 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
-                          [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
                           [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1419,46 +1548,33 @@ in the <a href="../reference/distributions.html" class="xref page">distribution<
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
-                      [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                      [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
-                      [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] |
-                      [[-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                      [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                      [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1480,44 +1596,35 @@ in the <a href="../reference/distributions.html" class="xref page">distribution<
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy -h
-Deploys all staged artifacts.
+Deploy all staged artifacts.
 
-Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;basedir&gt;]
-                        [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                        [-P=&lt;key=value&gt;]... [[[-y=&lt;deployer&gt;]...
-                        [-yn=&lt;name&gt;]...] | [[-xy=&lt;deployer&gt;]...
-                        [-xyn=&lt;name&gt;]...]]
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                        [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-y=&lt;deployer&gt;]...
+                        [-yn=&lt;name&gt;]...] | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                  Base directory.
+  -c, --config-file=&lt;file&gt;                   The config file.
+  -D=&lt;key=value&gt;                             Sets a System property. 🔁
+      --dry-run                              Skip remote operations.
+  -g, --debug                                Set log level to debug.
+      -grs, --git-root-search                Searches for the Git root.
+  -h, --help                                 Show this help message and exit.
+  -i, --info                                 Set log level to info.
+      -od, --output-directory=&lt;directory&gt;    Output directory.
+  -P, --set-property=&lt;key=value&gt;             Sets the value of a property. 🔁
+  -q, --quiet                                Log errors only.
+      --strict                               Enable strict mode.
+  -V, --version                              Print version information and exit.
+  -w, --warn                                 Set log level to warn.
 
 Include Filter:
-  -y, --deployer=&lt;deployer&gt; Include a deployer by type. Repeatable.
-      -yn, --deployer-name=&lt;name&gt;
-                            Include a deployer by name. Repeatable.
+  -y, --deployer=&lt;deployer&gt;                  Include a deployer by type. 🔁
+      -yn, --deployer-name=&lt;name&gt;            Include a deployer by name. 🔁
 
 Exclude Filter:
-      -xy, --exclude-deployer=&lt;deployer&gt;
-                            Exclude a deployer by type. Repeatable.
-      -xyn, --exclude-deployer-name=&lt;name&gt;
-                            Exclude a deployer by name. Repeatable.
+      -xy, --exclude-deployer=&lt;deployer&gt;     Exclude a deployer by type. 🔁
+      -xyn, --exclude-deployer-name=&lt;name&gt;   Exclude a deployer by name. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1593,56 +1700,42 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                        [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                        [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                        [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                        [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...
-                        [-d=&lt;distribution&gt;]...] | [[-xu=&lt;uploader&gt;]...
-                        [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                        [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                        [-sp=&lt;platform&gt;]... [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...
+                        [--cataloger=&lt;cataloger&gt;]...] | [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
+                        [-xd=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+      --dry-run                                    Skip remote operations.
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -u, --uploader=&lt;uploader&gt; Include an uploader by type. Repeatable.
-      -un, --uploader-name=&lt;name&gt;
-                            Include an uploader by name. Repeatable.
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
+      -un, --uploader-name=&lt;name&gt;                  Include an uploader by name. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xu, --exclude-uploader=&lt;uploader&gt;
-                            Exclude an uploader by type. Repeatable.
-      -xun, --exclude-uploader-name=&lt;name&gt;
-                            Exclude an uploader by name. Repeatable.
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xu, --exclude-uploader=&lt;uploader&gt;           Exclude an uploader by type. 🔁
+      -xun, --exclude-uploader-name=&lt;name&gt;         Exclude an uploader by name. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1718,143 +1811,95 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                         [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[-d=&lt;distribution&gt;]... [-y=&lt;deployer&gt;]...
-                         [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]...] |
-                         [[-xd=&lt;distribution&gt;]... [-xy=&lt;deployer&gt;]...
-                         [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...]
-                         | [[--auto-config] [--project-name=&lt;projectName&gt;]
-                         [--project-version=&lt;projectVersion&gt;]
-                         [--project-version-pattern=&lt;projectVersionPattern&gt;]
-                         [--project-snapshot-pattern=&lt;projectSnapshotPattern&gt;]
-                         [--project-snapshot-label=&lt;projectSnapshotLabel&gt;]
-                         [--project-snapshot-full-changelog]
-                         [--project-copyright=&lt;projectCopyright&gt;]
-                         [--project-description=&lt;projectDescription&gt;]
-                         [--project-inception-year=&lt;projectInceptionYear&gt;]
-                         [--project-stereotype=&lt;projectStereotype&gt;]
-                         [--author=&lt;author&gt;]... [--tag-name=&lt;tagName&gt;]
-                         [--previous-tag-name=&lt;previousTagName&gt;]
-                         [--release-name=&lt;releaseName&gt;]
-                         [--milestone-name=&lt;milestoneName&gt;] [--prerelease]
-                         [--prerelease-pattern=&lt;prereleasePattern&gt;] [--draft]
-                         [--overwrite] [--update]
-                         [--update-section=&lt;section&gt;]... [--skip-tag]
-                         [--skip-release] [--branch=&lt;branch&gt;]
-                         [--changelog=&lt;changelog&gt;] [--changelog-formatted]
-                         [--username=&lt;username&gt;]
-                         [--commit-author-name=&lt;commitAuthorName&gt;]
-                         [--commit-author-email=&lt;commitAuthorEmail&gt;]
-                         [--signing-enabled] [--signing-armored]
-                         [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
+                         [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]...
+                         [-xun=&lt;name&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...] | [[--auto-config]
+                         [--project-name=&lt;name&gt;] [--project-version=&lt;version&gt;]
+                         [--project-version-pattern=&lt;pattern&gt;] [--project-snapshot-pattern=&lt;pattern&gt;]
+                         [--project-snapshot-label=&lt;label&gt;] [--project-snapshot-full-changelog]
+                         [--project-copyright=&lt;copyright&gt;] [--project-description=&lt;description&gt;]
+                         [--project-inception-year=&lt;year&gt;] [--project-stereotype=&lt;stereotype&gt;]
+                         [--author=&lt;author&gt;]... [--tag-name=&lt;tag&gt;] [--previous-tag-name=&lt;tag&gt;]
+                         [--release-name=&lt;name&gt;] [--milestone-name=&lt;name&gt;] [--prerelease]
+                         [--prerelease-pattern=&lt;pattern&gt;] [--draft] [--overwrite] [--update]
+                         [--update-section=&lt;section&gt;]... [--skip-tag] [--skip-release] [--branch=&lt;branch&gt;]
+                         [--changelog=&lt;changelog&gt;] [--changelog-formatted] [--username=&lt;username&gt;]
+                         [--commit-author-name=&lt;name&gt;] [--commit-author-email=&lt;email&gt;] [--signing-enabled]
+                         [--signing-armored] [--file=&lt;file&gt;]... [--glob=&lt;glob&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;    Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                             The config file.
-  -D=&lt;key=value&gt;             Sets a System property. Repeatable.
-      --dry-run              Skip remote operations.
-  -g, --debug                Set log level to debug.
-      -grs, --git-root-search
-                             Searches for the Git root.
-  -h, --help                 Show this help message and exit.
-  -i, --info                 Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                             Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                             Sets the value of a property. Repeatable.
-  -q, --quiet                Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                             Activates paths not matching the given platform.
-                               Repeatable.
-      -scp, --select-current-platform
-                             Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                             Activates paths matching the given platform.
-                               Repeatable.
-      --strict               Enable strict mode.
-  -V, --version              Print version information and exit.
-  -w, --warn                 Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+      --dry-run                                    Skip remote operations.
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                             Include a distribution. Repeatable.
-  -u, --uploader=&lt;uploader&gt;  Include an uploader by type. Repeatable.
-      -un, --uploader-name=&lt;name&gt;
-                             Include an uploader by name. Repeatable.
-  -y, --deployer=&lt;deployer&gt;  Include a deployer by type. Repeatable.
-      -yn, --deployer-name=&lt;name&gt;
-                             Include a deployer by name. Repeatable.
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
+      -un, --uploader-name=&lt;name&gt;                  Include an uploader by name. 🔁
+  -y, --deployer=&lt;deployer&gt;                        Include a deployer by type. 🔁
+      -yn, --deployer-name=&lt;name&gt;                  Include a deployer by name. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                             Exclude a distribution. Repeatable.
-      -xu, --exclude-uploader=&lt;uploader&gt;
-                             Exclude an uploader by type. Repeatable.
-      -xun, --exclude-uploader-name=&lt;name&gt;
-                             Exclude an uploader by name. Repeatable.
-      -xy, --exclude-deployer=&lt;deployer&gt;
-                             Exclude a deployer by type. Repeatable.
-      -xyn, --exclude-deployer-name=&lt;name&gt;
-                             Exclude a deployer by name. Repeatable.
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xu, --exclude-uploader=&lt;uploader&gt;           Exclude an uploader by type. 🔁
+      -xun, --exclude-uploader-name=&lt;name&gt;         Exclude an uploader by name. 🔁
+      -xy, --exclude-deployer=&lt;deployer&gt;           Exclude a deployer by type. 🔁
+      -xyn, --exclude-deployer-name=&lt;name&gt;         Exclude a deployer by name. 🔁
 
 Auto Config Options:
-      --author=&lt;author&gt;      The project authors. Repeatable.
-      --auto-config          Activate auto configuration.
-      --branch=&lt;branch&gt;      The release branch.
-      --changelog=&lt;changelog&gt;
-                             Path to changelog file.
-      --changelog-formatted  Format generated changelog.
-      --commit-author-email=&lt;commitAuthorEmail&gt;
-                             Commit author e-mail.
-      --commit-author-name=&lt;commitAuthorName&gt;
-                             Commit author name.
-      --draft                If the release is a draft.
-      --file=&lt;file&gt;          Input file to be uploaded. Repeatable.
-      --glob=&lt;glob&gt;          Input file to be uploaded (as glob). Repeatable.
-      --milestone-name=&lt;milestoneName&gt;
-                             The milestone name.
-      --overwrite            Overwrite an existing release.
-      --prerelease           If the release is a prerelease.
-      --prerelease-pattern=&lt;prereleasePattern&gt;
-                             The prerelease pattern.
-      --previous-tag-name=&lt;previousTagName&gt;
-                             The previous release tag.
-      --project-copyright=&lt;projectCopyright&gt;
-                             The project copyright.
-      --project-description=&lt;projectDescription&gt;
-                             The project description.
-      --project-inception-year=&lt;projectInceptionYear&gt;
-                             The project inception year.
-      --project-name=&lt;projectName&gt;
-                             The project name.
-      --project-snapshot-full-changelog
-                             Calculate full changelog since last non-snapshot
-                               release.
-      --project-snapshot-label=&lt;projectSnapshotLabel&gt;
-                             The project snapshot label.
-      --project-snapshot-pattern=&lt;projectSnapshotPattern&gt;
-                             The project snapshot pattern.
-      --project-stereotype=&lt;projectStereotype&gt;
-                             The project stereotype.
-      --project-version=&lt;projectVersion&gt;
-                             The project version.
-      --project-version-pattern=&lt;projectVersionPattern&gt;
-                             The project version pattern.
-      --release-name=&lt;releaseName&gt;
-                             The release name.
-      --signing-armored      Generate ascii armored signatures.
-      --signing-enabled      Sign files.
-      --skip-release         Skip creating a release.
-      --skip-tag             Skip tagging the release.
-      --tag-name=&lt;tagName&gt;   The release tag.
-      --update               Update an existing release.
-      --update-section=&lt;section&gt;
-                             Release section to be updated. Repeatable.
-      --username=&lt;username&gt;  Git username.
+      --author=&lt;author&gt;                            The project authors. 🔁
+      --auto-config                                Activate auto configuration.
+      --branch=&lt;branch&gt;                            The release branch.
+      --changelog=&lt;changelog&gt;                      Path to changelog file.
+      --changelog-formatted                        Format generated changelog.
+      --commit-author-email=&lt;email&gt;                Commit author e-mail.
+      --commit-author-name=&lt;name&gt;                  Commit author name.
+      --draft                                      If the release is a draft.
+      --file=&lt;file&gt;                                Input file to be uploaded. 🔁
+      --glob=&lt;glob&gt;                                Input file to be uploaded (as glob). 🔁
+      --milestone-name=&lt;name&gt;                      The milestone name.
+      --overwrite                                  Overwrite an existing release.
+      --prerelease                                 If the release is a prerelease.
+      --prerelease-pattern=&lt;pattern&gt;               The prerelease pattern.
+      --previous-tag-name=&lt;tag&gt;                    The previous release tag.
+      --project-copyright=&lt;copyright&gt;              The project copyright.
+      --project-description=&lt;description&gt;          The project description.
+      --project-inception-year=&lt;year&gt;              The project inception year.
+      --project-name=&lt;name&gt;                        The project name.
+      --project-snapshot-full-changelog            Calculate full changelog since last non-snapshot release.
+      --project-snapshot-label=&lt;label&gt;             The project snapshot label.
+      --project-snapshot-pattern=&lt;pattern&gt;         The project snapshot pattern.
+      --project-stereotype=&lt;stereotype&gt;            The project stereotype.
+      --project-version=&lt;version&gt;                  The project version.
+      --project-version-pattern=&lt;pattern&gt;          The project version pattern.
+      --release-name=&lt;name&gt;                        The release name.
+      --signing-armored                            Generate ascii armored signatures.
+      --signing-enabled                            Sign files.
+      --skip-release                               Skip creating a release.
+      --skip-tag                                   Skip tagging the release.
+      --tag-name=&lt;tag&gt;                             The release tag.
+      --update                                     Update an existing release.
+      --update-section=&lt;section&gt;                   Release section to be updated. 🔁
+      --username=&lt;username&gt;                        Git username.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1931,50 +1976,36 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;basedir&gt;]
-                         [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
-                         [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
+Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
+                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
+                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
+                         [-xp=&lt;packager&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -p, --packager=&lt;packager&gt;                        Include a packager. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xp, --exclude-packager=&lt;packager&gt;
-                            Exclude a packager. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xp, --exclude-packager=&lt;packager&gt;           Exclude a packager. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -2037,51 +2068,37 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                         [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
                          [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+      --dry-run                                    Skip remote operations.
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -p, --packager=&lt;packager&gt;                        Include a packager. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xp, --exclude-packager=&lt;packager&gt;
-                            Exclude a packager. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xp, --exclude-packager=&lt;packager&gt;           Exclude a packager. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -2157,51 +2174,37 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                         [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                         [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
                          [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+      --dry-run                                    Skip remote operations.
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -p, --packager=&lt;packager&gt;                        Include a packager. 🔁
 
 Exclude Filter:
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xp, --exclude-packager=&lt;packager&gt;
-                            Exclude a packager. Repeatable.
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xp, --exclude-packager=&lt;packager&gt;           Exclude a packager. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -2277,38 +2280,31 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict]
-                          [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;] [-od=&lt;outputdir&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
-                          [[[-a=&lt;announcer&gt;]...] | [[-xa=&lt;announcer&gt;]...]]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-a=&lt;announcer&gt;]...] |
+                          [[-xa=&lt;announcer&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                  Base directory.
+  -c, --config-file=&lt;file&gt;                   The config file.
+  -D=&lt;key=value&gt;                             Sets a System property. 🔁
+      --dry-run                              Skip remote operations.
+  -g, --debug                                Set log level to debug.
+      -grs, --git-root-search                Searches for the Git root.
+  -h, --help                                 Show this help message and exit.
+  -i, --info                                 Set log level to info.
+      -od, --output-directory=&lt;directory&gt;    Output directory.
+  -P, --set-property=&lt;key=value&gt;             Sets the value of a property. 🔁
+  -q, --quiet                                Log errors only.
+      --strict                               Enable strict mode.
+  -V, --version                              Print version information and exit.
+  -w, --warn                                 Set log level to warn.
 
 Include Filter:
-  -a, --announcer=&lt;announcer&gt;
-                            Include an announcer. Repeatable.
+  -a, --announcer=&lt;announcer&gt;                Include an announcer. 🔁
 
 Exclude Filter:
-      -xa, --exclude-announcer=&lt;announcer&gt;
-                            Exclude an announcer. Repeatable.
+      -xa, --exclude-announcer=&lt;announcer&gt;   Exclude an announcer. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -2364,75 +2360,52 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict]
-                              [-b=&lt;basedir&gt;] [-c=&lt;configFile&gt;]
-                              [-od=&lt;outputdir&gt;] [-D=&lt;key=value&gt;]...
-                              [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
-                              [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]...
-                              [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
-                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...
-                              [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...] |
-                              [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
-                              [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
-                              [-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...
-                              [-xa=&lt;announcer&gt;]...]]
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                              [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                              [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
+                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...
+                              [--cataloger=&lt;cataloger&gt;]...] | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
+                              [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
+                              [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
 
 Options:
-  -b, --basedir=&lt;basedir&gt;   Base directory.
-  -c, --config-file=&lt;configFile&gt;
-                            The config file.
-  -D=&lt;key=value&gt;            Sets a System property. Repeatable.
-      --dry-run             Skip remote operations.
-  -g, --debug               Set log level to debug.
-      -grs, --git-root-search
-                            Searches for the Git root.
-  -h, --help                Show this help message and exit.
-  -i, --info                Set log level to info.
-      -od, --output-directory=&lt;outputdir&gt;
-                            Output directory.
-  -P, --set-property=&lt;key=value&gt;
-                            Sets the value of a property. Repeatable.
-  -q, --quiet               Log errors only.
-      -rp, --reject-platform=&lt;platform&gt;
-                            Activates paths not matching the given platform.
-                              Repeatable.
-      -scp, --select-current-platform
-                            Activates paths matching the current platform.
-      -sp, --select-platform=&lt;platform&gt;
-                            Activates paths matching the given platform.
-                              Repeatable.
-      --strict              Enable strict mode.
-  -V, --version             Print version information and exit.
-  -w, --warn                Set log level to warn.
+  -b, --basedir=&lt;directory&gt;                        Base directory.
+  -c, --config-file=&lt;file&gt;                         The config file.
+  -D=&lt;key=value&gt;                                   Sets a System property. 🔁
+      --dry-run                                    Skip remote operations.
+  -g, --debug                                      Set log level to debug.
+      -grs, --git-root-search                      Searches for the Git root.
+  -h, --help                                       Show this help message and exit.
+  -i, --info                                       Set log level to info.
+      -od, --output-directory=&lt;directory&gt;          Output directory.
+  -P, --set-property=&lt;key=value&gt;                   Sets the value of a property. 🔁
+  -q, --quiet                                      Log errors only.
+      -rp, --reject-platform=&lt;platform&gt;            Activates paths not matching the given platform. 🔁
+      -scp, --select-current-platform              Activates paths matching the current platform.
+      -sp, --select-platform=&lt;platform&gt;            Activates paths matching the given platform. 🔁
+      --strict                                     Enable strict mode.
+  -V, --version                                    Print version information and exit.
+  -w, --warn                                       Set log level to warn.
 
 Include Filter:
-  -a, --announcer=&lt;announcer&gt;
-                            Include an announcer. Repeatable.
-  -d, --distribution=&lt;distribution&gt;
-                            Include a distribution. Repeatable.
-  -p, --packager=&lt;packager&gt; Include a packager. Repeatable.
-  -u, --uploader=&lt;uploader&gt; Include an uploader by type. Repeatable.
-      -un, --uploader-name=&lt;name&gt;
-                            Include an uploader by name. Repeatable.
-  -y, --deployer=&lt;deployer&gt; Include a deployer by type. Repeatable.
-      -yn, --deployer-name=&lt;name&gt;
-                            Include a deployer by name. Repeatable.
+  -a, --announcer=&lt;announcer&gt;                      Include an announcer. 🔁
+      --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
+  -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
+  -p, --packager=&lt;packager&gt;                        Include a packager. 🔁
+  -u, --uploader=&lt;uploader&gt;                        Include an uploader by type. 🔁
+      -un, --uploader-name=&lt;name&gt;                  Include an uploader by name. 🔁
+  -y, --deployer=&lt;deployer&gt;                        Include a deployer by type. 🔁
+      -yn, --deployer-name=&lt;name&gt;                  Include a deployer by name. 🔁
 
 Exclude Filter:
-      -xa, --exclude-announcer=&lt;announcer&gt;
-                            Exclude an announcer. Repeatable.
-      -xd, --exclude-distribution=&lt;distribution&gt;
-                            Exclude a distribution. Repeatable.
-      -xp, --exclude-packager=&lt;packager&gt;
-                            Exclude a packager. Repeatable.
-      -xu, --exclude-uploader=&lt;uploader&gt;
-                            Exclude an uploader by type. Repeatable.
-      -xun, --exclude-uploader-name=&lt;name&gt;
-                            Exclude an uploader by name. Repeatable.
-      -xy, --exclude-deployer=&lt;deployer&gt;
-                            Exclude a deployer by type. Repeatable.
-      -xyn, --exclude-deployer-name=&lt;name&gt;
-                            Exclude a deployer by name. Repeatable.
+      --exclude-cataloger=&lt;cataloger&gt;              Exclude a cataloger. 🔁
+      -xa, --exclude-announcer=&lt;announcer&gt;         Exclude an announcer. 🔁
+      -xd, --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xp, --exclude-packager=&lt;packager&gt;           Exclude a packager. 🔁
+      -xu, --exclude-uploader=&lt;uploader&gt;           Exclude an uploader by type. 🔁
+      -xun, --exclude-uploader-name=&lt;name&gt;         Exclude an uploader by name. 🔁
+      -xy, --exclude-deployer=&lt;deployer&gt;           Exclude a deployer by type. 🔁
+      -xyn, --exclude-deployer-name=&lt;name&gt;         Exclude a deployer by name. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -2467,8 +2440,7 @@ JReleaser is a release automation tool for Java projects.
 
 Usage: jreleaser generate-completion [-hV]
 Generate bash/zsh completion script for jreleaser.
-Run the following command to give `jreleaser` TAB completion in the current
-shell:
+Run the following command to give `jreleaser` TAB completion in the current shell:
 
   source &lt;(jreleaser generate-completion)
 
@@ -2491,7 +2463,7 @@ Generate JSON schema.
 Usage: jreleaser json-schema [-hV] [-D=&lt;key=value&gt;]...
 
 Options:
-  -D=&lt;key=value&gt;    Sets a System property. Repeatable.
+  -D=&lt;key=value&gt;    Sets a System property. 🔁
   -h, --help        Show this help message and exit.
   -V, --version     Print version information and exit.
 

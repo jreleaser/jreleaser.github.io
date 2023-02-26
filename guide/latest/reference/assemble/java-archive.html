@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -752,6 +776,11 @@
 <div class="paragraph">
 <p>Creates an archive for a <a href="../../concepts/distributions/java-binary.html" class="xref page">Java Binary</a> distribution.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -806,7 +835,7 @@ assemble:
       # Enables or disables the assembler.
       # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active: ALWAYS
 
       # Export the assembled artifacts as a matching named distribution.
@@ -831,12 +860,6 @@ assemble:
       # If left undefined, will use {{distributionName}}-{{projectVersion}}.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       archiveName: 'app-{{projectVersion}}'
-
-      # Directory with file templates used to prepare the Jpackage assembler.
-      # Defaults to `src/jreleaser/assemblers/${distribution.name}/java-archive`.
-      # If specified, path must exist.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory: path/to/java-archive/templates
 
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       executable:
@@ -895,8 +918,31 @@ assemble:
 
 
 
+
+      # Directory with file templates used to prepare the assembler.
+      # Defaults to `src/jreleaser/assemblers/${distribution.name}/javaArchive`.
+      # If specified, path must exist.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      templateDirectory: path/to/javaArchive/templates
+
+      # List of template files to be skipped.
+      # Value may be an exact match or a regex.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipTemplates:
+        - README.md.tpl
+
+      # Defines a list of additional files as artifacts.
+      # These files will be added to the assembled archive.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      artifacts:
+        - path: path/to/file
+        - path: path/to/another_file
+          transform: path/inside/archive
+        - path: path/to/platform/specific/file
+          platform: osx-x86_64
+
       # Defines a list of additional files as globs.
-      # These files will be added to the assembled Zip file.
+      # These files will be added to the assembled archive.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       files:
           # The pattern to use.
@@ -948,7 +994,7 @@ assemble:
   # Enables or disables the assembler.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Export the assembled artifacts as a matching named distribution.
@@ -972,12 +1018,6 @@ assemble:
   # If left undefined, will use {{distributionName}}-{{projectVersion}}.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   archiveName = "app-{{projectVersion}}"
-
-  # Directory with file templates used to prepare the JavaArchive assembler.
-  # Defaults to `src/jreleaser/assemblers/${distribution.name}/java-archive`.
-  # If specified, path must exist.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/java-archive/templates"
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [assemble.javaArchive.app.executable]
@@ -1031,8 +1071,31 @@ assemble:
 
 
 
+  # Directory with file templates used to prepare the assembler.
+  # Defaults to `src/jreleaser/assemblers/${distribution.name}/javaArchive`.
+  # If specified, path must exist.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  templateDirectory = "path/to/javaArchive/templates"
+
+  # List of template files to be skipped.
+  # Value may be an exact match or a regex.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipTemplates = [ "README.md.tpl" ]
+
+  # Defines a list of additional files as artifacts.
+  # These files will be added to the assembled archive.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  [[assemble.javaArchive.app.artifacts]]
+    path = "path/to/file"
+  [[assemble.javaArchive.app.artifacts]]
+    path = "path/to/another_file"
+    transform = "path/inside/archive"
+  [[assemble.javaArchive.app.artifacts]]
+    path = "path/to/platform/specific/file"
+    platform = "osx-x86_64"
+
   # Defines a list of additional files as globs.
-  # These files will be added to the assembled Zip file.
+  # These files will be added to the assembled archive.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [[assemble.javaArchive.app.files]]
     # The pattern to use.
@@ -1087,7 +1150,7 @@ assemble:
         // Enables or disables the assembler.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "active": "ALWAYS",
 
         // Export the assembled artifacts as a matching named distribution.
@@ -1113,12 +1176,6 @@ assemble:
         // If left undefined, will use {{distributionName}}-{{projectVersion}}.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "archiveName": "app-{{projectVersion}}",
-
-        // Directory with file templates used to prepare the JavaArchive assembler.
-        // Defaults to `src/jreleaser/assemblers/${distribution.name}/java-archive`.
-        // If specified, path must exist.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "templateDirectory": "path/to/java-archive/templates",
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "executable":  {
@@ -1183,9 +1240,38 @@ assemble:
 
 
         },
+        // Directory with file templates used to prepare the assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/javaArchive`.
+        // If specified, path must exist.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "templateDirectory": "path/to/javaArchive/templates",
+
+        // List of template files to be skipped.
+        // Value may be an exact match or a regex.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "skipTemplates": [
+          "README.md.tpl"
+        ],
+
+        // Defines a list of additional files as artifacts.
+        // These files will be added to the assembled archive.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "artifacts": [
+          {
+            "path": "path/to/file"
+          },
+          {
+            "path": "path/to/another_file",
+            "transform": "path/inside/archive"
+          },
+          {
+            "path": "path/to/platform/specific/file",
+            "platform": "osx-x86_64"
+          }
+        ]  ,
 
         // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "files": [
           {
@@ -1257,7 +1343,7 @@ assemble:
           Enables or disables the distribution.
           Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `ALWAYS`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1295,14 +1381,6 @@ assemble:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;archiveName&gt;app-{{projectVersion}}&lt;/archiveName&gt;
-
-        &lt;!--
-          Directory with file templates used to prepare the JavaArchive assembler.
-          Defaults to `src/jreleaser/assemblers/${distribution.name}/java-archive`.
-          If specified, path must exist.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;templateDirectory&gt;path/to/brew/templates&lt;/templateDirectory&gt;
 
         &lt;!--
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1393,8 +1471,44 @@ assemble:
         &lt;/java&gt;
 
         &lt;!--
+          Directory with file templates used to prepare the assembler.
+          Defaults to `src/jreleaser/assemblers/${distribution.name}/javaArchive`.
+          If specified, path must exist.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;templateDirectory&gt;path/to/brew/templates&lt;/templateDirectory&gt;
+
+        &lt;!--
+          List of template files to be skipped.
+          Value may be an exact match or a regex.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;skipTemplates&gt;
+          &lt;skipTemplate&gt;README.md.tpl&lt;/skipTemplate&gt;
+        &lt;/skipTemplates&gt;
+
+        &lt;!--
+          Defines a list of additional files as artifacts.
+          These files will be added to the assembled archive.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;artifacts&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/file&lt;/path&gt;
+          &lt;/artifact&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/another_file&lt;/path&gt;
+            &lt;transform&gt;path/inside/archive&lt;/transform&gt;
+          &lt;/artifact&gt;
+          &lt;artifact&gt;
+            &lt;path&gt;path/to/platform/specific/file&lt;/path&gt;
+            &lt;platform&gt;osx-x86_64&lt;/platform&gt;
+          &lt;/artifact&gt;
+        &lt;/artifacts&gt;
+
+        &lt;!--
           Defines a list of additional files as globs.
-          These files will be added to the assembled Zip file.
+          These files will be added to the assembled archive.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;files&gt;
@@ -1483,7 +1597,7 @@ assemble:
         // Enables or disables the assembler.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active = 'ALWAYS'
 
         // Export the assembled artifacts as a matching named distribution.
@@ -1577,8 +1691,34 @@ assemble:
 
         }
 
+        // Directory with file templates used to prepare the assembler.
+        // Defaults to `src/jreleaser/assemblers/${distribution.name}/javaArchive`.
+        // If specified, path must exist.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        templateDirectory = 'path/to/javaArchive/templates'
+
+        // List of template files to be skipped.
+        // Value may be an exact match or a regex.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        skipTemplate('README.md.tpl')
+
+        // Defines a list of additional files as artifacts.
+        // These files will be added to the assembled archive.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        artifact {
+          path = 'path/to/file'
+        }
+        artifact {
+          path = 'path/to/another_file'
+          transform = 'path/inside/archive'
+        }
+        artifact {
+          path = 'path/to/platform/specific/file'
+          platform = 'osx-x86_64'
+        }
+
         // Defines a list of additional files as globs.
-        // These files will be added to the assembled Zip file.
+        // These files will be added to the assembled archive.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         files {
           // The pattern to use.
@@ -1623,6 +1763,236 @@ assemble:
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.assemble.java.archive.${name}.active<br>
+  jreleaser.assemble.java.archive.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ASSEMBLE_JAVA_ARCHIVE_${name}_ACTIVE<br>
+  JRELEASER_ASSEMBLE_JAVA_ARCHIVE_ACTIVE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default location for templates is:</p>
+</div>
+<div class="paragraph">
+<p><code>src/jreleaser/assemblers/&lt;distribution-name&gt;/java-archive</code></p>
+</div>
+<div class="paragraph">
+<p>The following list shows the filenames that may be used to override default templates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>bin/launcher.tpl</code></p>
+</li>
+<li>
+<p><code>bin/launcher.bat.tpl</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any additional files found in the template directories will be copied as is unless their filename ends with <code>.tpl</code> in
+which case <a href="../name-templates.html" class="xref page">Name Templates</a> substitution will take place.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_templates"><a class="anchor" href="#_skip_templates"></a>Skip Templates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may skip any template files by defining a set of skip rules in the <code>skipTemplates</code> property. For example, you may use
+any of these expressions to skip a template named <code>README.md.tpl</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>README.md.tpl</code>: matches the full template name</p>
+</li>
+<li>
+<p><code>README.md</code>: matches the transformed template name</p>
+</li>
+<li>
+<p><code>README.*</code>: matches using a regex</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_files"><a class="anchor" href="#_additional_files"></a>Additional Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are several ways to define additional files that may be handled by this assembler.</p>
+</div>
+<div class="sect2">
+<h3 id="_templates_2"><a class="anchor" href="#_templates_2"></a>Templates</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You may use <a href="../name-templates.html" class="xref page">Name Templates</a> inside the files to be copied.</p>
+</li>
+<li>
+<p>They retain directory structure that is, a template found at <code>${templateDirectory}/foo.txt.tpl</code> will be copied as
+<code>foo.txt</code> while a template such as <code>${templateDirectory}/docs/bar.md.tpl</code> will be copied to <code>docs/bar.md</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filesets"><a class="anchor" href="#_filesets"></a>FileSets</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>May use globs or regexes to define files to be included from a starting directory.</p>
+</li>
+<li>
+<p>They retain directory structure.</p>
+</li>
+<li>
+<p>May rename the target parent directory.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_files"><a class="anchor" href="#_files"></a>Files</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>May use globs or regexes to define files to be included from a starting directory.</p>
+</li>
+<li>
+<p>They <strong>do not</strong> retain directory structure. Only filenames are copied.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_artifacts"><a class="anchor" href="#_artifacts"></a>Artifacts</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>They <strong>do not</strong> retain directory structure by default. An artifact with <code>path</code> set to <code>bin/launcher.sh</code> will be copied
+to <code>launcher.sh</code>.</p>
+</li>
+<li>
+<p>May use the <code>transform</code> property to define the target path. An artifact with <code>path</code> set to <code>bin/launcher.sh</code>  and <code>transform</code>
+set to <code>bin/{{projectName}}</code> will be copied to <code>bin/app</code> [assuming <code>projectName</code> resolves to <code>app</code>].</p>
+</li>
+<li>
+<p>May use the <code>platform</code> property to filter files per matching platform. An artifact with <code>platform</code> set to <code>windows-x86_64</code>
+will only be copied when the matching platform is compatible with <code>windows-x86_64</code>.</p>
+</li>
+<li>
+<p>Artifacts without an explicit <code>platform</code> won&#8217;t be filtered.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This assembler ignores filtering artifacts by platform.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

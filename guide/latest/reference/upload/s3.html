@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -760,6 +784,11 @@
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -814,7 +843,7 @@ upload:
       # Enables or disables the uploader.
       # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       # Defaults to `NEVER`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active: ALWAYS
 
       # Defines the connection timeout in seconds.
@@ -847,6 +876,11 @@ upload:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       signatures: true
 
+      # Upload catalogs.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      catalogs: true
+
       # Additional properties used when evaluating templates.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       extraProperties:
@@ -854,51 +888,35 @@ upload:
         foo: bar
 
       # The region where the S3 bucket is located.
-      # If left unspecified, the `JRELEASER_S3_${name}_REGION`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       region: us-east-2
 
       # The name of the bucket.
-      # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       bucket: releases
 
       # The artifact path within the bucket.
-      # If left unspecified, the `JRELEASER_S3_${name}_PATH`
-      # environment variable may be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       path: '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       # Custom download URL.
-      # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-      # environment variable may be defined.
       # Required if a custom endpoint is defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       downloadUrl: 'https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
 
       # The accessKeyId required for authorization.
-      # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      accessKeyId: __DO_NOT_SET_HERE__
+      accessKeyId: __USE_ENVIRONMENT_VARIABLE__
 
       # The secretKey required for authorization.
-      # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      secretKey: __DO_NOT_SET_HERE__
+      secretKey: __USE_ENVIRONMENT_VARIABLE__
 
       # The AWS sessionToken when you use temporal credentials.
-      # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      sessionToken: __DO_NOT_SET_HERE__
+      sessionToken: __USE_ENVIRONMENT_VARIABLE__
 
       # The endpoint to use for S3 service in case some other S3 compatible service is used.
-      # If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-      # environment variable may be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       endpoint: 's3.{{region}}.example.com'
 
@@ -920,7 +938,7 @@ upload:
   # Enables or disables the uploader.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Defines the connection timeout in seconds.
@@ -953,57 +971,46 @@ upload:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   signatures = true
 
+  # Upload catalogs.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  catalogs = true
+
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
   # Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
 
   # The region where the S3 bucket is located.
-  # If left unspecified, the `JRELEASER_S3_${name}_REGION`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   region = "us-east-2"
 
   # The name of the bucket.
-  # If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   bucket = "releases"
 
   # The artifact path within the bucket.
-  # If left unspecified, the `JRELEASER_S3_${name}_PATH`
-  # environment variable may be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   path = "{{projectName}}/{{tagName}}/{{artifactFile}}"
 
   # Custom download URL.
-  # If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-  # environment variable may be defined.
   # Required if a custom endpoint is defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   downloadUrl = "https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}"
 
   # The accessKeyId required for authorization.
-  # If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  accessKeyId = "__DO_NOT_SET_HERE__"
+  accessKeyId = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The secretKey required for authorization..
-  # If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-  # environment variable must be defined.
+  # The secretKey required for authorization.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  secretKey = "__DO_NOT_SET_HERE__"
+  secretKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The AWS sessionToken when you use temporal credentials.
-  # If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  sessionToken = "__DO_NOT_SET_HERE__"
+  sessionToken = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The endpoint to use for S3 service in case some other S3 compatible service is used.
-  # If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-  # environment variable may be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   endpoint = "s3.{{region}}.example.com"
 
@@ -1029,7 +1036,7 @@ upload:
         // Enables or disables the uploader.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "active": "ALWAYS",
 
         // Defines the connection timeout in seconds.
@@ -1062,6 +1069,11 @@ upload:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "signatures": true,
 
+        // Upload catalogs.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "catalogs": true,
+
         // Additional properties used when evaluating templates.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "extraProperties": {
@@ -1070,51 +1082,35 @@ upload:
         },
 
         // The region where the S3 bucket is located.
-        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "region": "us-east-2",
 
         // The name of the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "bucket": "releases",
 
         // The artifact path within the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
-        // environment variable may be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "path": "{{projectName}}/{{tagName}}/{{artifactFile}}",
 
         // Custom download URL.
-        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-        // environment variable may be defined.
         // Required if a custom endpoint is defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "downloadUrl": "https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}",
 
         // The accessKeyId required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "accessKeyId": "__DO_NOT_SET_HERE__",
+        "accessKeyId": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The secretKey required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "secretKey": "__DO_NOT_SET_HERE__",
+        "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The AWS sessionToken when you use temporal credentials.
-        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "sessionToken": "__DO_NOT_SET_HERE__",
+        "sessionToken": "__USE_ENVIRONMENT_VARIABLE__",
 
         // The endpoint to use for S3 service in case some other S3 compatible service is used.
-        // If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-        // environment variable may be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "endpoint": "s3.{{region}}.example.com",
 
@@ -1152,7 +1148,7 @@ upload:
           Enables or disables the distribution.
           Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           Defaults to `NEVER`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1199,6 +1195,13 @@ upload:
         &lt;signatures&gt;true&lt;/signatures&gt;
 
         &lt;!--
+          Upload catalogs.
+          Defaults to `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;catalogs&gt;true&lt;/catalogs&gt;
+
+        &lt;!--
           Additional properties used when evaluating templates.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
@@ -1211,31 +1214,24 @@ upload:
 
         &lt;!--
           The region where the S3 bucket is located.
-          If left unspecified, the `JRELEASER_S3_${name}_REGION`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;region&gt;us-east-2&lt;/region&gt;
 
         &lt;!--
           The name of the bucket.
-          If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;bucket&gt;releases&lt;/bucket&gt;
 
         &lt;!--
-          If left unspecified, the `JRELEASER_S3_${name}_PATH`
-          environment variable may be defined.
+          The artifact path within the bucket.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;path&gt;{{projectName}}/{{tagName}}/{{artifactFile}}&lt;/path&gt;
 
         &lt;!--
           Custom download URL.
-          If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-          environment variable may be defined.
           Required if a custom endpoint is defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1243,32 +1239,24 @@ upload:
 
         &lt;!--
           The accessKeyId required for authorization.
-          If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;accessKeyId&gt;__DO_NOT_SET_HERE__&lt;/accessKeyId&gt;
+        &lt;accessKeyId&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/accessKeyId&gt;
 
         &lt;!--
           The secretKey required for authorization.
-          If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;secretKey&gt;__DO_NOT_SET_HERE__&lt;/secretKey&gt;
+        &lt;secretKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKey&gt;
 
         &lt;!--
           The AWS sessionToken when you use temporal credentials.
-          If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;sessionToken&gt;__DO_NOT_SET_HERE__&lt;/sessionToken&gt;
+        &lt;sessionToken&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/sessionToken&gt;
 
         &lt;!--
           The endpoint to use for S3 service in case some other S3 compatible service is used.
-          If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-          environment variable may be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;endpoint&gt;s3.{{region}}.example.com&lt;/endpoint&gt;
@@ -1303,7 +1291,7 @@ upload:
         // Enables or disables the uploader.
         // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         // Defaults to `NEVER`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active = 'ALWAYS'
 
         // Defines the connection timeout in seconds.
@@ -1336,57 +1324,46 @@ upload:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         signatures = true
 
+        // Upload catalogs.
+        // Defaults to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        catalogs = true
+
         // Additional properties used when evaluating templates.
         // Key will be capitalized and prefixed with `s3`, i.e, `s3Foo`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties.put('foo', 'bar')
 
         // The region where the S3 bucket is located.
-        // If left unspecified, the `JRELEASER_S3_${name}_REGION`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         region = 'us-east-2'
 
         // The name of the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_BUCKET`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         bucket = 'releases'
 
         // The artifact path within the bucket.
-        // If left unspecified, the `JRELEASER_S3_${name}_PATH`
-        // environment variable may be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         path = '{{projectName}}/{{tagName}}/{{artifactFile}}'
 
         // Custom download URL.
-        // If left unspecified, the `JRELEASER_S3_${name}_DOWNLOAD_URL`
-        // environment variable may be defined.
         // Required if a custom endpoint is defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         downloadUrl = 'https://{{bucket}}.s3.{{region}}.amazonaws.com/{{projectName}}/{{tagName}}/{{artifactFile}}'
 
         // The accessKeyId required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_ACCESS_KEY_ID`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        accessKeyId = '__DO_NOT_SET_HERE__'
+        accessKeyId = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The secretKey required for authorization.
-        // If left unspecified, the `JRELEASER_S3_${name}_SECRET_KEY`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        secretKey = '__DO_NOT_SET_HERE__'
+        secretKey = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The AWS sessionToken when you use temporal credentials.
-        // If left unspecified, the `JRELEASER_S3_${name}_SESSION_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        sessionToken = '__DO_NOT_SET_HERE__'
+        sessionToken = '__USE_ENVIRONMENT_VARIABLE__'
 
         // The endpoint to use for S3 service in case some other S3 compatible service is used.
-        // If left unspecified, the `JRELEASER_S3_${name}_ENDPOINT`
-        // environment variable may be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         endpoint = 's3.{{region}}.example.com'
 
@@ -1403,6 +1380,205 @@ upload:
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.active<br>
+  jreleaser.upload.s3.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_ACTIVE<br>
+  JRELEASER_UPLOAD_S3_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>region</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.region<br>
+  jreleaser.upload.s3.region<br>
+  jreleaser.s3.${name}.region<br>
+  jreleaser.s3.region</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_REGION<br>
+  JRELEASER_UPLOAD_S3_REGION<br>
+  JRELEASER_S3_${name}_REGION<br>
+  JRELEASER_S3_REGION</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>bucket</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.bucket<br>
+  jreleaser.upload.s3.bucket<br>
+  jreleaser.s3.${name}.bucket<br>
+  jreleaser.s3.bucket</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_BUCKET<br>
+  JRELEASER_UPLOAD_S3_BUCKET<br>
+  JRELEASER_S3_${name}_BUCKET<br>
+  JRELEASER_S3_BUCKET</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>accessKeyId</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.access.key.id<br>
+  jreleaser.upload.s3.access.key.id<br>
+  jreleaser.s3.${name}.access.key.id<br>
+  jreleaser.s3.access.key.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_ACCESS_KEY_ID<br>
+  JRELEASER_UPLOAD_S3_ACCESS_KEY_ID<br>
+  JRELEASER_S3_${name}_ACCESS_KEY_ID<br>
+  JRELEASER_S3_ACCESS_KEY_ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>secretKey</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.secret.key<br>
+  jreleaser.upload.s3.secret.key<br>
+  jreleaser.s3.${name}.secret.key<br>
+  jreleaser.s3.secret.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_SECRET_KEY<br>
+  JRELEASER_UPLOAD_S3_SECRET_KEY<br>
+  JRELEASER_S3_${name}_SECRET_KEY<br>
+  JRELEASER_S3_SECRET_KEY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>sessionToken</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.session.token<br>
+  jreleaser.upload.s3.session.token<br>
+  jreleaser.s3.${name}.session.token<br>
+  jreleaser.s3.session.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_SESSION_TOKEN<br>
+  JRELEASER_UPLOAD_S3_SESSION_TOKEN<br>
+  JRELEASER_S3_${name}_SESSION_TOKEN<br>
+  JRELEASER_S3_SESSION_TOKEN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>path</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.path<br>
+  jreleaser.upload.s3.path<br>
+  jreleaser.s3.${name}.path<br>
+  jreleaser.s3.path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_PATH<br>
+  JRELEASER_UPLOAD_S3_PATH<br>
+  JRELEASER_S3_${name}_PATH<br>
+  JRELEASER_S3_PATH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>downloadUrl</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.download.url<br>
+  jreleaser.upload.s3.download.url<br>
+  jreleaser.s3.${name}.download.url<br>
+  jreleaser.s3.download.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_DOWNLOAD_URL<br>
+  JRELEASER_UPLOAD_S3_DOWNLOAD_URL<br>
+  JRELEASER_S3_${name}_DOWNLOAD_URL<br>
+  JRELEASER_S3_DOWNLOAD_URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>endpoint</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.upload.s3.${name}.endpoint<br>
+  jreleaser.upload.s3.endpoint<br>
+  jreleaser.s3.${name}.endpoint<br>
+  jreleaser.s3.endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPLOAD_S3_${name}_ENDPOINT<br>
+  JRELEASER_UPLOAD_S3_ENDPOINT<br>
+  JRELEASER_S3_${name}_ENDPOINT<br>
+  JRELEASER_S3_ENDPOINT</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1431,7 +1607,7 @@ the default path within the bucket. This <strong>does not</strong> work for cust
 <pre class="highlightjs highlight"><code class="language-none hljs">upload:
   s3:
     app:
-      active: always
+      active: ALWAYS
 
 distributions:
   app:
@@ -1456,51 +1632,6 @@ respectively while <code>app-1.0.0.tar.gz</code> and <code>app-1.0.0.tar.gz.asc<
 <p>JReleaser uses the <a href="http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html">DefaultAWSCredentialsProviderChain</a>
  to look up the AWS credentials. If you want to override the credentials feel free to set <code>accessKeyId</code> and <code>secretKey</code>
  and (optionally depends on configuration) <code>sessionToken</code>. If these properties are set then JReleaser will ignore <code>DefaultAWSCredentialsProviderChain</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_accesskeyid"><a class="anchor" href="#_accesskeyid"></a>AccessKeyId</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The accessKeyId will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_ACCESS_KEY_ID</code>. If your instance is named <code>production</code>,
-you can store the accessKeyId in the environment variable <code>JRELEASER_S3_PRODUCTION_ACCESS_KEY_ID</code>. The name will be
-transformed to uppercase.</p>
-</div>
-<div class="paragraph">
-<p>If a configured accessKeyId is found in the configuration file, then the environment variable is not used at all.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_secretkey"><a class="anchor" href="#_secretkey"></a>SecretKey</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The secretKey will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_SECRET_KEY</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_S3_PRODUCTION_SECRET_KEY</code>. The name will be
-transformed to uppercase.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sessiontoken"><a class="anchor" href="#_sessiontoken"></a>SessionToken</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The sessionToken will be stored in an environment variable. The configured name of the S3 server will
-be used. This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_S3_NAME_SESSION_TOKEN</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_S3_PRODUCTION_SESSION_TOKEN</code>. The name will be
-transformed to uppercase.</p>
 </div>
 </div>
 </div>

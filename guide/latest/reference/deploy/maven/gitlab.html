@@ -418,6 +418,9 @@
     <a class="nav-link" href="../../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -779,6 +803,11 @@ Publication of snapshots is <strong>not</strong> allowed.
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -829,7 +858,7 @@ deploy:
     pomchecker:
       # Defines the tool version to use.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      version: 1.5.0
+      version: 1.8.0
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     gitlab:
@@ -840,7 +869,7 @@ deploy:
         # Enables or disables the deployer.
         # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         # Defaults to `NEVER`.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active: ALWAYS
 
         # URL where the Gitlab service is enabled.
@@ -853,13 +882,13 @@ deploy:
         # If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        username: __DO_NOT_SET_HERE__
+        username: __USE_ENVIRONMENT_VARIABLE__
 
         # Password for login into the GITLAB service.
         # If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        password: __DO_NOT_SET_HERE__
+        password: __USE_ENVIRONMENT_VARIABLE__
 
         # The authorization method to use.
         # Supported values are [`NONE`, `BASIC`, `BEARER`].
@@ -917,38 +946,32 @@ deploy:
 <div class="tab-pane" aria-labelledby="tabset1_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Deployers require a name.
-# <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[deploy.maven]
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven]
   # Defines the tool version to use.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  pomchecker.version = "1.5.0"
+  pomchecker.version = "1.8.0"
 
+# Deployers require a name.
+# <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
 [deploy.maven.gitlab.app]
 
   # Enables or disables the deployer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # URL where the Gitlab service is enabled.
-  # If left unspecified, the `JRELEASER_GITLAB_${name}_URL`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   url = "https://gitlab.com/api/v4/projects/12345678/packages/maven"
 
   # The username required for authorization.
-  # If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  username = "__DO_NOT_SET_HERE__"
+  username = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # Password for login into the GITLAB service..
-  # If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
-  # environment variable must be defined.
+  # Password for login into the GITLAB service.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  password = "__DO_NOT_SET_HERE__"
+  password = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The authorization method to use.
   # Supported values are [`NONE`, `BASIC`, `BEARER`].
@@ -1012,7 +1035,7 @@ deploy:
       "pomchecker": {
         // Defines the tool version to use.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "version": "1.5.0"
+        "version": "1.8.0"
       },
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1024,26 +1047,20 @@ deploy:
           // Enables or disables the deployer.
           // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           // Defaults to `NEVER`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "active": "ALWAYS",
 
           // URL where the Gitlab service is enabled.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_URL`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "url": "https://gitlab.com/api/v4/projects/12345678/packages/maven",
 
           // The username required for authorization.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "username": "__DO_NOT_SET_HERE__",
+          "username": "__USE_ENVIRONMENT_VARIABLE__",
 
           // Password for login into the GITLAB service.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "password": "__DO_NOT_SET_HERE__",
+          "password": "__USE_ENVIRONMENT_VARIABLE__",
 
           // The authorization method to use.
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
@@ -1122,7 +1139,7 @@ deploy:
           Defines the tool version to use.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;version&gt;1.5.0&lt;/version&gt;
+        &lt;version&gt;1.8.0&lt;/version&gt;
       &lt;/pomchecker&gt;
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1134,36 +1151,30 @@ deploy:
         --&gt;
         &lt;app&gt;
           &lt;!--
-            Enables or disables the distribution.
+            Enables or disables the deployer.
             Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
             Defaults to `NEVER`.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
 
           &lt;!--
             URL where the Gitlab service is enabled.
-            If left unspecified, the `JRELEASER_GITLAB_${name}_URL`
-            environment variable must be defined.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;url&gt;https://gitlab.com/api/v4/projects/12345678/packages/maven&lt;/url&gt;
 
           &lt;!--
             The username required for authorization.
-            If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
-            environment variable must be defined.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;username&gt;__DO_NOT_SET_HERE__&lt;/username&gt;
+          &lt;username&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/username&gt;
 
           &lt;!--
             Password for login into the GITLAB service.
-            If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
-            environment variable must be defined.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
+          &lt;password&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/password&gt;
 
           &lt;!--
             The authorization method to use.
@@ -1256,7 +1267,7 @@ deploy:
       pomchecker {
         // Defines the tool version to use.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        version = '1.5.0'
+        version = '1.8.0'
       }
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1268,26 +1279,20 @@ deploy:
           // Enables or disables the deployer.
           // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
           // Defaults to `NEVER`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           active = 'ALWAYS'
 
           // URL where the Gitlab service is enabled.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_URL`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           url = 'https://gitlab.com/api/v4/projects/12345678/packages/maven'
 
           // The username required for authorization.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_USERNAME`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          username = '__DO_NOT_SET_HERE__'
+          username = '__USE_ENVIRONMENT_VARIABLE__'
 
           // Password for login into the GITLAB service.
-          // If left unspecified, the `JRELEASER_GITLAB_${name}_PASSWORD`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          password = '__DO_NOT_SET_HERE__'
+          password = '__USE_ENVIRONMENT_VARIABLE__'
 
           // The authorization method to use.
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
@@ -1351,85 +1356,145 @@ deploy:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_url"><a class="anchor" href="#_url"></a>Url</h2>
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may set the url in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the Gitlab instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.</p>
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.active<br>
+  jreleaser.deploy.maven.gitlab.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_ACTIVE<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>url</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.url<br>
+  jreleaser.deploy.maven.gitlab.url<br>
+  jreleaser.gitlab.${name}.url<br>
+  jreleaser.gitlab.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_URL<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_URL<br>
+  JRELEASER_GITLAB_${name}_URL<br>
+  JRELEASER_GITLAB_URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>username</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.username<br>
+  jreleaser.deploy.maven.gitlab.username<br>
+  jreleaser.gitlab.${name}.username<br>
+  jreleaser.gitlab.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_USERNAME<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_USERNAME<br>
+  JRELEASER_GITLAB_${name}_USERNAME<br>
+  JRELEASER_GITLAB_USERNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>password</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitlab.${name}.password<br>
+  jreleaser.deploy.maven.gitlab.${name}.token<br>
+  jreleaser.deploy.maven.gitlab.password<br>
+  jreleaser.deploy.maven.gitlab.token<br>
+  jreleaser.gitlab.${name}.password<br>
+  jreleaser.gitlab.${name}.token<br>
+  jreleaser.gitlab.password<br>
+  jreleaser.gitlab.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_${name}_TOKEN<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_GITLAB_TOKEN<br>
+  JRELEASER_GITLAB_${name}_PASSWORD<br>
+  JRELEASER_GITLAB_${name}_TOKEN<br>
+  JRELEASER_GITLAB_PASSWORD<br>
+  JRELEASER_GITLAB_TOKEN</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_GITLAB_NAME_URL</code>. If your instance is named <code>production</code>,
-you can store the host in the environment variable <code>JRELEASER_GITLAB_PRODUCTION_URL</code>. The name will be
-transformed to uppercase.</p>
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_username"><a class="anchor" href="#_username"></a>Username</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The configured username needs to be authenticated against the Gitlab instance.</p>
-</div>
-<div class="paragraph">
-<p>You may set the username set in the configuration as shown above, or you can have it read from an environment variable.
-The configured name of the Gitlab instance will be used to build the environment variable name.
-This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_GITLAB_NAME_USERNAME</code>. If your instance is named <code>production</code>,
-you can store the username in the environment variable <code>JRELEASER_GITLAB_PRODUCTION_USERNAME</code>. The name will be
-transformed to uppercase.</p>
-</div>
-<div class="paragraph">
-<p>If a configured username is found in the configuration file, then the environment variable is not used at all.</p>
-</div>
-<div class="paragraph">
-<p>Alternatives to <code>JRELEASER_GITLAB_NAME_USERNAME</code> are (in order):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITLAB_NAME_USERNAME</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_USERNAME</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_password"><a class="anchor" href="#_password"></a>Password</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The password will be stored in an environment variable. The configured name of the Gitea server will
-be used. This means that the name per configured instance needs to be unique.</p>
-</div>
-<div class="paragraph">
-<p>The name of the environment variable will be <code>JRELEASER_GITLAB_NAME_PASSWORD</code>. If your instance is named <code>production</code>,
-you need to store the secret in the environment variable <code>JRELEASER_GITLAB_PRODUCTION_PASSWORD</code>. The name will be
-transformed to uppercase.</p>
-</div>
-<div class="paragraph">
-<p>Alternatives to <code>JRELEASER_GITLAB_NAME_PASSWORD</code> are (in order):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITLAB_NAME_PASSWORD</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_NAME_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_PASSWORD</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_TOKEN</code></p>
-</li>
-</ul>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1463,7 +1528,7 @@ transformed to uppercase.</p>
   maven:
     gitlab:
       app:
-        active: always
+        active: ALWAYS
         url: https://gitlab.com/api/v4/projects/12345678/packages/maven
         projectIdentifier: 12345678
         stagingRepositories:

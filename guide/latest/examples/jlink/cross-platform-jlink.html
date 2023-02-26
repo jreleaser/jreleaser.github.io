@@ -418,6 +418,9 @@
     <a class="nav-link" href="../../reference/announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../reference/announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../reference/announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../../reference/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../../reference/deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../reference/packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../reference/packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -800,7 +824,7 @@ release:
 assemble:
   jlink:
     app:
-      active: always
+      active: ALWAYS
       mainJar:
         path: 'target/{{distributionName}}-{{projectVersion}}.jar'
       jdk:
@@ -814,7 +838,7 @@ assemble:
 
 packagers:
   docker:
-    active: always
+    active: ALWAYS
     baseImage: ubuntu:latest
     preCommands:
       - 'RUN apt-get update -y'
@@ -978,7 +1002,7 @@ packagers:
       &lt;plugin&gt;
         &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
         &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-        &lt;version&gt;1.4.0&lt;/version&gt;
+        &lt;version&gt;1.5.0&lt;/version&gt;
         &lt;configuration&gt;
           &lt;jreleaser&gt;
             &lt;project&gt;
@@ -1120,7 +1144,7 @@ jreleaser {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ jreleaser assemble
-[INFO]  JReleaser 1.4.0
+[INFO]  JReleaser 1.5.0
 [INFO]  Configuring with jreleaser.yml
 [INFO]    - basedir set to /Users/duke/tmp/app
 [INFO]  Reading configuration
@@ -1149,7 +1173,7 @@ jreleaser {
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">$ jreleaser full-release
 
-[INFO]  JReleaser 1.4.0
+[INFO]  JReleaser 1.5.0
 [INFO]  Configuring with jreleaser.yml
 [INFO]    - basedir set to /Users/duke/tmp/app
 [INFO]  Reading configuration
@@ -1164,11 +1188,17 @@ jreleaser {
 [INFO]  Platform is osx-x86_64
 [INFO]  dryrun set to false
 [INFO]  Generating changelog: out/jreleaser/release/CHANGELOG.md
+[INFO]  Cataloging artifacts
+[INFO]    [sbom] Cataloging is not enabled. Skipping
 [INFO]  Calculating checksums
 [INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-osx.zip
 [INFO]    [checksum] out/jreleaser/app/assemble/jlink/com.acme.app-1.0.0-linux.zip
 [INFO]  Signing files
 [INFO]    [sign] Signing is not enabled. Skipping
+[INFO]  Deploying Maven artifacts
+[INFO]    [maven] Deploying is not enabled. Skipping
+[INFO]  Uploading distributions and files
+[INFO]    [upload] Uploading is not enabled. Skipping
 [INFO]  Releasing to https://github.com/duke/app
 [INFO]   - uploading com.acme.app-1.0.0-osx.zip
 [INFO]   - uploading com.acme.app-1.0.0-linux.zip
@@ -1187,7 +1217,7 @@ jreleaser {
 [INFO]      [docker]  - duke/app:v1.0.0
 [INFO]      [docker] Removing login credentials for https://index.docker.io/v1/
 [INFO]  Announcing release
-[INFO]  Announcing is not enabled. Skipping.
+[INFO]    [announce] Announcing is not enabled. Skipping
 [INFO]  JReleaser succeeded after 5.527s
 [INFO]  Writing output properties to out/jreleaser/output.properties</code></pre>
 </div>

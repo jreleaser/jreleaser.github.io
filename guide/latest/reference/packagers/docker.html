@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -847,6 +871,11 @@ username will be set to match the Git username.
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -897,7 +926,7 @@ packagers:
     # Enables or disables Docker.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `NEVER`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active: ALWAYS
 
     # Let the release continue if the packager fails.
@@ -971,23 +1000,19 @@ packagers:
       tagName: '{{distributionName}} {{tagName}}'
 
       # The target branch to use.
-      # May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # Username used for authoring commits. Must have write access to the repository.
-      # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
-      # environment variable must be defined.
+      # Username used for authoring commits.
+      # Must have write access to the repository.
       # Defaults to the same username as the release repository.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username: duke
 
       # Password or OAuth token with write access to the repository.
-      # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
-      # environment variable must be defined.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      token: __DO_NOT_SET_HERE__
+      token: __USE_ENVIRONMENT_VARIABLE__
 
       # Message when committing to the repository.
       # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1042,6 +1067,11 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       enabled: true
 
+      # Creates a builder before creating the container image.
+      # Default is `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      createBuilder: true
+
       # Configure the buildx builder.
       # Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1071,18 +1101,19 @@ packagers:
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
         server: https://myregistry.com
 
+        # Expect login/lougout to be carried out by external means.
+        # Defaults to `false`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        externalLogin: false
+
         # The user that can publish images.
-        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-        # environment variable must be defined.
         # Defaults to the same username as the release repository.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username: duke
 
         # Password for login into the registry
-        # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-        # environment variable must be defined.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        password: __DO_NOT_SET_HERE__
+        password: __USE_ENVIRONMENT_VARIABLE__
 
         # The name of the repository
         # Defaults to the same owner as the release repository.
@@ -1099,7 +1130,7 @@ packagers:
   # Enables or disables Docker.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Let the release continue if the packager fails.
@@ -1169,23 +1200,19 @@ packagers:
   repository.tagName = "{{distributionName}} {{tagName}}"
 
   # The target branch to use.
-  # May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.branch = "HEAD"
 
-  # Username used for authoring commits. Must have write access to the repository.
-  # If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
-  # environment variable must be defined.
+  # Username used for authoring commits.
+  # Must have write access to the repository.
   # Defaults to the same username as the release repository.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.username = "duke"
 
   # Password or OAuth token with write access to the repository.
-  # If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  repository.token = "__DO_NOT_SET_HERE__"
+  repository.token = "__USE_ENVIRONMENT_VARIABLE__"
 
   # Message when committing to the repository.
   # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1236,6 +1263,11 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   buildx.enabled = true
 
+  # Creates a builder before creating the container image.
+  # Default is `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  buildx.createBuilder = true
+
   # Configure the buildx builder.
   # Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1258,18 +1290,19 @@ packagers:
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
     server = "https://myregistry.com"
 
+    # Expect login/lougout to be carried out by external means.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    externalLogin = false
+
     # The user that can publish images.
-    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-    # environment variable must be defined.
     # Defaults to the same username as the release repository.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     username = "duke"
 
     # Password for login into the registry
-    # If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-    # environment variable must be defined.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    password = "__DO_NOT_SET_HERE__"
+    password = "__USE_ENVIRONMENT_VARIABLE__"
 
     # The name of the repository
     # Defaults to the same owner as the release repository.
@@ -1289,7 +1322,7 @@ packagers:
       // Enables or disables Docker.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "active": "ALWAYS",
 
       // Let the release continue if the packager fails.
@@ -1366,23 +1399,19 @@ packagers:
         "tagName": "{{distributionName}} {{tagName}}",
 
         // The target branch to use.
-        // May define a `JRELEASER_DOCKER_${GIT}_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // Username used for authoring commits. Must have write access to the repository.
-        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
-        // environment variable must be defined.
+        // Username used for authoring commits.
+        // Must have write access to the repository.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "username": "duke",
 
         // Password or OAuth token with write access to the repository.
-        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        "token": "__DO_NOT_SET_HERE__",
+        "token": "__USE_ENVIRONMENT_VARIABLE__",
 
         // Message when committing to the repository.
         // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1443,6 +1472,11 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "enabled": true,
 
+        // Creates a builder before creating the container image.
+        // Default is `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "createBuilder": true,
+
         // Configure the buildx builder.
         // Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1476,18 +1510,19 @@ packagers:
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
           "server": "https://myregistry.com",
 
+          // Expect login/lougout to be carried out by external means.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "externalLogin": false,
+
           // The user that can publish images.
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-          // environment variable must be defined.
           // Defaults to the same username as the release repository.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "username": "duke",
 
           // Password for login into the registry
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "password": "__DO_NOT_SET_HERE__",
+          "password": "__USE_ENVIRONMENT_VARIABLE__",
 
           // The name of the repository
           // Defaults to the same owner as the release repository.
@@ -1517,7 +1552,7 @@ packagers:
         Enables or disables Docker.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
         Defaults to `NEVER`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1627,16 +1662,14 @@ packagers:
 
         &lt;!--
           The target branch to use.
-          May define a `JRELEASER_DOCKER_${GIT}_BRANCH`` environment variable instead.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          Username used for authoring commits. Must have write access to the repository.
-          If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
-          environment variable must be defined.
+          Username used for authoring commits.
+          Must have write access to the repository.
           Defaults to the same username as the release repository.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1644,11 +1677,9 @@ packagers:
 
         &lt;!--
           Password or OAuth token with write access to the repository.
-          If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
-          environment variable must be defined.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
-        &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
+        &lt;token&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/token&gt;
 
         &lt;!--
           Message when committing to the repository.
@@ -1729,6 +1760,13 @@ packagers:
         &lt;enabled&gt;true&lt;/enabled&gt;
 
         &lt;!--
+          Creates a builder before creating the container image.
+          Default is `true`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;createBuilder&gt;true&lt;/createBuilder&gt;
+
+        &lt;!--
           Configure the buildx builder.
           Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1771,9 +1809,14 @@ packagers:
           &lt;server&gt;pass[https: myregistry.com]&lt;/server&gt;
 
           &lt;!--
+            Expect login/lougout to be carried out by external means.
+            Defaults to `false`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;externalLogin&gt;false&lt;/externalLogin&gt;
+
+          &lt;!--
             The user that can publish images.
-            If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-            environment variable must be defined.
             Defaults to the same username as the release repository.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
@@ -1781,11 +1824,9 @@ packagers:
 
           &lt;!--
             Password for login into the registry
-            If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-            environment variable must be defined.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;password&gt;__DO_NOT_SET_HERE__&lt;/password&gt;
+          &lt;password&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/password&gt;
 
           &lt;!--
             The name of the repository
@@ -1812,7 +1853,7 @@ packagers:
       // Enables or disables Docker.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `NEVER`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active = 'ALWAYS'
 
       // Let the release continue if the packager fails.
@@ -1885,23 +1926,19 @@ packagers:
         tagName = '{{distributionName}} {{tagName}}'
 
         // The target branch to use.
-        // May define a `JRELEASER_BRANCH` environment variable instead.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // Username used for authoring commits. Must have write access to the repository.
-        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_USERNAME`
-        // environment variable must be defined.
+        // Username used for authoring commits.
+        // Must have write access to the repository.
         // Defaults to the same username as the release repository.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username = 'duke'
 
         // Password or OAuth token with write access to the repository.
-        // If left unspecified, the `JRELEASER_DOCKER_${GIT}_TOKEN`
-        // environment variable must be defined.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        token = '__DO_NOT_SET_HERE__'
+        token = '__USE_ENVIRONMENT_VARIABLE__'
 
         # Message when committing to the repository.
         # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
@@ -1953,6 +1990,11 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         enabled = true
 
+        // Creates a builder before creating the container image.
+        // Default is `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        createBuilder = true
+
         // Configure the buildx builder.
         // Defaults to `['--name', 'jreleaser', '--driver', 'docker-container', '--bootstrap', '--use']`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1981,18 +2023,19 @@ packagers:
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
           server = 'https://myregistry.com'
 
+          // Expect login/lougout to be carried out by external means.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          externalLogin = false
+
           // The user that can publish images.
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_USERNAME`
-          // environment variable must be defined.
           // Defaults to the same username as the release repository.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           username = 'duke'
 
           // Password for login into the registry
-          // If left unspecified, the `JRELEASER_DOCKER_${serverName}_PASSWORD`
-          // environment variable must be defined.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          password = '__DO_NOT_SET_HERE__'
+          password = '__USE_ENVIRONMENT_VARIABLE__'
 
           // The name of the repository
           // Defaults to the same owner as the release repository.
@@ -2011,6 +2054,228 @@ packagers:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<div class="paragraph">
+<p><strong>Inside <code>packagers</code> section</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.packagers.docker.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_PACKAGERS_DOCKER_ACTIVE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Inside <code>distributions</code> section</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>registry.username</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.${serverName}.username<br>
+  jreleaser.docker.${serverName}.username<br>
+  jreleaser.github.username<br>
+  jreleaser.gitlab.username<br>
+  jreleaser.gitea.username<br>
+  jreleaser.codeberg.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_${serverName}_USERNAME<br>
+  JRELEASER_DOCKER_${serverName}_USERNAME<br>
+  JRELEASER_GITHUB_USERNAME<br>
+  JRELEASER_GITLAB_USERNAME<br>
+  JRELEASER_GITEA_USERNAME<br>
+  JRELEASER_CODEBERG_USERNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>registry.password</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.${serverName}.password<br>
+  jreleaser.docker.${serverName}.password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_${serverName}_PASSWORD<br>
+  JRELEASER_DOCKER_${serverName}_PASSWORD</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>repository.active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.repository.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_REPOSITORY_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>repository.username</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.repository.username<br>
+  jreleaser.docker.github.username<br>
+  jreleaser.docker.gitlab.username<br>
+  jreleaser.docker.gitea.username<br>
+  jreleaser.docker.codeberg.username<br>
+  jreleaser.github.username<br>
+  jreleaser.gitlab.username<br>
+  jreleaser.gitea.username<br>
+  jreleaser.codeberg.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_REPOSITORY_USERNAME<br>
+  JRELEASER_DOCKER_GITHUB_USERNAME<br>
+  JRELEASER_DOCKER_GITLAB_USERNAME<br>
+  JRELEASER_DOCKER_GITEA_USERNAME<br>
+  JRELEASER_DOCKER_CODEBERG_USERNAME<br>
+  JRELEASER_GITHUB_USERNAME<br>
+  JRELEASER_GITLAB_USERNAME<br>
+  JRELEASER_GITEA_USERNAME<br>
+  JRELEASER_CODEBERG_USERNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>repository.token</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.repository.token<br>
+  jreleaser.docker.github.token<br>
+  jreleaser.docker.gitlab.token<br>
+  jreleaser.docker.gitea.token<br>
+  jreleaser.docker.codeberg.token<br>
+  jreleaser.github.token<br>
+  jreleaser.gitlab.token<br>
+  jreleaser.gitea.token<br>
+  jreleaser.codeberg.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_REPOSITORY_TOKEN<br>
+  JRELEASER_DOCKER_GITHUB_TOKEN<br>
+  JRELEASER_DOCKER_GITLAB_TOKEN<br>
+  JRELEASER_DOCKER_GITEA_TOKEN<br>
+  JRELEASER_DOCKER_CODEBERG_TOKEN<br>
+  JRELEASER_GITHUB_TOKEN<br>
+  JRELEASER_GITLAB_TOKEN<br>
+  JRELEASER_GITEA_TOKEN<br>
+  JRELEASER_CODEBERG_TOKEN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>repository.branch</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.docker.repository.branch<br>
+  jreleaser.docker.github.branch<br>
+  jreleaser.docker.gitlab.branch<br>
+  jreleaser.docker.gitea.branch<br>
+  jreleaser.docker.codeberg.branch<br>
+  jreleaser.github.branch<br>
+  jreleaser.gitlab.branch<br>
+  jreleaser.gitea.branch<br>
+  jreleaser.codeberg.branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_DOCKER_REPOSITORY_BRANCH<br>
+  JRELEASER_DOCKER_GITHUB_BRANCH<br>
+  JRELEASER_DOCKER_GITLAB_BRANCH<br>
+  JRELEASER_DOCKER_GITEA_BRANCH<br>
+  JRELEASER_DOCKER_CODEBERG_BRANCH<br>
+  JRELEASER_GITHUB_BRANCH<br>
+  JRELEASER_GITLAB_BRANCH<br>
+  JRELEASER_GITEA_BRANCH<br>
+  JRELEASER_CODEBERG_BRANCH</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Substitute ${name} for the value of the named instance.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Space (' '), underscore (<code>_</code>), and dash (<code>-</code>) will be replaced by dot (<code>.</code>) to separate tokens in the System property.
+Space (' '), dash (<code>-</code>), and dot (<code>.</code>) will be replaced by underscore (<code>_</code>) to separate tokens in the environment variable,
+such that:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">${name}</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foobar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foobar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOOBAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo-bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo_bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">foo.bar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foo.bar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOO_BAR</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_tokens"><a class="anchor" href="#_tokens"></a>Tokens</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
@@ -2020,46 +2285,10 @@ packagers:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The repository token environment variable must match with the chosen <a href="../release/index.html" class="xref page">Release</a> service that is, it must
-be one of:
+The repository token environment variable must match with the chosen <a href="../release/index.html" class="xref page">Release</a> service.
 </td>
 </tr>
 </table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_DOCKER_GITHUB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_DOCKER_GITLAB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_DOCKER_GITEA_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_DOCKER_CODEBERG_TOKEN</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If a matching token is not found then the releaser&#8217;s token will be used instead:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>JRELEASER_GITHUB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITLAB_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_GITEA_TOKEN</code></p>
-</li>
-<li>
-<p><code>JRELEASER_CODEBERG_TOKEN</code></p>
-</li>
-</ul>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2199,7 +2428,7 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]</code></pre>
 <p>org.opencontainers.image.description = {{projectDescription}}</p>
 </li>
 <li>
-<p>org.opencontainers.image.url = {{projectWebsite}}</p>
+<p>org.opencontainers.image.url = {{projectLinkHomepage}}</p>
 </li>
 <li>
 <p>org.opencontainers.image.licenses = {{projectLicense}}</p>
@@ -2542,7 +2771,7 @@ settings:</p>
 assemble:
   jlink:
     jreleaser-standalone:
-      active: always
+      active: ALWAYS
       java:
         version: 11
         mainClass: 'org.jreleaser.cli.Main'
@@ -2576,7 +2805,7 @@ distributions:
   jreleaser-standalone:
     docker:
       # inherited by specs
-      active: always
+      active: ALWAYS
       # inherited by specs
       registries:
         - serverName: DEFAULT
@@ -2630,6 +2859,16 @@ distributions:
 </div>
 </div>
 <div class="sect1">
+<h2 id="_external_login"><a class="anchor" href="#_external_login"></a>External Login</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In some cases it may recommended to perform login/lougout operations outside of JReleaser, for example using the
+<a href="https://github.com/docker/login-action" class="bare">https://github.com/docker/login-action</a> when running inside GitHub actions. When this is the case set the value of
+<code>externalLogin</code> to <code>true</code> for the given registry or registries.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_skip_artifacts"><a class="anchor" href="#_skip_artifacts"></a>Skip Artifacts</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -2679,11 +2918,21 @@ which case <a href="../name-templates.html" class="xref page">Name Templates</a>
 <div class="paragraph">
 <p>Templates may be initialized using the <code>template</code> command</p>
 </div>
-<div class="paragraph">
-<p><a href="../../tools/jreleaser-cli.html#_template" class="xref page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template</a>,
-<a href="../../tools/jreleaser-maven.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template</a>,
-<a href="../../tools/jreleaser-gradle.html#_jreleasertemplate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplate</a>,
-<a href="../../tools/jreleaser-ant.html#_jreleaser_template" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tools/jreleaser-cli.html#_template_generate" class="xref page"><span class="image"><img src="../../_images/cli.svg" alt="cli" width="20" height="20"></span> template generate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-maven.html#_jreleasertemplate_generate" class="xref page"><span class="image"><img src="../../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:template-generate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-gradle.html#_jreleasertemplategenerate" class="xref page"><span class="image"><img src="../../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserTemplategGenerate</a></p>
+</li>
+<li>
+<p><a href="../../tools/jreleaser-ant.html#_jreleaser_template_generate" class="xref page"><span class="image"><img src="../../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-template-generate</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

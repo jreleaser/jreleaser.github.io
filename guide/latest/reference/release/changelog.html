@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -1000,7 +1024,13 @@ release:
         - search: '\[chore\]\s'
           replace: ''
         - search: '/CVE-(\d{4})-(\d+)/g'
-          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'</code></pre>
+          replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+        foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -1210,7 +1240,12 @@ release:
 
   [[release.github.changelog.replacers]]
     search = "/CVE-(\d{4})-(\d+)/g"
-    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"</code></pre>
+    replace = "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  changelog.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.</code></pre>
 </div>
 </div>
 </div>
@@ -1444,8 +1479,15 @@ release:
             "search": "/CVE-(\d{4})-(\d+)/g",
             "replace": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2"
           }
-        ]
-      },
+        ],
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+          "foo": "bar"
+        },
+      }
     }
   }
 }</code></pre>
@@ -1761,6 +1803,17 @@ release:
             &lt;replace&gt;https: cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2&lt;/replace&gt;
           &lt;/replacer&gt;
         &lt;/replacers&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
       &lt;/changelog&gt;
     &lt;/github&gt;
   &lt;/release&gt;
@@ -1989,6 +2042,11 @@ release:
           search = '/CVE-(\d{4})-(\d+)/g'
           replace = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
         }
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `changelog`, i.e, `changelogFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
       }
     }
   }
@@ -2462,6 +2520,10 @@ Use the <code>key</code> value to match a category and change its settings.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Scoped commits may be categorized as well by defining an extra property named <code>categorizeScopes</code> with
+a <code>true</code> value.</p>
 </div>
 <div class="sect3">
 <h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
@@ -3188,7 +3250,7 @@ the project). This can be achieved by enabling the <code>append</code> block, fo
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">release:
   github:
     changelog:
-      formatted: always
+      formatted: ALWAYS
       categoryTitleFormat: '#### {{categoryTitle}}'
       contributorsTitleFormat: '#### Contributors'
       preset: conventional-commits
@@ -3281,7 +3343,7 @@ JReleaser does not verify if a previous tag is already found in the full changel
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 4df324c (HEAD -&gt; main, tag: v1.0.0, origin/main, origin/HEAD) chore: Update JReleaser configuration
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 4df324c (HEAD -&gt; main) chore: Update JReleaser configuration
 * 035c613 fix: Update JReleaser configuration
 * 19742db feat: Add arguments to Main class
 * b2f44ae fix: Use fetch-depth=0 when checking out on release
@@ -3576,6 +3638,89 @@ We're pleased to announce v1.0.0 has been released.
 
  * Bug 1
  * Bug 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_categorized_scopes"><a class="anchor" href="#_categorized_scopes"></a>Categorized Scopes</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>conventional-commits</code> preset must be configured.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Given a repository with the following commit information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">* 86c03d0 (HEAD -&gt; main) build(release): Update JReleaser configuration
+* 072c519 fix(release): Update JReleaser configuration
+* 865592a feat(core): Add arguments to Main class
+* 54e0199 build(release): Use fetch-depth=0 when checking out on release
+* a8c6140 build(assembly): Add Maven assembly descriptor
+* 25789a7 build(release): Setup build &amp; release workflows
+* fa0d451 feat(release): Add JReleaser configuration
+* 5c18c47 build: Add Maven wrapper files
+* 4cc2751 build: Add sources
+* d751ebe build: Add license file
+* 51c3234 Init repository</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">release:
+  github:
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      extraProperties:
+        categorizeScopes: true</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">out/jreleaser/release/CHANGELOG.md</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-md hljs" data-lang="md">## Changelog
+
+## 🚀 Features
+**core**
+- 865592a Add arguments to Main class
+
+**release**
+- fa0d451 Add JReleaser configuration
+
+## 🐛 Fixes
+**release**
+- 072c519 Update JReleaser configuration
+
+## 🛠  Build
+**assembly**
+- a8c6140 Add Maven assembly descriptor
+
+**release**
+- 86c03d0 Update JReleaser configuration
+- 54e0199 Use fetch-depth=0 when checking out on release
+- 25789a7 Setup build &amp; release workflows
+
+**unscoped**
+- 5c18c47 Add Maven wrapper files
+- 4cc2751 Add sources
+- d751ebe Add license file
+
+---
+- 51c3234 Init repository
+
+
+## Contributors
+We'd like to thank the following people for their contributions:
+Andres Almiray</code></pre>
 </div>
 </div>
 </div>

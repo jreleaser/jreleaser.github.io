@@ -418,6 +418,9 @@
     <a class="nav-link" href="announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -759,6 +783,11 @@ must be configured if you intend to sign commits as well. You may sign using PGP
 <div class="paragraph">
 <p>Use the following options to customize how files may be signed:</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -807,7 +836,7 @@ signing:
   # Enables or disables file signing.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active: ALWAYS
 
   # Generates an armored signature.
@@ -828,24 +857,18 @@ signing:
   mode: MEMORY
 
   # The passphrase required to read secret keys.
-  # If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  passphrase: __DO_NOT_SET_HERE__
+  passphrase: __USE_ENVIRONMENT_VARIABLE__
 
   # The public GPG (ascii armored) used to sign files and commits.
-  # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
-  # environment variable must be defined.
   # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  publicKey: __DO_NOT_SET_HERE__
+  publicKey: __USE_ENVIRONMENT_VARIABLE__
 
   # The private GPG (ascii armored) used to sign files and commits.
-  # If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
-  # environment variable must be defined.
   # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  secretKey: __DO_NOT_SET_HERE__
+  secretKey: __USE_ENVIRONMENT_VARIABLE__
 
   # Sign files.
   # Defaults to `true`.
@@ -866,32 +889,24 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   command:
     # The executable used for signing.
-    # If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
-    # environment variable must be defined.
     # Defaults to `gpg[.exe]`.
     # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     executable: gpg
 
     # The directory from which gpg will load keyrings.
-    # If left unspecified, the `JRELEASER_GPG_HOMEDIR`
-    # environment variable must be defined.
     # Defaults to empty.
     # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     homeDir: /home/users/duke/.gnugpg
 
     # The "name" of the key to sign with.
-    # If left unspecified, the `JRELEASER_GPG_KEYNAME`
-    # environment variable must be defined.
     # Defaults to empty.
     # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     keyName: 0CB28B71EF50
 
     # The path to a public keyring to add to the list of keyrings.
-    # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
-    # environment variable must be defined.
     # Defaults to empty.
     # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -917,16 +932,12 @@ signing:
     version: 1.4.1
 
     # The private cosign key.
-    # If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
-    # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    privateKeyFile: __DO_NOT_SET_HERE__
+    privateKeyFile: __USE_ENVIRONMENT_VARIABLE__
 
     # The public cosign key.
-    # If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
-    # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    publicKeyFile: __DO_NOT_SET_HERE__</code></pre>
+    publicKeyFile: __USE_ENVIRONMENT_VARIABLE__</code></pre>
 </div>
 </div>
 </div>
@@ -938,7 +949,7 @@ signing:
   # Enables or disables file signing.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
   # Generates an armored signature.
@@ -959,24 +970,18 @@ signing:
   mode = 'MEMORY'
 
   # The passphrase required to read secret keys.
-  # If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  passphrase = "__DO_NOT_SET_HERE__"
+  passphrase = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public GPG (ascii armored) used to sign files and commits.
-  # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
-  # environment variable must be defined.
   # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  publicKey = "__DO_NOT_SET_HERE__"
+  publicKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The private GPG (ascii armored) used to sign files and commits.
-  # If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
-  # environment variable must be defined.
   # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  secretKey = "__DO_NOT_SET_HERE__"
+  secretKey = "__USE_ENVIRONMENT_VARIABLE__"
 
   # Sign files.
   # Defaults to `true`.
@@ -997,32 +1002,24 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
 
   # The executable used for signing.
-  # If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
-  # environment variable must be defined.
   # Defaults to `gpg[.exe]`.
   # When mode = `COMMAND`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   command.executable = "gpg"
 
   # The directory from which gpg will load keyrings.
-  # If left unspecified, the `JRELEASER_GPG_HOMEDIR`
-  # environment variable must be defined.
   # Defaults to empty.
   # When mode = `COMMAND`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   command.homeDir = "/home/users/duke/.gnugpg"
 
   # The "name" of the key to sign with.
-  # If left unspecified, the `JRELEASER_GPG_KEYNAME`
-  # environment variable must be defined.
   # Defaults to empty.
   # When mode = `COMMAND`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   command.keyName = "0CB28B71EF50"
 
   # The path to a public keyring to add to the list of keyrings.
-  # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
-  # environment variable must be defined.
   # Defaults to empty.
   # When mode = `COMMAND`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1047,16 +1044,12 @@ signing:
   cosign.version = "1.4.1"
 
   # The private cosign key.
-  # If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  cosign.privateKeyFile = "__DO_NOT_SET_HERE__"
+  cosign.privateKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public cosign key.
-  # If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  cosign.publicKeyFile = "__DO_NOT_SET_HERE__"</code></pre>
+  cosign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"</code></pre>
 </div>
 </div>
 </div>
@@ -1069,7 +1062,7 @@ signing:
     // Enables or disables file signing.
     // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     // Defaults to `NEVER`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "active": "ALWAYS",
 
     // Generates an armored signature.
@@ -1090,24 +1083,18 @@ signing:
     "mode": "MEMORY",
 
     // The passphrase required to read secret keys.
-    // If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
-    // environment variable must be defined.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "passphrase": "__DO_NOT_SET_HERE__",
+    "passphrase": "__USE_ENVIRONMENT_VARIABLE__",
 
     // The public GPG (ascii armored) used to sign files and commits.
-    // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
-    // environment variable must be defined.
     // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "publicKey": "__DO_NOT_SET_HERE__",
+    "publicKey": "__USE_ENVIRONMENT_VARIABLE__",
 
     // The private GPG (ascii armored) used to sign files and commits.
-    // If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
-    // environment variable must be defined.
     // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "secretKey": "__DO_NOT_SET_HERE__",
+    "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
 
     // Sign files.
     // Defaults to `true`.
@@ -1129,32 +1116,24 @@ signing:
     "command": {
 
       // The executable used for signing.
-      // If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
-      // environment variable must be defined.
       // Defaults to `gpg[.exe]`.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "executable": "gpg",
 
       // The directory from which gpg will load keyrings.
-      // If left unspecified, the `JRELEASER_GPG_HOMEDIR`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "homeDir": "/home/users/duke/.gnugpg",
 
       // The "name" of the key to sign with.
-      // If left unspecified, the `JRELEASER_GPG_KEYNAME`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "keyName": "0CB28B71EF50",
 
       // The path to a public keyring to add to the list of keyrings.
-      // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1182,16 +1161,12 @@ signing:
       "version": "1.4.1",
 
       // The private cosign key.
-      // If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "privateKeyFile": "__DO_NOT_SET_HERE__",
+      "privateKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The public cosign key.
-      // If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "publicKeyFile": "__DO_NOT_SET_HERE__"
+      "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
     }
   }
 }</code></pre>
@@ -1211,7 +1186,7 @@ signing:
       Enables or disables file signing.
       Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       Defaults to `NEVER`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
     &lt;active&gt;ALWAYS&lt;/active&gt;
 
@@ -1240,29 +1215,23 @@ signing:
 
     &lt;!--
       The passphrase required to read secret keys.
-      If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
-      environment variable must be defined.
       Required when mode = `MEMORY` || `FILE`.
       <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
-    &lt;passphrase&gt;__DO_NOT_SET_HERE__&lt;/passphrase&gt;
+    &lt;passphrase&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/passphrase&gt;
 
     &lt;!--
       The public GPG (ascii armored) used to sign files and commits.
-      If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
-      environment variable must be defined.
       Required when mode = `MEMORY` || `FILE`.
       <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
-    &lt;publicKey&gt;__DO_NOT_SET_HERE__&lt;/publicKey&gt;
+    &lt;publicKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKey&gt;
 
     &lt;!--
       The private GPG (ascii armored) used to sign files and commits.
-      If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
-      environment variable must be defined.
       <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     --&gt;
-    &lt;secretKey&gt;__DO_NOT_SET_HERE__&lt;/secretKey&gt;
+    &lt;secretKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKey&gt;
 
     &lt;!--
       Sign files.
@@ -1292,8 +1261,6 @@ signing:
     &lt;command&gt;
       &lt;!--
         The executable used for signing.
-        If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
-        environment variable must be defined.
         Defaults to `gpg[.exe]`.
         When mode = `COMMAND`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1302,8 +1269,6 @@ signing:
 
       &lt;!--
         The directory from which gpg will load keyrings.
-        If left unspecified, the `JRELEASER_GPG_HOMEDIR`
-        environment variable must be defined.
         Defaults to empty.
         When mode = `COMMAND`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1312,8 +1277,6 @@ signing:
 
       &lt;!--
         The "name" of the key to sign with.
-        If left unspecified, the `JRELEASER_GPG_KEYNAME`
-        environment variable must be defined.
         Defaults to empty.
         When mode = `COMMAND`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1322,8 +1285,6 @@ signing:
 
       &lt;!--
         The path to a public keyring to add to the list of keyrings.
-        If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
-        environment variable must be defined.
         Defaults to empty.
         When mode = `COMMAND`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1361,19 +1322,15 @@ signing:
 
       &lt;!--
         The private cosign key.
-        If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
-        environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;privateKeyFile&gt;__DO_NOT_SET_HERE__&lt;/privateKeyFile&gt;
+      &lt;privateKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/privateKeyFile&gt;
 
       &lt;!--
         The public cosign key.
-        If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
-        environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;publicKeyFile&gt;__DO_NOT_SET_HERE__&lt;/publicKeyFile&gt;
+      &lt;publicKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKeyFile&gt;
     &lt;/cosign&gt;
   &lt;/signing&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1389,7 +1346,7 @@ signing:
     // Enables or disables file signing.
     // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     // Defaults to `NEVER`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active = 'ALWAYS'
 
     // Generates an armored signature.
@@ -1410,24 +1367,18 @@ signing:
     mode = 'MEMORY'
 
     // The passphrase required to read secret keys.
-    // If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
-    // environment variable must be defined.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    passphrase = '__DO_NOT_SET_HERE__'
+    passphrase = '__USE_ENVIRONMENT_VARIABLE__'
 
     // The public GPG (ascii armored) used to sign files and commits.
-    // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
-    // environment variable must be defined.
     // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    publicKey = '__DO_NOT_SET_HERE__'
+    publicKey = '__USE_ENVIRONMENT_VARIABLE__'
 
     // The private GPG (ascii armored) used to sign files and commits.
-    // If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
-    // environment variable must be defined.
     // Required when mode = `MEMORY` || `FILE`.
     // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    secretKey = '__DO_NOT_SET_HERE__'
+    secretKey = '__USE_ENVIRONMENT_VARIABLE__'
 
     // Sign files.
     // Defaults to `true`.
@@ -1448,32 +1399,24 @@ signing:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     command {
       // The executable used for signing.
-      // If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
-      // environment variable must be defined.
       // Defaults to `gpg[.exe]`.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       executable = 'gpg'
 
       // The directory from which gpg will load keyrings.
-      // If left unspecified, the `JRELEASER_GPG_HOMEDIR`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       homeDir = '/home/users/duke/.gnugpg'
 
       // The "name" of the key to sign with.
-      // If left unspecified, the `JRELEASER_GPG_KEYNAME`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       keyName = '0CB28B71EF50'
 
       // The path to a public keyring to add to the list of keyrings.
-      // If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
-      // environment variable must be defined.
       // Defaults to empty.
       // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1499,16 +1442,12 @@ signing:
       version = '1.4.1'
 
       // The private cosign key.
-      // If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      privateKeyFile = '__DO_NOT_SET_HERE__'
+      privateKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The public cosign key.
-      // If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      publicKeyFile = '__DO_NOT_SET_HERE__'
+      publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
     }
   }
 }</code></pre>
@@ -1529,19 +1468,101 @@ Prefer the use of <a href="environment.html" class="xref page">Environment</a> i
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-When not explicitly set, the value of <code>active</code> may be resolved from an environment variable <code>JRELEASER_SIGNING_ACTIVE</code>
-or from a system property <code>jreleaser.signing.active</code>. The system property takes precedence over the environment variable.
-</td>
-</tr>
-</table>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.signing.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_SIGNING_ACTIVE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>passphrase</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.password<br>
+  jreleaser.gpg.passphrase</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PASSWORD<br>
+  JRELEASER_GPG_PASSPHRASE<br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>publicKey</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.public.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_PUBLIC_KEY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>secretKey</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.secret.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_SECRET_KEY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>command.executable</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.executable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_EXECUTABLE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>command.homeDir</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.homedir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_HOMEDIR</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>command.keyName</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.keyname</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_KEYNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>command.publicKeyring</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gpg.public.keyring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GPG_PUBLIC_KEYRING</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>cosign.publicKeyFile</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.public.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PUBLIC_KEY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>cosign.privateKeyFile</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.private.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PRIVATE_KEY</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">

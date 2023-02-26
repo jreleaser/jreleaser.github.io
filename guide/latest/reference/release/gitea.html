@@ -418,6 +418,9 @@
     <a class="nav-link" href="../announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -755,6 +779,11 @@
 <div class="paragraph">
 <p>Refer to <a href="changelog.html" class="xref page">Changelog</a> for full options on changelog customizations.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Legend:</p>
 </div>
@@ -833,15 +862,11 @@ release:
     host: my.gitea.com
 
     # Username used for authoring commits. Must have write access to the repository.
-    # If left unspecified, the `JRELEASER_GITEA_USERNAME`
-    # environment variable must be defined.
     # Defaults to the repository's owner.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     username: duke
 
     # Password or OAuth token with write access to the repository.
-    # If left unspecified, the `JRELEASER_GITEA_TOKEN`
-    # environment variable must be defined.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     token: __DO_NOT_SET_HERE__
 
@@ -851,25 +876,21 @@ release:
     apiEndpoint: https://my.gitea.com
 
     # The tag associated with the release.
-    # May define a `JRELEASER_TAG_NAME` environment variable instead.
     # If left unspecified, will use `v{{projectVersion}}`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     tagName: v1.0.0
 
     # The tag to compare against the release tag. Is used to fetch all commits between those tags.
-    # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
     # If left unspecified, will use the previous logical tag of `tagName`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     previousTagName: v0.9.0
 
     # The name of the release.
     # If left unspecified, will use `Release {{tagName}}`.
-    # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     releaseName: Release v1.0.0
 
     # Drops and creates an existing release with matching tag.
-    # May define a `JRELEASER_OVERWRITE` environment variable instead.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     overwrite: true
@@ -878,7 +899,6 @@ release:
     update:
       # Appends artifacts to an existing release with matching tag,
       # useful if `overwrite` is set to `false`.
-      # May define a `JRELEASER_UPDATE` environment variable instead.
       # Defaults to `false`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       enabled: true
@@ -892,14 +912,12 @@ release:
 
     # Skips creating a tag.
     # Useful when the tag was created externally.
-    # May define a `JRELEASER_SKIP_TAG` environment variable instead.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     skipTag: false
 
     # Skips creating a release.
     # Useful when release assets will be handled with an uploader.
-    # May define a `JRELEASER_SKIP_RELEASE` environment variable instead.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     skipRelease: false
@@ -911,7 +929,6 @@ release:
     sign: false
 
     # The target branch to use.
-    # May define a `JRELEASER_BRANCH` environment variable instead.
     # Defaults to the branch pointed by HEAD.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     branch: main
@@ -942,8 +959,12 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     signatures: true
 
+    # Release catalog files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    catalogs: true
+
     # Marks the release as a draft.
-    # May define a `JRELEASER_DRAFT` environment variable instead.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     draft: false
@@ -951,13 +972,11 @@ release:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     prerelease:
       # Marks the release as prerelease.
-      # May define a `JRELEASER_PRERELEASE` environment variable instead.
       # Defaults to `false`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       enabled: false
 
       # A regex to determine if the project version is a prerelease
-      # May define a `JRELEASER_PRERELEASE_PATTERN` environment variable instead.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       pattern: .*-pre
 
@@ -1083,15 +1102,11 @@ release:
   host = "my.gitea.com"
 
   # Username used for authoring commits. Must have write access to the repository.
-  # If left unspecified, the `JRELEASER_GITEA_USERNAME`
-  # environment variable must be defined.
   # Defaults to the repository's owner.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "duke"
 
   # Password or OAuth token with write access to the repository.
-  # If left unspecified, the `JRELEASER_GITEA_TOKEN`
-  # environment variable must be defined.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   token = "__DO_NOT_SET_HERE__"
 
@@ -1101,25 +1116,21 @@ release:
   apiEndpoint = "https://my.gitea.com"
 
   # The tag associated with the release.
-  # May define a `JRELEASER_TAG_NAME` environment variable instead.
   # If left unspecified, will use `v{{projectVersion}}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   tagName = "v1.0.0"
 
   # The tag to compare against the release tag. Is used to fetch all commits between those tags.
-  # May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
   # If left unspecified, will use the previous logical tag of `tagName`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   previousTagName = "v0.9.0"
 
   # The name of the release.
   # If left unspecified, will use `Release {{tagName}}`.
-  # May define a `JRELEASER_RELEASE_NAME` environment variable instead.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   releaseName = "Release v1.0.0"
 
   # Drops and creates an existing release with matching tag.
-  # May define a `JRELEASER_OVERWRITE` environment variable instead.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   overwrite = true
@@ -1128,7 +1139,6 @@ release:
   [release.gitea.update]
     # Appends artifacts to an existing release with matching tag,
     # useful if `overwrite` is set to `false`.
-    # May define a `JRELEASER_UPDATE` environment variable instead.
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     enabled = true
@@ -1141,14 +1151,12 @@ release:
 
   # Skips creating a tag.
   # Useful when the tag was created externally.
-  # May define a `JRELEASER_SKIP_TAG` environment variable instead.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   skipTag = false
 
   # Skips creating a release.
   # Useful when release assets will be handled with an uploader.
-  # May define a `JRELEASER_SKIP_RELEASE` environment variable instead.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   skipRelease = false
@@ -1160,7 +1168,6 @@ release:
   sign = false
 
   # The target branch to use.
-  # May define a `JRELEASER_BRANCH` environment variable instead.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   branch = "main"
@@ -1191,20 +1198,22 @@ release:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   signatures = true
 
+  # Release catalog files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  catalogs = true
+
   # Marks the release as a draft.
-  # May define a `JRELEASER_DRAFT` environment variable instead.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   draft = false
 
   # Marks the release as prerelease.
-  # May define a `JRELEASER_PRERELEASE` environment variable instead.
   # Defaults to `false`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   prerelease.enabled = false
 
   # A regex to determine if the project version is a prerelease
-  # May define a `JRELEASER_PRERELEASE_PATTERN` environment variable instead.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   prerelease.pattern = .*-pre
 
@@ -1327,15 +1336,11 @@ release:
       "host": "my.gitea.com",
 
       // Username used for authoring commits. Must have write access to the repository.
-      // If left unspecified, the `JRELEASER_GITEA_USERNAME`
-      // environment variable must be defined.
       // Defaults to the repository's owner.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "username": "duke",
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITEA_TOKEN`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "token": "__DO_NOT_SET_HERE__",
 
@@ -1345,25 +1350,21 @@ release:
       "apiEndpoint": "https://my.gitea.com",
 
       // The tag associated with the release.
-      // May define a `JRELEASER_TAG_NAME` environment variable instead.
       // If left unspecified, will use `v{{projectVersion}}`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "tagName": "v1.0.0",
 
       // The tag to compare against the release tag. Is used to fetch all commits between those tags.
-      // May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
       // If left unspecified, will use the previous logical tag of `tagName`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "previousTagName": "v0.9.0",
 
       // The name of the release.
-      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
       // If left unspecified, will use `Release {{tagName}}`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "releaseName": "Release v1.0.0",
 
       // Drops and creates an existing release with matching tag.
-      // May define a `JRELEASER_OVERWRITE` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "overwrite": true,
@@ -1372,7 +1373,6 @@ release:
       "update": {
         // Appends artifacts to an existing release with matching tag,
         // useful if `overwrite` is set to `false`.
-        // May define a `JRELEASER_UPDATE` environment variable instead.
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "enabled": true,
@@ -1386,14 +1386,12 @@ release:
 
       // Skips creating a tag.
       // Useful when the tag was created externally.
-      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "skipTag": false,
 
       // Skips creating a release.
       // Useful when release assets will be handled with an uploader.
-      // May define a `JRELEASER_SKIP_RELEASE` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "skipRelease": false,
@@ -1405,7 +1403,6 @@ release:
       "sign": false,
 
       // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
       // Defaults to the branch pointed by HEAD.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "branch": "main",
@@ -1436,8 +1433,12 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "signatures": true,
 
+      // Release catalog files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "catalogs": true,
+
       // Marks the release as a draft.
-      // May define a `JRELEASER_DRAFT` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "draft": false,
@@ -1445,13 +1446,11 @@ release:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "prerelease": {
         // Marks the release as prerelease.
-        // May define a `JRELEASER_PRERELEASE` environment variable instead.
         // Defaults to `false`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "enabled": false,
 
         // A regex to determine if the project version is a prerelease
-        // May define a `JRELEASER_PRERELEASE_PATTERN` environment variable instead.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "pattern": ".*-pre"
       },
@@ -1593,8 +1592,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         Username used for authoring commits. Must have write access to the repository.
-        If left unspecified, the `JRELEASER_GITEA_USERNAME`
-        environment variable must be defined.
         Defaults to the repository's owner.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1602,8 +1599,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         Password or OAuth token with write access to the repository.
-        If left unspecified, the `JRELEASER_GITEA_TOKEN`
-        environment variable must be defined.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;token&gt;__DO_NOT_SET_HERE__&lt;/token&gt;
@@ -1617,7 +1612,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         The tag associated with the release.
-        May define a `JRELEASER_TAG_NAME` environment variable instead.
         If left unspecified, will use `v{{projectVersion}}`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
@@ -1625,7 +1619,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         The tag to compare against the release tag. Is used to fetch all commits between those tags.
-        May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
         If left unspecified, will use the previous logical tag of `tagName`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1633,7 +1626,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         The name of the release.
-        May define a `JRELEASER_RELEASE_NAME` environment variable instead.
         If left unspecified, will use `Release {{tagName}}`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
@@ -1641,7 +1633,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         Drops and creates an existing release with matching tag.
-        May define a `JRELEASER_OVERWRITE` environment variable instead.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1654,7 +1645,6 @@ include::partial$release/json/commitauthor.adoc[
         &lt;!--
           Appends artifacts to an existing release with matching tag,
           useful if `overwrite` is set to `false`.
-          May define a `JRELEASER_UPDATE` environment variable instead.
           Defaults to `false`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
@@ -1674,7 +1664,6 @@ include::partial$release/json/commitauthor.adoc[
       &lt;!--
         Skips creating a tag.
         Useful when the tag was created externally.
-        May define a `JRELEASER_SKIP_TAG` environment variable instead.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1683,7 +1672,6 @@ include::partial$release/json/commitauthor.adoc[
       &lt;!--
         Skips creating a release.
         Useful when release assets will be handled with an uploader.
-        May define a `JRELEASER_SKIP_RELEASE` environment variable instead.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1699,7 +1687,6 @@ include::partial$release/json/commitauthor.adoc[
 
       &lt;!--
         The target branch to use.
-        May define a `JRELEASER_BRANCH` environment variable instead.
         Defaults to the branch pointed by HEAD.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1742,8 +1729,14 @@ include::partial$release/json/commitauthor.adoc[
       &lt;signatures&gt;true&lt;/signatures&gt;
 
       &lt;!--
+        Release catalog files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;catalogs&gt;true&lt;/catalogs&gt;
+
+      &lt;!--
         Marks the release as a draft.
-        May define a `JRELEASER_DRAFT` environment variable instead.
         Defaults to `false`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
@@ -1755,15 +1748,13 @@ include::partial$release/json/commitauthor.adoc[
       &lt;prerelease&gt;
         &lt;!--
           Marks the release as prerelease.
-          May define a `JRELEASER_PRERELEASE` environment variable instead.
           Defaults to `false`.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
         &lt;enabled&gt;false&lt;/enabled&gt;
 
         &lt;!--
           A regex to determine if the project version is a prerelease
-          May define a `JRELEASER_PRERELEASE_PATTERN` environment variable instead.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;pattern&gt;.*-pre&lt;/enabled&gt;
@@ -1942,15 +1933,11 @@ include::partial$release/json/commitauthor.adoc[
       host = 'my.gitea.com'
 
       // Username used for authoring commits. Must have write access to the repository.
-      // If left unspecified, the `JRELEASER_GITEA_USERNAME`
-      // environment variable must be defined.
       // Defaults to the repository's owner.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       username = 'duke'
 
       // Password or OAuth token with write access to the repository.
-      // If left unspecified, the `JRELEASER_GITEA_TOKEN`
-      // environment variable must be defined.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       token = '__DO_NOT_SET_HERE__'
 
@@ -1960,25 +1947,21 @@ include::partial$release/json/commitauthor.adoc[
       apiEndpoint = 'https://my.gitea.com'
 
       // The tag associated with the release.
-      // May define a `JRELEASER_TAG_NAME` environment variable instead.
       // If left unspecified, will use `v{{projectVersion}}`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       tagName = 'v1.0.0'
 
       // The tag to compare against the release tag. Is used to fetch all commits between those tags.
-      // May define a `JRELEASER_PREVIOUS_TAG_NAME` environment variable instead.
       // If left unspecified, will use the previous logical tag of `tagName`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       previousTagName = 'v0.9.0'
 
       // The name of the release.
-      // May define a `JRELEASER_RELEASE_NAME` environment variable instead.
       // If left unspecified, will use `Release {{tagName}}`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       releaseName = 'Release v1.0.0'
 
       // Drops and creates an existing release with matching tag.
-      // May define a `JRELEASER_OVERWRITE` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       overwrite = true
@@ -1987,7 +1970,6 @@ include::partial$release/json/commitauthor.adoc[
       update {
         // Appends artifacts to an existing release with matching tag,
         // useful if `overwrite` is set to `false`.
-        // May define a `JRELEASER_UPDATE` environment variable instead.
         // Defaults to `false`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         enabled = true
@@ -2001,14 +1983,12 @@ include::partial$release/json/commitauthor.adoc[
 
       // Skips creating a tag.
       // Useful when the tag was created externally.
-      // May define a `JRELEASER_SKIP_TAG` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       skipTag = false
 
       // Skips creating a release.
       // Useful when release assets will be handled with an uploader.
-      // May define a `JRELEASER_SKIP_RELEASE` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       skipRelease = false
@@ -2020,7 +2000,6 @@ include::partial$release/json/commitauthor.adoc[
       sign = false
 
       // The target branch to use.
-      // May define a `JRELEASER_BRANCH` environment variable instead.
       // Defaults to the branch pointed by HEAD.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       branch = 'main'
@@ -2051,8 +2030,12 @@ include::partial$release/json/commitauthor.adoc[
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       signatures = true
 
+      // Release catalog files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      catalogs = true
+
       // Marks the release as a draft.
-      // May define a `JRELEASER_DRAFT` environment variable instead.
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       draft = false
@@ -2060,13 +2043,11 @@ include::partial$release/json/commitauthor.adoc[
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       prerelease {
         // Marks the release as prerelease.
-        // May define a `JRELEASER_PRERELEASE` environment variable instead.
         // Defaults to `false`.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         enabled = false
 
         // A regex to determine if the project version is a prerelease
-        // May define a `JRELEASER_PRERELEASE_PATTERN` environment variable instead.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         pattern = '.*-pre'
       }
@@ -2166,6 +2147,120 @@ include::partial$release/json/commitauthor.adoc[
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_environment"><a class="anchor" href="#_environment"></a>Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When not explicitly set, the value of the following properties may be resolved from an environment variable or a system
+property as shown in the table. The system property takes precedence over the environment variable.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>username</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gitea.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GITEA_USERNAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>token</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.gitea.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GITEA_TOKEN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>tagName</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.tag.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_TAG_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>previousTagName</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.previous.tag.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_PREVIOUS_TAG_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>releaseName</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.release.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_RELEASE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>milestone.name</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.milestone.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_MILESTONE_NAME</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>branch</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_BRANCH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>overwrite</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.overwrite</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_OVERWRITE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>update.enabled</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.update</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_UPDATE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>skipTag</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.skip.tag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_SKIP_TAG</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>skipRelease</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.skip.release</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_SKIP_RELEASE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>draft</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.draft</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DRAFT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>prerelease.pattern</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.prelease.pattern</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_PRERELEASE_PATTERN</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">

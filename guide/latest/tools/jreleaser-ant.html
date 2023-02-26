@@ -418,6 +418,9 @@
     <a class="nav-link" href="../reference/announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -766,7 +790,7 @@ the <code>lib</code> folder. Create this folder if there is none. Add the follow
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;path id="jreleaser.classpath"&gt;
     &lt;fileset dir="lib"&gt;
-        &lt;include name="jreleaser-ant-tasks-1.4.0/*.jar"/&gt;
+        &lt;include name="jreleaser-ant-tasks-1.5.0/*.jar"/&gt;
     &lt;/fileset&gt;
 &lt;/path&gt;
 
@@ -857,6 +881,31 @@ the <code>lib</code> folder. Create this folder if there is none. Add the follow
 <p><code>JRELEASER_SELECT_PLATFORMs</code> and <code>JRELEASER_REJECT_PLATFORMs</code> may define a command separated list of values such as
 <code>osx-x86_64,linux-x86_64</code>.</p>
 </div>
+<div class="paragraph">
+<p>These additional environment variables are supported as well:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -907,6 +956,12 @@ For example, when building on <code>linux-x86_64</code> while also having <code>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following tasks are provided:</p>
+</div>
+<div class="sect2">
+<h3 id="_jreleaser_env"><a class="anchor" href="#_jreleaser_env"></a>jreleaser-env</h3>
+<div class="paragraph">
+<p>Display environment variable names.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_jreleaser_init"><a class="anchor" href="#_jreleaser_init"></a>jreleaser-init</h3>
@@ -1156,6 +1211,7 @@ Description
 </tr>
 </table>
 </div>
+<hr>
 <div class="paragraph">
 <p><strong>assembly</strong></p>
 </div>
@@ -1251,6 +1307,7 @@ Description
 </tr>
 </table>
 </div>
+<hr>
 <div class="paragraph">
 <p><strong>download</strong></p>
 </div>
@@ -1576,7 +1633,7 @@ Description
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jreleaser_template"><a class="anchor" href="#_jreleaser_template"></a>jreleaser-template</h3>
+<h3 id="_jreleaser_template_generate"><a class="anchor" href="#_jreleaser_template_generate"></a>jreleaser-template-generate</h3>
 <div class="paragraph">
 <p>Generate a tool/announcer template.</p>
 </div>
@@ -2055,6 +2112,647 @@ Description
 </td>
 <td class="hdlist2">
 <p>Skips execution of this task.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleaser_template_eval"><a class="anchor" href="#_jreleaser_template_eval"></a>jreleaser-template-eval</h3>
+<div class="paragraph">
+<p>Evaluate a template or templates.</p>
+</div>
+<div class="paragraph">
+<p><strong>configFile</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.config.file</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>true</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>The config file.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>announce</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.announce</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Display only announce configuration.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>assembly</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.assembly</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Display only assembly configuration.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>changelog</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.changelog</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Display only changelog configuration.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>download</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.download</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Display only download configuration.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>inputFile</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>releaser.template.input.file</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>true</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>An input template file.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>inputDir</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>releaser.template.input.dir</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>true</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>A directory with input templates.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>outputDir</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>"build"</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.outputdir</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Overwrites existing template files.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>rejectPlatforms</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>[]</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+<br>
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths not matching the given platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>selectCurrentPlatform</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.select.current.platform</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths matching the current platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>selectPlatforms</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>[]</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+<br>
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths matching the given platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>skip</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.skip</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Skips execution of this task.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>strict</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.strict</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Enable strict mode.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>targetDir</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.template.target.dir</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>true</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Directory where evaluated template(s) will be placed.</p>
 </td>
 </tr>
 </table>
@@ -3963,6 +4661,495 @@ Description
 </div>
 </div>
 <div class="sect2">
+<h3 id="_jreleaser_catalog"><a class="anchor" href="#_jreleaser_catalog"></a>jreleaser-catalog</h3>
+<div class="paragraph">
+<p>Catalogs all distributions and files.</p>
+</div>
+<div class="paragraph">
+<p><strong>configFile</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.config.file</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>true</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>The config file.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>catalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Name of the catalogers to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>distributions</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Name of the distributions to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>excludedCatalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Names of catalogers to exclude.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>excludedDistributions</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Names of distributions to exclude.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>outputDir</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>File</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>"build"</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.outputdir</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Overwrites existing template files.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>rejectPlatforms</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>[]</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+<br>
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths not matching the given platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>selectCurrentPlatform</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.select.current.platform</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths matching the current platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>selectPlatforms</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>[]</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+<br>
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Activates paths matching the given platform.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>skip</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.skip</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Skips execution of this task.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>strict</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>boolean</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Property
+</td>
+<td class="hdlist2">
+<p>jreleaser.strict</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Enable strict mode.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_jreleaser_deploy"><a class="anchor" href="#_jreleaser_deploy"></a>jreleaser-deploy</h3>
 <div class="paragraph">
 <p>Deploys all staged artifacts.</p>
@@ -4413,6 +5600,46 @@ Description
 </div>
 <hr>
 <div class="paragraph">
+<p><strong>catalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Name of catalogers to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
 <p><strong>distributions</strong></p>
 </div>
 <div class="hdlist">
@@ -4488,6 +5715,46 @@ Required
 <td class="hdlist2">
 <p>false
 Description: Skips remote operations.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>excludedCatalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Names of catalogers to exclude.</p>
 </td>
 </tr>
 </table>
@@ -5023,6 +6290,46 @@ Description
 </div>
 <hr>
 <div class="paragraph">
+<p><strong>catalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Name of catalogers to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
 <p><strong>deployers</strong></p>
 </div>
 <div class="hdlist">
@@ -5137,6 +6444,46 @@ Description
 </td>
 <td class="hdlist2">
 <p>Name of the distributions to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>excludedCatalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Names of catalogers to exclude.</p>
 </td>
 </tr>
 </table>
@@ -7570,6 +8917,46 @@ Description
 </div>
 <hr>
 <div class="paragraph">
+<p><strong>catalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Name of catalogers to include.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
 <p><strong>deployers</strong></p>
 </div>
 <div class="hdlist">
@@ -7813,6 +9200,46 @@ Description
 </td>
 <td class="hdlist2">
 <p>Names of announcers to exclude.</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>excludedCatalogers</strong></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p>List&lt;String&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Default value
+</td>
+<td class="hdlist2">
+<p>&lt;none&gt;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Required
+</td>
+<td class="hdlist2">
+<p>false</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Names of catalogers to exclude.</p>
 </td>
 </tr>
 </table>

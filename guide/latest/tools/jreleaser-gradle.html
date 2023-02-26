@@ -418,6 +418,9 @@
     <a class="nav-link" href="../reference/announce/google-chat.html">GoogleChat</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/linkedin.html">Linkedin</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/http.html">Http</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -477,6 +480,21 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/index.html">Catalog</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../reference/checksum.html">Checksum</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -489,6 +507,9 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/artifactory.html">Artifactory</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/deploy/maven/gitea.html">Gitea</a>
@@ -590,6 +611,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/spec.html">Spec</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/winget.html">Winget</a>
   </li>
 </ul>
   </li>
@@ -772,7 +796,7 @@ Requires Gradle 6.x.
 <div class="title">build.gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
-    id 'org.jreleaser' version '1.4.0'
+    id 'org.jreleaser' version '1.5.0'
 }</code></pre>
 </div>
 </div>
@@ -864,6 +888,31 @@ configuration file may be used if the <code>configFile</code> field property is 
 <p><code>JRELEASER_SELECT_PLATFORMs</code> and <code>JRELEASER_REJECT_PLATFORMs</code> may define a command separated list of values such as
 <code>osx-x86_64,linux-x86_64</code>.</p>
 </div>
+<div class="paragraph">
+<p>These additional environment variables are supported as well:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_NO_COLOR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disable colors in output</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1068,6 +1117,24 @@ if that were not to be the case then you may download the files and register the
 <p>The following tasks are provided:</p>
 </div>
 <div class="sect2">
+<h3 id="_jreleaserenv"><a class="anchor" href="#_jreleaserenv"></a>jreleaserEnv</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Path
+     :jreleaserEnv
+
+Type
+     JReleaserEnvTask (org.jreleaser.gradle.plugin.tasks.JReleaserEnvTask)
+
+Description
+     Display environment variable names
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_jreleaserinit"><a class="anchor" href="#_jreleaserinit"></a>jreleaserInit</h3>
 <div class="listingblock">
 <div class="content">
@@ -1138,14 +1205,14 @@ Group
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jreleasertemplate"><a class="anchor" href="#_jreleasertemplate"></a>jreleaserTemplate</h3>
+<h3 id="_jreleasertemplategenerate"><a class="anchor" href="#_jreleasertemplategenerate"></a>jreleaserTemplateGenerate</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">Path
-     :jreleaserTemplate
+     :jreleaserTemplateGenerate
 
 Type
-     JReleaserTemplateTask (org.jreleaser.gradle.plugin.tasks.JReleaserTemplateTask)
+     JReleaserTemplateGenerateTask (org.jreleaser.gradle.plugin.tasks.JReleaserTemplateGenerateTask)
 
 Options
      --announcer-name        The name of the announcer (OPTIONAL).
@@ -1171,7 +1238,52 @@ Options
      --snapshot              Use snapshot template (OPTIONAL).
 
 Description
-     Generates templates for a specific tool/announcer
+     Generates templates for a specific packager/announcer
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jreleasertemplateeval"><a class="anchor" href="#_jreleasertemplateeval"></a>jreleaserTemplateEval</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Path
+     :jreleaserTemplateEval
+
+Type
+     JReleaserTemplateEvalTask (org.jreleaser.gradle.plugin.tasks.JReleaserTemplateEvalTask)
+
+Options
+     --announce                 Eval model in announce configuration (OPTIONAL).
+
+     --assembly                 Eval model in assembly configuration (OPTIONAL).
+
+     --changelog                Eval model in changelog configuration (OPTIONAL).
+
+     --download                 Eval model in download configuration (OPTIONAL).
+
+     --dryrun                   Skip remote operations (OPTIONAL).
+
+     --git-root-search          Searches for the Git root (OPTIONAL).
+
+     --input-directory          A directory with input templates.
+
+     --input-file               An input template file.
+
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
+     --select-current-platform  Activates paths matching the current platform (OPTIONAL).
+
+     --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
+
+     --target-directory         Directory where evaluated template(s) will be placed.
+
+Description
+     Evaluate a template or templates
 
 Group
      JReleaser</code></pre>
@@ -1342,6 +1454,45 @@ Group
 </div>
 </div>
 <div class="sect2">
+<h3 id="_jreleasercatalog"><a class="anchor" href="#_jreleasercatalog"></a>jreleaserCatalog</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Path
+     :jreleaserCatalog
+
+Type
+     JReleaserCatalogTask (org.jreleaser.gradle.plugin.tasks.JReleaserCatalogTask)
+
+Options
+     --cataloger                Include a cataloger (OPTIONAL).
+
+     --distribution             Include a distribution (OPTIONAL).
+
+     --dryrun                   Skip remote operations (OPTIONAL).
+
+     --exclude-cataloger        Exclude a cataloger (OPTIONAL).
+
+     --exclude-distribution     Exclude a distribution (OPTIONAL).
+
+     --git-root-search          Searches for the Git root (OPTIONAL).
+
+     --reject-platform          Activates paths not matching the given platform (OPTIONAL).
+
+     --select-current-platform  Activates paths matching the current platform (OPTIONAL).
+
+     --select-platform          Activates paths matching the given platform (OPTIONAL).
+
+     --strict                   Enable strict mode (OPTIONAL).
+
+Description
+     Catalogs all distributions and files
+
+Group
+     JReleaser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_jreleaserdeploy"><a class="anchor" href="#_jreleaserdeploy"></a>jreleaserDeploy</h3>
 <div class="listingblock">
 <div class="content">
@@ -1385,9 +1536,13 @@ Type
      JReleaserUploadTask (org.jreleaser.gradle.plugin.tasks.JReleaserUploadTask)
 
 Options
+     --cataloger                 Include a cataloger (OPTIONAL).
+
      --distribution              The name of the distribution (OPTIONAL).
 
      --dryrun                    Skip remote operations (OPTIONAL).
+
+     --exclude-cataloger         Exclude a cataloger (OPTIONAL).
 
      --exclude-distribution      Exclude a distribution (OPTIONAL).
 
@@ -1428,17 +1583,21 @@ Type
      JReleaserReleaseTask (org.jreleaser.gradle.plugin.tasks.JReleaserReleaserTask)
 
 Options
-     --deployer                  Include a deployer by type (OPTIONAL).
+     --cataloger                Include a cataloger (OPTIONAL).
 
-     --deployer-name             Include a deployer by name (OPTIONAL).
+     --deployer                 Include a deployer by type (OPTIONAL).
+
+     --deployer-name            Include a deployer by name (OPTIONAL).
 
      --distribution             The name of the distribution (OPTIONAL).
 
      --dryrun                   Skip remote operations (OPTIONAL).
 
-     --exclude-deployer          Exclude a deployer by type (OPTIONAL).
+     --exclude-cataloger        Exclude a cataloger (OPTIONAL).
 
-     --exclude-deployer-name     Exclude a deployer by name (OPTIONAL).
+     --exclude-deployer         Exclude a deployer by type (OPTIONAL).
+
+     --exclude-deployer-name    Exclude a deployer by name (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
@@ -1626,9 +1785,11 @@ Type
 Options
      --announcer                Include an announcer (OPTIONAL).
 
-     --deployer                  Include a deployer by type (OPTIONAL).
+     --cataloger                Include a cataloger (OPTIONAL).
 
-     --deployer-name             Include a deployer by name (OPTIONAL).
+     --deployer                 Include a deployer by type (OPTIONAL).
+
+     --deployer-name            Include a deployer by name (OPTIONAL).
 
      --distribution             Include a distribution (OPTIONAL).
 
@@ -1636,9 +1797,11 @@ Options
 
      --exclude-announcer        Exclude an announcer (OPTIONAL).
 
-     --exclude-deployer          Exclude a deployer by type (OPTIONAL).
+     --exclude-cataloger        Exclude a cataloger (OPTIONAL).
 
-     --exclude-deployer-name     Exclude a deployer by name (OPTIONAL).
+     --exclude-deployer         Exclude a deployer by type (OPTIONAL).
+
+     --exclude-deployer-name    Exclude a deployer by name (OPTIONAL).
 
      --exclude-distribution     Exclude a distribution (OPTIONAL).
 
