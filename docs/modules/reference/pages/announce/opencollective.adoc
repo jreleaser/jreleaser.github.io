@@ -1,0 +1,257 @@
+= OpenCollective
+:announcer_id:      openCollective
+:announcer_name:    OpenCollective
+:announcer_sys_key: opencollective
+:announcer_env_key: OPENCOLLECTIVE
+
+Posts an update to an link:https://opencollective.com/[{announcer_name}] page. You must create a personal token with
+the `update` scope set. Head to `pass:[https://opencollective.com/&lt;user&gt;/admin/for-developers]` for instructions.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$announce/yaml/common-head.adoc[]
+
+    # The collective slug to use.
+    # If left unspecified, the `JRELEASER_OPENCOLLECTIVE_SLUG`
+    # environment variable must be defined.
+    # Defaults to the project's name.
+    # icon:dot-circle[] icon:eye-slash[]
+    slug: app
+
+    # The token associated with the given slug.
+    # If left unspecified, the `JRELEASER_OPENCOLLECTIVE_TOKEN`
+    # environment variable must be defined.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    token: __USE_ENVIRONMENT_VARIABLE__
+
+    # The message's title.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    title: '{{projectNameCapitalized}} {{projectVersion}} released!'
+
+    # The announcement message.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    message: '{{#f_md2html}}🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}'
+
+    # Path to a template file that contains the message.
+    # Review the available xref:reference:name-templates.adoc[].
+    # Defaults to `src/jreleaser/templates/opencollective.tpl`.
+    # icon:dot-circle[]
+    messageTemplate: path/to/template/opencollective.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$announce/toml/common-head.adoc[]
+
+  # The collective slug to use.
+  # If left unspecified, the `JRELEASER_OPENCOLLECTIVE_SLUG`
+  # environment variable must be defined.
+  # Defaults to the project's name.
+  # icon:dot-circle[] icon:eye-slash[]
+  slug = "app"
+
+  # The token associated with the given slug.
+  # If left unspecified, the `JRELEASER_OPENCOLLECTIVE_TOKEN`
+  # environment variable must be defined.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  token = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # The message's title.
+  # Review the available xref:reference:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  title = "{{projectNameCapitalized}} {{projectVersion}} released!"
+
+  # The announcement message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # icon:dot-circle[] icon:file-alt[]
+  message = "{{#f_md2html}}🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}"
+
+  # Path to a template file that contains the message.
+  # Review the available xref:reference:name-templates.adoc[].
+  # Defaults to `src/jreleaser/templates/opencollective.tpl`.
+  # icon:dot-circle[]
+  messageTemplate = "path/to/template/opencollective.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$announce/json/common-head.adoc[]
+
+      // The collective slug to use.
+      // If left unspecified, the `JRELEASER_OPENCOLLECTIVE_SLUG`
+      // environment variable must be defined.
+      // Defaults to the project's name.
+      // icon:dot-circle[] icon:eye-slash[]
+      "slug": "app",
+
+      // The token associated with the given slug.
+      // If left unspecified, the `JRELEASER_OPENCOLLECTIVE_TOKEN`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "token": "__USE_ENVIRONMENT_VARIABLE__",
+
+      // The message's title.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[]
+      "title": "{{projectNameCapitalized}} {{projectVersion}} released!",
+
+      // The announcement message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      "message": "{{#f_md2html}}🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}",
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/opencollective.tpl`.
+      // icon:dot-circle[]
+      "messageTemplate": "path/to/template/opencollective.tpl"
+include::partial$announce/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$announce/maven/common-head.adoc[]
+
+      <!--
+        The collective slug to use.
+        If left unspecified, the `JRELEASER_OPENCOLLECTIVE_SLUG`
+        environment variable must be defined.
+        Defaults to the project's name.
+        icon:dot-circle[] icon:eye-slash[]
+      -->
+      <slug>app</slug>
+
+      <!--
+        The token associated with the given slug.
+        If left unspecified, the `JRELEASER_OPENCOLLECTIVE_TOKEN`
+        environment variable must be defined.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <token>__USE_ENVIRONMENT_VARIABLE__</token>
+
+      <!--
+        The message's title.
+        Review the available xref:reference:name-templates.adoc[].
+        icon:dot-circle[]
+      -->
+      <title>{{projectNameCapitalized}} {{projectVersion}} released!</title>
+
+      <!--
+        The announcement message.
+        Review the available xref:reference:name-templates.adoc[].
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <message>{{#f_md2html}}🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}</message>
+
+      <!--
+        Path to a template file that contains the message.
+        Review the available xref:reference:name-templates.adoc[].
+        Defaults to `src/jreleaser/templates/opencollective.tpl`.
+        icon:dot-circle[]
+      -->
+      <messageTemplate>path/to/template/opencollective.tpl</messageTemplate>
+include::partial$announce/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$announce/gradle/common-head.adoc[]
+
+      // The collective slug to use.
+      // If left unspecified, the `JRELEASER_OPENCOLLECTIVE_SLUG`
+      // environment variable must be defined.
+      // Defaults to the project's name.
+      // icon:dot-circle[] icon:eye-slash[]
+      slug = 'app'
+
+      // The token associated with the given slug.
+      // If left unspecified, the `JRELEASER_OPENCOLLECTIVE_TOKEN`
+      // environment variable must be defined.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      token = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // The message's title.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[]
+      title = '{{projectNameCapitalized}} {{projectVersion}} released!'
+
+      // The announcement message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // icon:dot-circle[] icon:file-alt[]
+      message = '{{#f_md2html}}🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}'
+
+      // Path to a template file that contains the message.
+      // Review the available xref:reference:name-templates.adoc[].
+      // Defaults to `src/jreleaser/templates/opencollective.tpl`.
+      // icon:dot-circle[]
+      messageTemplate = 'path/to/template/opencollective.tpl'
+include::partial$announce/gradle/common-footer.adoc[]
+----
+--
+====
+
+You may define either `message` or `messageTemplate`, with the former taking precedence over the latter.
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property                               | Environment Variable
+2+| *active*
+| jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+2+| *slug*
+| jreleaser.announce.{announcer_sys_key}.slug +
+  jreleaser.{announcer_sys_key}.slug
+| JRELEASER_ANNOUNCE_{announcer_env_key}_SLUG +
+  JRELEASER_{announcer_env_key}_SLUG
+2+| *token*
+| jreleaser.announce.{announcer_sys_key}.token +
+  jreleaser.{announcer_sys_key}.token
+| JRELEASER_ANNOUNCE_{announcer_env_key}_TOKEN +
+  JRELEASER_{announcer_env_key}_TOKEN
+|===
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `opencollective.tpl`
+
+Templates may be initialized using the `template` command
+
+ * xref:tools:jreleaser-cli.adoc#_template_generate[{icon_cli_s} template generate]
+ * xref:tools:jreleaser-maven.adoc#_jreleasertemplate_generate[{icon_maven_s} jreleaser:template-generate]
+ * xref:tools:jreleaser-gradle.adoc#_jreleasertemplategenerate[{icon_gradle_s} jreleaserTemplategGenerate]
+ * xref:tools:jreleaser-ant.adoc#_jreleaser_template_generate[{icon_ant_s} jreleaser-template-generate]
