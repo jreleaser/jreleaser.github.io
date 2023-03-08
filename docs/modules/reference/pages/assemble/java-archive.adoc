@@ -293,7 +293,9 @@ NOTE: This assembler ignores filtering artifacts by platform.
 
 == Example
 
-Given the following file structure
+=== Classpath
+
+Given the following file structure for an application that will be run on the classpath
 
 [source]
 ----
@@ -444,7 +446,189 @@ jreleaser {
           path = 'target/{{distributionName}}-{{projectVersion}}.jar'
         }
         java {
-          mainClass('com.acme.Main')
+          mainClass = 'com.acme.Main'
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+Results in an assembled Zip archive named `app-1.0.0.zip` with the following entries
+
+[source]
+----
+.
+├── LICENSE
+├── README
+├── bin
+│   ├── app
+│   └── app.bat
+└── lib
+    └── app-1.0.0.jar
+----
+
+=== Modulepath
+
+Given the following file structure for an application that will be run on the modulepath
+
+[source]
+----
+.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── app-1.0.0.jar
+----
+
+And this assembly configuration
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  version: 1.0.0
+
+assemble:
+  javaArchive:
+    app:
+      active: ALWAYS
+      fileSets:
+        - input: '.'
+          includes:
+            - 'LICENSE'
+            - 'README'
+      mainJar:
+        path: target/{{distributionName}}-{{projectVersion}}.jar
+      java:
+        mainClass: com.acme.Main
+        mainModule: com.acme
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  version = "1.0.0"
+
+[assemble.javaArchive.app]
+  active = "ALWAYS"
+  pass:[[[assemble.archive.app.fileSets]]]
+    input = "."
+    includes = ["LICENSE", "README"]
+  pass:[[[assemble.archive.app.mainJar]]]
+    path = "target/{{distributionName}}-{{projectVersion}}.jar"
+  pass:[[[assemble.archive.app.java]]]
+    mainClass = "com.acme.Main"
+    mainModule = "com.acme"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "version": "1.0.0"
+  },
+  "assemble": {
+    "javaArchive": {
+      "app": {
+        "active": "ALWAYS",
+        "fileSets": [
+          {
+            "input": ".",
+            "includes": ["LICENSE", "README"]
+          }
+        ],
+        "mainJar": [
+          {
+            "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+          }
+        ],
+        "java": {
+          "mainClass": "com.acme.Main",
+          "mainModule": "com.acme"
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <project>
+    <version>1.0.0</version>
+  </project>
+  <assemble>
+    <javaArchive>
+      <app>
+        <active>ALWAYS</active>
+        <fileSets>
+          <fileSet>
+            <input>.</input>
+            <includes>
+              <include>LICENSE</include>
+              <include>README</include>
+            </includes>
+          </fileSet>
+        </fileSets>
+        <mainJar>
+          <path>target/{{distributionName}}-{{projectVersion}}.jar</path>
+        </mainJar>
+        <java>
+          <mainClass>com.acme.Main</mainClass>
+          <mainModule>com.acme</mainModule>
+        </java>
+      </app>
+    </javaArchive>
+  </assemble>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    version = '1.0.0'
+  }
+  assemble {
+    javaArchive {
+      app {
+        active = 'ALWAYS'
+        fileSet {
+          input = '.'
+          includes = ['LICENSE', 'README']
+        }
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        java {
+          mainClass = 'com.acme.Main'
+          mainModule = 'com.acme'
         }
       }
     }
