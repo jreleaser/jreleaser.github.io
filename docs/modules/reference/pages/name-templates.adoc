@@ -1023,13 +1023,13 @@ Maven::
     <app>
       <artifacts>
         <artifact>
-          <path>path/to/${project.artifactId}-${project.version}.zip</path>
+          <path>path/to/{{distributionName}}-{{projectVersion}}.zip</path>
           <extraProperties>
             <main>true</main>
           </extraProperties>
         </artifact>
         <artifact>
-          <path>path/to/${project.artifactId}-${project.version}-mac.zip</path>
+          <path>path/to/{{distributionName}}-{{projectVersion}}-mac.zip</path>
           <platform>osx-aarch_64</platform>
         </artifact>
       </artifacts>
@@ -1052,11 +1052,11 @@ jreleaser {
   distributions {
     app {
       artifact {
-        path = "path/to/${project.name}-${project.version}.zip"
+        path = "path/to/{{distributionName}}-{{projectVersion}}.zip"
         extraProperties.put("main", true)
       }
       artifact {
-        path = "path/to/${project.name}-${project.version}-mac.zip"
+        path = "path/to/{{distributionName}}-{{projectVersion}}-mac.zip"
         platform = 'osx-aarch_64'
       }
     }
@@ -1073,24 +1073,24 @@ The following names will be calculated:
 * artifactUrl
 * artifactChecksumMd5
 * artifactChecksumSha256
-* artifactFile: `${project.name}-${project.version}.zip`
-* artifactFileName: `${project.name}-${project.version}`
+* artifactFile: `{{distributionName}}-{{projectVersion}}.zip`
+* artifactFileName: `{{distributionName}}-{{projectVersion}}`
 * artifactFileExtension: `.zip`
 * artifactFileFormat: `zip`
-* artifactName: `${project.name}`
-* artifactVersion: `${project.version}`
+* artifactName: `{{distributionName}}`
+* artifactVersion: `{{projectVersion}}`
 * artifactSize
 * artifactMain: true
 * distributionUrl
 * distributionSize
 * distributionChecksumMd5
 * distributionChecksumSha256
-* distributionArtifactFile: `${project.name}-${project.version}.zip`
-* distributionArtifactFileName: `${project.name}-${project.version}`
+* distributionArtifactFile: `{{distributionName}}-{{projectVersion}}.zip`
+* distributionArtifactFileName: `{{distributionName}}-{{projectVersion}}`
 * distributionArtifactFileExtension: `.zip`
 * distributionArtifactFileFormat: `zip`
-* distributionArtifactName: `${project.name}`
-* distributionArtifactVersion: `${project.version}`
+* distributionArtifactName: `{{distributionName}}`
+* distributionArtifactVersion: `{{projectVersion}}`
 * distributionArtifactSize
 
 *Platform specific artifact*
@@ -1098,12 +1098,12 @@ The following names will be calculated:
 * artifactOsxAarch64Url
 * artifactOsxAarch64ChecksumMd5
 * artifactOsxAarch64ChecksumSha256
-* artifactOsxAarch64File: `${project.name}-${project.version}.zip`
-* artifactOsxAarch64FileName: `${project.name}-${project.version}`
+* artifactOsxAarch64File: `{{distributionName}}-{{projectVersion}}.zip`
+* artifactOsxAarch64FileName: `{{distributionName}}-{{projectVersion}}`
 * artifactOsxAarch64FileExtension: `.zip`
 * artifactOsxAarch64FileFormat: `zip`
-* artifactOsxAarch64Name: `${project.name}`
-* artifactOsxAarch64Version: `${project.version}`
+* artifactOsxAarch64Name: `{{distributionName}}`
+* artifactOsxAarch64Version: `{{projectVersion}}`
 * artifactOsxAarch64Platform: `osx-aarch_64`
 * artifactOsxAarch64Os: `osx`
 * artifactOsxAarch64Arch: `aarch_64`
@@ -1437,7 +1437,7 @@ The following names are related to xref:reference:packagers/homebrew.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                  | Description
-| brewTapRepoOwner     | owner of the tap repository URL, defaults to `${release.owner}`
+| brewTapRepoOwner     | owner of the tap repository URL, defaults to `#{release.owner}`
 | brewTapRepoName      | name of the tap repository URL, defaults to `homebrew-tap`
 | brewTapName          | short name of the tap repository URL, defaults to `tap`
 | brewTapRepoUrl       | the tap repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
@@ -1558,7 +1558,7 @@ The following names are related to xref:reference:packagers/chocolatey.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                          | Description
-| chocolateyPackageName        | the name of the Chocolatey package. Defaults to `${distribution.name}`
+| chocolateyPackageName        | the name of the Chocolatey package. Defaults to `#{distribution.name}`
 | chocolateyUsername           | the name of the Chocolatey username
 | chocolateyTitle              | the title to use in the spec
 | chocolateyIconUrl            | the icon URL
@@ -2766,7 +2766,7 @@ The following names are related to xref:reference:packagers/macports.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                            | Description
-| macportsPackageName            | the name of the Macports package. Defaults to `${distribution.name}`
+| macportsPackageName            | the name of the Macports package. Defaults to `#{distribution.name}`
 | macportsRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | macportsRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 | macportsRevision               | the port revision number
@@ -3263,7 +3263,7 @@ The following names are related to xref:reference:packagers/scoop.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                       | Description
-| scoopPackageName          | the name of the Scoop package. Defaults to `${distribution.executable}`
+| scoopPackageName          | the name of the Scoop package. Defaults to `#{distribution.executable.name}`
 | scoopBucketRepoUrl        | the bucket repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | scoopBucketRepoCloneUrl   | the bucket repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 | scoopCheckverUrl          | the URL used to check for a release version
@@ -3651,7 +3651,7 @@ The following names are related to xref:reference:packagers/snap.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                  | Description
-| snapPackageName      | the name of the Snap package. Defaults to `${distribution.name}`
+| snapPackageName      | the name of the Snap package. Defaults to `#{distribution.name}`
 | snapRepoUrl          | the snap repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | snapRepoCloneUrl     | the snap repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 | snapBase             | the snap base
@@ -3799,7 +3799,7 @@ The following names are related to xref:reference:packagers/spec.adoc[].
 [%header, cols="<2,<5", width="100%"]
 |===
 | Key                        | Description
-| specPackageName            | the name of the Spec. Defaults to `${distribution.name}`
+| specPackageName            | the name of the Spec. Defaults to `#{distribution.name}`
 | specRepositoryRepoUrl      | the repository URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}]`
 | specRepositoryRepoCloneUrl | the repository clone URL, `pass:[https://{{repoHost}}/{{repoOwner}}/{{repoName}}.git]`
 | specRelease                | the release number
