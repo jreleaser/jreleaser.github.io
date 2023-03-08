@@ -2003,8 +2003,10 @@ This assembler ignores filtering artifacts by platform.
 <div class="sect1">
 <h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_classpath"><a class="anchor" href="#_classpath"></a>Classpath</h3>
 <div class="paragraph">
-<p>Given the following file structure</p>
+<p>Given the following file structure for an application that will be run on the classpath</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2164,7 +2166,7 @@ assemble:
           path = 'target/{{distributionName}}-{{projectVersion}}.jar'
         }
         java {
-          mainClass('com.acme.Main')
+          mainClass = 'com.acme.Main'
         }
       }
     }
@@ -2188,6 +2190,202 @@ assemble:
 │   └── app.bat
 └── lib
     └── app-1.0.0.jar</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_modulepath"><a class="anchor" href="#_modulepath"></a>Modulepath</h3>
+<div class="paragraph">
+<p>Given the following file structure for an application that will be run on the modulepath</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── app-1.0.0.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And this assembly configuration</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset3_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset3_toml"></a>TOML</p>
+</li>
+<li>
+<p><a id="tabset3_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset3_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset3_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset3_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
+  version: 1.0.0
+
+assemble:
+  javaArchive:
+    app:
+      active: ALWAYS
+      fileSets:
+        - input: '.'
+          includes:
+            - 'LICENSE'
+            - 'README'
+      mainJar:
+        path: target/{{distributionName}}-{{projectVersion}}.jar
+      java:
+        mainClass: com.acme.Main
+        mainModule: com.acme</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_toml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[project]
+  version = "1.0.0"
+
+[assemble.javaArchive.app]
+  active = "ALWAYS"
+  [[assemble.archive.app.fileSets]]
+    input = "."
+    includes = ["LICENSE", "README"]
+  [[assemble.archive.app.mainJar]]
+    path = "target/{{distributionName}}-{{projectVersion}}.jar"
+  [[assemble.archive.app.java]]
+    mainClass = "com.acme.Main"
+    mainModule = "com.acme"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "project": {
+    "version": "1.0.0"
+  },
+  "assemble": {
+    "javaArchive": {
+      "app": {
+        "active": "ALWAYS",
+        "fileSets": [
+          {
+            "input": ".",
+            "includes": ["LICENSE", "README"]
+          }
+        ],
+        "mainJar": [
+          {
+            "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+          }
+        ],
+        "java": {
+          "mainClass": "com.acme.Main",
+          "mainModule": "com.acme"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;project&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+  &lt;/project&gt;
+  &lt;assemble&gt;
+    &lt;javaArchive&gt;
+      &lt;app&gt;
+        &lt;active&gt;ALWAYS&lt;/active&gt;
+        &lt;fileSets&gt;
+          &lt;fileSet&gt;
+            &lt;input&gt;.&lt;/input&gt;
+            &lt;includes&gt;
+              &lt;include&gt;LICENSE&lt;/include&gt;
+              &lt;include&gt;README&lt;/include&gt;
+            &lt;/includes&gt;
+          &lt;/fileSet&gt;
+        &lt;/fileSets&gt;
+        &lt;mainJar&gt;
+          &lt;path&gt;target/{{distributionName}}-{{projectVersion}}.jar&lt;/path&gt;
+        &lt;/mainJar&gt;
+        &lt;java&gt;
+          &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
+          &lt;mainModule&gt;com.acme&lt;/mainModule&gt;
+        &lt;/java&gt;
+      &lt;/app&gt;
+    &lt;/javaArchive&gt;
+  &lt;/assemble&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset3_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  project {
+    version = '1.0.0'
+  }
+  assemble {
+    javaArchive {
+      app {
+        active = 'ALWAYS'
+        fileSet {
+          input = '.'
+          includes = ['LICENSE', 'README']
+        }
+        mainJar {
+          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
+        }
+        java {
+          mainClass = 'com.acme.Main'
+          mainModule = 'com.acme'
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Results in an assembled Zip archive named <code>app-1.0.0.zip</code> with the following entries</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">.
+├── LICENSE
+├── README
+├── bin
+│   ├── app
+│   └── app.bat
+└── lib
+    └── app-1.0.0.jar</code></pre>
+</div>
 </div>
 </div>
 </div>
