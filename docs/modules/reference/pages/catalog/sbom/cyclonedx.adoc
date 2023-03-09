@@ -1,10 +1,10 @@
-= Syft
-:cataloger_id:   syft
-:cataloger_name: Syft
-:cataloger_sys_key: syft
-:cataloger_env_key: SYFT
+= CycloneDX
+:cataloger_id:   cyclonedx
+:cataloger_name: Cyclonedx
+:cataloger_sys_key: cyclonedx
+:cataloger_env_key: CYCLONEDX
 
-Generates SBOMs using link:https://github.com/anchore/syft[Syft]. Multiple formats may be used at the same time.
+Generates SBOMs using link:https://github.com/CycloneDX/cyclonedx-cli[CycloneDX]. Multiple formats may be used at the same time.
 
 Catalogs may be xref:checksum.adoc[checksumed] and xref:signing.adoc[signed] when packed.
 
@@ -29,14 +29,14 @@ include::partial$catalog/sbom/yaml/common-head.adoc[]
         # Version of tool to use.
         # If unspecified, will use {syft-version}.
         # icon:dot-circle[]
-        version: {syft-version}
+        version: {cyclonedx-version}
 
         # Target SBOM format(s).
-        # If unspecified, [`SPDX_JSON`].
+        # If unspecified, [`JSON`].
         # icon:dot-circle[]
         formats:
-          - SPDX_JSON
-          - CYCLONEDX_JSON
+          - JSON
+          - XML
 ----
 --
 TOML::
@@ -50,12 +50,12 @@ include::partial$catalog/sbom/toml/common-head.adoc[]
   # Version of tool to use.
   # If unspecified, will use {syft-version}.
   # icon:dot-circle[]
-  version = "{syft-version}"
+  version = "{cyclonedx-version}"
 
   # Target SBOM format(s).
-  # If unspecified, [`SPDX_JSON`].
+  # If unspecified, [`JSON`].
   # icon:dot-circle[]
-  formats = ["SPDX_JSON", "CYCLONEDX_JSON"]
+  formats = ["JSON", "XML"]
 ----
 --
 JSON::
@@ -69,14 +69,14 @@ include::partial$catalog/sbom/json/common-head.adoc[]
           // Version of tool to use.
           // If unspecified, will use {syft-version}.
           // icon:dot-circle[]
-          "version": "{syft-version}",
+          "version": "{cyclonedx-version}",
 
           // Target SBOM format(s).
-          // If unspecified, [`SPDX_JSON`].
+          // If unspecified, [`JSON`].
           // icon:dot-circle[]
           "formats": [
-            "SPDX_JSON",
-            "CYCLONEDX_JSON"
+            "JSON",
+            "XML"
           ]
 include::partial$catalog/sbom/json/common-footer.adoc[]
 ----
@@ -94,16 +94,16 @@ include::partial$catalog/sbom/maven/common-head.adoc[]
             If unspecified, will use {syft-version}.
             icon:dot-circle[]
           -->
-          <version>{syft-version}</version>
+          <version>{cyclonedx-version}</version>
 
           <!--
             Target SBOM format(s).
-            If unspecified, [`SPDX_JSON`].
+            If unspecified, [`JSON`].
             icon:dot-circle[]
           -->
           <formats>
-            <format>SPDX_JSON</format>
-            <format>CYCLONEDX_JSON</format>
+            <format>JSON</format>
+            <format>XML</format>
           </formats>
 include::partial$catalog/sbom/maven/common-footer.adoc[]
 ----
@@ -119,13 +119,13 @@ include::partial$catalog/sbom/gradle/common-head.adoc[]
           // Version of tool to use.
           // If unspecified, will use {syft-version}.
           // icon:dot-circle[]
-          version = '{syft-version}'
+          version = '{cyclonedx-version}'
 
           // Target SBOM format(s).
-          // If unspecified, [`SPDX_JSON`].
+          // If unspecified, [`JSON`].
           // icon:dot-circle[]
-          format('SPDX_JSON')
-          format('CYCLONEDX_JSON')
+          format('JSON')
+          format('XML')
 include::partial$catalog/sbom/gradle/common-footer.adoc[]
 ----
 --
@@ -143,13 +143,9 @@ include::partial$catalog/sbom/envvars.adoc[]
 
 The {cataloger_name} cataloger supports the following formats:
 
- - `SYFT_JSON`
- - `CYCLONEDX_XML`
- - `CYCLONEDX_JSON`
- - `GITHUB_JSON`
- - `SPDX_JSON`
- - `TABLE`
- - `TEXT`
+ - `JSON`
+ - `XML`
+ - `PROTOBUF`
 
 == Skip Cataloging
 
@@ -157,4 +153,4 @@ Distributions and artifacts may define extra properties that may stop them from 
 conform to the following rules:
 
 * `skipSbom`: skipped from all catalogers.
-* `skipSbomSyft`: skipped from this cataloger.
+* `skipSbomCyclonedx`: skipped from this cataloger.
