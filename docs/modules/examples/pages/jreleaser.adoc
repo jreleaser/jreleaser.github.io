@@ -17,8 +17,6 @@ environment:
     graalFilePrefix: 'graalvm-ce-java17-22.2.0'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
-    skipJpackageResolver: true
-    skipNativeImageResolver: true
 
 # General information about this project
 project:
@@ -286,13 +284,6 @@ assemble:
 distributions:
   # Distribution 1 is of type JAVA_BINARY
   jreleaser:
-    chocolatey:
-      active: ALWAYS
-      remoteBuild: true
-      title: JReleaser
-      iconUrl: 'pass:[https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png]'
-      bucket:
-        active: RELEASE
     flatpak:
       active: ALWAYS
       componentId: org.jreleaser.cli
@@ -312,6 +303,14 @@ distributions:
         owner: flathub
         name: org.jreleaser.cli
         branch: master
+        branchPush: '{{projectName}}-{{tagName}}'
+    chocolatey:
+      active: ALWAYS
+      remoteBuild: true
+      title: JReleaser
+      iconUrl: 'https://rawcdn.githack.com/jreleaser/jreleaser/0934fa1fa3f0bd09c0c8c39fbdeb5df2ce507457/src/media/icon_128x128.png'
+      bucket:
+        active: RELEASE
     jbang:
       active: ALWAYS
     macports:
