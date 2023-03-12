@@ -958,10 +958,15 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       tagName: '{{distributionName}} {{tagName}}'
 
-      # The target branch to use.
+      # The target branch pull from.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
+
+      # The target branch push to.
+      # Defaults to the branch pointed by `#{branch}`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      branchPush: '{{projectName}}-{{tagName}}'
 
       # Username used for authoring commits.
       # Must have write access to the catalog.
@@ -1058,10 +1063,15 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   catalog.tagName = "{{distributionName}} {{tagName}}"
 
-  # The target branch to use.
+  # The target branch pull from.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   catalog.branch = "HEAD"
+
+  # The target branch push to.
+  # Defaults to the branch pointed by `#{branch}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+  catalog.branchPush = "{{projectName}}-{{tagName}}"
 
   # Username used for authoring commits.
   # Must have write access to the catalog.
@@ -1168,10 +1178,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "tagName": "{{distributionName}} {{tagName}}",
 
-        // The target branch to use.
+        // The target branch pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
+
+        // The target branch push to.
+        // Defaults to the branch pointed by `#{branch}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "branchPush": "{{projectName}}-{{tagName}}",
 
         // Username used for authoring commits.
         // Must have write access to the catalog.
@@ -1318,11 +1333,18 @@ packagers:
         &lt;tagName&gt;{{distributionName}} {{tagName}}&lt;/tagName&gt;
 
         &lt;!--
-          The target branch to use.
+          The target branch pull from.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
+          The target branch push to.
+          Defaults to the branch pointed by `#{branch}`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;branchPush&gt;{{projectName}}-{{tagName}}&lt;/branchPush&gt;
 
         &lt;!--
           Username used for authoring commits.
@@ -1437,10 +1459,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         tagName = '{{distributionName}} {{tagName}}'
 
-        // The target branch to use.
+        // The target branch pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
+
+        // The target branch push to.
+        // Defaults to the branch pointed by `#{branch}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        branchPush = '{{projectName}}-{{tagName}}'
 
         // Username used for authoring commits.
         // Must have write access to the catalog.
@@ -1662,6 +1689,29 @@ property as shown in the table. The system property takes precedence over the en
   JRELEASER_GITLAB_BRANCH<br>
   JRELEASER_GITEA_BRANCH<br>
   JRELEASER_CODEBERG_BRANCH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>catalog.branchPush</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.jbang.catalog.branch.push<br>
+  jreleaser.jbang.github.branch.push<br>
+  jreleaser.jbang.gitlab.branch.push<br>
+  jreleaser.jbang.gitea.branch.push<br>
+  jreleaser.jbang.codeberg.branch.push<br>
+  jreleaser.github.branch.push<br>
+  jreleaser.gitlab.branch.push<br>
+  jreleaser.gitea.branch.push<br>
+  jreleaser.codeberg.branch.push</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_JBANG_CATALOG_BRANCH_PUSH<br>
+  JRELEASER_JBANG_GITHUB_BRANCH_PUSH<br>
+  JRELEASER_JBANG_GITLAB_BRANCH_PUSH<br>
+  JRELEASER_JBANG_GITEA_BRANCH_PUSH<br>
+  JRELEASER_JBANG_CODEBERG_BRANCH_PUSH<br>
+  JRELEASER_GITHUB_BRANCH_PUSH<br>
+  JRELEASER_GITLAB_BRANCH_PUSH<br>
+  JRELEASER_GITEA_BRANCH_PUSH<br>
+  JRELEASER_CODEBERG_BRANCH_PUSH</p></td>
 </tr>
 </tbody>
 </table>

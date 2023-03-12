@@ -994,10 +994,15 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       tagName: '{{distributionName}} {{tagName}}'
 
-      # The target branch to use.
+      # The target branch pull from.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
+
+      # The target branch push to.
+      # Defaults to the branch pointed by `#{branch}`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      branchPush: '{{projectName}}-{{tagName}}'
 
       # Username used for authoring commits.
       # Must have write access to the tap.
@@ -1176,10 +1181,15 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   tap.tagName = "{{distributionName}} {{tagName}}"
 
-  # The target branch to use.
+  # The target branch pull from.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   tap.branch = "HEAD"
+
+  # The target branch push to.
+  # Defaults to the branch pointed by `#{branch}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
+  tap.branchPush = "{{projectName}}-{{tagName}}"
 
   # Username used for authoring commits.
   # Must have write access to the tap.
@@ -1361,10 +1371,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "tagName": "{{distributionName}} {{tagName}}",
 
-        // The target branch to use.
+        // The target branch pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
+
+        // The target branch push to.
+        // Defaults to the branch pointed by `#{branch}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "branchPush": "{{projectName}}-{{tagName}}",
 
         // Username used for authoring commits.
         // Must have write access to the tap.
@@ -1600,11 +1615,18 @@ packagers:
         &lt;tagName&gt;{{distributionName}} {{tagName}}&lt;/tagName&gt;
 
         &lt;!--
-          The target branch to use.
+          The target branch pull from.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
+
+        &lt;!--
+          The target branch push to.
+          Defaults to the branch pointed by `#{branch}`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;branchPush&gt;{{projectName}}-{{tagName}}&lt;/branchPush&gt;
 
         &lt;!--
           Username used for authoring commits.
@@ -1848,10 +1870,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         tagName = '{{distributionName}} {{tagName}}'
 
-        // The target branch to use.
+        // The target branch pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
+
+        // The target branch push to.
+        // Defaults to the branch pointed by `#{branch}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        branchPush = '{{projectName}}-{{tagName}}'
 
         // Username used for authoring commits.
         // Must have write access to the repoTap.
@@ -2111,6 +2138,29 @@ property as shown in the table. The system property takes precedence over the en
   JRELEASER_GITLAB_BRANCH<br>
   JRELEASER_GITEA_BRANCH<br>
   JRELEASER_CODEBERG_BRANCH</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>tap.branchPush</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.distributions.${name}.brew.tap.branch.push<br>
+  jreleaser.homebrew.github.branch.push<br>
+  jreleaser.homebrew.gitlab.branch.push<br>
+  jreleaser.homebrew.gitea.branch.push<br>
+  jreleaser.homebrew.codeberg.branch.push<br>
+  jreleaser.github.branch.push<br>
+  jreleaser.gitlab.branch.push<br>
+  jreleaser.gitea.branch.push<br>
+  jreleaser.codeberg.branch.push</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DISTRIBUTIONS_${name}_BREW_TAP_BRANCH_PUSH<br>
+  JRELEASER_HOMEBREW_GITHUB_BRANCH_PUSH<br>
+  JRELEASER_HOMEBREW_GITLAB_BRANCH_PUSH<br>
+  JRELEASER_HOMEBREW_GITEA_BRANCH_PUSH<br>
+  JRELEASER_HOMEBREW_CODEBERG_BRANCH_PUSH<br>
+  JRELEASER_GITHUB_BRANCH_PUSH<br>
+  JRELEASER_GITLAB_BRANCH_PUSH<br>
+  JRELEASER_GITEA_BRANCH_PUSH<br>
+  JRELEASER_CODEBERG_BRANCH_PUSH</p></td>
 </tr>
 </tbody>
 </table>
