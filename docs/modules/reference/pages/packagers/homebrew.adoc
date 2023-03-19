@@ -69,7 +69,7 @@ include::partial$packagers/yaml/tap.adoc[]
     formulaName: App
 
     # Create a formula that supports OSX & Linux.
-    # Applicable to distributions of type [`JLINK`, `BINARY`, `FLAT_BIINARY`].
+    # Applicable to distributions of type [`JLINK`, `BINARY`, `FLAT_BINARY`].
     # Default is `false`.
     # icon:dot-circle[]
     multiPlatform: false
@@ -82,8 +82,7 @@ include::partial$packagers/yaml/tap.adoc[]
       - 'strategy :sparkle'
 
     # A map of Homebrew dependencies.
-    # The key `openjdk@#{java.version}` will be added automatically if not defined.
-    # This can be skipped by adding `skipJava` as an extra property on the distribution.
+    # A dependency to `openjdk` is automatically added to applicable Java distributions.
     # icon:dot-circle[]
     dependencies:
       # key in symbol format
@@ -184,8 +183,7 @@ include::partial$packagers/toml/tap.adoc[]
      "strategy :sparkle'"]
 
   # A map of Homebrew dependencies.
-  # The key `openjdk@#{java.version}` will be added automatically if not defined.
-  # This can be skipped by adding `skipJava` as an extra property on the distribution.
+  # A dependency to `openjdk` is automatically added to applicable Java distributions.
   # icon:dot-circle[]
   # key in symbol format
   # mapped as `depends_on :key1 => "value1"`
@@ -280,8 +278,7 @@ include::partial$packagers/json/tap.adoc[]
       ],
 
       // A map of Homebrew dependencies.
-      // The key `openjdk@#{java.version}` will be added automatically if not defined.
-      // This can be skipped by adding `skipJava` as an extra property on the distribution.
+      // A dependency to `openjdk` is automatically added to applicable Java distributions.
       // icon:dot-circle[]
       "dependencies": {
         // key in symbol format
@@ -397,8 +394,7 @@ include::partial$packagers/maven/tap.adoc[]
 
       <!--
         A map of Homebrew dependencies.
-        The key `openjdk@#{java.version}` will be added automatically if not defined.
-        This can be skipped by adding `skipJava` as an extra property on the distribution.
+        A dependency to `openjdk` is automatically added to applicable Java distributions.
         icon:dot-circle[]
       -->
       <dependencies>
@@ -542,8 +538,7 @@ include::partial$packagers/gradle/tap.adoc[]
         'strategy :sparkle']
 
       // A map of Homebrew dependencies.
-      // The key `openjdk@#{java.version}` will be added automatically if not defined.
-      // This can be skipped by adding `skipJava` as an extra property on the distribution.
+      // A dependency to `openjdk` is automatically added to applicable Java distributions.
       // icon:dot-circle[]
       dependencies {
         // key in symbol format
@@ -686,6 +681,12 @@ homebrew repositories.
 == Skip Artifacts
 
 You may mark artifacts to be skipped for this packager by adding an extra property name `skipBrew` set to `true`.
+
+== JDK dependency
+
+For Java Binary and Single JAR distributions, a dependency to OpenJDK is added automatically. This can be disabled entirely by adding `skipJava` as an extra property on the distribution.
+
+NOTE: As of JReleaser 1.x, the default is to add a dependency on the specific major JDK version known for the distribution (such as 8 or 17). Later major versions of JReleaser are expected to change this and default to adding a dependency to openjdk without a specific version, as is the usual pattern for link:https://docs.brew.sh/Homebrew-and-Java[Java software on Homebrew]. You can explicitly control this by setting the `useVersionedJava` extra property on the distribution.
 
 == Casks
 
