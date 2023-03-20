@@ -386,3 +386,20 @@ The following template names are also available:
 [horizontal]
 {{event.type}}:: One of [`before`, `success`, `failure`].
 {{event.name}}:: One of the previously mentioned steps.
+
+== Output
+
+Command hooks have the option to provide key/value pairs as input for other steps in the current workflow. Simply
+use `JRELEASER_OUTPUT:` as prefix in the command's output followed by `key=value`. For example, the following configuration
+adds a key named `foo` with a value `bar` before the `changelog` step is invoked:
+
+[source,yaml]
+----
+hooks:
+  command:
+    before:
+      - filter:
+          includes: [changelog]
+        cmd: 'echo JRELEASER_OUTPUT:foo=bar'
+----
+
