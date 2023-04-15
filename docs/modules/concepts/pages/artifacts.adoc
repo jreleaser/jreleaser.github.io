@@ -3,6 +3,7 @@
 Artifacts are at the heart of a release; they define files that may be:
 
 * added to a Git xref:reference:release/index.adoc[release].
+* added to xref:reference:assemble/index.adoc[assemblers].
 * prepared, packaged, and published using a xref:reference:packagers/index.adoc[packager].
 
 Artifacts refer to a specific file as they have a single `path` property. Globs on the other hand refer to a collection
@@ -12,21 +13,24 @@ of files. Files resolved by Artifact and Glob types do not preserve directory st
 
 Artifacts have the following properties:
 
+* `active`. Enable or disable this file. Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`]. Defaults to `ALWAYS`.
+This property is *optional*.
+
 * `path`. Defines the location of the file. Path may be relative or absolute. We recommend defining paths
 that are relative to the `basedir` as much as possible, as that simplifies the setup on
 xref:continuous-integration:index.adoc[CI]. Its value may use xref:reference:name-templates.adoc[].
 This property is *required*.
 
-* `transform`. Sometimes the source path does not have the exact name you'd looking for. You may apply a
+* `transform`. Sometimes the source path does not have the exact name you're looking for. You may apply a
 name transformation using this property. Its value may use xref:reference:name-templates.adoc[].
 This property is *optional*.
+
+* `extraProperties`. Defines key/value pairs of metadata that's related to the artifact.
 
 * `platform`. Defines the OS specific platform for this file. Some xref:reference:assemble/index.adoc[assemblers]
 and xref:reference:packagers/index.adoc[packagers] require that artifacts define a platform.
 
 include::reference:partial$platform.adoc[]
-
-* `extraProperties`. Defines key/value pairs of metadata that's related to the artifact.
 
 === Optional
 
@@ -59,23 +63,29 @@ $ jreleaser release -PversionOpt=true
 
 Globs have the following properties:
 
-* `pattern`. Defines pattern used to match artifacts.
-This property is *required*.
+* `active`. Enable or disable this file. Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`]. Defaults to `ALWAYS`.
+This property is *optional*.
 
-* `platform`. Defines the OS specific platform for this file. Some xref:reference:assemble/index.adoc[assemblers]
-and xref:reference:packagers/index.adoc[packagers] require that globs define a platform.
+* `pattern`. Defines pattern used to match artifacts. Accepts glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
+If no prefix is specified then `glob:` will be used.
+This property is *required*.
 
 * `directory`. Defines the starting point when searching for files. Defaults to the context's basedir.
 This property is *optional*.
 
 * `extraProperties`. Defines key/value pairs of metadata that's related to the resolved artifacts.
 
-The `pattern` field accepts glob or regex patterns by using `glob:` and `regex:` prefixes accordingly.
-If no prefix is specified then `glob:` will be used.
+* `platform`. Defines the OS specific platform for all matching files. Some xref:reference:assemble/index.adoc[assemblers]
+and xref:reference:packagers/index.adoc[packagers] require that globs define a platform.
+
+include::reference:partial$platform.adoc[]
 
 == FileSets
 
 FileSets have the following properties:
+
+* `active`. Enable or disable this file. Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`]. Defaults to `ALWAYS`.
+This property is *optional*.
 
 * `input`. Defines the input path to search for files. 
   Its value may use xref:reference:name-templates.adoc[].
@@ -95,6 +105,11 @@ FileSets have the following properties:
   Values may use xref:reference:name-templates.adoc[].
 
 * `extraProperties`. Defines key/value pairs of metadata that's related to the resolved paths.
+
+* `platform`. Defines the OS specific platform for all matching files. Some xref:reference:assemble/index.adoc[assemblers]
+and xref:reference:packagers/index.adoc[packagers] require that fileSets define a platform.
+
+include::reference:partial$platform.adoc[]
 
 == Examples
 
