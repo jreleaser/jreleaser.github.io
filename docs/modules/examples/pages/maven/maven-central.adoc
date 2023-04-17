@@ -1,6 +1,7 @@
 = Publishing to Maven Central
 :deployer_url:     pass:[https://s01.oss.sonatype.org/service/local]
 :deployer_old_url: pass:[https://oss.sonatype.org/service/local]
+:deployer_snapshot_url: pass:[https://s01.oss.sonatype.org/content/repositories/snapshots/]
 
 Maven Central is the defacto artifact repository for JVM based projects. Anyone can publish artifacts to it as long as
 they follow the rules. Follow this link:https://central.sonatype.org/publish/publish-guide/[guide] to register an account.
@@ -50,6 +51,7 @@ deploy:
       maven-central:
         active: ALWAYS
         url: {deployer_url}
+        snapshotUrl: {deployer_snapshot_url}
         closeRepository: true
         releaseRepository: true
         stagingRepositories:
@@ -69,6 +71,7 @@ TOML::
 [deploy.maven.nexus2.maven-central]
   active = "ALWAYS"
   url = "{deployer_url}"
+  snapshotUrl = "{deployer_snapshot_url}"
   closeRepository = true
   releaseRepository = true
   stagingRepositories = ["target/staging-deploy"]
@@ -92,6 +95,7 @@ JSON::
           "maven-central": {
             "active": "ALWAYS",
             "url": "{deployer_url}",
+            "snapshotUrl": "{deployer_snapshot_url}",
             "closeRepository": true,
             "releaseRepository": true,
             "stagingRepositories": [
@@ -122,6 +126,7 @@ Maven::
         <maven-central>
           <active>ALWAYS</active>
           <url>{deployer_url}</url>
+          <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
           <closeRepository>true</closeRepository>
           <releaseRepository>true</releaseRepository>
           <stagingRepositories>target/staging-deploy</stagingRepositories>
@@ -149,6 +154,7 @@ jreleaser {
         maven-central {
           active = 'ALWAYS'
           url = '{deployer_url}'
+          snapshotUrl = '{deployer_snapshot_url}'
           closeRepository = true
           releaseRepository = true
           stagingRepository('target/staging-deploy')
@@ -264,6 +270,7 @@ The following `pom.xml` file shows the minimum required configuration
                                   <maven-central>
                                       <active>ALWAYS</active>
                                       <url>{deployer_url}</url>
+                                      <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
                                       <closeRepository>true</closeRepository>
                                       <releaseRepository>true</releaseRepository>
                                       <stagingRepositories>target/staging-deploy</stagingRepositories>
@@ -467,7 +474,8 @@ jreleaser {
             nexus2 {
                 'maven-central' {
                     active = 'ALWAYS'
-                    url = 'https://s01.oss.sonatype.org/service/local'
+                    url = '{deployer_url}'
+                    snapshotUrl = '{deployer_snapshot_url}'
                     closeRepository = true
                     releaseRepository = true
                     stagingRepository('build/staging-deploy')
