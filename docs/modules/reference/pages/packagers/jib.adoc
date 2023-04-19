@@ -1,0 +1,1063 @@
+= Jib
+:tool_id:       jib
+:tool_name:     Jib
+:tool_tap:      repository
+:tool_tap_name: app-jib
+:tool_manifest: build.yml
+:docker:        true
+:packager_sys_key: jib
+:packager_env_key: JIB
+:tap_sys_key:      repository
+:tap_env_key:      REPOSITORY
+:tap_basename_sys: jib
+:tap_basename_env: JIB
+
+Creates container images with link:https://github.com/GoogleContainerTools/jib[jib].
+
+The following artifact extensions are supported by this packager:
+
+* `.jar`
+* `.tgz`
+* `.txz`
+* `.tar.gz`
+* `.tar.xz`
+* `.tar`
+* `.zip`
+
+== Distribution Support
+
+[%header, cols="<,^"]
+|===
+| Distribution                                      | Supported
+| xref:concepts:distributions/binary.adoc[]         | {icon_req_y}
+| xref:concepts:distributions/flat-binary.adoc[]    | {icon_req_y}
+| xref:concepts:distributions/java-binary.adoc[]    | {icon_req_y}
+| xref:concepts:distributions/jlink.adoc[]          | {icon_req_y}
+| xref:concepts:distributions/native-image.adoc[]   | {icon_req_y}
+| xref:concepts:distributions/native-package.adoc[] | {icon_req_n}
+| xref:concepts:distributions/single-jar.adoc[]     | {icon_req_y}
+|===
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/yaml/common-head.adoc[]
+
+include::partial$packagers/yaml/template-directory.adoc[]
+
+include::partial$packagers/yaml/commitauthor.adoc[]
+
+include::partial$packagers/yaml/tap.adoc[]
+
+    # The base Jib image to use.
+    # icon:dot-circle[] icon:file-alt[]
+    baseImage: "alpine:latest"
+
+    # Defines the tool version to use.
+    # icon:dot-circle[]
+    version: {jib-version}
+
+    # Sets the creation time of the container only.
+    # Can be: millis since epoch (ex: 1000) or an ISO 8601 creation time (ex: 2020-06-08T14:54:36+00:00).
+    # icon:dot-circle[]
+    creationTime: 2000
+
+    # Image format.
+    # Valid values are [`DOCKER`, `OCI`].
+    # icon:dot-circle[]
+    format: DOCKER
+
+    # Image working directory
+    # Defaults to `/workspace`.
+    # icon:dot-circle[]
+    workingDirectory: /workspace
+
+    # The user to run the container (does not affect file permissions)
+    # icon:dot-circle[]
+    user: duke
+
+    # A list of image names.
+    # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+    # will be created.
+    # icon:dot-circle[] icon:file-alt[]
+    imageNames:
+      - "{{repoOwner}}/{{distributionName}}:{{tagName}}"
+      - "duke/app:latest"
+
+    # A map of environment variables.
+    # icon:dot-circle[]
+    environment:
+      FOO: bar
+
+    # A map of OCI labels.
+    # icon:dot-circle[] icon:file-alt[]
+    labels:
+      foo: bar
+
+    # Set of volume mount points.
+    # icon:dot-circle[]
+    volumes:
+      - '/volume1'
+
+    # Set of exposed ports metadata (port-number/protocol).
+    # icon:dot-circle[]
+    exposedPorts:
+      - '123/udp'
+
+    # A list of jib registries where images will be published.
+    # icon:dot-circle[]
+    registries:
+
+        # The name of the registry. Must be unique.
+        # icon:exclamation-triangle[]
+      - name: myRegistry
+
+        # The address of the jib registry.
+        # icon:exclamation-triangle[]
+        server: ghcr.io
+
+        # Username for communicating with both target and base image registries.
+        # Defaults to the same username as the release repository.
+        # icon:dot-circle[] icon:eye-slash[]
+        username: duke
+
+        # Username for communicating with target image registry.
+        # icon:dot-circle[] icon:eye-slash[]
+        toUsername: duke
+
+        # Username for communicating with base image registry.
+        # icon:dot-circle[] icon:eye-slash[]
+        fromUsername: duke
+
+        # Password for communicating with both target and base image registries.
+        # icon:dot-circle[] icon:eye-slash[]
+        password: __USE_ENVIRONMENT_VARIABLE__
+
+        # Password for communicating with target registry.
+        # icon:dot-circle[] icon:eye-slash[]
+        toPassword: __USE_ENVIRONMENT_VARIABLE__
+
+        # Password for communicating with base image registry.
+        # icon:dot-circle[] icon:eye-slash[]
+        fromPassword: __USE_ENVIRONMENT_VARIABLE__
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/toml/common-head.adoc[]
+
+include::partial$packagers/toml/template-directory.adoc[]
+
+include::partial$packagers/toml/commitauthor.adoc[]
+
+include::partial$packagers/toml/tap.adoc[]
+
+  # The base Jib image to use.
+  # icon:dot-circle[] icon:file-alt[]
+  baseImage = "alpine:latest"
+
+  # Defines the tool version to use.
+  # icon:dot-circle[]
+  version = "{jib-version}"
+
+  # Sets the creation time of the container only.
+  # Can be: millis since epoch (ex: 1000) or an ISO 8601 creation time (ex: 2020-06-08T14:54:36+00:00).
+  # icon:dot-circle[]
+  creationTime = "2000"
+
+  # Image format.
+  # Valid values are [`DOCKER`, `OCI`].
+  # icon:dot-circle[]
+  format = "DOCKER"
+
+  # Image working directory
+  # Defaults to `/workspace`.
+  # icon:dot-circle[]
+  workingDirectory = "/workspace"
+
+  # The user to run the container (does not affect file permissions)
+  # icon:dot-circle[]
+  user = "duke"
+
+  # A list of image names.
+  # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+  # will be created.
+  # icon:dot-circle[] icon:file-alt[]
+  imageNames = [
+    "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+    "duke/app:latest"]
+
+  # A map of environment variables.
+  # icon:dot-circle[]
+  environment.FOO = "bar"
+
+  # A map of OCI labels.
+  # icon:dot-circle[] icon:file-alt[]
+  labels.foo = "bar"
+
+  # Set of volume mount points.
+  # icon:dot-circle[]
+  volumes = ["/volume1"]
+
+  # Set of exposed ports metadata (port-number/protocol).
+  # icon:dot-circle[]
+  exposedPorts = ["123/udp"]
+
+  # A list of jib registries where images will be published.
+  # icon:dot-circle[]
+  pass:[[[packagers.jib.registries]]]
+    # The name of the registry. Must be unique.
+    # icon:exclamation-triangle[]
+    name = "myRegistry"
+
+    # The address of the jib registry.
+    # icon:exclamation-triangle[]
+    server = "ghcr.io"
+
+    # Username for communicating with both target and base image registries.
+    # Defaults to the same username as the release repository.
+    # icon:dot-circle[] icon:eye-slash[]
+    username = "duke"
+
+    # Username for communicating with target image registry.
+    # icon:dot-circle[] icon:eye-slash[]
+    toUsername = "duke"
+
+    # Username for communicating with base image registry.
+    # icon:dot-circle[] icon:eye-slash[]
+    fromUsername = "duke"
+
+    # Password for communicating with both target and base image registries.
+    # icon:dot-circle[] icon:eye-slash[]
+    password = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Password for communicating with target image registry.
+    # icon:dot-circle[] icon:eye-slash[]
+    toPassword = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Password for communicating with base image registry.
+    # icon:dot-circle[] icon:eye-slash[]
+    fromBassword = "__USE_ENVIRONMENT_VARIABLE__"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/json/common-head.adoc[]
+
+include::partial$packagers/json/template-directory.adoc[]
+
+include::partial$packagers/json/commitauthor.adoc[]
+
+include::partial$packagers/json/tap.adoc[]
+
+      // The base Jib image to use.
+      // icon:dot-circle[] icon:file-alt[]
+      "baseImage": "alpine:latest",
+
+      // Defines the tool version to use.
+      // icon:dot-circle[]
+      "version": "{jib-version}",
+
+      // Sets the creation time of the container only.
+      // Can be: millis since epoch (ex: 1000) or an ISO 8601 creation time (ex: 2020-06-08T14:54:36+00:00).
+      // icon:dot-circle[]
+      "creationTime": "2000",
+
+      // Image format.
+      // Valid values are [`DOCKER`, `OCI`].
+      // icon:dot-circle[]
+      "format": "DOCKER",
+
+      // Image working directory
+      // Defaults to `/workspace`.
+      // icon:dot-circle[]
+      "workingDirectory": "/workspace",
+
+      // The user to run the container (does not affect file permissions)
+      // icon:dot-circle[]
+      "user": "duke",
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // icon:dot-circle[] icon:file-alt[]
+      "imageNames": [
+        "{{repoOwner}}/{{distributionName}}:{{tagName}}",
+        "duke/app:latest"
+      ],
+
+      // A map of environment variables.
+      // icon:dot-circle[]
+      "environment": {
+        "FOO": "bar"
+      }
+
+      // A map of OCI labels.
+      // icon:dot-circle[] icon:file-alt[]
+      "labels": {
+        "foo": "bar"
+      },
+
+      // Set of volume mount points.
+      // icon:dot-circle[]
+      "volumes": [
+        "/volume1"
+      ],
+
+      // Set of exposed ports metadata (port-number/protocol).
+      // icon:dot-circle[]
+      "exposedPorts": [
+        "123/udp"
+      ]
+
+      // A list of jib registries where images will be published.
+      // icon:dot-circle[]
+      "registries": [
+
+        {
+          // The name of the registry. Must be unique.
+          // icon:exclamation-triangle[]
+          "name": "myRegistry",
+
+          // The address of the jib registry.
+          // icon:exclamation-triangle[]
+          "server": "ghcr.io",
+
+          // Username for communicating with both target and base image registries.
+          // Defaults to the same username as the release repository.
+          // icon:dot-circle[] icon:eye-slash[]
+          "username": "duke",
+
+          // Username for communicating with target image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          "toUsername": "duke",
+
+          // Username for communicating with both target and base image registries.
+          // icon:dot-circle[] icon:eye-slash[]
+          "fromUsername": "duke",
+
+          // Password for communicating with base image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          "password": "__USE_ENVIRONMENT_VARIABLE__",
+
+          // Password for communicating with target image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          "toPassword": "__USE_ENVIRONMENT_VARIABLE__",
+
+          // Password for communicating with base image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          "fromPassword": "__USE_ENVIRONMENT_VARIABLE__"
+        }
+      ]
+include::partial$packagers/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$packagers/maven/common-head.adoc[]
+
+include::partial$packagers/maven/template-directory.adoc[]
+
+include::partial$packagers/maven/commitauthor.adoc[]
+
+include::partial$packagers/maven/tap.adoc[]
+
+      <!--
+        The base Jib image to use.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <baseImage>alpine:latest</baseImage>
+
+      <!--
+        Defines the tool version to use.
+        icon:dot-circle[]
+      -->
+      <version>{jib-version}</version>
+
+      <!--
+        Sets the creation time of the container only.
+        Can be: millis since epoch (ex: 1000) or an ISO 8601 creation time (ex: 2020-06-08T14:54:36+00:00).
+        icon:dot-circle[]
+      -->
+      <creationTime>2000</creationTime>
+
+      <!--
+        Image format.
+        Valid values are [`DOCKER`, `OCI`].
+        icon:dot-circle[]
+      -->
+      <format>DOCKER</format>
+
+      <!--
+        Image working directory
+        Defaults to `/workspace`.
+        icon:dot-circle[]
+      -->
+      <workingDirectory>/workspace</workingDirectory>
+
+      <!--
+        The user to run the container (does not affect file permissions)
+        icon:dot-circle[]
+      -->
+      <user>duke</user>
+
+      <!--
+        A list of image names.
+        If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+        will be created.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <imageNames>
+        <imageName>{{repoOwner}}/{{distributionName}}:{{tagName}}</imageName>
+        <imageName>duke/app:latest</imageName>
+      </imageNames>
+
+      <!--
+        A map of environment variables.
+        icon:dot-circle[]
+      -->
+      <environment>
+        <FOO>bar</FOO>
+
+      <!--
+        A map of OCI labels.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <labels>
+        <foo>bar</foo>
+      </labels>
+
+      <!--
+        Set of volume mount points.
+        icon:dot-circle[]
+      -->
+      <volumes>
+        <volume>/volume1</volume>
+      </volumes>
+
+      <!--
+        Set of exposed ports metadata (port-number/protocol).
+        icon:dot-circle[]
+      -->
+      <exposedPorts>
+        <exposedPort>123/udp</exposedPort>
+      </exposedPorts>
+
+      <!--
+        A list of jib registries where images will be published.
+        icon:dot-circle[]
+      -->
+      <registries>
+        <registry>
+          <!--
+             The name of the registry. Must be unique.
+             icon:exclamation-triangle[]
+          -->
+          <name>myRegistry</name>
+
+          <!--
+            The address of the jib registry.
+            icon:exclamation-triangle[]
+          -->
+          <server>pass[https: myregistry.com]</server>
+
+          <!--
+            Username for communicating with both target and base image registries.
+            Defaults to the same username as the release repository.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <username>duke</username>
+
+          <!--
+            Username for communicating with target image registry.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <toUsername>duke</toUsername>
+
+          <!--
+            Username for communicating with base image registry.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <fromUsername>duke</fromUsername>
+
+          <!--
+            Password for communicating with both target and base image registries.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <password>__USE_ENVIRONMENT_VARIABLE__</password>
+
+          <!--
+            Password for communicating with target image registry.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <toPassword>__USE_ENVIRONMENT_VARIABLE__</toPassword>
+
+          <!--
+            Password for communicating with base image registry.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <fromPassword>__USE_ENVIRONMENT_VARIABLE__</fromPassword>
+        </registry>
+      </registries>
+include::partial$packagers/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$packagers/gradle/common-head.adoc[]
+
+include::partial$packagers/gradle/template-directory.adoc[]
+
+include::partial$packagers/gradle/commitauthor.adoc[]
+
+include::partial$packagers/gradle/tap.adoc[]
+
+      // The base Jib image to use.
+      // icon:dot-circle[] icon:file-alt[]
+      baseImage = 'alpine:latest'
+
+      // Defines the tool version to use.
+      // icon:dot-circle[]
+      version = '{jib-version}'
+
+      // Sets the creation time of the container only.
+      // Can be: millis since epoch (ex: 1000) or an ISO 8601 creation time (ex: 2020-06-08T14:54:36+00:00).
+      // icon:dot-circle[]
+      creationTime = '2000'
+
+      // Image format.
+      // Valid values are [`DOCKER`, `OCI`].
+      // icon:dot-circle[]
+      format = 'DOCKER'
+
+      // Image working directory
+      // Defaults to `/workspace`.
+      // icon:dot-circle[]
+      workingDirectory = '/workspace'
+
+      // The user to run the container (does not affect file permissions)
+      // icon:dot-circle[]
+      user = 'duke'
+
+      // A list of image names.
+      // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
+      // will be created.
+      // icon:dot-circle[] icon:file-alt[]
+      imageName('{{repoOwner}}/{{distributionName}}:{{tagName}}')
+      imageName('duke/app:latest')
+
+      // A map of environment variables.
+      // icon:dot-circle[]
+      environment('FOO', bar)
+
+      // A map of OCI labels.
+      // The key `openjdk@#{java.version}` will be added automatically if not defined.
+      // icon:dot-circle[] icon:file-alt[]
+      label('foo', 'bar')
+
+      // Set of volume mount points.
+      // icon:dot-circle[]
+      volume('/volume1')
+
+      // Set of exposed ports metadata (port-number/protocol).
+      // icon:dot-circle[]
+      exposedPort('123/udp')
+
+      // A list of jib registries where images will be published.
+      // icon:dot-circle[]
+      registries {
+
+        // The name of the registry. Must be unique.
+        // icon:exclamation-triangle[]
+        myRegistry {
+
+          // The address of the jib registry.
+          // icon:exclamation-triangle[]
+          server = 'ghcr.io'
+
+          // Username for communicating with both target and base image registries.
+          // Defaults to the same username as the release repository.
+          // icon:dot-circle[] icon:eye-slash[]
+          username = 'duke'
+
+          // Username for communicating with target image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          toUsername = 'duke'
+
+          // Username for communicating with base image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          fromUsername = 'duke'
+
+          // Password for communicating with both target and base image registries.
+          // icon:dot-circle[] icon:eye-slash[]
+          password = '__USE_ENVIRONMENT_VARIABLE__'
+
+          // Password for communicating with target image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          toPassword = '__USE_ENVIRONMENT_VARIABLE__'
+
+          // Password for communicating with base image registry.
+          // icon:dot-circle[] icon:eye-slash[]
+          fromPassword = '__USE_ENVIRONMENT_VARIABLE__'
+        }
+      }
+include::partial$packagers/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+**Inside `packagers` section**
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *active*
+| jreleaser.packagers.{packager_sys_key}.active
+| JRELEASER_PACKAGERS_{packager_env_key}_ACTIVE
+|===
+
+**Inside `distributions` section**
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *active*
+| jreleaser.distributions.${name}.{packager_sys_key}.active
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_ACTIVE
+2+| *registry.toUsername*
+| jreleaser.distributions.${name}.{packager_sys_key}.${serverName}.tousername +
+  jreleaser.{tap_basename_sys}.${serverName}.tousername +
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${serverName}_TOUSERNAME +
+  JRELEASER_{tap_basename_env}_${serverName}_TOUSERNAME +
+2+| *registry.fromUsername*
+| jreleaser.distributions.${name}.{packager_sys_key}.${serverName}.fromusername +
+  jreleaser.{tap_basename_sys}.${serverName}.fromusername +
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${serverName}_FROMUSERNAME +
+  JRELEASER_{tap_basename_env}_${serverName}_FROMUSERNAME +
+2+| *registry.username*
+| jreleaser.distributions.${name}.{packager_sys_key}.${serverName}.username +
+  jreleaser.{tap_basename_sys}.${serverName}.username +
+  jreleaser.github.username +
+  jreleaser.gitlab.username +
+  jreleaser.gitea.username +
+  jreleaser.codeberg.username
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${serverName}_USERNAME +
+  JRELEASER_{tap_basename_env}_${serverName}_USERNAME +
+  JRELEASER_GITHUB_USERNAME +
+  JRELEASER_GITLAB_USERNAME +
+  JRELEASER_GITEA_USERNAME +
+  JRELEASER_CODEBERG_USERNAME
+2+| *registry.topassword*
+| jreleaser.distributions.${name}.{packager_sys_key}.${name}.topassword +
+  jreleaser.{tap_basename_sys}.${name}.topassword
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${name}_TOPASSWORD +
+  JRELEASER_{tap_basename_env}_${name}_TOPASSWORD
+2+| *registry.frompassword*
+| jreleaser.distributions.${name}.{packager_sys_key}.${name}.frompassword +
+  jreleaser.{tap_basename_sys}.${name}.frompassword
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${name}_FROMPASSWORD +
+  JRELEASER_{tap_basename_env}_${name}_FROMPASSWORD
+2+| *registry.password*
+| jreleaser.distributions.${name}.{packager_sys_key}.${name}.password +
+  jreleaser.{tap_basename_sys}.${name}.password
+| JRELEASER_DISTRIBUTIONS_${name}_{packager_env_key}_${name}_PASSWORD +
+  JRELEASER_{tap_basename_env}_${name}_PASSWORD
+include::partial$packagers/tap-envvars.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
+include::partial$packagers/token.adoc[]
+
+include::partial$packagers/downloadUrl.adoc[]
+
+== Usernames/Passwords
+
+You must define values for both `toUsername` and `toPassword` properties on a given registry, at the bare minimum.
+If `username` and `password` are defined then other properties will be ignored.
+
+== Example
+
+Assuming the current version is `1.2.3`, and a distribution named `app`, the above configuration will generate
+a build file like the following one:
+
+[source,yml]
+----
+apiVersion: jib/v1alpha1
+kind: BuildFile
+
+from:
+  image: azul/zulu-openjdk-alpine:11-jre
+
+format: Docker
+
+labels:
+  "org.opencontainers.image.description": "App"
+  "org.opencontainers.image.licenses": "APACHE-2.0"
+  "org.opencontainers.image.revision": "8b592aa0103670b10d2f767481189684ca621c69"
+  "org.opencontainers.image.title": "app"
+  "org.opencontainers.image.url": "https://github.com/duke/app"
+  "org.opencontainers.image.version": "1.2.3"
+
+workingDirectory: "/workspace"
+
+entrypoint: ["/workspace/app-1.2.3/bin/app"]
+
+layers:
+  entries:
+    - name: app
+      files:
+        - src: assembly/app-1.2.3/bin
+          dest: /workspace/app-1.0.0/bin
+          properties:
+            filePermissions: 755
+        - src: assembly/app-1.2.3
+          dest: /workspace/app-1.2.3
+          excludes:
+            - "bin/*"
+        - src: assembly
+          dest: /workspace
+          excludes:
+            - "app-1.2.3"
+
+----
+
+== Base Images
+
+Different values for the default base image will be used depending on the distribution type:
+
+ * `azul/zulu-openjdk-alpine:#{distribution.java.version}-jre` for JAVA_BINARY and SINGLE_JAR distributions.
+ * `ubuntu:latest` for JLINK distributions when the artifact has a `linux` platform.
+ * `alpine:latest` for JLINK distributions when the artifact has a `linux_musl` platform.
+ * `scratch` for NATIVE_IMAGE distributions.
+
+== Default Labels
+
+JReleaser will add the following labels if they are not explicitly defined:
+
+ * org.opencontainers.image.title = {{distributionName}}
+ * org.opencontainers.image.description = {{projectDescription}}
+ * org.opencontainers.image.url = {{projectLinkHomepage}}
+ * org.opencontainers.image.licenses = {{projectLicense}}
+ * org.opencontainers.image.version = {{projectVersion}}
+ * org.opencontainers.image.revision = {{commitFullHash}}
+
+You may use any xref:reference:name-templates.adoc[] as part of the label value.
+
+== Prerelease Image Names
+
+A different set of images names will be automatically configured when the project is snapshot, to avoid possible clashes
+with production images.
+
+JReleaser will look for the first image name that ends with `:{{tagName}}` and discard the rest.
+
+It will use `{{repoOwner}}/{{distributionName}}:{{tagName}}` if no matching image name is found.
+
+== Keeping images updated for current major
+
+Some users might want to when version to push jib tags `:v1`, `:v1.6`, `:v1.6.4` and `:latest` when `v1.6.4`
+(for example) is built. That can be accomplished by using multiple image names:
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+project:
+  name: app
+
+packagers:
+  jib:
+    active: ALWAYS
+    imageNames:
+    - "myuser/myimage:{{tagName}}"
+    - "myuser/myimage:v{{projectVersionMajor}}"
+    - "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}"
+    - "myuser/myimage:latest"
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[project]
+  name = "app"
+
+[packagers.jib]
+  active = "ALWAYS"
+  imageNames = [
+    "myuser/myimage:{{tagName}}",
+    "myuser/myimage:v{{projectVersionMajor}}",
+    "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+    "myuser/myimage:latest"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "project": {
+    "name": "app"
+  },
+
+  "packagers": {
+    "jib": {
+      "active": "ALWAYS",
+      "imageNames": [
+        "myuser/myimage:{{tagName}}",
+        "myuser/myimage:v{{projectVersionMajor}}",
+        "myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}",
+        "myuser/myimage:latest"
+      ]
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<!-- project.artifactId = app -->
+<jreleaser>
+  <packagers>
+    <jib>
+      <active>ALWAYS</active>
+      <imageNames>
+        <imageName>myuser/myimage:{{tagName}}</imageName>
+        <imageName>myuser/myimage:v{{projectVersionMajor}}</imageName>
+        <imageName>myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}</imageName>
+        <imageName>myuser/myimage:latest</imageName>
+      </imageNames>
+    </jib>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+// project.name = app
+jreleaser {
+  packagers {
+    jib {
+      active = 'ALWAYS'
+      imageName('myuser/myimage:{{tagName}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}')
+      imageName('myuser/myimage:v{{projectVersionMajor}}.{{projectVersionMinor}}')
+      imageName('myuser/myimage:latest')
+    }
+  }
+}
+----
+--
+====
+
+This will build the following images:
+
+* `myuser/myimage:v1.6.4`
+* `myuser/myimage:v1`
+* `myuser/myimage:v1.6`
+* `myuser/myimage:latest`
+
+== Additional Files
+
+Any files placed inside `#{jib.templateDirectory}/assembly` will be copied into the container at the root.
+
+== Multiple build files per Distribution
+
+The previous sections explain how a single or multiple Jib images may be created for a single distribution using the
+same `build.yml` file. However, should you need to use several build files with the same distribution then just add a `specs`
+section and configure each `spec` to your liking. Each `spec` takes the same arguments as the `jib` section plus an
+extra element named `matchers` that determines which distribution artifact should be used with that particular `spec`.
+
+Matchers are key/value pairs that can match the artifact's `platform` property and any of its `extraProperties`.
+
+This feature is useful when paired with an assembled Jlink distribution that defines more than one artifact that may be
+packaged with Jib. The following example handles the case of generating cross-platform Java Runtimes with Jlink;
+there are 2 artifacts (the linux variants) that may be distributed with Jib, each one requiring different settings:
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+environment:
+  properties:
+    jdkPathPrefix: 'target/jdks'
+    jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
+
+project:
+  name: helloworld
+  description: HelloWorld in Java
+  longDescription: HelloWorld in Java
+  links:
+    homepage: https://github.com/jreleaser/helloworld-java-jlink
+  authors:
+    - Andres Almiray
+  license: APACHE-2.0
+  inceptionYear: 2023
+  stereotype: CLI
+  java:
+    version: 11
+    groupId: org.jreleaser.examples
+    artifactId: helloworld
+    mainClass: org.jreleaser.examples.HelloWorld
+
+release:
+  github:
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+assemble:
+  jlink:
+    helloworld:
+      active: ALWAYS
+      imageName: '{{distributionName}}-{{projectVersion}}'
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17OsxIntel/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxIntel/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMuslIntel/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
+          platform: 'linux-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsIntel/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
+          platform: 'windows-aarch_64'
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+
+packagers:
+  jib:
+    active: ALWAYS
+    registries:
+      - name: github
+        server: ghcr.io
+
+distributions:
+  # name must match!
+  helloworld:
+    jib:
+      # configure 2 specs
+      specs:
+        slim:
+          imageNames:
+            - 'duke/{{distributionName}}-{{jibSpecName}}:{{tagName}}'
+            - 'duke/{{distributionName}}-{{jibSpecName}}:latest'
+          matchers:
+            # match by platform
+            platform: 'linux-x86_64'
+        alpine:
+          imageNames:
+            - 'duke/{{distributionName}}-{{jibSpecName}}:{{tagName}}'
+            - 'duke/{{distributionName}}-{{jibSpecName}}:latest'
+          matchers:
+            # match by platform
+            platform: 'linux_musl-x86_64'
+----
+--
+====
+
+This generates two different images:
+
+ * `duke/helloworld-slim:<tag>` with `ubuntu:latest` as base image. Packages
+   `helloworld-standalone-<version>-linux.zip` because of the matching platform.
+ * `duke/helloworld-alpine:<tag>` with `alpine:latest` as base image. Packages
+   `helloworld-standalone-<version>-linux_musl.zip` because of the matching platform.
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/distributions/<distribution-name>/jib`
+
+The default location for spec templates is:
+
+`src/jreleaser/distributions/<distribution-name>/jib/<spec>`
+
+You may place common files to all specs at
+
+`src/jreleaser/distributions/<distribution-name>/jib/ROOT`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `build.yml.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+Templates may be initialized using the `template` command
+
+ * xref:tools:jreleaser-cli.adoc#_template_generate[{icon_cli_s} template generate]
+ * xref:tools:jreleaser-maven.adoc#_jreleasertemplate_generate[{icon_maven_s} jreleaser:template-generate]
+ * xref:tools:jreleaser-gradle.adoc#_jreleasertemplategenerate[{icon_gradle_s} jreleaserTemplategGenerate]
+ * xref:tools:jreleaser-ant.adoc#_jreleaser_template_generate[{icon_ant_s} jreleaser-template-generate]
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex
+
+== Skip Artifacts
+
+If there is more than one matching artifact in a given distribution you may add a `skip{tool_name}` extra property
+to the target artifact to mark it as skipped for packaging with {tool_id}.
+
+== Skip License
+
+If there's a matching `LICENSE` file available at the root of the project it will be copied to the {tool_tap} by default.
+You may set an extra property named `skipLicenseFile` on {tool_id} to skip this behavior.

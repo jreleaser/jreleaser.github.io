@@ -1764,10 +1764,12 @@ The following names are related to xref:reference:packagers/docker.adoc[].
 
 [%header, cols="<2,<5", width="100%"]
 |===
-| Key             | Description
-| dockerBaseImage | the base Docker image
-| dockerLabels    | a list of formatted labels
-| dockerSpecName  | the name of the current Docker spec
+| Key                | Description
+| dockerBaseImage    | the base Docker image
+| dockerLabels       | a list of formatted labels
+| dockerSpecName     | the name of the current Docker spec
+| dockerPreCommands  | a list of commands to be invoked before copying sources
+| dockerPostCommands | a list of commands to be invoked after copying sources
 |===
 
 Additionally, every key/value from `docker.extraProperties` is mapped with `docker` as key prefix and the capitalized
@@ -2852,6 +2854,118 @@ jreleaser {
     jbang {
       // Key will be capitalized and prefixed
       // with `jbang`, i.e, `jbangFoo`.
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+== Jib
+
+The following names are related to xref:reference:packagers/jib.adoc[].
+
+[%header, cols="<2,<5", width="100%"]
+|===
+| Key                 | Description
+| jibBaseImage        | the base Jib image
+| jibSpecName         | the name of the current Jib spec
+| jibCreationTime     | the image's creation time
+| jibUser             | the image's user
+| jibFormat           | the image's format
+| jibWorkingDirectory | the image's working directory
+| jibHasVolumes       | if there are any volumes defined
+| jibVolumes          | set of volumes
+| jibHasExposedPorts  | if there are any exposed ports
+| jibExposedPorts     | set of exposed ports
+| jibHasEnvironment   | if there are any environment variables defined
+| jibEnvironment      | set of environment variables
+| jibLabels           | a list of formatted labels
+|===
+
+Additionally, every key/value from `jib.extraProperties` is mapped with `jib` as key prefix and the capitalized
+key, such that
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+packagers:
+  jib:
+    extraProperties:
+      # Key will be capitalized and prefixed
+      # with `jib`, i.e, `jibFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[packagers.jib]
+  # Key will be capitalized and prefixed
+  # with `jib`, i.e, `jibFoo`.
+  extraProperties.foo = "bar"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "packagers": {
+    "jib": {
+      "extraProperties": {
+        // Key will be capitalized and prefixed
+        // with `jib`, i.e, `jibFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <packagers>
+    <jib>
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed
+          with `jib`, i.e, `jibFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </jib>
+  </packagers>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  packagers {
+    jib {
+      // Key will be capitalized and prefixed
+      // with `jib`, i.e, `jibFoo`.
       extraProperties.put('foo', 'bar')
     }
   }
