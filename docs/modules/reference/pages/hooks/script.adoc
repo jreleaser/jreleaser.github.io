@@ -24,6 +24,11 @@ hooks:
   # icon:dot-circle[] icon:eye-slash[]
   active: ALWAYS
 
+  # A map of global environment variables..
+  # icon:dot-circle[] icon:file-alt[]
+  environment:
+    FOO: bar
+
   # icon:dot-circle[]
   script:
     # Enable or disable all before, success, and failure hooks.
@@ -31,6 +36,11 @@ hooks:
     # Defaults to `ALWAYS`.
     # icon:dot-circle[] icon:eye-slash[]
     active: ALWAYS
+
+    # A map of script environment variables..
+    # icon:dot-circle[] icon:file-alt[]
+    environment:
+      FOO: bar
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -51,6 +61,11 @@ hooks:
         # Defaults to `ALWAYS`.
         # icon:dot-circle[] icon:eye-slash[]
         active: ALWAYS
+
+        # A map of local environment variables..
+        # icon:dot-circle[] icon:file-alt[]
+        environment:
+          FOO: bar
 
         # Shell settings for executing the script.
         # Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -90,6 +105,10 @@ TOML::
   # icon:dot-circle[] icon:eye-slash[]
   active = "ALWAYS"
 
+  # A map of global environment variables..
+  # icon:dot-circle[] icon:file-alt[]
+  environment.FOO = "bar"
+
   # icon:dot-circle[]
   [hooks.script]
     # Enable or disable all before, success, and failure hooks.
@@ -97,6 +116,10 @@ TOML::
     # Defaults to `ALWAYS`.
     # icon:dot-circle[] icon:eye-slash[]
     active = "ALWAYS"
+
+    # A map of script environment variables..
+    # icon:dot-circle[] icon:file-alt[]
+    environment.FOO = "bar"
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -117,6 +140,10 @@ TOML::
       # Defaults to `ALWAYS`.
       # icon:dot-circle[] icon:eye-slash[]
       active = "ALWAYS"
+
+      # A map of local environment variables..
+      # icon:dot-circle[] icon:file-alt[]
+      environment.FOO = "bar"
 
       # Shell settings for executing the script.
       # Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -154,6 +181,12 @@ JSON::
     // icon:dot-circle[] icon:eye-slash[]
     "active": "ALWAYS",
 
+    // A map of global environment variables..
+    // icon:dot-circle[] icon:eye-slash[]
+    "environment": {
+      "FOO": "bar"
+    },
+
     // icon:dot-circle[]
     "script": {
       // Enable or disable all before, success, and failure hooks.
@@ -161,6 +194,12 @@ JSON::
       // Defaults to `ALWAYS`.
       // icon:dot-circle[] icon:eye-slash[]
       "active": "ALWAYS",
+
+      // A map of script environment variables..
+      // icon:dot-circle[] icon:eye-slash[]
+      "environment": {
+        "FOO": "bar"
+      },
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -182,6 +221,12 @@ JSON::
           // Defaults to `ALWAYS`.
           // icon:dot-circle[] icon:eye-slash[]
           "active": "ALWAYS",
+
+          // A map of local environment variables..
+          // icon:dot-circle[] icon:eye-slash[]
+          "environment": {
+            "FOO": "bar"
+          },
 
           // Shell settings for executing the script.
           // Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -234,6 +279,14 @@ Maven::
     <active>ALWAYS</active>
 
     <!--
+      A map of global environment variables.
+      icon:dot-circle[] icon:file-alt[]
+    -->
+    <environment>
+      <FOO>bar</FOO>
+    </environment>
+
+    <!--
       icon:dot-circle[]
     -->
     <script>
@@ -244,6 +297,14 @@ Maven::
         icon:dot-circle[] icon:eye-slash[]
       -->
       <active>ALWAYS</active>
+
+      <!--
+        A map of script environment variables.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <environment>
+        <FOO>bar</FOO>
+      </environment>
 
       <!--
         The type of hook
@@ -273,6 +334,14 @@ Maven::
             icon:dot-circle[] icon:eye-slash[]
           -->
           <active>ALWAYS</active>
+
+          <!--
+            A map of local environment variables.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <environment>
+            <FOO>bar</FOO>
+          </environment>
 
           <!--
             Shell settings for executing the script.
@@ -328,6 +397,10 @@ jreleaser {
     // icon:dot-circle[] icon:eye-slash[]
     active = 'ALWAYS'
 
+    // A map of global environment variables.
+    // icon:dot-circle[] icon:file-alt[]
+    environment('FOO', 'bar')
+
     // icon:dot-circle[]
     script {
       // Enable or disable all before, success, and failure hooks.
@@ -335,6 +408,10 @@ jreleaser {
       // Defaults to `ALWAYS`.
       // icon:dot-circle[] icon:eye-slash[]
       active: ALWAYS
+
+      // A map of script environment variables.
+      // icon:dot-circle[] icon:file-alt[]
+      environment('FOO', 'bar')
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -355,6 +432,10 @@ jreleaser {
         // Defaults to `ALWAYS`.
         // icon:dot-circle[] icon:eye-slash[]
         active = 'ALWAYS'
+
+        // A map of local environment variables.
+        // icon:dot-circle[] icon:file-alt[]
+        environment('FOO', 'bar')
 
         // Shell settings for executing the script.
         // Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -480,6 +561,50 @@ property:
 `BASH` sets `set -eo pipefail` by default while `SH` does not. In `PWSH` and `POWERSHELL` JReleaser prepends
 `$ErrorActionPreference = 'stop'` to script contents. It also appends `if ((Test-Path -LiteralPath variable:\LASTEXITCODE)) { exit $LASTEXITCODE }`
  to powershell scripts to reflect the script's last exit code.
+
+== Environment Resolution
+
+Environment variables may be defined at 3 different scopes: `global`, `script`, and `local`. Precedence when resolving keys
+goes from most specific scope to the most generic.
+
+[source,yaml]
+----
+hooks:
+  environment:
+    KEY1: global1
+    KEY2: global2
+    KEY3: global3
+  script:
+    environment:
+      KEY2: script1
+      KEY4: script2
+      KEY5: script3
+    before:
+      - run: |
+          echo "KEY1: $KEY1"
+          echo "KEY2: $KEY2"
+          echo "KEY3: $KEY3"
+          echo "KEY4: $KEY4"
+          echo "KEY5: $KEY5"
+          echo "KEY6: $KEY6"
+        verbose: true
+        environment:
+          KEY3: local1
+          KEY5: local2
+          KEY6: local3
+----
+
+Executing the script results in the following output
+
+[source]
+----
+  [hooks] KEY1: global1
+  [hooks] KEY2: script1
+  [hooks] KEY3: local1
+  [hooks] KEY4: script2
+  [hooks] KEY5: local2
+  [hooks] KEY6: local3
+----
 
 == Output
 
