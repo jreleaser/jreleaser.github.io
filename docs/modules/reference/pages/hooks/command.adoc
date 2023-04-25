@@ -65,6 +65,10 @@ hooks:
         environment:
           FOO: bar
 
+        # Execute the command of the condition evaluates to `true`.
+        # icon:dot-circle[] icon:file-alt[]
+        condition: '"{{ Env.CI }}" == true'
+
         # The command to be invoked.
         # icon:exclamation-triangle[] icon:file-alt[]
         cmd: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
@@ -136,6 +140,10 @@ TOML::
       # A map of local environment variables.
       # icon:dot-circle[] icon:file-alt[]
       environment.FOO = "bar"
+
+      # Execute the command of the condition evaluates to `true`.
+      # icon:dot-circle[] icon:file-alt[]
+      condition = "'{{ Env.CI }}' == true"
 
       # The command to be invoked.
       # icon:exclamation-triangle[] icon:file-alt[]
@@ -213,6 +221,10 @@ JSON::
           "environment": {
             "FOO": "bar"
           },
+
+          // Execute the command of the condition evaluates to `true`.
+          // icon:dot-circle[] icon:file-alt[]
+          "condition": "'{{ Env.CI }}' == true",
 
           // The command to be invoked.
           // icon:exclamation-triangle[] icon:file-alt[]
@@ -324,6 +336,12 @@ Maven::
           </environment>
 
           <!--
+            Execute the command of the condition evaluates to `true`.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <condition>"{{ Env.CI }}" == true</condition>
+
+          <!--
             The command to be invoked.
             icon:exclamation-triangle[] icon:file-alt[]
           -->
@@ -408,7 +426,11 @@ jreleaser {
         // A map of local environment variables.
         // icon:dot-circle[] icon:file-alt[]
         environment('FOO', 'bar')
-    
+
+        // Execute the command of the condition evaluates to `true`.
+        // icon:dot-circle[] icon:file-alt[]
+        condition = '"{{ Env.CI }}" == true'
+
         // The command to be invoked.
         // icon:exclamation-triangle[] icon:file-alt[]
         cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
@@ -533,6 +555,28 @@ Executing the command results in the following output
   [hooks] KEY5: local2
   [hooks] KEY6: local3
 ----
+
+== Conditions
+
+You may define a condition to determine if the command should run or not. xref:reference:name-templates.adoc[] will be
+evaluated before the actual condition. Expressions follow link:https://commons.apache.org/proper/commons-jexl/[JEXL] rules:
+
+The following example shows a command hook used to run the build before the `assemble` step only if the running environment
+has an environment variable `CI` set to true, which is typically the case in xref:continuous-integration:index.adoc[] services:
+
+[source,yaml]
+----
+hooks:
+  command:
+    before:
+      - cmd: './mvnw -ntp verify'
+        condition: '"{{ Env.CI }}" == true'
+        verbose: true
+        filter:
+          includes: ['assemble']
+----
+
+NOTE: Use quotes around name templates if their evaluation may result in an empty string.
 
 == Output
 
