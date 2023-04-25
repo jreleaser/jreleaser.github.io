@@ -911,6 +911,10 @@ hooks:
         environment:
           FOO: bar
 
+        # Execute the script of the condition evaluates to `true`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        condition: '"{{ Env.CI }}" == true'
+
         # Shell settings for executing the script.
         # Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
         # Defaults to `BASH`.
@@ -986,6 +990,10 @@ hooks:
       # A map of local environment variables..
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       environment.FOO = "bar"
+
+      # Execute the script of the condition evaluates to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      condition = "'{{ Env.CI }}' == true"
 
       # Shell settings for executing the script.
       # Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -1067,6 +1075,10 @@ hooks:
           "environment": {
             "FOO": "bar"
           },
+
+          // Execute the script of the condition evaluates to `true`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "condition": "'{{ Env.CI }}' == true",
 
           // Shell settings for executing the script.
           // Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -1182,6 +1194,12 @@ hooks:
           &lt;/environment&gt;
 
           &lt;!--
+            Execute the script of the condition evaluates to `true`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;condition&gt;"{{ Env.CI }}" == true&lt;/condition&gt;
+
+          &lt;!--
             Shell settings for executing the script.
             Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
             Defaults to `BASH`.
@@ -1272,6 +1290,10 @@ hooks:
         // A map of local environment variables.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         environment('FOO', 'bar')
+
+        // Execute the script of the condition evaluates to `true`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        condition = '"{{ Env.CI }}" == true'
 
         // Shell settings for executing the script.
         // Supported values are [`BASH`, `SH`, `CMD`, `PWSH`, `POWERSHELL`].
@@ -1594,6 +1616,43 @@ goes from most specific scope to the most generic.</p>
   [hooks] KEY5: local2
   [hooks] KEY6: local3</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conditions"><a class="anchor" href="#_conditions"></a>Conditions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may define a condition to determine if the script should run or not. <a href="../name-templates.html" class="xref page">Name Templates</a> will be
+evaluated before the actual condition. Expressions follow <a href="https://commons.apache.org/proper/commons-jexl/">JEXL</a> rules:</p>
+</div>
+<div class="paragraph">
+<p>The following example shows a script hook used to run the build before the <code>assemble</code> step only if the running environment
+has an environment variable <code>CI</code> set to true, which is typically the case in <a href="../../continuous-integration/index.html" class="xref page">Continuous Integration</a> services:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
+  script:
+    before:
+      - run: './mvnw -ntp verify'
+        condition: '"{{ Env.CI }}" == true'
+        verbose: true
+        filter:
+          includes: ['assemble']</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use quotes around name templates if their evaluation may result in an empty string.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
