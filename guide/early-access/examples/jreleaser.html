@@ -951,7 +951,6 @@ announce:
     active: RELEASE
     host: https://fosstodon.org
     statusTemplate: src/jreleaser/mastodon.tpl
-
   openCollective:
     active: RELEASE
     message: '{{#f_md2html}}🚀 JReleaser {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}'
@@ -959,7 +958,7 @@ announce:
     noticeable:
       active: RELEASE
       url: https://api.noticeable.io/graphql
-      authorization: bearer
+      authorization: BEARER
       bearerKeyword: Apikey
       method: POST
       headers:
@@ -1063,6 +1062,7 @@ assemble:
         path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
         - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
+        - pattern: 'plugins/jreleaser/build/dependencies/graalvm/*.jar'
       graalJdks:
         - path: '{{jdkPathPrefix}}/graal17Osx/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-x86_64'
@@ -1128,6 +1128,11 @@ distributions:
         active: RELEASE
     sdkman:
       active: RELEASE
+      continueOnError: true
+    snap:
+      active: ALWAYS
+      remoteBuild: true
+      base: core18
       architectures:
         - buildOn: [ amd64, arm64 ]
       plugs:
