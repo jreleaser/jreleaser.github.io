@@ -445,6 +445,9 @@
     <a class="nav-link" href="../announce/mattermost.html">Mattermost</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../announce/opencollective.html">OpenCollective</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../announce/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -499,6 +502,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../catalog/sbom/index.html">Sbom</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../catalog/sbom/cyclonedx.html">CycloneDX</a>
+  </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../catalog/sbom/syft.html">Syft</a>
   </li>
@@ -576,6 +582,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../hooks/command.html">Command Hooks</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hooks/script.html">Script Hooks</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -608,6 +617,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jib.html">Jib</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="macports.html">Macports</a>
@@ -1011,12 +1023,12 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       tagName: '{{distributionName}} {{tagName}}'
 
-      # The target branch pull from.
+      # The target branch to pull from.
       # Defaults to the branch pointed by HEAD.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       branch: HEAD
 
-      # The target branch push to.
+      # The target branch to push to.
       # Defaults to the branch pointed by `#{branch}`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       branchPush: '{{projectName}}-{{tagName}}'
@@ -1071,7 +1083,7 @@ packagers:
       - "VOLUME /workspace"
 
     # A map of Docker labels.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     labels:
       foo: bar
 
@@ -1216,12 +1228,12 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.tagName = "{{distributionName}} {{tagName}}"
 
-  # The target branch pull from.
+  # The target branch to pull from.
   # Defaults to the branch pointed by HEAD.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   repository.branch = "HEAD"
 
-  # The target branch push to.
+  # The target branch to push to.
   # Defaults to the branch pointed by `#{branch}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>  <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.branchPush = "{{projectName}}-{{tagName}}"
@@ -1274,7 +1286,7 @@ packagers:
   postCommands = ["VOLUME /workspace"]
 
   # A map of Docker labels.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   labels.foo = "bar"
 
   # Configure multi-arch image support.
@@ -1420,12 +1432,12 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "tagName": "{{distributionName}} {{tagName}}",
 
-        // The target branch pull from.
+        // The target branch to pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         "branch": "HEAD",
 
-        // The target branch push to.
+        // The target branch to push to.
         // Defaults to the branch pointed by `#{branch}`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "branchPush": "{{projectName}}-{{tagName}}",
@@ -1485,7 +1497,7 @@ packagers:
       ],
 
       // A map of Docker labels.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "labels": {
         "foo": "bar"
       },
@@ -1531,7 +1543,7 @@ packagers:
           // Use `DEFAULT` to match the default registry
           // provided by the Docker daemon.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-          "serverName": "someName",
+          "serverName": "myRegistry",
 
           // The address of the docker registry.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
@@ -1688,14 +1700,14 @@ packagers:
         &lt;tagName&gt;{{distributionName}} {{tagName}}&lt;/tagName&gt;
 
         &lt;!--
-          The target branch pull from.
+          The target branch to pull from.
           Defaults to the branch pointed by HEAD.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         --&gt;
         &lt;branch&gt;HEAD&lt;/branch&gt;
 
         &lt;!--
-          The target branch push to.
+          The target branch to push to.
           Defaults to the branch pointed by `#{branch}`.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
@@ -1775,7 +1787,7 @@ packagers:
 
       &lt;!--
         A map of Docker labels.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
       &lt;labels&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
@@ -1959,12 +1971,12 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         tagName = '{{distributionName}} {{tagName}}'
 
-        // The target branch pull from.
+        // The target branch to pull from.
         // Defaults to the branch pointed by HEAD.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         branch = 'HEAD'
 
-        // The target branch push to.
+        // The target branch to push to.
         // Defaults to the branch pointed by `#{branch}`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         branchPush = '{{projectName}}-{{tagName}}'
@@ -2017,7 +2029,7 @@ packagers:
 
       // A map of Docker labels.
       // The key `openjdk@#{java.version}` will be added automatically if not defined.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       label('foo', 'bar')
 
       // Configure multi-arch image support.
@@ -2056,7 +2068,7 @@ packagers:
         // Use `DEFAULT` to match the default registry
         // provided by the Docker daemon.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        someName {
+        myRegistry {
 
           // The address of the docker registry.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
@@ -2636,7 +2648,7 @@ jreleaser {
 with production images.</p>
 </div>
 <div class="paragraph">
-<p>JReleaer will look for the first image name that ends with <code>:{{tagName}}</code> and discard the rest.</p>
+<p>JReleaser will look for the first image name that ends with <code>:{{tagName}}</code> and discard the rest.</p>
 </div>
 <div class="paragraph">
 <p>It will use <code>{{repoOwner}}/{{distributionName}}:{{tagName}}</code> if no matching image name is found.</p>
@@ -2931,15 +2943,6 @@ distributions:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_skip_artifacts"><a class="anchor" href="#_skip_artifacts"></a>Skip Artifacts</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If there is more than one matching artifact in a given distribution you may add a <code>skipDocker</code> extra property to the target
-artifact to mark it as skipped for packaging with Docker.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_templates"><a class="anchor" href="#_templates"></a>Templates</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -3017,6 +3020,24 @@ any of these expressions to skip a template named <code>README.md.tpl</code>:</p
 <p><code>README.*</code>: matches using a regex</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_artifacts"><a class="anchor" href="#_skip_artifacts"></a>Skip Artifacts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If there is more than one matching artifact in a given distribution you may add a <code>skipDocker</code> extra property
+to the target artifact to mark it as skipped for packaging with docker.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_skip_license"><a class="anchor" href="#_skip_license"></a>Skip License</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If there&#8217;s a matching <code>LICENSE</code> file available at the root of the project it will be copied to the repository by default.
+You may set an extra property named <code>skipLicenseFile</code> on docker to skip this behavior.</p>
 </div>
 </div>
 </div>

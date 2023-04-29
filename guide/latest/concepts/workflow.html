@@ -445,6 +445,9 @@
     <a class="nav-link" href="../reference/announce/mattermost.html">Mattermost</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/opencollective.html">OpenCollective</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -499,6 +502,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/cyclonedx.html">CycloneDX</a>
+  </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
   </li>
@@ -576,6 +582,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/hooks/command.html">Command Hooks</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/hooks/script.html">Script Hooks</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -608,6 +617,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/jib.html">Jib</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/macports.html">Macports</a>
@@ -903,6 +915,39 @@ the configuration. Configured inside a <a href="../reference/release/index.html"
 </div>
 </div>
 <div class="sect1">
+<h2 id="_checksum"><a class="anchor" href="#_checksum"></a>Checksum</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
+file configured in the <a href="../reference/files.html" class="xref page">Files</a> section.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All files must exist by the time Checksum is invoked, otherwise an error will occur.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Configured with <a href="../reference/checksum.html" class="xref page">Checksum</a>.</p>
+</div>
+<div class="paragraph">
+<p>Checksums will be placed at <code>${basedir}/out/jreleaser/checksums</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="../tools/jreleaser-cli.html#_checksum" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> checksum</a>,
+<a href="../tools/jreleaser-maven.html#_jreleaserchecksum" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:checksum</a>,
+<a href="../tools/jreleaser-gradle.html#_jreleaserchecksum" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserChecksum</a>,
+<a href="../tools/jreleaser-ant.html#_jreleaser_checksum" class="xref page"><span class="image"><img src="../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-checksum</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_catalog"><a class="anchor" href="#_catalog"></a>Catalog</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -928,46 +973,13 @@ All files must exist by the time Catalog is invoked, otherwise an error will occ
 <p>Catalogs will be placed at <code>${basedir}/out/jreleaser/catalogs</code>.</p>
 </div>
 <div class="paragraph">
+<p>Depends on <a href="#_checksum">Checksum</a>.</p>
+</div>
+<div class="paragraph">
 <p><a href="../tools/jreleaser-cli.html#_catalog" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> catalog</a>,
 <a href="../tools/jreleaser-maven.html#_jreleasercatalog" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:catalog</a>,
 <a href="../tools/jreleaser-gradle.html#_jreleasercatalog" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserCatalog</a>,
 <a href="../tools/jreleaser-ant.html#_jreleaser_catalog" class="xref page"><span class="image"><img src="../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-catalog</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_checksum"><a class="anchor" href="#_checksum"></a>Checksum</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Calculates SHA256 checksums on all input files. This includes all artifacts per distribution and every matching
-file configured in the <a href="../reference/files.html" class="xref page">Files</a> section, plus archived <a href="../reference/catalog/index.html" class="xref page">catalogs</a>.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-All files must exist by the time Checksum is invoked, otherwise an error will occur.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Configured with <a href="../reference/checksum.html" class="xref page">Checksum</a>.</p>
-</div>
-<div class="paragraph">
-<p>Checksums will be placed at <code>${basedir}/out/jreleaser/checksums</code>.</p>
-</div>
-<div class="paragraph">
-<p>Depends on <a href="#_catalog">Catalog</a>.</p>
-</div>
-<div class="paragraph">
-<p><a href="../tools/jreleaser-cli.html#_checksum" class="xref page"><span class="image"><img src="../_images/cli.svg" alt="cli" width="20" height="20"></span> checksum</a>,
-<a href="../tools/jreleaser-maven.html#_jreleaserchecksum" class="xref page"><span class="image"><img src="../_images/maven.svg" alt="maven" width="24" height="24"></span> jreleaser:checksum</a>,
-<a href="../tools/jreleaser-gradle.html#_jreleaserchecksum" class="xref page"><span class="image"><img src="../_images/gradle.svg" alt="gradle" width="24" height="24"></span> jreleaserChecksum</a>,
-<a href="../tools/jreleaser-ant.html#_jreleaser_checksum" class="xref page"><span class="image"><img src="../_images/ant.svg" alt="ant" width="24" height="24"></span> jreleaser-checksum</a></p>
 </div>
 </div>
 </div>

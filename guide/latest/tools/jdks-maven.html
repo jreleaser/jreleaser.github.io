@@ -445,6 +445,9 @@
     <a class="nav-link" href="../reference/announce/mattermost.html">Mattermost</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/opencollective.html">OpenCollective</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -499,6 +502,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/cyclonedx.html">CycloneDX</a>
+  </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
   </li>
@@ -576,6 +582,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/hooks/command.html">Command Hooks</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/hooks/script.html">Script Hooks</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -608,6 +617,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/jib.html">Jib</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/macports.html">Macports</a>
@@ -798,7 +810,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
   &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
   &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.5.1&lt;/version&gt;
+  &lt;version&gt;1.6.0&lt;/version&gt;
   &lt;inherited&gt;false&lt;/inherited&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
@@ -851,6 +863,18 @@ plugin in a multi-module setup.
 </li>
 <li>
 <p><code>javafxBundled</code>: whether JavaFx should be bundled or not. Defaults to <code>false</code>.</p>
+</li>
+<li>
+<p><code>packageType</code>: one of [<code>jdk</code>, <code>jre</code>]. Defaults to <code>jdk</code>.</p>
+</li>
+<li>
+<p><code>releaseStatus</code>: one of [<code>ea</code>, <code>ga</code>]. Defaults to <code>null</code>.</p>
+</li>
+<li>
+<p><code>termOfSupport</code>: one of [<code>sts</code>, <code>mts</code>, <code>lts</code>]. Defaults to <code>null</code>.</p>
+</li>
+<li>
+<p><code>bitness</code>: one of [<code>32</code>, <code>64</code>]. Defaults to <code>null</code>.</p>
 </li>
 </ul>
 </div>
@@ -924,7 +948,7 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
     &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
     &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.5.1&lt;/version&gt;
+    &lt;version&gt;1.6.0&lt;/version&gt;
     &lt;configuration&gt;
         &lt;pkgs&gt;
             &lt;pkg&gt;
@@ -1051,7 +1075,7 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
     &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
     &lt;artifactId&gt;jdks-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.5.1&lt;/version&gt;
+    &lt;version&gt;1.6.0&lt;/version&gt;
     &lt;configuration&gt;
         &lt;jdks&gt;
             &lt;jdk&gt;
@@ -1129,6 +1153,12 @@ Skip execution.<br>
 Type: boolean<br>
 User property: <code>disco.setup.skip</code></p>
 </li>
+<li>
+<p>unpack (default: <code>true</code>)<br>
+Unpack archives.<br>
+Type: boolean<br>
+User property: <code>disco.setup.unpack</code></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1165,6 +1195,12 @@ Skip execution.<br>
 Type: boolean<br>
 User property: <code>jdks.setup.skip</code></p>
 </li>
+<li>
+<p>unpack (default: <code>true</code>)<br>
+Unpack archives.<br>
+Type: boolean<br>
+User property: <code>jdks.setup.unpack</code></p>
+</li>
 </ul>
 </div>
 </div>
@@ -1176,13 +1212,14 @@ User property: <code>jdks.setup.skip</code></p>
 <div class="listingblock">
 <div class="title">jdks:list-disco</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.5.1:list-disco (default-cli) @ app ---
+<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.6.0:list-disco (default-cli) @ app ---
 [INFO] == Pkg zulu11Linux ==
 [INFO] version:       11.0.11
 [INFO] archiveType:   zip
 [INFO] platform:      linux-x86_64
 [INFO] distribution:  zulu
 [INFO] javafxBundled: false
+[INFO] packageType:   jdk
 [INFO] package(s):    1
 [INFO] filename:      zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] == Pkg zulu11Osx ==
@@ -1191,6 +1228,7 @@ User property: <code>jdks.setup.skip</code></p>
 [INFO] platform:      osx-x86_64
 [INFO] distribution:  zulu
 [INFO] javafxBundled: false
+[INFO] packageType:   jdk
 [INFO] package(s):    1
 [INFO] filename:      zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
 [INFO] == Pkg zulu11Windows ==
@@ -1199,6 +1237,7 @@ User property: <code>jdks.setup.skip</code></p>
 [INFO] platform:      windows-x86_64
 [INFO] distribution:  zulu
 [INFO] javafxBundled: false
+[INFO] packageType:   jdk
 [INFO] package(s):    1
 [INFO] filename:      zulu11.48.21-ca-jdk11.0.11-win_x64.zip</code></pre>
 </div>
@@ -1206,14 +1245,14 @@ User property: <code>jdks.setup.skip</code></p>
 <div class="listingblock">
 <div class="title">jdks:setup-disco</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.5.1:setup-disco (default-cli) @ app ---
-[INFO] Fetching [name='zulu11Linux', version='11.0.11', archiveType='zip', distribution='zulu', platform='linux-x86_64', javafxBundled='false']
+<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.6.0:setup-disco (default-cli) @ app ---
+[INFO] Fetching [name='zulu11Linux', version='11.0.11', archiveType='zip', distribution='zulu', platform='linux-x86_64', packageType='jdk', javafxBundled='false']
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
-[INFO] Fetching [name='zulu11Osx', version='11.0.11', archiveType='zip', distribution='zulu', platform='osx-x86_64', javafxBundled='false']
+[INFO] Fetching [name='zulu11Osx', version='11.0.11', archiveType='zip', distribution='zulu', platform='osx-x86_64', packageType='jdk', javafxBundled='false']
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
 [INFO] Extracting zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip
-[INFO] Fetching [name='zulu11Windows', version='11.0.11', archiveType='zip', distribution='zulu', platform='windows-x86_64', javafxBundled='false']
+[INFO] Fetching [name='zulu11Windows', version='11.0.11', archiveType='zip', distribution='zulu', platform='windows-x86_64', packageType='jdk', javafxBundled='false']
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip
 [INFO] Extracting zulu11.48.21-ca-jdk11.0.11-win_x64.zip</code></pre>
 </div>
@@ -1221,7 +1260,7 @@ User property: <code>jdks.setup.skip</code></p>
 <div class="listingblock">
 <div class="title">jdks:list-jdks</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.5.1:list-jdks (default-cli) @ app ---
+<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.6.0:list-jdks (default-cli) @ app ---
 [INFO] == JDK zulu11Linux ==
 [INFO] url: https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] checksum: 9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60
@@ -1241,7 +1280,7 @@ User property: <code>jdks.setup.skip</code></p>
 <div class="listingblock">
 <div class="title">jdks:setup-jdks</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.5.1:setup-jdks (default-cli) @ app ---
+<pre class="highlightjs highlight"><code class="language-none hljs">[INFO] --- jdks-maven-plugin:1.6.0:setup-jdks (default-cli) @ app ---
 [INFO] Downloading https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] Verifying zulu11.48.21-ca-jdk11.0.11-linux_x64.zip
 [INFO] Extracting zulu11.48.21-ca-jdk11.0.11-linux_x64.zip

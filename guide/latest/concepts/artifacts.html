@@ -445,6 +445,9 @@
     <a class="nav-link" href="../reference/announce/mattermost.html">Mattermost</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/announce/opencollective.html">OpenCollective</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/announce/sdkman.html">Sdkman</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -499,6 +502,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../reference/catalog/sbom/cyclonedx.html">CycloneDX</a>
+  </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/catalog/sbom/syft.html">Syft</a>
   </li>
@@ -576,6 +582,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/hooks/command.html">Command Hooks</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/hooks/script.html">Script Hooks</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -608,6 +617,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/jbang.html">JBang</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/packagers/jib.html">Jib</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/packagers/macports.html">Macports</a>
@@ -793,6 +805,9 @@
 <p>added to a Git <a href="../reference/release/index.html" class="xref page">release</a>.</p>
 </li>
 <li>
+<p>added to <a href="../reference/assemble/index.html" class="xref page">assemblers</a>.</p>
+</li>
+<li>
 <p>prepared, packaged, and published using a <a href="../reference/packagers/index.html" class="xref page">packager</a>.</p>
 </li>
 </ul>
@@ -812,15 +827,22 @@ of files. Files resolved by Artifact and Glob types do not preserve directory st
 <div class="ulist">
 <ul>
 <li>
+<p><code>active</code>. Enable or disable this file. Supported values are [<code>NEVER</code>, <code>ALWAYS</code>, <code>RELEASE</code>, <code>SNAPSHOT</code>]. Defaults to <code>ALWAYS</code>.
+This property is <strong>optional</strong>.</p>
+</li>
+<li>
 <p><code>path</code>. Defines the location of the file. Path may be relative or absolute. We recommend defining paths
 that are relative to the <code>basedir</code> as much as possible, as that simplifies the setup on
 <a href="../continuous-integration/index.html" class="xref page">CI</a>. Its value may use <a href="../reference/name-templates.html" class="xref page">Name Templates</a>.
 This property is <strong>required</strong>.</p>
 </li>
 <li>
-<p><code>transform</code>. Sometimes the source path does not have the exact name you&#8217;d looking for. You may apply a
+<p><code>transform</code>. Sometimes the source path does not have the exact name you&#8217;re looking for. You may apply a
 name transformation using this property. Its value may use <a href="../reference/name-templates.html" class="xref page">Name Templates</a>.
 This property is <strong>optional</strong>.</p>
+</li>
+<li>
+<p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the artifact.</p>
 </li>
 <li>
 <p><code>platform</code>. Defines the OS specific platform for this file. Some <a href="../reference/assemble/index.html" class="xref page">assemblers</a>
@@ -884,13 +906,6 @@ Use <code>linux_musl</code> for artifacts that target Alpine Linux.
 <p>Platform detection may be overridden by defining an environment variable or a System property named
 <code>JRELEASER_PLATFORM_OVERRIDE</code>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the artifact.</p>
-</li>
-</ul>
-</div>
 <div class="sect2">
 <h3 id="_optional"><a class="anchor" href="#_optional"></a>Optional</h3>
 <div class="paragraph">
@@ -932,12 +947,13 @@ files:
 <div class="ulist">
 <ul>
 <li>
-<p><code>pattern</code>. Defines pattern used to match artifacts.
-This property is <strong>required</strong>.</p>
+<p><code>active</code>. Enable or disable this file. Supported values are [<code>NEVER</code>, <code>ALWAYS</code>, <code>RELEASE</code>, <code>SNAPSHOT</code>]. Defaults to <code>ALWAYS</code>.
+This property is <strong>optional</strong>.</p>
 </li>
 <li>
-<p><code>platform</code>. Defines the OS specific platform for this file. Some <a href="../reference/assemble/index.html" class="xref page">assemblers</a>
-and <a href="../reference/packagers/index.html" class="xref page">packagers</a> require that globs define a platform.</p>
+<p><code>pattern</code>. Defines pattern used to match artifacts. Accepts glob or regex patterns by using <code>glob:</code> and <code>regex:</code> prefixes accordingly.
+If no prefix is specified then <code>glob:</code> will be used.
+This property is <strong>required</strong>.</p>
 </li>
 <li>
 <p><code>directory</code>. Defines the starting point when searching for files. Defaults to the context&#8217;s basedir.
@@ -946,11 +962,67 @@ This property is <strong>optional</strong>.</p>
 <li>
 <p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the resolved artifacts.</p>
 </li>
+<li>
+<p><code>platform</code>. Defines the OS specific platform for all matching files. Some <a href="../reference/assemble/index.html" class="xref page">assemblers</a>
+and <a href="../reference/packagers/index.html" class="xref page">packagers</a> require that globs define a platform.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>pattern</code> field accepts glob or regex patterns by using <code>glob:</code> and <code>regex:</code> prefixes accordingly.
-If no prefix is specified then <code>glob:</code> will be used.</p>
+<p>The value of <code>platform</code> is dictated by the normalized values detected by
+<a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
+<code>arch</code> classifier. The following values are currently recognized:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
+<p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>linux_musl</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>osx</code></p>
+</li>
+<li>
+<p><code>osx-aarch_64</code></p>
+</li>
+<li>
+<p><code>windows</code></p>
+</li>
+<li>
+<p><code>linux</code></p>
+</li>
+<li>
+<p><code>linux-x86_64</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use <code>linux_musl</code> for artifacts that target Alpine Linux.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Platform detection may be overridden by defining an environment variable or a System property named
+<code>JRELEASER_PLATFORM_OVERRIDE</code>.</p>
 </div>
 </div>
 </div>
@@ -962,6 +1034,10 @@ If no prefix is specified then <code>glob:</code> will be used.</p>
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p><code>active</code>. Enable or disable this file. Supported values are [<code>NEVER</code>, <code>ALWAYS</code>, <code>RELEASE</code>, <code>SNAPSHOT</code>]. Defaults to <code>ALWAYS</code>.
+This property is <strong>optional</strong>.</p>
+</li>
 <li>
 <p><code>input</code>. Defines the input path to search for files.
 Its value may use <a href="../reference/name-templates.html" class="xref page">Name Templates</a>.
@@ -987,7 +1063,67 @@ Values may use <a href="../reference/name-templates.html" class="xref page">Name
 <li>
 <p><code>extraProperties</code>. Defines key/value pairs of metadata that&#8217;s related to the resolved paths.</p>
 </li>
+<li>
+<p><code>platform</code>. Defines the OS specific platform for all matching files. Some <a href="../reference/assemble/index.html" class="xref page">assemblers</a>
+and <a href="../reference/packagers/index.html" class="xref page">packagers</a> require that fileSets define a platform.</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The value of <code>platform</code> is dictated by the normalized values detected by
+<a href="https://github.com/trustin/os-maven-plugin">os-maven-plugin</a>. You may use the plain <code>platform</code> value or append a
+<code>arch</code> classifier. The following values are currently recognized:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">platform</dt>
+<dd>
+<p><code>aix</code>, <code>hpux</code>, <code>os400</code>, <code>linux</code>, <code>linux_musl</code>, <code>osx</code>, <code>freebsd</code>, <code>openbsd</code>, <code>netbsd</code>, <code>sunos</code>, <code>windows</code>, <code>zos</code>.</p>
+</dd>
+<dt class="hdlist1">arch</dt>
+<dd>
+<p><code>x86_64</code>, <code>x86_32</code>, <code>itanium_64</code>, <code>itanium_32</code>, <code>sparc_32</code>, <code>sparc_64</code>, <code>arm_32</code>, <code>aarch_64</code>, <code>mips_32</code>,
+<code>mipsel_32</code>, <code>mips_64</code>, <code>mipsel_64</code>, <code>ppc_32</code>, <code>ppcle_32</code>, <code>ppc_64</code>, <code>ppcle_64</code>, <code>s390_32</code>, <code>s390_64</code>, <code>riscv</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>osx</code></p>
+</li>
+<li>
+<p><code>osx-aarch_64</code></p>
+</li>
+<li>
+<p><code>windows</code></p>
+</li>
+<li>
+<p><code>linux</code></p>
+</li>
+<li>
+<p><code>linux-x86_64</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Use <code>linux_musl</code> for artifacts that target Alpine Linux.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Platform detection may be overridden by defining an environment variable or a System property named
+<code>JRELEASER_PLATFORM_OVERRIDE</code>.</p>
 </div>
 </div>
 </div>
@@ -1223,16 +1359,16 @@ Target JDKs are of type <code>artifact</code>.</p>
 │    ├── jreleaser
 │    │   └── build
 │    │       └── distributions
-│    │           └── jreleaser-1.5.1.zip
+│    │           └── jreleaser-1.6.0.zip
 │    └── jreleaser-tool-provider
 │        └── build
 │            └── libs
-│                └── jreleaser-tool-provider-1.5.1.jar
+│                └── jreleaser-tool-provider-1.6.0.jar
 └── plugins
     └── jreleaser-ant-tasks
         └── build
             └── distributions
-                └── jreleaser-ant-tasks-1.5.1.zip</code></pre>
+                └── jreleaser-ant-tasks-1.6.0.zip</code></pre>
 </div>
 </div>
 </div>
