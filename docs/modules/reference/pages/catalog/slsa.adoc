@@ -1,0 +1,270 @@
+= SLSA
+:cataloger_sys_key: slsa
+:cataloger_env_key: SLSA
+
+Generates subject attestations for link:https://slsa.dev/[SLSA] to be used in combination with JReleaser's
+link:https://github.com/jreleaser/release-action[SLSA builders].
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+catalog:
+  # icon:dot-circle[]
+  slsa:
+
+    # Enable or disable this cataloger.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[] icon:eye-slash[]
+    active: ALWAYS
+
+    # Name of the attestation file.
+    # Defaults to `{{projectName}}-{{projectEffectiveVersion}}`.
+    # icon:dot-circle[] icon:file-alt[]
+    attestationName: 'app-all-{{projectVersion}}'
+
+    # Check distribution artifacts.
+    # Defaults to `true`.
+    # icon:dot-circle[]
+    artifacts: true
+
+    # Check files.
+    # Defaults to `true`.
+    # icon:dot-circle[]
+    files: true
+
+    # Check deployable artifacts.
+    # Defaults to `true`.
+    # icon:dot-circle[]
+    deployables: true
+
+    # Additional properties used when evaluating templates.
+    # icon:dot-circle[] icon:file-alt[]
+    extraProperties:
+      # Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+      foo: bar
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+# icon:dot-circle[]
+[catalog.slsa]
+
+  # Enable or disable this cataloger.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  active = "ALWAYS"
+
+   # Name of the attestation file.
+   # Defaults to `{{projectName}}-{{projectEffectiveVersion}}`.
+   # icon:dot-circle[] icon:file-alt[]
+   attestationName = "app-all-{{projectVersion}}"
+
+   # Check distribution artifacts.
+   # Defaults to `true`.
+   # icon:dot-circle[]
+   artifacts = true
+
+   # Check files.
+   # Defaults to `true`.
+   # icon:dot-circle[]
+   files = true
+
+   # Check deployable artifacts.
+   # Defaults to `true`.
+   # icon:dot-circle[]
+   deployables = true
+
+  # Additional properties used when evaluating templates.
+  # icon:dot-circle[] icon:file-alt[]
+  extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "catalog": {
+    // icon:dot-circle[]
+    "slsa": {
+
+      // Enable or disable this cataloger.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      "active": "ALWAYS",
+
+      // Name of the attestation file.
+      // Defaults to `{{projectName}}-{{projectEffectiveVersion}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      "attestationName": "app-all-{{projectVersion}}",
+
+      // Check distribution artifacts.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      "artifacts": true,
+
+      // Check files.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      "files": true,
+
+      // Check deployable artifacts.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      "deployables": true,
+
+      // Additional properties used when evaluating templates.
+      // icon:dot-circle[] icon:file-alt[]
+      "extraProperties": {
+        // Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+        "foo": "bar"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <catalog>
+    <!--
+      icon:dot-circle[]
+    -->
+    <slsa>
+
+      <!--
+        Enable or disable this cataloger.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        icon:dot-circle[] icon:eye-slash[]
+      -->
+      <active>ALWAYS</active>
+
+      <!--
+        Name of the attestation file.
+        Defaults to `{{projectName}}-{{projectEffectiveVersion}}`.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <attestationName>app-all-{{projectVersion}}</attestationName>
+
+      <!--
+        Check distribution artifacts.
+        Defaults to `true`.
+        icon:dot-circle[]
+      -->
+      <artifacts>true</artifacts>
+
+      <!--
+        Check files.
+        Defaults to `true`.
+        icon:dot-circle[]
+      -->
+      <files>true</files>
+
+      <!--
+        Check deployable artifacts.
+        Defaults to `true`.
+        icon:dot-circle[]
+      -->
+      <deployables>true</deployables>
+
+      <!--
+        Additional properties used when evaluating templates.
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <extraProperties>
+        <!--
+          Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+        -->
+        <foo>bar</foo>
+      </extraProperties>
+    </slsa>
+  </catalog>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  catalog {
+    // icon:dot-circle[]
+    slsa {
+
+      // Enable or disable this cataloger.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      active = 'ALWAYS'
+
+      // Name of the attestation file.
+      // Defaults to `{{projectName}}-{{projectEffectiveVersion}}`.
+      // icon:dot-circle[] icon:file-alt[]
+      attestationName = 'app-all-{{projectVersion}}'
+
+      // Check distribution artifacts.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      artifacts = true
+
+      // Check files.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      files = true
+
+      // Check deployable artifacts.
+      // Defaults to `true`.
+      // icon:dot-circle[]
+      deployables = true
+
+      // Additional properties used when evaluating templates.
+      // Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+      // icon:dot-circle[] icon:file-alt[]
+      extraProperties.put('foo', 'bar')
+    }
+  }
+}
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property                               | Environment Variable
+2+| *active*
+| jreleaser.catalog.{cataloger_sys_key}.active | JRELEASER_ANNOUNCE_{cataloger_env_key}_ACTIVE
+2+| *attestationName*
+| jreleaser.catalog.{cataloger_sys_key}.attestation.name | JRELEASER_ANNOUNCE_{cataloger_env_key}_ATTESTATION_NAME
+|===
