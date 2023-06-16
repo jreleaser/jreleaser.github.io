@@ -136,6 +136,22 @@ include::partial$assemble/yaml/common-archive-options.adoc[]
 
 include::partial$assemble/yaml/common-java.adoc[]
 
+      # Inputs as a xref:reference:assemble/java-archive.adoc[]
+      # icon:dot-circle[]
+      javaArchive:
+        # Path to the source Java archive.
+        # icon:exclamation-triangle[] icon:file-alt[]
+        path: path/to/app-1.0.0.zip
+
+        # Name of the main JAR.
+        # Defaults to `{{projectName}}-{{projectVersion}}.jar`.
+        # icon:dot-circle[] icon:file-alt[]
+        mainJarName: '{{projectName}}-{{projectVersion}}.jar'
+
+        # Path within archive containing JAR files.
+        # Defaults to `lib`.
+        # icon:dot-circle[] icon:file-alt[]
+        libDirectoryName: lib
 include::partial$assemble/yaml/common-assembler.adoc[]
 ----
 --
@@ -244,6 +260,23 @@ include::partial$assemble/toml/common-head.adoc[]
 include::partial$assemble/toml/common-archive-options.adoc[]
 
 include::partial$assemble/toml/common-java.adoc[]
+
+  # Inputs as a xref:reference:assemble/java-archive.adoc[]
+  # icon:dot-circle[]
+
+  # Path to the source Java archive.
+  # icon:exclamation-triangle[] icon:file-alt[]
+  javaArchive.path = "path/to/app-1.0.0.zip"
+
+  # Name of the main JAR.
+  # Defaults to `{{projectName}}-{{projectVersion}}.jar`.
+  # icon:dot-circle[] icon:file-alt[]
+  javaArchive.mainJarName = "{{projectName}}-{{projectVersion}}.jar"
+
+  # Path within archive containing JAR files.
+  # Defaults to `lib`.
+  # icon:dot-circle[] icon:file-alt[]
+  javaArchive.libDirectoryName = "lib"
 
 include::partial$assemble/toml/common-assembler.adoc[]
 ----
@@ -371,7 +404,26 @@ include::partial$assemble/json/common-archive-options.adoc[]
 
 include::partial$assemble/json/common-java.adoc[]
 
+        // Inputs as a xref:reference:assemble/java-archive.adoc[]
+        // icon:dot-circle[]
+        "javaArchive": {
+          // Path to the source Java archive.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          "path": "path/to/app-1.0.0.zip",
+
+          // Name of the main JAR.
+          // Defaults to `{{projectName}}-{{projectVersion}}.jar`.
+          // icon:dot-circle[] icon:file-alt[]
+          "mainJarName": "{{projectName}}-{{projectVersion}}.jar",
+
+          // Path within archive containing JAR files.
+          // Defaults to `lib`.
+          // icon:dot-circle[] icon:file-alt[]
+          "libDirectoryName": "lib"
+        },
+
 include::partial$assemble/json/common-assembler.adoc[]
+
 include::partial$assemble/json/common-footer.adoc[]
 ----
 --
@@ -530,6 +582,32 @@ include::partial$assemble/maven/common-archive-options.adoc[]
 
 include::partial$assemble/maven/common-java.adoc[]
 
+        <!--
+          Inputs as a xref:reference:assemble/java-archive.adoc[]
+          icon:dot-circle[]
+        -->
+        <javaArchive>
+           <!--
+            Path to the source Java archive.
+            icon:exclamation-triangle[] icon:file-alt[]
+          -->
+          <path>path/to/app-1.0.0.zip</path>
+
+           <!--
+            Name of the main JAR.
+            Defaults to `{{projectName}}-{{projectVersion}}.jar`.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <mainJarName>{{projectName}}-{{projectVersion}}.jar</mainJarName>
+
+           <!--
+            Path within archive containing JAR files.
+            Defaults to `lib`.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <libDirectoryName>lib</libDirectoryName>
+        </javaArchive>
+
 include::partial$assemble/maven/common-assembler.adoc[]
 include::partial$assemble/maven/common-footer.adoc[]
 ----
@@ -652,6 +730,24 @@ include::partial$assemble/gradle/common-archive-options.adoc[]
 
 include::partial$assemble/gradle/common-java.adoc[]
 
+        // Inputs as a xref:reference:assemble/java-archive.adoc[]
+        // icon:dot-circle[]
+        javaArchive {
+          // Path to the source Java archive.
+          // icon:exclamation-triangle[] icon:file-alt[]
+          path = 'path/to/app-1.0.0.zip'
+
+          // Name of the main JAR.
+          // Defaults to `{{projectName}}-{{projectVersion}}.jar`.
+          // icon:dot-circle[] icon:file-alt[]
+          mainJarName = '{{projectName}}-{{projectVersion}}.jar'
+
+          // Path within archive containing JAR files.
+          // Defaults to `lib`.
+          // icon:dot-circle[] icon:file-alt[]
+          libDirectoryName = 'lib'
+        }
+
 include::partial$assemble/gradle/common-assembler.adoc[]
 include::partial$assemble/gradle/common-footer.adoc[]
 ----
@@ -665,6 +761,14 @@ include::partial$envvars-header.adoc[]
 | System Property | Environment Variable
 include::partial$named-envvars/active.adoc[]
 |===
+
+== Inputs
+
+Jlink assemblers would typically be configured using the `mainJar` and `jars` properties, with any additional supporting
+files defined as required with `artifacts`, `files`, and `fileSets`. It's also possible to set `javaArchive`, in which case
+an archive that follows the structure of a xref:concepts:distributions/java-binary.adoc[] distribution is expected. You
+may create such archive using the xref:assemble/java-archive.adoc[] assembler or a plugin of your preferred build tool
+of choice.
 
 == Archive Format
 
