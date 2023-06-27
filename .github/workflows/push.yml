@@ -11,12 +11,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
 
       - name: Run Antora
-        uses: kameshsampath/antora-site-action@master
-        with:
-          antora_playbook: antora-playbook.yml
+        run: npx antora antora-playbook.yml
 
       - name: Copy landing page
         run: |
