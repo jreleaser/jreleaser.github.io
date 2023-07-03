@@ -1,0 +1,85 @@
+= Jetbrains Space
+
+You can setup a link:https://www.jetbrains.com/help/space/automation.html[Jetbrains Space] Automation for use.
+
+NOTE: If you're already building with either Maven or Gradle then you might use the
+xref:tools:jreleaser-maven.adoc[] or the xref:tools:jreleaser-gradle.adoc[] instead.
+
+[source,kts]
+[subs="+macros"]
+..space.kts
+----
+// Define a build step
+job("build") {
+    // Specify container image that contains Java
+    // Can also be a maven image if your project
+    // does not rely on the Maven wrapper
+    container(displayName = "Run mvn install", image = "azul/zulu-openjdk:11") {
+        // Full build
+        shellScript {
+            interpreter = "/bin/bash"
+            content = "./mvnw --batch-mode verify"
+        }
+
+        // Save artifacts for release
+        fileArtifacts {
+            remotePath = "{{ run:number }}/helloworld-1.0.0-SNAPSHOT.jar"
+            localPath = "target/helloworld-1.0.0-SNAPSHOT.jar"
+            onStatus = OnStatus.SUCCESS
+        }
+    }
+}
+
+// Create a release
+job("release") {
+    // limit release to git tags
+    startOn {
+        gitPush {
+            anyTag()
+        }
+    }
+
+    // allow use of secrets for environment variables
+    // specific example shows use of GPG signature
+    parameters {
+        secret("gpg-passphrase", value = "{{ project:gpg-passphrase }}")
+        secret("gpg-public-key", value = "{{ project:gpg-public-key }}")
+        secret("gpg-secret-key", value = "{{ project:gpg-secret-key }}")
+    }
+
+    // Use the predefined JReleaser Docker image
+    container(displayName = "jReleaser", image = "jreleaser/jreleaser-slim:latest") {
+        // use artifact from build step
+        fileInput {
+            source = FileSource.FileArtifact(
+                "{{ run:file-artifacts.default-repository }}",
+                "{{ run:number }}/helloworld-1.0.0-SNAPSHOT.jar"
+            )
+            // must be a relative path as expected by the JReleaser configuration
+            localPath = "helloworld.jar"
+        }
+
+        // # icon:rocket[] Execute JReleaser
+        shellScript {
+            interpreter = "/bin/bash"
+            content = "jreleaser full-release"
+        }
+
+        // Set environment variables accordingly
+        env["JRELEASER_PROJECT_VERSION"] = "{{ run:trigger.git-push.ref }}"
+        env["JRELEASER_GPG_PASSPHRASE"] = "{{ gpg-passphrase }}"
+        env["JRELEASER_GPG_PUBLIC_KEY"] = "{{ gpg-public-key }}"
+        env["JRELEASER_GPG_SECRET_KEY"] = "{{ gpg-secret-key }}"
+    }
+
+    // Allow read of git tags and complete changelog
+    git {
+        depth = UNLIMITED_DEPTH
+    }
+}
+----
+
+TIP: You may use `latest` to pull the latest stable release or `early-access` to pull the latest snapshot.
+
+There is more than one jreleaser image available. Available images are listed xref:tools:jreleaser-docker.adoc[here].
+
