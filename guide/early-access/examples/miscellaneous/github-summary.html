@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Miscellaneous :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/examples/miscellaneous/index.html">
+    <title>GitHub Summary :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/examples/miscellaneous/github-summary.html">
     <meta name="generator" content="Antora 3.1.6">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -226,7 +226,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Miscellaneous</a>
 <ul class="nav-list">
@@ -784,67 +784,189 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../index.html">JReleaser</a></li>
-    <li><a href="../index.html">Examples</a></li>
-    <li><a href="index.html">Miscellaneous</a></li>
+    <li><a href="github-summary.html">GitHub Summary</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../latest/examples/miscellaneous/index.html">latest</a>
-    <a class="version is-current" href="index.html">early-access</a>
+    <a class="version is-missing" href="../../../latest/index.html">latest</a>
+    <a class="version is-current" href="github-summary.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/examples/pages/miscellaneous/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/examples/pages/miscellaneous/github-summary.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Miscellaneous</h1>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="simple-release.html" class="xref page">Simple Release</a></p>
-</li>
-<li>
-<p><a href="auto-config-release.html" class="xref page">AutoConfig Release</a></p>
-</li>
-<li>
-<p><a href="github-summary.html" class="xref page">GitHub Summary</a></p>
-</li>
-<li>
-<p><a href="ballerina.html" class="xref page">Helloworld in Ballerina</a></p>
-</li>
-<li>
-<p><a href="cpp.html" class="xref page">Helloworld in CPP</a></p>
-</li>
-<li>
-<p><a href="crystal.html" class="xref page">Helloworld in Crystal</a></p>
-</li>
-<li>
-<p><a href="csharp-cross-platform.html" class="xref page">Helloworld in C# (Cross Platform)</a></p>
-</li>
-<li>
-<p><a href="elixir.html" class="xref page">Helloworld in Elixir</a></p>
-</li>
-<li>
-<p><a href="haskell.html" class="xref page">Helloworld in Haskell</a></p>
-</li>
-<li>
-<p><a href="perl.html" class="xref page">Helloworld in Perl</a></p>
-</li>
-<li>
-<p><a href="rust-cross-platform.html" class="xref page">Helloworld in Rust (Cross Platform)</a></p>
-</li>
-<li>
-<p><a href="swift.html" class="xref page">Helloworld in Swift</a></p>
-</li>
-<li>
-<p><a href="zig.html" class="xref page">Helloworld in Zig</a></p>
-</li>
-</ul>
+<h1 class="page">GitHub Summary</h1>
+<div class="paragraph">
+<p>GitHub offers a feature called <a href="https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/">job summaries</a> that may
+be used to generate additional content when executing jobs on a GitHub Actions workflow. <a href="../../reference/hooks/index.html" class="xref page">Hooks</a> may be used to
+enhance the summary output when running a release.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to configure a set of script hooks to create a table showcasing the execution steps and their outcome as emojis.</p>
+</div>
+<div class="paragraph">
+<p><strong>jreleaser.yml</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
+  condition: '"{{ Env.CI }}" == true'
+  script:
+    before:
+      - filter:
+          includes: ['session']
+        run: |
+          echo "### {{command}}" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "| Step | Outcome |" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "| ---- | ------- |" &gt;&gt; $GITHUB_STEP_SUMMARY
+    success:
+      - filter:
+          excludes: ['session']
+        run: 'echo "| {{event.name}} | :white_check_mark: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+      - filter:
+          includes: ['session']
+        run: echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+    failure:
+      - filter:
+          excludes: ['session']
+        run: 'echo "| {{event.name}} | :x: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+      - filter:
+          includes: ['session']
+        run: |
+          echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "### Failure" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "{{event.stacktrace}}\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+          echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+
+project:
+  name: helloworld
+  description: HelloWorld in Java
+  longDescription: HelloWorld in Java
+  links:
+    homepage: https://github.com/aalmiray/helloworld
+  authors:
+    - Andres Almiray
+  license: APACHE-2.0
+  inceptionYear: 2023
+  stereotype: cli
+  java:
+    version: 11
+    groupId: org.jreleaser.examples
+    artifactId: helloworld
+    mainClass: org.jreleaser.examples.HelloWorld
+
+release:
+  github:
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+assemble:
+  javaArchive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      fileSets:
+        - input: '.'
+          includes: [ 'LICENSE' ]
+      mainJar:
+        path: target/{{distributionName}}-{{projectVersion}}.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that all hooks will only be enabled when running on GitHub Actions due to the top level condition <code>"{{ Env.CI }}" == true</code>.
+The table header hook matches the <code>session</code> event, while the table row hooks exclude it. Finally, if there were to be a failure
+an additional hooks prints out the stacktrace.</p>
+</div>
+<div class="paragraph">
+<p>In a repopsitory where the github token is wrongfully configured we get the following output when attempting a release</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-markdown hljs" data-lang="markdown">### assemble
+| Step | Outcome |
+| ---- | ------- |
+| assemble | :white_check_mark: |
+
+
+### full-release
+| Step | Outcome |
+| ---- | ------- |
+| changelog | :white_check_mark: |
+| checksum | :white_check_mark: |
+| catalog | :white_check_mark: |
+| sign | :white_check_mark: |
+| deploy | :white_check_mark: |
+| upload | :white_check_mark: |
+| release | :x: |
+
+### Failure
+\```
+org.jreleaser.model.JReleaserException: Unexpected error when creating release
+	at jreleaser.shadow.org.jreleaser.workflow.ReleaseWorkflowItem.doInvoke(ReleaseWorkflowItem.java:41)
+	at jreleaser.shadow.org.jreleaser.workflow.AbstractWorkflowItem.lambda/tmp/jreleaser14525037237472999922.sh(AbstractWorkflowItem.java:43)
+	at jreleaser.shadow.org.jreleaser.engine.hooks.HookExecutor.execute(HookExecutor.java:70)
+	at jreleaser.shadow.org.jreleaser.workflow.AbstractWorkflowItem.invoke(AbstractWorkflowItem.java:43)
+	at jreleaser.shadow.org.jreleaser.workflow.WorkflowImpl.doExecute(WorkflowImpl.java:129)
+	at jreleaser.shadow.org.jreleaser.workflow.WorkflowImpl.execute(WorkflowImpl.java:54)
+	at jreleaser.shadow.org.jreleaser.cli.FullRelease.doExecute(FullRelease.java:219)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractModelCommand.execute(AbstractModelCommand.java:89)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractCommand.call(AbstractCommand.java:52)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractModelCommand.call(AbstractModelCommand.java:53)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractCommand.call(AbstractCommand.java:37)
+	at jreleaser.shadow.picocli.CommandLine.executeUserObject(CommandLine.java:2041)
+	at jreleaser.shadow.picocli.CommandLine.access500(CommandLine.java:148)
+	at jreleaser.shadow.picocli.CommandLine.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2461)
+	at jreleaser.shadow.picocli.CommandLine.handle(CommandLine.java:2453)
+	at jreleaser.shadow.picocli.CommandLine.handle(CommandLine.java:2415)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2273)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2417)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2170)
+	at jreleaser.shadow.org.jreleaser.cli.Main.execute(Main.java:98)
+	at jreleaser.shadow.org.jreleaser.cli.Main.run(Main.java:94)
+	at org.jreleaser.tool.JReleaser.main(JReleaser.java:47)
+Caused by: jreleaser.shadow.org.jreleaser.model.spi.release.ReleaseException: jreleaser.shadow.org.jreleaser.sdk.commons.RestAPIException: 403: Forbidden
+{message:Resource not accessible by integration,documentation_url:https://docs.github.com/rest/git/refs#delete-a-reference}
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:235)
+	at jreleaser.shadow.org.jreleaser.sdk.git.release.AbstractReleaser.release(AbstractReleaser.java:59)
+	at jreleaser.shadow.org.jreleaser.engine.release.Releasers.release(Releasers.java:56)
+	at jreleaser.shadow.org.jreleaser.workflow.ReleaseWorkflowItem.doInvoke(ReleaseWorkflowItem.java:39)
+	... 21 more
+Caused by: jreleaser.shadow.org.jreleaser.sdk.commons.RestAPIException: 403: Forbidden
+{message:Resource not accessible by integration,documentation_url:https://docs.github.com/rest/git/refs#delete-a-reference}
+	at jreleaser.shadow.org.jreleaser.sdk.commons.ClientUtils.lambda(ClientUtils.java:114)
+	at jreleaser.shadow.feign.InvocationContext.decodeError(InvocationContext.java:114)
+	at jreleaser.shadow.feign.InvocationContext.proceed(InvocationContext.java:72)
+	at jreleaser.shadow.feign.ResponseHandler.handleResponse(ResponseHandler.java:63)
+	at jreleaser.shadow.feign.SynchronousMethodHandler.executeAndDecode(SynchronousMethodHandler.java:114)
+	at jreleaser.shadow.feign.SynchronousMethodHandler.invoke(SynchronousMethodHandler.java:70)
+	at jreleaser.shadow.feign.ReflectiveFeign.invoke(ReflectiveFeign.java:96)
+	at jdk.proxy2/jdk.proxy2..deleteTag(Unknown Source)
+	at jreleaser.shadow.org.jreleaser.sdk.github.Github.deleteTag(Github.java:328)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.deleteTags(GithubReleaser.java:534)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:337)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:231)
+	... 24 more
+```</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which is rendered as follows:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/github-summary.jpg" alt="github summary">
+</div>
 </div>
 </article>
   </div>
