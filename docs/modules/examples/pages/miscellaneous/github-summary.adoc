@@ -1,0 +1,156 @@
+= GitHub Summary
+
+GitHub offers a feature called link:https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/[job summaries] that may
+be used to generate additional content when executing jobs on a GitHub Actions workflow. xref:reference:hooks/index.adoc[] may be used to
+enhance the summary output when running a release.
+
+The following example shows how to configure a set of script hooks to create a table showcasing the execution steps and their outcome as emojis.
+
+**jreleaser.yml**
+```yaml
+hooks:
+  condition: '"{{ Env.CI }}" == true'
+  script:
+    before:
+      - filter:
+          includes: ['session']
+        run: |
+          echo "### {{command}}" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Outcome |" >> $GITHUB_STEP_SUMMARY
+          echo "| ---- | ------- |" >> $GITHUB_STEP_SUMMARY
+    success:
+      - filter:
+          excludes: ['session']
+        run: 'echo "| {{event.name}} | :white_check_mark: |" >> $GITHUB_STEP_SUMMARY'
+      - filter:
+          includes: ['session']
+        run: echo "" >> $GITHUB_STEP_SUMMARY
+    failure:
+      - filter:
+          excludes: ['session']
+        run: 'echo "| {{event.name}} | :x: |" >> $GITHUB_STEP_SUMMARY'
+      - filter:
+          includes: ['session']
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Failure" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "{{event.stacktrace}}\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+project:
+  name: helloworld
+  description: HelloWorld in Java
+  longDescription: HelloWorld in Java
+  links:
+    homepage: https://github.com/aalmiray/helloworld
+  authors:
+    - Andres Almiray
+  license: APACHE-2.0
+  inceptionYear: 2023
+  stereotype: cli
+  java:
+    version: 11
+    groupId: org.jreleaser.examples
+    artifactId: helloworld
+    mainClass: org.jreleaser.examples.HelloWorld
+
+release:
+  github:
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+assemble:
+  javaArchive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      fileSets:
+        - input: '.'
+          includes: [ 'LICENSE' ]
+      mainJar:
+        path: target/{{distributionName}}-{{projectVersion}}.jar
+```
+
+Note that all hooks will only be enabled when running on GitHub Actions due to the top level condition `"{{ Env.CI }}" == true`.
+The table header hook matches the `session` event, while the table row hooks exclude it. Finally, if there were to be a failure
+an additional hooks prints out the stacktrace.
+
+In a repopsitory where the github token is wrongfully configured we get the following output when attempting a release
+
+[source, markdown]
+----
+### assemble
+| Step | Outcome |
+| ---- | ------- |
+| assemble | :white_check_mark: |
+
+
+### full-release
+| Step | Outcome |
+| ---- | ------- |
+| changelog | :white_check_mark: |
+| checksum | :white_check_mark: |
+| catalog | :white_check_mark: |
+| sign | :white_check_mark: |
+| deploy | :white_check_mark: |
+| upload | :white_check_mark: |
+| release | :x: |
+
+### Failure
+\```
+org.jreleaser.model.JReleaserException: Unexpected error when creating release
+	at jreleaser.shadow.org.jreleaser.workflow.ReleaseWorkflowItem.doInvoke(ReleaseWorkflowItem.java:41)
+	at jreleaser.shadow.org.jreleaser.workflow.AbstractWorkflowItem.lambda/tmp/jreleaser14525037237472999922.sh(AbstractWorkflowItem.java:43)
+	at jreleaser.shadow.org.jreleaser.engine.hooks.HookExecutor.execute(HookExecutor.java:70)
+	at jreleaser.shadow.org.jreleaser.workflow.AbstractWorkflowItem.invoke(AbstractWorkflowItem.java:43)
+	at jreleaser.shadow.org.jreleaser.workflow.WorkflowImpl.doExecute(WorkflowImpl.java:129)
+	at jreleaser.shadow.org.jreleaser.workflow.WorkflowImpl.execute(WorkflowImpl.java:54)
+	at jreleaser.shadow.org.jreleaser.cli.FullRelease.doExecute(FullRelease.java:219)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractModelCommand.execute(AbstractModelCommand.java:89)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractCommand.call(AbstractCommand.java:52)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractModelCommand.call(AbstractModelCommand.java:53)
+	at jreleaser.shadow.org.jreleaser.cli.AbstractCommand.call(AbstractCommand.java:37)
+	at jreleaser.shadow.picocli.CommandLine.executeUserObject(CommandLine.java:2041)
+	at jreleaser.shadow.picocli.CommandLine.access500(CommandLine.java:148)
+	at jreleaser.shadow.picocli.CommandLine.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2461)
+	at jreleaser.shadow.picocli.CommandLine.handle(CommandLine.java:2453)
+	at jreleaser.shadow.picocli.CommandLine.handle(CommandLine.java:2415)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2273)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2417)
+	at jreleaser.shadow.picocli.CommandLine.execute(CommandLine.java:2170)
+	at jreleaser.shadow.org.jreleaser.cli.Main.execute(Main.java:98)
+	at jreleaser.shadow.org.jreleaser.cli.Main.run(Main.java:94)
+	at org.jreleaser.tool.JReleaser.main(JReleaser.java:47)
+Caused by: jreleaser.shadow.org.jreleaser.model.spi.release.ReleaseException: jreleaser.shadow.org.jreleaser.sdk.commons.RestAPIException: 403: Forbidden
+{message:Resource not accessible by integration,documentation_url:https://docs.github.com/rest/git/refs#delete-a-reference}
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:235)
+	at jreleaser.shadow.org.jreleaser.sdk.git.release.AbstractReleaser.release(AbstractReleaser.java:59)
+	at jreleaser.shadow.org.jreleaser.engine.release.Releasers.release(Releasers.java:56)
+	at jreleaser.shadow.org.jreleaser.workflow.ReleaseWorkflowItem.doInvoke(ReleaseWorkflowItem.java:39)
+	... 21 more
+Caused by: jreleaser.shadow.org.jreleaser.sdk.commons.RestAPIException: 403: Forbidden
+{message:Resource not accessible by integration,documentation_url:https://docs.github.com/rest/git/refs#delete-a-reference}
+	at jreleaser.shadow.org.jreleaser.sdk.commons.ClientUtils.lambda(ClientUtils.java:114)
+	at jreleaser.shadow.feign.InvocationContext.decodeError(InvocationContext.java:114)
+	at jreleaser.shadow.feign.InvocationContext.proceed(InvocationContext.java:72)
+	at jreleaser.shadow.feign.ResponseHandler.handleResponse(ResponseHandler.java:63)
+	at jreleaser.shadow.feign.SynchronousMethodHandler.executeAndDecode(SynchronousMethodHandler.java:114)
+	at jreleaser.shadow.feign.SynchronousMethodHandler.invoke(SynchronousMethodHandler.java:70)
+	at jreleaser.shadow.feign.ReflectiveFeign.invoke(ReflectiveFeign.java:96)
+	at jdk.proxy2/jdk.proxy2..deleteTag(Unknown Source)
+	at jreleaser.shadow.org.jreleaser.sdk.github.Github.deleteTag(Github.java:328)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.deleteTags(GithubReleaser.java:534)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:337)
+	at jreleaser.shadow.org.jreleaser.sdk.github.GithubReleaser.createRelease(GithubReleaser.java:231)
+	... 24 more
+```
+----
+
+Which is rendered as follows:
+
+image::github-summary.jpg[]
