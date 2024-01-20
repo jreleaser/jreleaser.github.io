@@ -329,7 +329,7 @@ jreleaser {
 --
 ====
 
-Any of the following environment variables may be define supply values for `username` and `password`:
+Any of the following environment variables may be defined to supply values for `username` and `password`:
 
  * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_APP_USERNAME`
  * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_USERNAME`
@@ -343,3 +343,118 @@ Any of the following environment variables may be define supply values for `user
  * `JRELEASER_{deployer_env_key}_APP_TOKEN`
  * `JRELEASER_{deployer_env_key}_PASSWORD`
  * `JRELEASER_{deployer_env_key}_TOKEN`
+
+== Staged Deployments
+
+The Nexus2 Maven deployer allows executing deployments in stages that is, you may `UPLOAD`, `CLOSE`, and/or `RELEASE`.
+You may define any of the following system properties or environment variables to set the given stage:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *start*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.start.stage +
+  jreleaser.deploy.maven.{deployer_sys_key}.start.stage +
+  jreleaser.{deployer_sys_key}.${name}.start.stage +
+  jreleaser.{deployer_sys_key}.start.stage
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_START_STAGE +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}__START_STAGE +
+  JRELEASER_{deployer_env_key}_${name}_START_STAGE +
+  JRELEASER_{deployer_env_key}_START_STAGE
+2+| *end*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.end.stage +
+  jreleaser.deploy.maven.{deployer_sys_key}.end.stage +
+  jreleaser.{deployer_sys_key}.${name}.end.stage +
+  jreleaser.{deployer_sys_key}.end.stage
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_END_STAGE +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}__END_STAGE +
+  JRELEASER_{deployer_env_key}_${name}_END_STAGE +
+  JRELEASER_{deployer_env_key}_END_STAGE
+|===
+
+Rules for evaluation stages are as follows:
+
+- if no `start.stage` and `end.stage` are given then deployment process in its entirety as it's currently done.
+- if only `start.stage` is given then deployment occurs from that stage til `RELEASE`.
+- if only `end.stage` is given then deployment occurs from the very beginning until that stage is reached.
+- if both `start.stage` and `end.stage` are given then deployment proceeds from the start stage to the end stage.
+- `end.stage` must be &gt; than `start.stage`. When both are equal then only that single stage will be performed.
+
+[%header, cols="<,<,<2,<2", width="100%"]
+|===
+| START | END | OUTCOME | REQUIREMENTS
+|       |     | full deployment |
+| UPLOAD |    | full deployment |
+| UPLOAD | UPLOAD | only artifacts are uploaded |
+| UPLOAD | CLOSE  | upload artifacts and close repository |
+| UPLOAD | RELEASE | full deployment |
+|        | UPLOAD  | only artifacts are uploaded |
+| CLOSE  |         | close and release repository | staged repository open
+| CLOSE  | CLOSE   | only close repository | staged repository open
+| CLOSE  | RELEASE | close and release repository | staged repository open
+|        | CLOSE   | upload artifacts and close repository |
+| RELEASE |        | release repository | staged repository closed *
+| RELEASE | RELEASE | release repository | staged repository closed *
+|         | RELEASE | full deployment |
+|===
+
+NOTE: Closing and releasing repositories will still be governed by the `closeRepository` and `releaseRepository` properties
+of the given deployer, that is, if `start.stage` is set to `CLOSE`, `closeRepository` is set to `true`, and
+`releaseRepository` is set to `false` then the matching repository will be _closed_ but not _released_.
+
+For simplicity, when `start.stage` is set to `RELEASE` and the target staged repository is still open, the deployer may
+close the repository _if_ `closeRepository` is set to `true`, otherwise the expectation is to find the repository in a
+closed stated. Deployment fails if that's not the case.
+
+The Nexus2 deployer requires both the `stagingProfileId` and the `stagingRepositoryId` when stages are specified.
+These values may be calculated on the spot (matching credentials and target `groupId`). However, these values may also
+be passed using the following system properties or environment variables:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *stagingProfileId*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.staging.profile.id +
+  jreleaser.deploy.maven.{deployer_sys_key}.staging.profile.id +
+  jreleaser.{deployer_sys_key}.${name}.staging.profile.id +
+  jreleaser.{deployer_sys_key}.staging.profile.id
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_STAGING_PROFILE_ID +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}__STAGING_PROFILE_ID +
+  JRELEASER_{deployer_env_key}_${name}_STAGING_PROFILE_ID +
+  JRELEASER_{deployer_env_key}_STAGING_PROFILE_ID
+2+| *stagingRepositoryId*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.staging.repository.id +
+  jreleaser.deploy.maven.{deployer_sys_key}.staging.repository.id +
+  jreleaser.{deployer_sys_key}.${name}.staging.repository.id +
+  jreleaser.{deployer_sys_key}.staging.repository.id
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_STAGING_REPOSITORY_ID +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}__EN_STAGING_REPOSITORY_IDD_STAGE +
+  JRELEASER_{deployer_env_key}_${name}_STAGING_REPOSITORY_ID +
+  JRELEASER_{deployer_env_key}_STAGING_REPOSITORY_ID
+|===
+
+Any mismatches with provided values results in deployment error and no modification of remote resources.
+
+IMPORTANT: Determining the target staging repository requires finding out the latest modified repository in the correct
+state for the given execution stage, any mismatches result in deployment error.
+
+This deployer writes the value of `stagingProfileId` and `stagingRepositoryId` to the output of the JReleaser process,
+typically `out/jreleaser/output.properties` from where you can grab their values and use them in the next invocation.
+
+Here's an example on how a 2 stage deployment may occur:
+
+ - Artifacts deployed to a staged repository:
+[source,shell]
+----
+$ JRELEASER_NEXUS2_END_STAGE=CLOSE jreleaser deploy
+----
+ - Team members have the option to inspect deployed artifacts available from the closed staged repository.
+ - Once the team approves the artifacts the release continues with:
+[source,shell]
+----
+$ JRELEASER_NEXUS2_START_STAGE=RELEASE jreleaser deploy
+----
+
+You may read the values for `stagingProfileId` and `stagingRepositoryId` from `output.properties` and set them as either
+system properties or environment variables for the second invocation.
+
