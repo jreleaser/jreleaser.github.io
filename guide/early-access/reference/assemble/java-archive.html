@@ -522,6 +522,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../catalog/slsa.html">SLSA</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../catalog/swid.html">SWID</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -1038,7 +1041,75 @@ assemble:
           # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           extraProperties:
             # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
-            foo: bar</code></pre>
+            foo: bar
+
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      swid:
+        # Tags require a name.
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        mytag:
+
+          # Enables or disables the tag.
+          # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          # Defaults to `NEVER`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+          active: ALWAYS
+
+          # Reference to a common tag.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          tagRef: swid-tag
+
+          # Path where the tag file will be placed.
+          # Defaults to `SWIDTAG`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          path: SWID
+
+          # A globally unique identifier and should be assigned a GUID reference.
+          # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          tagId: c526ec37-2715-328e-8bbc-4eb5a9f47c98
+
+          # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+          # Defaults to `1`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          tagVersion: 2
+
+          # Language used in the tag document.
+          # Defaults to `en-US`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          lang: de
+
+          # If this SWID tag is a collection of information that describes the pre-installation data of software component.
+          # Defaults to `false`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          corpus: true
+
+          # If this SWID tag describes a product patch or modification to a different software element.
+          # Defaults to `false`.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          patch: false
+
+          # List of organizations related to the software component referenced by this SWID tag.
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          entities:
+              # name of the organization claiming a particular role in the SWID tag.
+              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            - name: Acme
+
+              # URI of the claiming organization.
+              # Defaults to `http://invalid.unavailable`.
+              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              regid: https://acme.com
+
+              # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+              # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+              # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+              # Other roles will be defined as the market uses the SWID tags.
+              # Defaults to [`tagCreator`, `softwareCreator`].
+              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              roles:
+                - tagCreator
+                - softwareCreator</code></pre>
 </div>
 </div>
 </div>
@@ -1209,7 +1280,69 @@ assemble:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     [[assemble.javaArchive.app.fileSets.extraProperties]]
       # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
-      foo: bar</code></pre>
+      foo: bar
+
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  [assemble.javaArchive.app.swid]
+    # Enables or disables the tag.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    active = "ALWAYS"
+
+    # Reference to a common tag.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    tagRef = "swid-tag"
+
+    # Path where the tag file will be placed.
+    # Defaults to `SWIDTAG`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    path = "SWID"
+
+    # A globally unique identifier and should be assigned a GUID reference.
+    # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    tagId = "c526ec37-2715-328e-8bbc-4eb5a9f47c98"
+
+    # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+    # Defaults to `1`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    tagVersion = 2
+
+    # Language used in the tag document.
+    # Defaults to `en-US`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    lang = "de"
+
+    # If this SWID tag is a collection of information that describes the pre-installation data of software component.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    corpus = true
+
+    # If this SWID tag describes a product patch or modification to a different software element.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    patch = false
+
+    # List of organizations related to the software component referenced by this SWID tag.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    [[assemble.javaArchive.app.swid.entities]]
+      # name of the organization claiming a particular role in the SWID tag.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      name = "Acme"
+
+      # URI of the claiming organization.
+      # Defaults to `http://invalid.unavailable`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      regid = "https://acme.com"
+
+      # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+      # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+      # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+      # Other roles will be defined as the market uses the SWID tags.
+      # Defaults to [`tagCreator`, `softwareCreator`].
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      roles = ["tagCreator", "softwareCreator"]</code></pre>
 </div>
 </div>
 </div>
@@ -1415,7 +1548,80 @@ assemble:
               "foo": "bar"
             }
           }
-        ]
+        ],
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "swid": {
+          // Tags require a name.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          "mytag": {
+
+            // Enables or disables the tag.
+            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to `NEVER`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+            "active": "ALWAYS",
+
+            // Reference to a common tag.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "tagRef": "swid-tag",
+
+            // Path where the tag file will be placed.
+            // Defaults to `SWIDTAG`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "path": "SWID",
+
+            // A globally unique identifier and should be assigned a GUID reference.
+            // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "tagId": "c526ec37-2715-328e-8bbc-4eb5a9f47c98",
+
+            // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+            // Defaults to `1`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "tagVersion": 2,
+
+            // Language used in the tag document.
+            // Defaults to `en-US`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "lang": "de",
+
+            // If this SWID tag is a collection of information that describes the pre-installation data of software component.
+            // Defaults to `false`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "corpus": true,
+
+            // If this SWID tag describes a product patch or modification to a different software element.
+            // Defaults to `false`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "patch": false,
+
+            // List of organizations related to the software component referenced by this SWID tag.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            "entities": [
+              {
+                // name of the organization claiming a particular role in the SWID tag.
+                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                "name": "Acme",
+
+                // URI of the claiming organization.
+                // Defaults to `http://invalid.unavailable`.
+                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                "regid": "https://acme.com",
+
+                // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+                // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+                // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+                // Other roles will be defined as the market uses the SWID tags.
+                // Defaults to [`tagCreator`, `softwareCreator`].
+                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                "roles": [
+                  "tagCreator",
+                  "softwareCreator"
+                ]
+              }
+            ]
+          }
+        }
       }
     }
   }
@@ -1707,6 +1913,108 @@ assemble:
             &lt;/extraProperties&gt;
           &lt;/fileSet&gt;
         &lt;/fileSets&gt;
+
+        &lt;!--
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;swid&gt;
+          &lt;!--
+            Tags require a name.
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          --&gt;
+          &lt;mytag&gt;
+
+            &lt;!--
+              Enables or disables the tag.
+              Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+              Defaults to `NEVER`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+            --&gt;
+            &lt;active&gt;ALWAYS&lt;/active&gt;
+
+            &lt;!--
+              Reference to a common tag.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;tagRef&gt;swid-tag&lt;/tagRef&gt;
+
+            &lt;!--
+              Path where the tag file will be placed.
+              Defaults to `SWIDTAG`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;path&gt;SWID&lt;/path&gt;
+
+            &lt;!--
+              A globally unique identifier and should be assigned a GUID reference.
+              Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;tagId&gt;c526ec37-2715-328e-8bbc-4eb5a9f47c98&lt;/tagId&gt;
+
+            &lt;!--
+              Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+              Defaults to `1`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;tagVersion&gt;2&lt;/tagVersion&gt;
+
+            &lt;!--
+              Language used in the tag document.
+              Defaults to `en-US`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;lang&gt;de&lt;/lang&gt;
+
+            &lt;!--
+              If this SWID tag is a collection of information that describes the pre-installation data of software component.
+              Defaults to `false`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;corpus&gt;true&lt;/corpus&gt;
+
+            &lt;!--
+              If this SWID tag describes a product patch or modification to a different software element.
+              Defaults to `false`.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;patch&gt;false&lt;/patch&gt;
+
+            &lt;!--
+              List of organizations related to the software component referenced by this SWID tag.
+              <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            --&gt;
+            &lt;entities&gt;
+              &lt;entity&gt;
+                &lt;!--
+                  name of the organization claiming a particular role in the SWID tag.
+                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                --&gt;
+                &lt;name&gt;Acme&lt;/name&gt;
+
+                &lt;!--
+                  URI of the claiming organization.
+                  Defaults to `http://invalid.unavailable`.
+                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                --&gt;
+                &lt;regid&gt;https://acme.com&lt;/regid&gt;
+
+                &lt;!--
+                  The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+                  The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+                  include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+                  Other roles will be defined as the market uses the SWID tags.
+                  Defaults to [`tagCreator`, `softwareCreator`].
+                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
+                --&gt;
+                &lt;roles&gt;
+                  &lt;role&gt;tagCreator&lt;/role&gt;
+                  &lt;role&gt;softwareCreator&lt;/role&gt;
+                &lt;/roles&gt;
+              &lt;/entity&gt;
+            &lt;/entities&gt;
+          &lt;/swid-tag&gt;
+        &lt;/swid&gt;
       &lt;/app&gt;
     &lt;/javaArchive&gt;
   &lt;/assemble&gt;
@@ -1904,6 +2212,76 @@ assemble:
           // Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           extraProperties.put('foo', 'bar')
+        }
+
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        swid {
+          // Tags require a name.
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          mytag {
+
+            // Enables or disables the tag.
+            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to `NEVER`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+            active = 'ALWAYS'
+
+            // Reference to a common tag.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            tagRef = 'swid-tag'
+
+            // Path where the tag file will be placed.
+            // Defaults to `SWIDTAG`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            path = 'SWID'
+
+            // A globally unique identifier and should be assigned a GUID reference.
+            // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            tagId = 'c526ec37-2715-328e-8bbc-4eb5a9f47c98'
+
+            // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+            // Defaults to `1`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            tagVersion = 2
+
+            // Language used in the tag document.
+            // Defaults to `en-US`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            lang = 'de'
+
+            // If this SWID tag is a collection of information that describes the pre-installation data of software component.
+            // Defaults to `false`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            corpus = true
+
+            // If this SWID tag describes a product patch or modification to a different software element.
+            // Defaults to `false`.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            patch = false
+
+            // List of organizations related to the software component referenced by this SWID tag.
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+            entity {
+              // name of the organization claiming a particular role in the SWID tag.
+              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              name = 'Acme'
+
+              // URI of the claiming organization.
+              // Defaults to `http://invalid.unavailable`.
+              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              regid = 'https://acme.com'
+
+              // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+              // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+              // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+              // Other roles will be defined as the market uses the SWID tags.
+              // Defaults to [`tagCreator`, `softwareCreator`].
+              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+              role('tagCreator')
+              role('softwareCreator')
+            }
+          }
         }
       }
     }
