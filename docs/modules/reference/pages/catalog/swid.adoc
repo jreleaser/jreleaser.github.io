@@ -1,0 +1,434 @@
+= SWID
+:cataloger_sys_key: swid
+:cataloger_env_key: SWID
+
+Software Identification (link:https://csrc.nist.gov/Projects/Software-Identification-SWID/[SWID]) Tags, defined by the
+ISO/IEC 19770-2:2015 standard, promise to be an important step towards such a goal. SWID Tags provide a transparent way
+for organizations to track the software installed on their managed devices. SWID Tag files contain descriptive
+information about a specific release of a software product.
+
+This section defines common tags that may be consumed by xref:reference:assemble/index.adoc[assemblers].
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+catalog:
+  # icon:dot-circle[]
+  swid:
+    # Tags require a name.
+    # icon:exclamation-triangle[]
+    mytag:
+
+      # Enables or disables the tag.
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # icon:dot-circle[] icon:eye-slash[]
+      active: ALWAYS
+
+      # Path where the tag file will be placed.
+      # Defaults to `SWIDTAG`.
+      # icon:dot-circle[]
+      path: SWID
+
+      # A globally unique identifier and should be assigned a GUID reference.
+      # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+      # icon:dot-circle[]
+      tagId: c526ec37-2715-328e-8bbc-4eb5a9f47c98
+
+      # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+      # Defaults to `1`.
+      # icon:dot-circle[]
+      tagVersion: 2
+
+      # Language used in the tag document.
+      # Defaults to `en-US`.
+      # icon:dot-circle[]
+      lang: de
+
+      # If this SWID tag is a collection of information that describes the pre-installation data of software component.
+      # Defaults to `false`.
+      # icon:dot-circle[]
+      corpus: true
+
+      # If this SWID tag describes a product patch or modification to a different software element.
+      # Defaults to `false`.
+      # icon:dot-circle[]
+      patch: false
+
+      # List of organizations related to the software component referenced by this SWID tag.
+      # icon:dot-circle[]
+      entities:
+          # name of the organization claiming a particular role in the SWID tag.
+          # icon:dot-circle[]
+        - name: Acme
+
+          # URI of the claiming organization.
+          # Defaults to `http://invalid.unavailable`.
+          # icon:dot-circle[]
+          regid: pass:[https://acme.com]
+
+          # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+          # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+          # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+          # Other roles will be defined as the market uses the SWID tags.
+          # Defaults to [`tagCreator`, `softwareCreator`].
+          # icon:dot-circle[]
+          roles:
+            - tagCreator
+            - softwareCreator
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+# Tags require a name.
+# icon:dot-circle[]
+[catalog.swid.mytag]
+
+  # Enables or disables the tag.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  active = "ALWAYS"
+
+  # Path where the tag file will be placed.
+  # Defaults to `SWIDTAG`.
+  # icon:dot-circle[]
+  path = "SWID"
+
+  # A globally unique identifier and should be assigned a GUID reference.
+  # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+  # icon:dot-circle[]
+  tagId = "c526ec37-2715-328e-8bbc-4eb5a9f47c98"
+
+  # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+  # Defaults to `1`.
+  # icon:dot-circle[]
+  tagVersion = 2
+
+  # Language used in the tag document.
+  # Defaults to `en-US`.
+  # icon:dot-circle[]
+  lang = "de"
+
+  # If this SWID tag is a collection of information that describes the pre-installation data of software component.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  corpus = true
+
+  # If this SWID tag describes a product patch or modification to a different software element.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  patch = false
+
+  # List of organizations related to the software component referenced by this SWID tag.
+  # icon:dot-circle[]
+[[catalog.swid.mytag.entities]]
+  # name of the organization claiming a particular role in the SWID tag.
+  # icon:dot-circle[]
+  name = "Acme"
+
+  # URI of the claiming organization.
+  # Defaults to `http://invalid.unavailable`.
+  # icon:dot-circle[]
+  regid = "pass:[https://acme.com]"
+
+  # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+  # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+  # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+  # Other roles will be defined as the market uses the SWID tags.
+  # Defaults to [`tagCreator`, `softwareCreator`].
+  # icon:dot-circle[]
+  roles = ["tagCreator", "softwareCreator"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "catalog": {
+    // icon:dot-circle[]
+    "swid": {
+      // Tags require a name.
+      // icon:exclamation-triangle[]
+      "mytag": {
+
+        // Enables or disables the tag.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[] icon:eye-slash[]
+        "active": "ALWAYS",
+
+        // Path where the tag file will be placed.
+        // Defaults to `SWIDTAG`.
+        // icon:dot-circle[]
+        "path": "SWID",
+
+        // A globally unique identifier and should be assigned a GUID reference.
+        // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+        // icon:dot-circle[]
+        "tagId": "c526ec37-2715-328e-8bbc-4eb5a9f47c98",
+
+        // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+        // Defaults to `1`.
+        // icon:dot-circle[]
+        "tagVersion": 2,
+
+        // Language used in the tag document.
+        // Defaults to `en-US`.
+        // icon:dot-circle[]
+        "lang": "de",
+
+        // If this SWID tag is a collection of information that describes the pre-installation data of software component.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "corpus": true,
+
+        // If this SWID tag describes a product patch or modification to a different software element.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "patch": false,
+
+        // List of organizations related to the software component referenced by this SWID tag.
+        // icon:dot-circle[]
+        "entities": [
+          {
+            // name of the organization claiming a particular role in the SWID tag.
+            // icon:dot-circle[]
+            "name": "Acme",
+
+            // URI of the claiming organization.
+            // Defaults to `http://invalid.unavailable`.
+            // icon:dot-circle[]
+            "regid": "pass:[https://acme.com]",
+
+            // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+            // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+            // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+            // Other roles will be defined as the market uses the SWID tags.
+            // Defaults to [`tagCreator`, `softwareCreator`].
+            // icon:dot-circle[]
+            "roles": [
+              "tagCreator",
+              "softwareCreator"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <!--
+    icon:dot-circle[]
+  -->
+  <catalog>
+    <!--
+      icon:dot-circle[]
+    -->
+    <swid>
+      <!--
+        Tags require a name.
+        icon:exclamation-triangle[]
+      -->
+      <mytag>
+
+        <!--
+          Enables or disables the tag.
+          Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          Defaults to `NEVER`.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <active>ALWAYS</active>
+
+        <!--
+          Path where the tag file will be placed.
+          Defaults to `SWIDTAG`.
+          icon:dot-circle[]
+        -->
+        <path>SWID</path>
+
+        <!--
+          A globally unique identifier and should be assigned a GUID reference.
+          Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+          icon:dot-circle[]
+        -->
+        <tagId>c526ec37-2715-328e-8bbc-4eb5a9f47c98</tagId>
+
+        <!--
+          Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+          Defaults to `1`.
+          icon:dot-circle[]
+        -->
+        <tagVersion>2</tagVersion>
+
+        <!--
+          Language used in the tag document.
+          Defaults to `en-US`.
+          icon:dot-circle[]
+        -->
+        <lang>de</lang>
+
+        <!--
+          If this SWID tag is a collection of information that describes the pre-installation data of software component.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <corpus>true</corpus>
+
+        <!--
+          If this SWID tag describes a product patch or modification to a different software element.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <patch>false</patch>
+
+        <!--
+          List of organizations related to the software component referenced by this SWID tag.
+          icon:dot-circle[]
+        -->
+        <entities>
+          <entity>
+            <!--
+              name of the organization claiming a particular role in the SWID tag.
+              icon:dot-circle[]
+            -->
+            <name>Acme</name>
+
+            <!--
+              URI of the claiming organization.
+              Defaults to `http://invalid.unavailable`.
+              icon:dot-circle[]
+            -->
+            <regid>pass:[https://acme.com]</regid>
+
+            <!--
+              The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+              The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+              include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+              Other roles will be defined as the market uses the SWID tags.
+              Defaults to [`tagCreator`, `softwareCreator`].
+              icon:dot-circle[]
+            -->
+            <roles>
+              <role>tagCreator</role>
+              <role>softwareCreator</role>
+            </roles>
+          </entity>
+        </entities>
+      </swid-tag>
+    </swid>
+  </catalog>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  catalog {
+    // icon:dot-circle[]
+    swid {
+      // Tags require a name.
+      // icon:exclamation-triangle[]
+      mytag {
+
+        // Enables or disables the tag.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `NEVER`.
+        // icon:dot-circle[] icon:eye-slash[]
+        active = 'ALWAYS'
+
+        // Path where the tag file will be placed.
+        // Defaults to `SWIDTAG`.
+        // icon:dot-circle[]
+        path = 'SWID'
+
+        // A globally unique identifier and should be assigned a GUID reference.
+        // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
+        // icon:dot-circle[]
+        tagId = 'c526ec37-2715-328e-8bbc-4eb5a9f47c98'
+
+        // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
+        // Defaults to `1`.
+        // icon:dot-circle[]
+        tagVersion = 2
+
+        // Language used in the tag document.
+        // Defaults to `en-US`.
+        // icon:dot-circle[]
+        lang = 'de'
+
+        // If this SWID tag is a collection of information that describes the pre-installation data of software component.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        corpus = true
+
+        // If this SWID tag describes a product patch or modification to a different software element.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        patch = false
+
+        // List of organizations related to the software component referenced by this SWID tag.
+        // icon:dot-circle[]
+        entity {
+          // name of the organization claiming a particular role in the SWID tag.
+          // icon:dot-circle[]
+          name = 'Acme'
+
+          // URI of the claiming organization.
+          // Defaults to `http://invalid.unavailable`.
+          // icon:dot-circle[]
+          regid = 'pass:[https://acme.com]'
+
+          // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
+          // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
+          // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
+          // Other roles will be defined as the market uses the SWID tags.
+          // Defaults to [`tagCreator`, `softwareCreator`].
+          // icon:dot-circle[]
+          role('tagCreator')
+          role('softwareCreator')
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property                               | Environment Variable
+2+| *active*
+| jreleaser.catalog.{cataloger_sys_key}.${name}.active | JRELEASER_CATALOG_{cataloger_env_key}_${name}_ACTIVE
+|===
