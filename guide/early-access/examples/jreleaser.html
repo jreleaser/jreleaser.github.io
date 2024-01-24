@@ -823,8 +823,8 @@ is used to create both release and snapshot releases:</p>
 environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
-    graalFilePrefix: 'graalvm-ce-java17-22.2.0'
+    jdkFilePrefix: 'zulu21.32.17-ca-jdk21.0.2'
+    graalFilePrefix: 'graalvm-community-openjdk-21.0.2+13.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
 
@@ -937,13 +937,17 @@ signing:
   active: ALWAYS
   armored: true
 
-# Generate SBOMs for all distributions and files
 catalog:
+  # Generate SBOMs for all distributions and files
   sbom:
     syft:
       active: ALWAYS
       pack:
         enabled: true
+  # Configure SWID tag with defaults
+  swid:
+    swid-tag:
+      active: ALWAYS
 
 # Deploy JARs and POMs to Maven Central
 deploy:
@@ -959,6 +963,9 @@ deploy:
 
 # Announcing a release only occurs when it's not snapshot
 announce:
+  bluesky:
+    active: RELEASE
+    statusTemplate: src/jreleaser/bluesky.tpl
   twitter:
     active: RELEASE
     statusTemplate: src/jreleaser/twitter.tpl
@@ -986,7 +993,7 @@ assemble:
     jreleaser-standalone:
       active: ALWAYS
       java:
-        version: 11
+        version: 21
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1009,26 +1016,26 @@ assemble:
         - 'jdk.security.auth'
         - 'jdk.security.jgss'
       targetJdks:
-        - path: '{{jdkPathPrefix}}/zulu17Osx/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+        - path: '{{jdkPathPrefix}}/zulu21Osx/{{jdkFilePrefix}}-macosx_x64/zulu-21.jdk/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
+        - path: '{{jdkPathPrefix}}/zulu21OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-21.jdk/Contents/Home'
           platform: 'osx-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Linux/{{jdkFilePrefix}}-linux_x64'
+        - path: '{{jdkPathPrefix}}/zulu21Linux/{{jdkFilePrefix}}-linux_x64'
           platform: 'linux-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
+        - path: '{{jdkPathPrefix}}/zulu21LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
           platform: 'linux-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
+        - path: '{{jdkPathPrefix}}/zulu21LinuxMusl/{{jdkFilePrefix}}-linux_musl_x64'
           platform: 'linux_musl-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu17LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
+        - path: '{{jdkPathPrefix}}/zulu21LinuxMuslArm/{{jdkFilePrefix}}-linux_musl_aarch64'
           platform: 'linux_musl-aarch_64'
-        - path: '{{jdkPathPrefix}}/zulu17Windows/{{jdkFilePrefix}}-win_x64'
+        - path: '{{jdkPathPrefix}}/zulu21Windows/{{jdkFilePrefix}}-win_x64'
           platform: 'windows-x86_64'
-        - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
-          platform: 'windows-aarch_64'
       mainJar:
-        path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+        path: 'plugins/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
-        - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
+        - pattern: 'plugins/jreleaser/build/dependencies/flat/*.jar'
+      swid:
+        tagRef: swid-tag
 
   # Configure platform specific installers
   jpackage:
@@ -1063,7 +1070,7 @@ assemble:
     jreleaser-native:
       active: ALWAYS
       java:
-        version: 17
+        version: 21
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1079,12 +1086,10 @@ assemble:
         - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
         - pattern: 'plugins/jreleaser/build/dependencies/graalvm/*.jar'
       graalJdks:
-        - path: '{{jdkPathPrefix}}/graal17Osx/{{graalFilePrefix}}/Contents/Home'
+        - path: '{{jdkPathPrefix}}/graal21Osx/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/graal17Linux/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal21Linux/{{graalFilePrefix}}'
           platform: 'linux-x86_64'
-        - path: '{{jdkPathPrefix}}/graal17Windows/{{graalFilePrefix}}'
-          platform: 'windows-x86_64'
       upx:
         active: ALWAYS
         version: '3.96'
@@ -1093,7 +1098,9 @@ assemble:
         - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
         - '-H:Optimize=2'
         - '-H:+RemoveUnusedSymbols'
-        -
+      swid:
+        tagRef: swid-tag
+
 # Configure 5 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
@@ -1285,8 +1292,6 @@ distributions:
         platform: 'osx-x86_64'
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip'
         platform: 'linux-x86_64'
-      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.zip'
-        platform: 'windows-x86_64'
 
 files:
   artifacts:
@@ -1321,7 +1326,6 @@ jreleaser-standalone-early-access-linux_musl-aarch64.zip
 jreleaser-standalone-early-access-linux_musl-x86_64.zip
 jreleaser-standalone-early-access-osx-aarch64.zip
 jreleaser-standalone-early-access-osx-x86_64.zip
-jreleaser-standalone-early-access-windows-aarch64.zip
 jreleaser-standalone-early-access-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
@@ -1333,7 +1337,6 @@ jreleaser-installer-early-access-windows-x86_64.msi
 # binaries created by the NativeImage assembler
 jreleaser-native-early-access-osx-x86_64.zip
 jreleaser-native-early-access-linux-x86_64.zip
-jreleaser-native-early-access-windows-x86_64.zip
 
 # sbom archive
 jreleaser-early-access-sboms.zip
@@ -1358,7 +1361,6 @@ jreleaser-standalone-early-access-linux_musl-aarch64.zip.asc
 jreleaser-standalone-early-access-linux_musl-x86_64.zip.asc
 jreleaser-standalone-early-access-osx-aarch64.zip.asc
 jreleaser-standalone-early-access-osx-x86_64.zip.asc
-jreleaser-standalone-early-access-windows-aarch64.zip.asc
 jreleaser-standalone-early-access-windows-x86_64.zip.asc
 jreleaser-installer-early-access-osx-x86_64.pkg.asc
 jreleaser-installer-early-access-1_amd64.deb.asc
@@ -1366,7 +1368,6 @@ jreleaser-installer-early-access-1.x86_64.rpm.asc
 jreleaser-installer-early-access-windows-x86_64.msi.asc
 jreleaser-native-early-access-osx-x86_64.zip.asc
 jreleaser-native-early-access-linux-x86_64.zip.asc
-jreleaser-native-early-access-windows-x86_64.zip.asc
 
 # additional files
 VERSION</code></pre>
@@ -1436,7 +1437,7 @@ VERSION</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Finally, Twitter &amp; Mastodon threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
+<p>Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
 </div>
 </article>
   </div>
