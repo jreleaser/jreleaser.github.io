@@ -509,7 +509,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">SBOM</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/catalog/sbom/cyclonedx.html">CycloneDX</a>
@@ -827,6 +827,7 @@ environment:
     graalFilePrefix: 'graalvm-ce-java17-22.2.0'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
+    javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
 
 # General information about this project
 project:
@@ -988,6 +989,27 @@ announce:
         Content-Type: application/json
 
 assemble:
+  # Configure the universal Java binary distribution
+  javaArchive:
+    jreleaser:
+      active: ALWAYS
+      formats:
+        - ZIP
+        - TAR
+      fileSets:
+        - input: '.'
+          includes:
+            - NOTICE
+            - LICENSE
+        - input: licenses
+          output: licenses
+      mainJar:
+        path: 'plugins/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+      jars:
+        - pattern: 'plugins/jreleaser/build/dependencies/flat/*.jar'
+      swid:
+        tagRef: swid-tag
+
   # Configure a cross-platform Jlink assembly
   jlink:
     jreleaser-standalone:
@@ -1180,11 +1202,11 @@ distributions:
         name: jreleaser-copr
     artifacts:
       # Transform the artifact name
-      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+      - path: '{{javaArchiveDir}}/{{distributionName}}-{{projectVersion}}.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
         extraProperties:
           skipSpec: true
-      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
+      - path: '{{javaArchiveDir}}/{{distributionName}}-{{projectVersion}}.tar'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
         extraProperties:
           skipFlatpak: true
@@ -1316,10 +1338,12 @@ the project is not snapshot.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the Gradle build
-jreleaser-early-access.tar
-jreleaser-early-access.zip
 jreleaser-ant-tasks-early-access.zip
 jreleaser-tool-provider-early-access.jar
+
+# binaries created by the Java-archive assembler
+jreleaser-early-access.tar
+jreleaser-early-access.zip
 
 # binaries created by the Jlink assembler
 jreleaser-standalone-early-access-linux-aarch64.zip
@@ -1441,7 +1465,8 @@ VERSION</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
+<p>Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news" class="bare">https://jreleaser.noticeable.news</a>
+and the <a href="https://opencollective.com/jreleaser" class="bare">https://opencollective.com/jreleaser</a> pages.</p>
 </div>
 </article>
   </div>
