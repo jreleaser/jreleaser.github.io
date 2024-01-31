@@ -14,7 +14,7 @@ environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
     jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
-    graalFilePrefix: 'graalvm-ce-java17-22.2.0'
+    graalFilePrefix: 'graalvm-community-openjdk-21.0.2+13.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
@@ -300,10 +300,14 @@ assemble:
         - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
         - pattern: 'plugins/jreleaser/build/dependencies/graalvm/*.jar'
       graalJdks:
-        - path: '{{jdkPathPrefix}}/graal17Osx/{{graalFilePrefix}}/Contents/Home'
+        - path: '{{jdkPathPrefix}}/graal21Osx/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/graal17Linux/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal21OsxArm/{{graalFilePrefix}}/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/graal21Linux/{{graalFilePrefix}}'
           platform: 'linux-x86_64'
+        - path: '{{jdkPathPrefix}}/graal21Windows/{{graalFilePrefix}}'
+          platform: 'windows-x86_64'
       upx:
         active: ALWAYS
         version: '3.96'
@@ -502,10 +506,14 @@ distributions:
   # Name matches the assembled nativeImage distribution
   jreleaser-native:
     artifacts:
+      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-aarch64.zip'
+        platform: 'osx-aarch_64'
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip'
         platform: 'osx-x86_64'
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip'
         platform: 'linux-x86_64'
+      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.zip'
+        platform: 'windows-x86_64'
 
 files:
   artifacts:
@@ -551,8 +559,10 @@ jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm
 jreleaser-installer-{jreleaser-effective-version}-windows-x86_64.msi
 
 # binaries created by the NativeImage assembler
+jreleaser-native-{jreleaser-effective-version}-osx-aarch64.zip
 jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip
 jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip
+jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip
 
 # sbom archive
 jreleaser-{jreleaser-effective-version}-sboms.zip
@@ -584,7 +594,9 @@ jreleaser-installer-{jreleaser-effective-version}-1_amd64.deb.asc
 jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm.asc
 jreleaser-installer-{jreleaser-effective-version}-windows-x86_64.msi.asc
 jreleaser-native-{jreleaser-effective-version}-osx-x86_64.zip.asc
+jreleaser-native-{jreleaser-effective-version}-osx-aarch64.zip.asc
 jreleaser-native-{jreleaser-effective-version}-linux-x86_64.zip.asc
+jreleaser-native-{jreleaser-effective-version}-windows-x86_64.zip.asc
 
 # additional files
 VERSION
