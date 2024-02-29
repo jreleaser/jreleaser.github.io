@@ -509,7 +509,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../reference/catalog/sbom/index.html">Sbom</a>
+    <a class="nav-link" href="../reference/catalog/sbom/index.html">SBOM</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../reference/catalog/sbom/cyclonedx.html">CycloneDX</a>
@@ -521,6 +521,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/catalog/slsa.html">SLSA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/catalog/swid.html">SWID</a>
   </li>
 </ul>
   </li>
@@ -821,9 +824,10 @@ environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
     jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
-    graalFilePrefix: 'graalvm-ce-java17-22.2.0'
+    graalFilePrefix: 'graalvm-community-openjdk-21.0.2+13.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
+    javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
 
 # General information about this project
 project:
@@ -934,13 +938,17 @@ signing:
   active: ALWAYS
   armored: true
 
-# Generate SBOMs for all distributions and files
 catalog:
+  # Generate SBOMs for all distributions and files
   sbom:
     syft:
       active: ALWAYS
       pack:
         enabled: true
+  # Configure SWID tag with defaults
+  swid:
+    swid-tag:
+      active: ALWAYS
 
 # Deploy JARs and POMs to Maven Central
 deploy:
@@ -956,6 +964,9 @@ deploy:
 
 # Announcing a release only occurs when it's not snapshot
 announce:
+  bluesky:
+    active: RELEASE
+    statusTemplate: src/jreleaser/bluesky.tpl
   twitter:
     active: RELEASE
     statusTemplate: src/jreleaser/twitter.tpl
@@ -978,12 +989,33 @@ announce:
         Content-Type: application/json
 
 assemble:
+  # Configure the universal Java binary distribution
+  javaArchive:
+    jreleaser:
+      active: ALWAYS
+      formats:
+        - ZIP
+        - TAR
+      fileSets:
+        - input: '.'
+          includes:
+            - NOTICE
+            - LICENSE
+        - input: licenses
+          output: licenses
+      mainJar:
+        path: 'plugins/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+      jars:
+        - pattern: 'plugins/jreleaser/build/dependencies/flat/*.jar'
+      swid:
+        tagRef: swid-tag
+
   # Configure a cross-platform Jlink assembly
   jlink:
     jreleaser-standalone:
       active: ALWAYS
       java:
-        version: 11
+        version: 17
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1023,9 +1055,11 @@ assemble:
         - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
           platform: 'windows-aarch_64'
       mainJar:
-        path: 'apps/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
+        path: 'plugins/jreleaser/build/libs/jreleaser-{{projectVersion}}.jar'
       jars:
-        - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
+        - pattern: 'plugins/jreleaser/build/dependencies/flat/*.jar'
+      swid:
+        tagRef: swid-tag
 
   # Configure platform specific installers
   jpackage:
@@ -1076,11 +1110,13 @@ assemble:
         - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
         - pattern: 'plugins/jreleaser/build/dependencies/graalvm/*.jar'
       graalJdks:
-        - path: '{{jdkPathPrefix}}/graal17Osx/{{graalFilePrefix}}/Contents/Home'
+        - path: '{{jdkPathPrefix}}/graal21Osx/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/graal17Linux/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal21OsxArm/{{graalFilePrefix}}/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/graal21Linux/{{graalFilePrefix}}'
           platform: 'linux-x86_64'
-        - path: '{{jdkPathPrefix}}/graal17Windows/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal21Windows/{{graalFilePrefix}}'
           platform: 'windows-x86_64'
       upx:
         active: ALWAYS
@@ -1090,7 +1126,9 @@ assemble:
         - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
         - '-H:Optimize=2'
         - '-H:+RemoveUnusedSymbols'
-        -
+      swid:
+        tagRef: swid-tag
+
 # Configure 5 distributions
 distributions:
   # Distribution 1 is of type JAVA_BINARY
@@ -1168,11 +1206,11 @@ distributions:
         name: jreleaser-copr
     artifacts:
       # Transform the artifact name
-      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.zip
+      - path: '{{javaArchiveDir}}/{{distributionName}}-{{projectVersion}}.zip'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.zip'
         extraProperties:
           skipSpec: true
-      - path: apps/{{distributionName}}/build/distributions/{{distributionName}}-{{projectVersion}}.tar
+      - path: '{{javaArchiveDir}}/{{distributionName}}-{{projectVersion}}.tar'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}.tar'
         extraProperties:
           skipFlatpak: true
@@ -1278,6 +1316,8 @@ distributions:
   # Name matches the assembled nativeImage distribution
   jreleaser-native:
     artifacts:
+      - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-aarch64.zip'
+        platform: 'osx-aarch_64'
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip'
         platform: 'osx-x86_64'
       - path: '{{nativeImageDir}}/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip'
@@ -1306,64 +1346,68 @@ the project is not snapshot.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs"># binaries created by the Gradle build
-jreleaser-1.10.0.tar
-jreleaser-1.10.0.zip
-jreleaser-ant-tasks-1.10.0.zip
-jreleaser-tool-provider-1.10.0.jar
+jreleaser-ant-tasks-1.11.0.zip
+jreleaser-tool-provider-1.11.0.jar
+
+# binaries created by the Java-archive assembler
+jreleaser-1.11.0.tar
+jreleaser-1.11.0.zip
 
 # binaries created by the Jlink assembler
-jreleaser-standalone-1.10.0-linux-aarch64.zip
-jreleaser-standalone-1.10.0-linux-x86_64.zip
-jreleaser-standalone-1.10.0-linux_musl-aarch64.zip
-jreleaser-standalone-1.10.0-linux_musl-x86_64.zip
-jreleaser-standalone-1.10.0-osx-aarch64.zip
-jreleaser-standalone-1.10.0-osx-x86_64.zip
-jreleaser-standalone-1.10.0-windows-aarch64.zip
-jreleaser-standalone-1.10.0-windows-x86_64.zip
+jreleaser-standalone-1.11.0-linux-aarch64.zip
+jreleaser-standalone-1.11.0-linux-x86_64.zip
+jreleaser-standalone-1.11.0-linux_musl-aarch64.zip
+jreleaser-standalone-1.11.0-linux_musl-x86_64.zip
+jreleaser-standalone-1.11.0-osx-aarch64.zip
+jreleaser-standalone-1.11.0-osx-x86_64.zip
+jreleaser-standalone-1.11.0-windows-aarch64.zip
+jreleaser-standalone-1.11.0-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
-jreleaser-installer-1.10.0-osx-x86_64.pkg
-jreleaser-installer-1.10.0-1_amd64.deb
-jreleaser-installer-1.10.0-1.x86_64.rpm
-jreleaser-installer-1.10.0-windows-x86_64.msi
+jreleaser-installer-1.11.0-osx-x86_64.pkg
+jreleaser-installer-1.11.0-1_amd64.deb
+jreleaser-installer-1.11.0-1.x86_64.rpm
+jreleaser-installer-1.11.0-windows-x86_64.msi
 
 # binaries created by the NativeImage assembler
-jreleaser-native-1.10.0-osx-x86_64.zip
-jreleaser-native-1.10.0-linux-x86_64.zip
-jreleaser-native-1.10.0-windows-x86_64.zip
+jreleaser-native-1.11.0-osx-aarch64.zip
+jreleaser-native-1.11.0-osx-x86_64.zip
+jreleaser-native-1.11.0-linux-x86_64.zip
+jreleaser-native-1.11.0-windows-x86_64.zip
 
 # sbom archive
-jreleaser-1.10.0-sboms.zip
+jreleaser-1.11.0-sboms.zip
 
 # checksums
 checksums_rmd160.txt
 checksums_sha256.txt
-jreleaser-1.10.0.zip.rmd160
-jreleaser-1.10.0.zip.sha256
+jreleaser-1.11.0.zip.rmd160
+jreleaser-1.11.0.zip.sha256
 
 # signatures
 checksums_rmd160.txt.asc
 checksums_sha256.txt.asc
-jreleaser-1.10.0-sboms.zip.asc
-jreleaser-1.10.0.tar.asc
-jreleaser-1.10.0.zip.asc
-jreleaser-ant-tasks-1.10.0.zip.asc
-jreleaser-tool-provider-1.10.0.jar.asc
-jreleaser-standalone-1.10.0-linux-aarch64.zip.asc
-jreleaser-standalone-1.10.0-linux-x86_64.zip.asc
-jreleaser-standalone-1.10.0-linux_musl-aarch64.zip.asc
-jreleaser-standalone-1.10.0-linux_musl-x86_64.zip.asc
-jreleaser-standalone-1.10.0-osx-aarch64.zip.asc
-jreleaser-standalone-1.10.0-osx-x86_64.zip.asc
-jreleaser-standalone-1.10.0-windows-aarch64.zip.asc
-jreleaser-standalone-1.10.0-windows-x86_64.zip.asc
-jreleaser-installer-1.10.0-osx-x86_64.pkg.asc
-jreleaser-installer-1.10.0-1_amd64.deb.asc
-jreleaser-installer-1.10.0-1.x86_64.rpm.asc
-jreleaser-installer-1.10.0-windows-x86_64.msi.asc
-jreleaser-native-1.10.0-osx-x86_64.zip.asc
-jreleaser-native-1.10.0-linux-x86_64.zip.asc
-jreleaser-native-1.10.0-windows-x86_64.zip.asc
+jreleaser-1.11.0-sboms.zip.asc
+jreleaser-1.11.0.tar.asc
+jreleaser-1.11.0.zip.asc
+jreleaser-ant-tasks-1.11.0.zip.asc
+jreleaser-tool-provider-1.11.0.jar.asc
+jreleaser-standalone-1.11.0-linux-aarch64.zip.asc
+jreleaser-standalone-1.11.0-linux-x86_64.zip.asc
+jreleaser-standalone-1.11.0-linux_musl-aarch64.zip.asc
+jreleaser-standalone-1.11.0-linux_musl-x86_64.zip.asc
+jreleaser-standalone-1.11.0-osx-aarch64.zip.asc
+jreleaser-standalone-1.11.0-osx-x86_64.zip.asc
+jreleaser-standalone-1.11.0-windows-aarch64.zip.asc
+jreleaser-standalone-1.11.0-windows-x86_64.zip.asc
+jreleaser-installer-1.11.0-osx-x86_64.pkg.asc
+jreleaser-installer-1.11.0-1_amd64.deb.asc
+jreleaser-installer-1.11.0-1.x86_64.rpm.asc
+jreleaser-installer-1.11.0-windows-x86_64.msi.asc
+jreleaser-native-1.11.0-osx-x86_64.zip.asc
+jreleaser-native-1.11.0-osx-aarch64.zip.asc
+jreleaser-native-1.11.0-linux-x86_64.zip.asc
+jreleaser-native-1.11.0-windows-x86_64.zip.asc
 
 # additional files
 VERSION</code></pre>
@@ -1433,7 +1477,8 @@ VERSION</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Finally, Twitter &amp; Mastodon threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news/" class="bare">https://jreleaser.noticeable.news/</a>.</p>
+<p>Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news" class="bare">https://jreleaser.noticeable.news</a>
+and the <a href="https://opencollective.com/jreleaser" class="bare">https://opencollective.com/jreleaser</a> pages.</p>
 </div>
 </article>
   </div>

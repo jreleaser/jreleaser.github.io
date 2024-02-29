@@ -509,7 +509,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../catalog/sbom/index.html">Sbom</a>
+    <a class="nav-link" href="../../catalog/sbom/index.html">SBOM</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../../catalog/sbom/cyclonedx.html">CycloneDX</a>
@@ -521,6 +521,9 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../catalog/slsa.html">SLSA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../catalog/swid.html">SWID</a>
   </li>
 </ul>
   </li>
@@ -2035,7 +2038,7 @@ such that:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Any of the following environment variables may be define supply values for <code>username</code> and <code>password</code>:</p>
+<p>Any of the following environment variables may be defined to supply values for <code>username</code> and <code>password</code>:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2076,6 +2079,291 @@ such that:</p>
 <p><code>JRELEASER_NEXUS2_TOKEN</code></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_staged_deployments"><a class="anchor" href="#_staged_deployments"></a>Staged Deployments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Nexus2 Maven deployer allows executing deployments in stages that is, you may <code>UPLOAD</code>, <code>CLOSE</code>, and/or <code>RELEASE</code>.
+You may define any of the following system properties or environment variables to set the given stage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>start</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.start.stage<br>
+  jreleaser.deploy.maven.nexus2.start.stage<br>
+  jreleaser.nexus2.${name}.start.stage<br>
+  jreleaser.nexus2.start.stage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS2_${name}_START_STAGE<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS2__START_STAGE<br>
+  JRELEASER_NEXUS2_${name}_START_STAGE<br>
+  JRELEASER_NEXUS2_START_STAGE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>end</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.end.stage<br>
+  jreleaser.deploy.maven.nexus2.end.stage<br>
+  jreleaser.nexus2.${name}.end.stage<br>
+  jreleaser.nexus2.end.stage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS2_${name}_END_STAGE<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS2__END_STAGE<br>
+  JRELEASER_NEXUS2_${name}_END_STAGE<br>
+  JRELEASER_NEXUS2_END_STAGE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Rules for evaluation stages are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if no <code>start.stage</code> and <code>end.stage</code> are given then deployment process in its entirety as it&#8217;s currently done.</p>
+</li>
+<li>
+<p>if only <code>start.stage</code> is given then deployment occurs from that stage til <code>RELEASE</code>.</p>
+</li>
+<li>
+<p>if only <code>end.stage</code> is given then deployment occurs from the very beginning until that stage is reached.</p>
+</li>
+<li>
+<p>if both <code>start.stage</code> and <code>end.stage</code> are given then deployment proceeds from the start stage to the end stage.</p>
+</li>
+<li>
+<p><code>end.stage</code> must be &gt; than <code>start.stage</code>. When both are equal then only that single stage will be performed.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">START</th>
+<th class="tableblock halign-left valign-top">END</th>
+<th class="tableblock halign-left valign-top">OUTCOME</th>
+<th class="tableblock halign-left valign-top">REQUIREMENTS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full deployment</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full deployment</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">only artifacts are uploaded</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">upload artifacts and close repository</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full deployment</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPLOAD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">only artifacts are uploaded</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">close and release repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">staged repository open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">only close repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">staged repository open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">close and release repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">staged repository open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLOSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">upload artifacts and close repository</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">staged repository closed *</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">staged repository closed *</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RELEASE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full deployment</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Closing and releasing repositories will still be governed by the <code>closeRepository</code> and <code>releaseRepository</code> properties
+of the given deployer, that is, if <code>start.stage</code> is set to <code>CLOSE</code>, <code>closeRepository</code> is set to <code>true</code>, and
+<code>releaseRepository</code> is set to <code>false</code> then the matching repository will be <em>closed</em> but not <em>released</em>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For simplicity, when <code>start.stage</code> is set to <code>RELEASE</code> and the target staged repository is still open, the deployer may
+close the repository <em>if</em> <code>closeRepository</code> is set to <code>true</code>, otherwise the expectation is to find the repository in a
+closed stated. Deployment fails if that&#8217;s not the case.</p>
+</div>
+<div class="paragraph">
+<p>The Nexus2 deployer requires both the <code>stagingProfileId</code> and the <code>stagingRepositoryId</code> when stages are specified.
+These values may be calculated on the spot (matching credentials and target <code>groupId</code>). However, these values may also
+be passed using the following system properties or environment variables:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>stagingProfileId</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.staging.profile.id<br>
+  jreleaser.deploy.maven.nexus2.staging.profile.id<br>
+  jreleaser.nexus2.${name}.staging.profile.id<br>
+  jreleaser.nexus2.staging.profile.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS2_${name}_STAGING_PROFILE_ID<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS2__STAGING_PROFILE_ID<br>
+  JRELEASER_NEXUS2_${name}_STAGING_PROFILE_ID<br>
+  JRELEASER_NEXUS2_STAGING_PROFILE_ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>stagingRepositoryId</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.staging.repository.id<br>
+  jreleaser.deploy.maven.nexus2.staging.repository.id<br>
+  jreleaser.nexus2.${name}.staging.repository.id<br>
+  jreleaser.nexus2.staging.repository.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS2_${name}_STAGING_REPOSITORY_ID<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS2__EN_STAGING_REPOSITORY_IDD_STAGE<br>
+  JRELEASER_NEXUS2_${name}_STAGING_REPOSITORY_ID<br>
+  JRELEASER_NEXUS2_STAGING_REPOSITORY_ID</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Any mismatches with provided values results in deployment error and no modification of remote resources.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Determining the target staging repository requires finding out the latest modified repository in the correct
+state for the given execution stage, any mismatches result in deployment error.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This deployer writes the value of <code>stagingProfileId</code> and <code>stagingRepositoryId</code> to the output of the JReleaser process,
+typically <code>out/jreleaser/output.properties</code> from where you can grab their values and use them in the next invocation.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example on how a 2 stage deployment may occur:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifacts deployed to a staged repository:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ JRELEASER_NEXUS2_END_STAGE=CLOSE jreleaser deploy</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Team members have the option to inspect deployed artifacts available from the closed staged repository.</p>
+</li>
+<li>
+<p>Once the team approves the artifacts the release continues with:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ JRELEASER_NEXUS2_START_STAGE=RELEASE jreleaser deploy</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may read the values for <code>stagingProfileId</code> and <code>stagingRepositoryId</code> from <code>output.properties</code> and set them as either
+system properties or environment variables for the second invocation.</p>
 </div>
 </div>
 </div>
