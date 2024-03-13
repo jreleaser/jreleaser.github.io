@@ -1,0 +1,268 @@
+= jreleaser-cdevents
+
+:jreleaser-cdevents-version: 1.0.0
+
+This extension provides integration with link:https://cdevents.dev/[CDEvents]. It registers a
+xref:extension-points/workflow-listener.adoc[], triggering cdevents events as a result.
+
+== GAV Coordinates
+
+[source]
+[subs="+macros,attributes"]
+----
+org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}
+----
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+extensions:
+  jreleaser-cdevents:
+    enabled: true
+    gav: org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[extensions.jreleaser-cdevents]
+  enabled = true
+  gav = "org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "extensions": {
+    "jreleaser-cdevents": {
+      "enabled": true,
+      "gav": "org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}"
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros,attributes"]
+----
+<jreleaser>
+  <extensions>
+    <jreleaser-cdevents>
+      <enabled>true</enabled>
+      <gav>org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}</gav>
+    </jreleaser-cdevents>
+  </extensions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  extensions {
+    jreleaser-cdevents {
+      enabled = true
+      gav = 'org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}'
+    }
+  }
+}
+----
+--
+====
+
+== Configuration Properties
+
+[%header, cols="<1,^,<1,<1", width="100%"]
+|===
+| Name                    | Required     | Type      | Description
+| continueOnError         |              | `boolean` | Halt execution on failure if `false`, continue if `true`.
+| mode                    |              | `enum`    | Start a new pipeline (`CREATE`) or join an existing pipeline (`JOIN`).
+| source                  | {icon_req_y} | `String`  | Pipeline source.
+| subject.id              | {icon_req_y} | `String`  | Pipeline identifier.
+| subject.url             | {icon_req_y} | `String`  | Pipeline url.
+| subject.source          | {icon_req_y} | `String`  | URL of the pipeline source.
+| subject.pipeline.name   | {icon_req_y} | `String`  | Name of the pipeline.
+| subject.pipeline.run.id | {icon_req_y} | `String`  | Pipeline run identifier.
+| subject.errors          | {icon_req_y} | `String`  | Title for errors.
+| endpoint                | {icon_req_y} | `String`  | Endpoint where events should be sent.
+|===
+
+You may use System properties or environment variables to configure many of these properties instead of defining their
+explicit values in the configuration file. Refer to the following mappings:
+
+[%header, cols="<1,<1,<1", width="100%"]
+|===
+| Name                 | System Property                            | Environment Variable
+| mode                 | jreleaser.cdevents.mode                    | JRELEASER_CDEVENTS_MODE
+| source               | jreleaser.cdevents.source                  | JRELEASER_CDEVENTS_SOURCE
+| subjectId            | jreleaser.cdevents.subject.id              | JRELEASER_CDEVENTS_SUBJECT_ID
+| subjectUrl           | jreleaser.cdevents.subject.url             | JRELEASER_CDEVENTS_SUBJECT_URL
+| subjectSource        | jreleaser.cdevents.subject.source          | JRELEASER_CDEVENTS_SUBJECT_SOURCE
+| subjectPipelineName  | jreleaser.cdevents.subject.pipeline.name   | JRELEASER_CDEVENTS_SUBJECT_PIPELINE_NAME
+| subjectPipelineRunId | jreleaser.cdevents.subject.pipeline.run.id | JRELEASER_CDEVENTS_SUBJECT_PIPELINE_RUN_ID
+| subjectErrors        | jreleaser.cdevents.subject.errors          | JRELEASER_CDEVENTS_SUBJECT_ERRORS
+| endpoint             | jreleaser.cdevents.endpoint                | JRELEASER_CDEVENTS_ENDPOINT
+|===
+
+== Usage
+
+Events will be pumped to the configured endpoint.
+
+== Example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+extensions:
+  jreleaser-cdevents:
+    enabled: true
+    gav: org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}
+    providers:
+      - type: org.jreleaser.extensions.cdevents.CDEventsWorkflowListener
+        properties:
+          source: pass:[http://dev.cdevents]
+          subjectId: /dev/pipeline/run/1
+          subjectUrl: pass:[http://dev.pipeline.run/url]
+          subjectSource: pass:[http://dev.pipeline.run/source]
+          subjectPipelineName: MyPipeline
+          subjectPipelineRunId: 1
+          subjectErrors: pipelineErrors
+          endpoint: pass:[http://localhost:8080/dcevents/sink]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[extensions.jreleaser-cdevents]
+  enabled = true
+  gav = "org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}"
+  pass:[[[]extensions.jreleaser-cdevents.providerspass:[]]]
+    type = "org.jreleaser.extensions.cdevents.CDEventsWorkflowListener"
+    properties.source = "pass:[http://dev.cdevents]"
+    properties.subjectId = "/dev/pipeline/run/1"
+    properties.subjectUrl = "pass:[http://dev.pipeline.run/url]"
+    properties.subjectSource = "pass:[http://dev.pipeline.run/source]"
+    properties.subjectPipelineName = "MyPipeline"
+    properties.subjectPipelineRunId = "1"
+    properties.subjectErrors = "pipelineErrors"
+    properties.endpoint = "pass:[http://localhost:8080/dcevents/sink]"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "extensions": {
+    "jreleaser-cdevents": {
+      "enabled": true,
+      "gav": "org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}",
+      "providers": [
+        {
+          "type": "org.jreleaser.extensions.cdevents.CDEventsWorkflowListener",
+          "properties": {
+            "source": "pass:[http://dev.cdevents]",
+            "subjectId": "/dev/pipeline/run/1",
+            "subjectUrl": "pass:[http://dev.pipeline.run/url]",
+            "subjectSource": "pass:[http://dev.pipeline.run/source]",
+            "subjectPipelineName": "MyPipeline",
+            "subjectPipelineRunId": "1",
+            "subjectErrors": "pipelineErrors",
+            "endpoint": "pass:[http://localhost:8080/dcevents/sink]"
+          }
+        }
+      ]
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="verbatim,+macros,attributes"]
+----
+<jreleaser>
+  <extensions>
+    <jreleaser-cdevents>
+      <enabled>true</enabled>
+      <gav>org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}</gav>
+      <providers>
+        <provider>
+          <type>org.jreleaser.extensions.cdevents.CDEventsWorkflowListenertype</type>
+          <properties>
+            <source>pass:[http://dev.cdevents]</source>
+            <subjectId>/dev/pipeline/run/1</subjectId>
+            <subjectUrl>pass:[http://dev.pipeline.run/url]</subjectUrl>
+            <subjectSource>pass:[http://dev.pipeline.run/source]</subjectSource>
+            <subjectPipelineName>MyPipeline</subjectPipelineName>
+            <subjectPipelineRunId>1</subjectPipelineRunId>
+            <subjectErrors>pipelineErrors</subjectErrors>
+            <endpoint>pass:[http://localhost:8080/dcevents/sink]</endpoint>
+          </properties>
+        </provider>
+      </providers>
+    </jreleaser-cdevents>
+  </extensions>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  extensions {
+    jreleaser-cdevents {
+      enabled = true
+      gav = 'org.jreleaser.extensions:jreleaser-cdevents-extension:{jreleaser-cdevents-version}'
+      provider {
+        type = 'org.jreleaser.extensions.cdevents.CDEventsWorkflowListener'
+        properties = [
+          source: 'pass:[http://dev.cdevents]',
+          subjectId: '/dev/pipeline/run/1',
+          subjectUrl: 'pass:[http://dev.pipeline.run/url]',
+          subjectSource: 'pass:[http://dev.pipeline.run/source]',
+          subjectPipelineName: 'MyPipeline',
+          subjectPipelineRunId: '1',
+          subjectErrors: 'pipelineErrors',
+          endpoint: 'pass:[http://localhost:8080/dcevents/sink]'
+        ]
+      }
+    }
+  }
+}
+----
+--
+====
