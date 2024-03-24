@@ -10,7 +10,7 @@ otherwise deployment will fail. Fortunately JReleaser can verify many of those r
 deployed.
 
 IMPORTANT: Before continuing make sure that all artifacts to be deployed have been xref:maven/staging-artifacts.adoc[staged].
-Missing this step will make the deployment phase fail!
+Missing this step will make the deployment phase fail! We recommend performing deployments from a *clean* state.
 
 Maven Central requires artifacts to be signed with PGP. The xref:reference:deploy/maven/nexus2.adoc[] deployer
 automatically enables `applyMavenCentralRules` when the publication url contains `oss.sonatype.org`. This setting
@@ -53,7 +53,7 @@ deploy:
         url: {deployer_url}
         snapshotUrl: {deployer_snapshot_url}
         closeRepository: true
-        releaseRepository: true
+        releaseRepository: false
         stagingRepositories:
           - target/staging-deploy
 ----
@@ -73,7 +73,7 @@ TOML::
   url = "{deployer_url}"
   snapshotUrl = "{deployer_snapshot_url}"
   closeRepository = true
-  releaseRepository = true
+  releaseRepository = false
   stagingRepositories = ["target/staging-deploy"]
 ----
 --
@@ -97,7 +97,7 @@ JSON::
             "url": "{deployer_url}",
             "snapshotUrl": "{deployer_snapshot_url}",
             "closeRepository": true,
-            "releaseRepository": true,
+            "releaseRepository": false,
             "stagingRepositories": [
               "target/staging-deploy"
             ]
@@ -128,7 +128,7 @@ Maven::
           <url>{deployer_url}</url>
           <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
           <closeRepository>true</closeRepository>
-          <releaseRepository>true</releaseRepository>
+          <releaseRepository>false</releaseRepository>
           <stagingRepositories>target/staging-deploy</stagingRepositories>
         </maven-central>
       </nexus2>
@@ -156,7 +156,7 @@ jreleaser {
           url = '{deployer_url}'
           snapshotUrl = '{deployer_snapshot_url}'
           closeRepository = true
-          releaseRepository = true
+          releaseRepository = false
           stagingRepository('target/staging-deploy')
         }
       }
@@ -395,14 +395,21 @@ Once all configuration is in place you may execute the following commands:
 $ mvn jreleaser:config
 ----
 
-2) Stage all artifacts to a local directory
+2) Ensure a clean deployment
+
+[source]
+----
+$ mvn clean
+----
+
+3) Stage all artifacts to a local directory
 
 [source]
 ----
 $ mvn -Ppublication
 ----
 
-3) Deploy and release
+4) Deploy and release
 
 [source]
 ----
@@ -552,14 +559,21 @@ Once all configuration is in place you may execute the following commands:
 $ ./gradlew jreleaserConfig
 ----
 
-2) Stage all artifacts to a local directory
+2) Ensure a clean deployment
+
+[source]
+----
+$ ./gradlew clean
+----
+
+3) Stage all artifacts to a local directory
 
 [source]
 ----
 $ ./gradlew publish
 ----
 
-3) Deploy and release
+4) Deploy and release
 
 [source]
 ----
