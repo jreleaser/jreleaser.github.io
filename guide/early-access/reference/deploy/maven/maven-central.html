@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gitea :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/deploy/maven/gitea.html">
+    <title>MavenCentral :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/reference/deploy/maven/maven-central.html">
     <meta name="generator" content="Antora 3.1.7">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../../_/css/site-extra.css">
@@ -547,7 +547,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="azure.html">Azure</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="gitea.html">Gitea</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -556,7 +556,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="gitlab.html">Gitlab</a>
   </li>
-  <li class="nav-item" data-depth="4">
+  <li class="nav-item is-current-page" data-depth="4">
     <a class="nav-link" href="maven-central.html">MavenCentral</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -799,54 +799,29 @@
     <li><a href="../../index.html">Reference</a></li>
     <li><a href="../index.html">Deploy</a></li>
     <li><a href="index.html">Maven</a></li>
-    <li><a href="gitea.html">Gitea</a></li>
+    <li><a href="maven-central.html">MavenCentral</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../../latest/reference/deploy/maven/gitea.html">latest</a>
-    <a class="version is-current" href="gitea.html">early-access</a>
+    <a class="version is-missing" href="../../../../latest/index.html">latest</a>
+    <a class="version is-current" href="maven-central.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/gitea.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/maven-central.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gitea</h1>
+<h1 class="page">MavenCentral</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploys staged artifacts to a Gitea instance via its
-<a href="https://docs.gitea.io/en-us/packages/maven/">Maven Packages</a> option.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-This feature <strong>does not</strong> support deploying artifacts other than JARs and POMs to a Maven compatible repository.
-If you need to upload any other binaries then check the <a href="../../upload/gitea.html" class="xref page">Gitea Uploader</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Publication of snapshots is <strong>not</strong> allowed.
-</td>
-</tr>
-</table>
+<p>Deploys staged artifacts to <a href="https://central.sonatype.org/">Maven Central</a> using the
+<a href="https://central.sonatype.org/register/central-portal/">publisher API</a>.</p>
 </div>
 </div>
 </div>
@@ -916,7 +891,7 @@ deploy:
       failOnError: false
 
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    gitea:
+    mavenCentral:
       # Deployers require a name.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app:
@@ -927,20 +902,20 @@ deploy:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active: ALWAYS
 
-        # URL where the Gitea service is enabled.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_URL`
+        # URL where the MavenCentral service is enabled.
+        # If left unspecified, the `JRELEASER_MAVENCENTRAL_${name}_URL`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        url: https://codeberg.org/api/packages/{{owner}}/maven
+        url: https://central.sonatype.com/api/v1/publisher
 
         # The username required for authorization.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_USERNAME`
+        # If left unspecified, the `JRELEASER_MAVENCENTRAL_${name}_USERNAME`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username: __USE_ENVIRONMENT_VARIABLE__
 
-        # Password for login into the GITEA service.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_PASSWORD`
+        # Password for login into the MAVENCENTRAL service.
+        # If left unspecified, the `JRELEASER_MAVENCENTRAL_${name}_PASSWORD`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         password: __USE_ENVIRONMENT_VARIABLE__
@@ -1026,8 +1001,27 @@ deploy:
         # Additional properties used when evaluating templates.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties:
-          # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
-          foo: bar</code></pre>
+          # Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
+          foo: bar
+
+        # Registered publication namespace.
+        # Defaults to `${project.java.groupId}`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        namespace: com.acme
+
+        # Deployment identifier used for publication.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        deploymentId: dd9991b0-18a7-41e7-b1fe-37b8ea936f85
+
+        # Time to wait between state transition checks, in seconds.
+        # Defaults to `10`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        retryDelay: 10
+
+        # Maximum number of attempts to verify state transition.
+        # Defaults to `60`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        maxRetries: 60</code></pre>
 </div>
 </div>
 </div>
@@ -1051,7 +1045,7 @@ deploy:
 
 # Deployers require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[deploy.maven.gitea.app]
+[deploy.maven.mavenCentral.app]
 
   # Enables or disables the deployer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -1059,15 +1053,15 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
-  # URL where the Gitea service is enabled.
+  # URL where the MavenCentral service is enabled.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  url = "https://codeberg.org/api/packages/{{owner}}/maven"
+  url = "https://central.sonatype.com/api/v1/publisher"
 
   # The username required for authorization.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # Password for login into the GITEA service.
+  # Password for login into the MAVENCENTRAL service.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   password = "__USE_ENVIRONMENT_VARIABLE__"
 
@@ -1114,7 +1108,7 @@ deploy:
 
   # Override artifact configuration
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[deploy.maven.gitea.app.artifactOverrides]]
+  [[deploy.maven.mavenCentral.app.artifactOverrides]]
 
     # Match artifact by groupId
     # If undefined, will use `#{project.java.groupId}`.
@@ -1152,7 +1146,26 @@ deploy:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
+
+  # Registered publication namespace.
+  # Defaults to `${project.java.groupId}`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  namespace = "com.acme"
+
+  # Deployment identifier used for publication.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  deploymentId = "dd9991b0-18a7-41e7-b1fe-37b8ea936f85"
+
+  # Time to wait between state transition checks, in seconds.
+  # Defaults to `10`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  retryDelay = 10
+
+  # Maximum number of attempts to verify state transition.
+  # Defaults to `60`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  maxRetries = 60</code></pre>
 </div>
 </div>
 </div>
@@ -1181,7 +1194,7 @@ deploy:
       },
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "gitea": {
+      "mavenCentral": {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         "app": {
@@ -1192,15 +1205,15 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "active": "ALWAYS",
 
-          // URL where the Gitea service is enabled.
+          // URL where the MavenCentral service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "url": "https://codeberg.org/api/packages/{{owner}}/maven",
+          "url": "https://central.sonatype.com/api/v1/publisher",
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "username": "__USE_ENVIRONMENT_VARIABLE__",
 
-          // Password for login into the GITEA service.
+          // Password for login into the MAVENCENTRAL service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "password": "__USE_ENVIRONMENT_VARIABLE__",
 
@@ -1286,10 +1299,28 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "readTimeout": 60,
 
+          // Registered publication namespace.
+          // Defaults to `${project.java.groupId}`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "namespace": "com.acme",
+
+          // Deployment identifier used for publication.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "deploymentId": "dd9991b0-18a7-41e7-b1fe-37b8ea936f85",
+
+          // Time to wait between state transition checks, in seconds.
+          // Defaults to `10`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "retryDelay": 10,
+
+          // Maximum number of attempts to verify state transition.
+          // Defaults to `60`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "maxRetries": 60,
           // Additional properties used when evaluating templates.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "extraProperties": {
-            // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+            // Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
             "foo": "bar"
           }
         }
@@ -1336,7 +1367,7 @@ deploy:
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;gitea&gt;
+      &lt;mavenCentral&gt;
         &lt;!--
           Deployers require a name.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -1351,10 +1382,10 @@ deploy:
           &lt;active&gt;ALWAYS&lt;/active&gt;
 
           &lt;!--
-            URL where the Gitea service is enabled.
+            URL where the MavenCentral service is enabled.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;url&gt;https://codeberg.org/api/packages/{{owner}}/maven&lt;/url&gt;
+          &lt;url&gt;https://central.sonatype.com/api/v1/publisher&lt;/url&gt;
 
           &lt;!--
             The username required for authorization.
@@ -1363,7 +1394,7 @@ deploy:
           &lt;username&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/username&gt;
 
           &lt;!--
-            Password for login into the GITEA service.
+            Password for login into the MAVENCENTRAL service.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;password&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/password&gt;
@@ -1486,12 +1517,39 @@ deploy:
           --&gt;
           &lt;extraProperties&gt;
             &lt;!--
-              Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+              Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
             --&gt;
             &lt;foo&gt;bar&lt;/foo&gt;
           &lt;/extraProperties&gt;
+
+          &lt;!--
+            Registered publication namespace.
+            Defaults to `${project.java.groupId}`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;namespace&gt;com.acme&lt;/namespace&gt;
+
+          &lt;!--
+            Deployment identifier used for publication.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;deploymentId&gt;dd9991b0-18a7-41e7-b1fe-37b8ea936f85&lt;/deploymentId&gt;
+
+          &lt;!--
+            Time to wait between state transition checks, in seconds.
+            Defaults to `10`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;retryDelay&gt;10&lt;/retryDelay&gt;
+
+          &lt;!--
+            Maximum number of attempts to verify state transition.
+            Defaults to `60`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;maxRetries&gt;60&lt;/maxRetries&gt;
         &lt;/app&gt;
-      &lt;/gitea&gt;
+      &lt;/mavenCentral&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1523,7 +1581,7 @@ deploy:
       }
 
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      gitea {
+      mavenCentral {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         app {
@@ -1534,15 +1592,15 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           active = 'ALWAYS'
 
-          // URL where the Gitea service is enabled.
+          // URL where the MavenCentral service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          url = 'https://codeberg.org/api/packages/{{owner}}/maven'
+          url = 'https://central.sonatype.com/api/v1/publisher'
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           username = '__USE_ENVIRONMENT_VARIABLE__'
 
-          // Password for login into the GITEA service.
+          // Password for login into the MAVENCENTRAL service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           password = '__USE_ENVIRONMENT_VARIABLE__'
 
@@ -1625,9 +1683,28 @@ deploy:
           readTimeout = 60
 
           // Additional properties used when evaluating templates.
-          // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+          // Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           extraProperties.put('foo', 'bar')
+
+          // Registered publication namespace.
+          // Defaults to `${project.java.groupId}`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          namespace = 'com.acme'
+
+          // Deployment identifier used for publication.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          deploymentId = 'dd9991b0-18a7-41e7-b1fe-37b8ea936f85'
+
+          // Time to wait between state transition checks, in seconds.
+          // Defaults to `10`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          retryDelay = 10
+
+          // Maximum number of attempts to verify state transition.
+          // Defaults to `60`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          maxRetries = 60
         }
       }
     }
@@ -1663,57 +1740,83 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.active<br>
-  jreleaser.deploy.maven.gitea.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_ACTIVE<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.active<br>
+  jreleaser.deploy.maven.mavencentral.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_ACTIVE<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_ACTIVE</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>url</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.url<br>
-  jreleaser.deploy.maven.gitea.url<br>
-  jreleaser.gitea.${name}.url<br>
-  jreleaser.gitea.url</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_URL<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_URL<br>
-  JRELEASER_GITEA_${name}_URL<br>
-  JRELEASER_GITEA_URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.url<br>
+  jreleaser.deploy.maven.mavencentral.url<br>
+  jreleaser.mavencentral.${name}.url<br>
+  jreleaser.mavencentral.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_URL<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_URL<br>
+  JRELEASER_MAVENCENTRAL_${name}_URL<br>
+  JRELEASER_MAVENCENTRAL_URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>username</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.username<br>
-  jreleaser.deploy.maven.gitea.username<br>
-  jreleaser.gitea.${name}.username<br>
-  jreleaser.gitea.username</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_USERNAME<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_USERNAME<br>
-  JRELEASER_GITEA_${name}_USERNAME<br>
-  JRELEASER_GITEA_USERNAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.username<br>
+  jreleaser.deploy.maven.mavencentral.username<br>
+  jreleaser.mavencentral.${name}.username<br>
+  jreleaser.mavencentral.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_USERNAME<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_USERNAME<br>
+  JRELEASER_MAVENCENTRAL_${name}_USERNAME<br>
+  JRELEASER_MAVENCENTRAL_USERNAME</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>password</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.password<br>
-  jreleaser.deploy.maven.gitea.${name}.token<br>
-  jreleaser.deploy.maven.gitea.password<br>
-  jreleaser.deploy.maven.gitea.token<br>
-  jreleaser.gitea.${name}.password<br>
-  jreleaser.gitea.${name}.token<br>
-  jreleaser.gitea.password<br>
-  jreleaser.gitea.token</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_${name}_TOKEN<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_TOKEN<br>
-  JRELEASER_GITEA_${name}_PASSWORD<br>
-  JRELEASER_GITEA_${name}_TOKEN<br>
-  JRELEASER_GITEA_PASSWORD<br>
-  JRELEASER_GITEA_TOKEN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.password<br>
+  jreleaser.deploy.maven.mavencentral.${name}.token<br>
+  jreleaser.deploy.maven.mavencentral.password<br>
+  jreleaser.deploy.maven.mavencentral.token<br>
+  jreleaser.mavencentral.${name}.password<br>
+  jreleaser.mavencentral.${name}.token<br>
+  jreleaser.mavencentral.password<br>
+  jreleaser.mavencentral.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_TOKEN<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_TOKEN<br>
+  JRELEASER_MAVENCENTRAL_${name}_PASSWORD<br>
+  JRELEASER_MAVENCENTRAL_${name}_TOKEN<br>
+  JRELEASER_MAVENCENTRAL_PASSWORD<br>
+  JRELEASER_MAVENCENTRAL_TOKEN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>namespace</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.namespace<br>
+  jreleaser.deploy.maven.mavencentral.namespace<br>
+  jreleaser.mavencentral.${name}.namespace<br>
+  jreleaser.mavencentral.namespace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_NAMESPACE<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_NAMESPACE<br>
+  JRELEASER_MAVENCENTRAL_${name}_NAMESPACE<br>
+  JRELEASER_MAVENCENTRAL_NAMESPACE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>deploymentId</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.deployment.id<br>
+  jreleaser.deploy.maven.mavencentral.deployment.id<br>
+  jreleaser.mavencentral.${name}.deployment.id<br>
+  jreleaser.mavencentral.deployment.id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_DEPLOYMENT_ID<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_DEPLOYMENT_ID<br>
+  JRELEASER_MAVENCENTRAL_${name}_DEPLOYMENT_ID<br>
+  JRELEASER_MAVENCENTRAL_DEPLOYMENT_ID</p></td>
 </tr>
 </tbody>
 </table>
@@ -1811,10 +1914,10 @@ such that:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy:
   maven:
-    gitea:
+    mavenCentral:
       app:
         active: ALWAYS
-        url: https://codeberg.org/api/packages/{{owner}}/maven
+        url: https://central.sonatype.com/api/v1/publisher
         stagingRepositories:
           - target/staging-deploy</code></pre>
 </div>
@@ -1823,9 +1926,9 @@ such that:</p>
 <div class="tab-pane" aria-labelledby="tabset2_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.gitea.app]
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.mavenCentral.app]
   active = "ALWAYS"
-  host = "https://codeberg.org/api/packages/{{owner}}/maven"
+  url = "https://central.sonatype.com/api/v1/publisher"
   stagingRepositories = ["target/staging-deploy"]</code></pre>
 </div>
 </div>
@@ -1837,10 +1940,10 @@ such that:</p>
   "jreleaser": {
     "deploy": {
       "maven": {
-        "gitea": {
+        "mavenCentral": {
           "app": {
             "active": "ALWAYS",
-            "host": "https://codeberg.org/api/packages/{{owner}}/maven",
+            "url": "https://central.sonatype.com/api/v1/publisher",
             "stagingRepositories": [
               "target/staging-deploy"
             ]
@@ -1859,13 +1962,13 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
   &lt;deploy&gt;
     &lt;maven&gt;
-      &lt;gitea&gt;
+      &lt;mavenCentral&gt;
         &lt;app&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
-          &lt;host&gt;https://codeberg.org/api/packages/{{owner}}/maven&lt;/host&gt;
+          &lt;url&gt;https://central.sonatype.com/api/v1/publisher&lt;/url&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
         &lt;/app&gt;
-      &lt;/gitea&gt;
+      &lt;/mavenCentral&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1878,10 +1981,10 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   deploy {
     maven {
-      gitea {
+      mavenCentral {
         app {
           active = 'ALWAYS'
-          host = 'https://codeberg.org/api/packages/{{owner}}/maven'
+          url = 'https://central.sonatype.com/api/v1/publisher'
           stagingRepository('target/staging-deploy')
         }
       }
@@ -1899,42 +2002,119 @@ such that:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_USERNAME</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_APP_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_USERNAME</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_USERNAME</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_APP_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_USERNAME</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_PASSWORD</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_APP_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_TOKEN</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_APP_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_PASSWORD</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_TOKEN</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_PASSWORD</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_APP_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_TOKEN</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_APP_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_PASSWORD</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_TOKEN</code></p>
+<p><code>JRELEASER_MAVENCENTRAL_TOKEN</code></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_staged_deployments"><a class="anchor" href="#_staged_deployments"></a>Staged Deployments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The MavenCentral Maven deployer allows executing deployments in stages that is, you may set the <code>stage</code> property to
+<code>UPLOAD</code>, <code>PUBLISH</code>, and/or <code>FULL</code>. You may define any of the following system properties or environment variables to set the given stage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System Property</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>stage</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.mavencentral.${name}.stage<br>
+  jreleaser.deploy.maven.mavencentral.stage<br>
+  jreleaser.mavencentral.${name}.stage<br>
+  jreleaser.mavencentral.stage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_${name}_STAGE<br>
+  JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_STAGE<br>
+  JRELEASER_MAVENCENTRAL_${name}_STAGE<br>
+  JRELEASER_MAVENCENTRAL_STAGE</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The MavenCentral deployer requires the <code>deploymentId</code> property to be set when the stage is set to <code>PUBLISH</code>.</p>
+</div>
+<div class="paragraph">
+<p>This deployer writes the value of <code>namespace</code> and <code>deploymentId</code> to the output of the JReleaser process,
+typically <code>out/jreleaser/output.properties</code> from where you can grab their values and use them in the next invocation.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example on how a 2 stage deployment may occur:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifacts deployed to a staged repository:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ JRELEASER_MAVENCENTRAL_STAGE=UPLOAD jreleaser deploy</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Team members have the option to inspect deployed artifacts available from the closed staged repository.</p>
+</li>
+<li>
+<p>Once the team approves the artifacts the release continues with:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ JRELEASER_MAVENCENTRAL_STAGE=PUBLISH jreleaser deploy</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may read the values for <code>namespace</code> and <code>deploymentId</code> from <code>output.properties</code> and set them as either
+system properties or environment variables for the second invocation.</p>
 </div>
 </div>
 </div>
