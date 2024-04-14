@@ -1,0 +1,355 @@
+= MavenCentral
+:deployer_id:   mavenCentral
+:deployer_name: MavenCentral
+:deployer_url:  pass:[https://central.sonatype.com/api/v1/publisher]
+:default_auth:  BEARER
+:deployer_sys_key: mavencentral
+:deployer_env_key: MAVENCENTRAL
+
+Deploys staged artifacts to link:https://central.sonatype.org/[Maven Central] using the
+link:https://central.sonatype.org/register/central-portal/[publisher API].
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$deploy/maven/yaml/common-head.adoc[]
+
+        # Registered publication namespace.
+        # Defaults to `${project.java.groupId}`.
+        # icon:dot-circle[]
+        namespace: com.acme
+
+        # Deployment identifier used for publication.
+        # icon:dot-circle[]
+        deploymentId: dd9991b0-18a7-41e7-b1fe-37b8ea936f85
+
+        # Time to wait between state transition checks, in seconds.
+        # Defaults to `10`.
+        # icon:dot-circle[]
+        retryDelay: 10
+
+        # Maximum number of attempts to verify state transition.
+        # Defaults to `60`.
+        # icon:dot-circle[]
+        maxRetries: 60
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$deploy/maven/toml/common-head.adoc[]
+
+  # Registered publication namespace.
+  # Defaults to `${project.java.groupId}`.
+  # icon:dot-circle[]
+  namespace = "com.acme"
+
+  # Deployment identifier used for publication.
+  # icon:dot-circle[]
+  deploymentId = "dd9991b0-18a7-41e7-b1fe-37b8ea936f85"
+
+  # Time to wait between state transition checks, in seconds.
+  # Defaults to `10`.
+  # icon:dot-circle[]
+  retryDelay = 10
+
+  # Maximum number of attempts to verify state transition.
+  # Defaults to `60`.
+  # icon:dot-circle[]
+  maxRetries = 60
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$deploy/maven/json/common-head.adoc[]
+
+          // Registered publication namespace.
+          // Defaults to `${project.java.groupId}`.
+          // icon:dot-circle[]
+          "namespace": "com.acme",
+
+          // Deployment identifier used for publication.
+          // icon:dot-circle[]
+          "deploymentId": "dd9991b0-18a7-41e7-b1fe-37b8ea936f85",
+
+          // Time to wait between state transition checks, in seconds.
+          // Defaults to `10`.
+          // icon:dot-circle[]
+          "retryDelay": 10,
+
+          // Maximum number of attempts to verify state transition.
+          // Defaults to `60`.
+          // icon:dot-circle[]
+          "maxRetries": 60,
+include::partial$deploy/maven/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$deploy/maven/maven/common-head.adoc[]
+
+          <!--
+            Registered publication namespace.
+            Defaults to `${project.java.groupId}`.
+            icon:dot-circle[]
+          -->
+          <namespace>com.acme</namespace>
+
+          <!--
+            Deployment identifier used for publication.
+            icon:dot-circle[]
+          -->
+          <deploymentId>dd9991b0-18a7-41e7-b1fe-37b8ea936f85</deploymentId>
+
+          <!--
+            Time to wait between state transition checks, in seconds.
+            Defaults to `10`.
+            icon:dot-circle[]
+          -->
+          <retryDelay>10</retryDelay>
+
+          <!--
+            Maximum number of attempts to verify state transition.
+            Defaults to `60`.
+            icon:dot-circle[]
+          -->
+          <maxRetries>60</maxRetries>
+include::partial$deploy/maven/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$deploy/maven/gradle/common-head.adoc[]
+
+          // Registered publication namespace.
+          // Defaults to `${project.java.groupId}`.
+          // icon:dot-circle[]
+          namespace = 'com.acme'
+
+          // Deployment identifier used for publication.
+          // icon:dot-circle[]
+          deploymentId = 'dd9991b0-18a7-41e7-b1fe-37b8ea936f85'
+
+          // Time to wait between state transition checks, in seconds.
+          // Defaults to `10`.
+          // icon:dot-circle[]
+          retryDelay = 10
+
+          // Maximum number of attempts to verify state transition.
+          // Defaults to `60`.
+          // icon:dot-circle[]
+          maxRetries = 60
+include::partial$deploy/maven/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+include::partial$deploy/maven/envvars.adoc[]
+2+| *namespace*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.namespace +
+  jreleaser.deploy.maven.{deployer_sys_key}.namespace +
+  jreleaser.{deployer_sys_key}.${name}.namespace +
+  jreleaser.{deployer_sys_key}.namespace
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_NAMESPACE +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_NAMESPACE +
+  JRELEASER_{deployer_env_key}_${name}_NAMESPACE +
+  JRELEASER_{deployer_env_key}_NAMESPACE
+2+| *deploymentId*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.deployment.id +
+  jreleaser.deploy.maven.{deployer_sys_key}.deployment.id +
+  jreleaser.{deployer_sys_key}.${name}.deployment.id +
+  jreleaser.{deployer_sys_key}.deployment.id
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_DEPLOYMENT_ID +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_DEPLOYMENT_ID +
+  JRELEASER_{deployer_env_key}_${name}_DEPLOYMENT_ID +
+  JRELEASER_{deployer_env_key}_DEPLOYMENT_ID
+|===
+
+include::partial$envvars-footer.adoc[]
+
+== Example
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+deploy:
+  maven:
+    {deployer_id}:
+      app:
+        active: ALWAYS
+        url: {deployer_url}
+        stagingRepositories:
+          - target/staging-deploy
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[deploy.maven.{deployer_id}.app]
+  active = "ALWAYS"
+  url = "{deployer_url}"
+  stagingRepositories = ["target/staging-deploy"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "jreleaser": {
+    "deploy": {
+      "maven": {
+        "{deployer_id}": {
+          "app": {
+            "active": "ALWAYS",
+            "url": "{deployer_url}",
+            "stagingRepositories": [
+              "target/staging-deploy"
+            ]
+          }
+        }
+      }  
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <deploy>
+    <maven>
+      <{deployer_id}>
+        <app>
+          <active>ALWAYS</active>
+          <url>{deployer_url}</url>
+          <stagingRepositories>target/staging-deploy</stagingRepositories>
+        </app>
+      </{deployer_id}>
+    </maven>
+  </deploy>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  deploy {
+    maven {
+      {deployer_id} {
+        app {
+          active = 'ALWAYS'
+          url = '{deployer_url}'
+          stagingRepository('target/staging-deploy')
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+Any of the following environment variables may be defined to supply values for `username` and `password`:
+
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_APP_USERNAME`
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_USERNAME`
+ * `JRELEASER_{deployer_env_key}_APP_USERNAME`
+ * `JRELEASER_{deployer_env_key}_USERNAME`
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_APP_PASSWORD`
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_APP_TOKEN`
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_PASSWORD`
+ * `JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_TOKEN`
+ * `JRELEASER_{deployer_env_key}_APP_PASSWORD`
+ * `JRELEASER_{deployer_env_key}_APP_TOKEN`
+ * `JRELEASER_{deployer_env_key}_PASSWORD`
+ * `JRELEASER_{deployer_env_key}_TOKEN`
+
+== Staged Deployments
+
+The MavenCentral Maven deployer allows executing deployments in stages that is, you may set the `stage` property to
+`UPLOAD`, `PUBLISH`, and/or `FULL`. You may define any of the following system properties or environment variables to set the given stage:
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+2+| *stage*
+| jreleaser.deploy.maven.{deployer_sys_key}.${name}.stage +
+  jreleaser.deploy.maven.{deployer_sys_key}.stage +
+  jreleaser.{deployer_sys_key}.${name}.stage +
+  jreleaser.{deployer_sys_key}.stage
+| JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_${name}_STAGE +
+  JRELEASER_DEPLOY_MAVEN_{deployer_env_key}_STAGE +
+  JRELEASER_{deployer_env_key}_${name}_STAGE +
+  JRELEASER_{deployer_env_key}_STAGE
+|===
+
+The MavenCentral deployer requires the `deploymentId` property to be set when the stage is set to `PUBLISH`.
+
+This deployer writes the value of `namespace` and `deploymentId` to the output of the JReleaser process,
+typically `out/jreleaser/output.properties` from where you can grab their values and use them in the next invocation.
+
+Here's an example on how a 2 stage deployment may occur:
+
+ - Artifacts deployed to a staged repository:
+[source,shell]
+----
+$ JRELEASER_MAVENCENTRAL_STAGE=UPLOAD jreleaser deploy
+----
+ - Team members have the option to inspect deployed artifacts available from the closed staged repository.
+ - Once the team approves the artifacts the release continues with:
+[source,shell]
+----
+$ JRELEASER_MAVENCENTRAL_STAGE=PUBLISH jreleaser deploy
+----
+
+You may read the values for `namespace` and `deploymentId` from `output.properties` and set them as either
+system properties or environment variables for the second invocation.
+

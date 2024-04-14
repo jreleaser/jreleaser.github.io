@@ -1,4 +1,5 @@
 = Publishing to Maven Central
+:central_url:      pass:[https://central.sonatype.com/api/v1/publisher]
 :deployer_url:     pass:[https://s01.oss.sonatype.org/service/local]
 :deployer_old_url: pass:[https://oss.sonatype.org/service/local]
 :deployer_snapshot_url: pass:[https://s01.oss.sonatype.org/content/repositories/snapshots/]
@@ -12,7 +13,8 @@ deployed.
 IMPORTANT: Before continuing make sure that all artifacts to be deployed have been xref:maven/staging-artifacts.adoc[staged].
 Missing this step will make the deployment phase fail! We recommend performing deployments from a *clean* state.
 
-Maven Central requires artifacts to be signed with PGP. The xref:reference:deploy/maven/nexus2.adoc[] deployer
+Maven Central requires artifacts to be signed with PGP. The xref:reference:deploy/maven/maven-central.adoc[] deployer
+automatically enables `applyMavenCentralRules`. The xref:reference:deploy/maven/nexus2.adoc[] deployer
 automatically enables `applyMavenCentralRules` when the publication url contains `oss.sonatype.org`. This setting
 performs the following tasks:
 
@@ -24,6 +26,133 @@ performs the following tasks:
 You have the option to close and release the staged repository automatically right after deployment, or keep the staged
 repository open and perform close and release operations using the UI. You must login into Sonatype OSSRH using your
 Sonatype account to do so.
+
+== Portal Publisher API
+
+Publishing using the Portal Publisher API requires using the xref:reference:deploy/maven/maven-central.adoc[] deployer.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+signing:
+  active: ALWAYS
+  armored: true
+
+deploy:
+  maven:
+    mavenCentral:
+      sonatype:
+        active: ALWAYS
+        url: {central_url}
+        stagingRepositories:
+          - target/staging-deploy
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[signing]
+  active = "ALWAYS"
+  armored = true
+
+[deploy.maven.mavenCentral.sonatype]
+  active = "ALWAYS"
+  url = "{central_url}"
+  stagingRepositories = ["target/staging-deploy"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "jreleaser": {
+    "signing": {
+      "active": "ALWAYS",
+      "armored": true
+    },
+    "deploy": {
+      "maven": {
+        "mavenCentral": {
+          "sonatype": {
+            "active": "ALWAYS",
+            "url": "{central_url}",
+            "stagingRepositories": [
+              "target/staging-deploy"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <signing>
+    <active>ALWAYS</active>
+    <armored>true</armored>
+  </signing>
+  <deploy>
+    <maven>
+      <mavenCentral>
+        <sonatype>
+          <active>ALWAYS</active>
+          <url>{central_url}</url>
+          <stagingRepositories>target/staging-deploy</stagingRepositories>
+        </sonatype>
+      </mavenCentral>
+    </maven>
+  </deploy>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  signing {
+    active = 'ALWAYS'
+    armored = true
+  }
+  deploy {
+    maven {
+      mavenCentral {
+        sonatype {
+          active = 'ALWAYS'
+          url = '{central_url}'
+          stagingRepository('target/staging-deploy')
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+== OSSRH
+
+Publishing to OSSRH requires using the xref:reference:deploy/maven/nexus2.adoc[] deployer.
 
 NOTE: We recommend setting `releaseRepository` to `false` for the first time. This lets you review staged artifacts in the
 Sonatype UI. You'll have to perform a manual release on the UI. Once you're happy with the settings and the release is
@@ -173,6 +302,19 @@ file:
 - `JRELEASER_GPG_PUBLIC_KEY`, unless `signing.verify` is set to `false`.
 - `JRELEASER_GPG_SECRET_KEY`
 - `JRELEASER_GPG_PASSPHRASE`
+
+If using the xref:reference:deploy/maven/maven-central.adoc[] deployer:
+
+- `JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME` or  `JRELEASER_MAVENCENTRAL_USERNAME`
+- `JRELEASER_MAVENCENTRAL_SONATYPE_PASSWORD` or  `JRELEASER_MAVENCENTRAL_PASSWORD`
+
+Alternatively, you may set these for link:https://central.sonatype.org/publish/generate-token/[token based authentication]:
+
+- `JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME` or  `JRELEASER_MAVENCENTRAL_USERNAME`
+- `JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN` or  `JRELEASER_MAVENCENTRAL_TOKEN`
+
+If using the xref:reference:deploy/maven/nexus2.adoc[] deployer:
+
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_USERNAME` or  `JRELEASER_NEXUS2_USERNAME`
 - `JRELEASER_NEXUS2_MAVEN_CENTRAL_PASSWORD` or  `JRELEASER_NEXUS2_PASSWORD`
 
@@ -240,7 +382,7 @@ The following `pom.xml` file shows the minimum required configuration
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.12.1</version>
+                    <version>3.13.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -250,7 +392,7 @@ The following `pom.xml` file shows the minimum required configuration
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
@@ -269,20 +411,29 @@ The following `pom.xml` file shows the minimum required configuration
                             <active>ALWAYS</active>
                             <armored>true</armored>
                         </signing>
-                      <deploy>
-                          <maven>
-                              <nexus2>
-                                  <maven-central>
-                                      <active>ALWAYS</active>
-                                      <url>{deployer_url}</url>
-                                      <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
-                                      <closeRepository>true</closeRepository>
-                                      <releaseRepository>true</releaseRepository>
-                                      <stagingRepositories>target/staging-deploy</stagingRepositories>
-                                  </maven-central>
-                              </nexus2>
-                          </maven>
-                      </deploy>
+                        <deploy>
+                            <maven>
+                                <nexus2>
+                                    <maven-central>
+                                        <active>ALWAYS</active>
+                                        <url>{deployer_url}</url>
+                                        <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
+                                        <closeRepository>true</closeRepository>
+                                        <releaseRepository>true</releaseRepository>
+                                        <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                    </maven-central>
+                                </nexus2>
+                                <!-- Portal Publisher API
+                                <mavenCentral>
+                                    <sonatype>
+                                        <active>ALWAYS</active>
+                                        <url>{central_url}</url>
+                                        <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                    </sonatype>
+                                </mavenCentral>
+                                -->
+                            </maven>
+                        </deploy>
                     </jreleaser>
                 </configuration>
             </plugin>
@@ -342,6 +493,8 @@ case be aware of indentation or use environment variables.
 .~/.jreleaser/config.toml
 [source,toml]
 ----
+JRELEASER_MAVENCENTRAL_USERNAME = "<your-publisher-portal-username>"
+JRELEASER_MAVENCENTRAL_PASSWORD = "<your-publisher-portal-password>"
 JRELEASER_NEXUS2_USERNAME = "<your-sonatype-account-username>"
 JRELEASER_NEXUS2_PASSWORD = "<your-sonatype-account-password>"
 JRELEASER_GPG_PASSPHRASE = "<your-pgp-passphrase>"
@@ -493,6 +646,15 @@ jreleaser {
                     stagingRepository('build/staging-deploy')
                 }
             }
+            /* Portal Publisher API
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = '{central_url}'
+                    stagingRepository('target/staging-deploy')
+                }
+            }
+            */
         }
     }
 }
@@ -505,6 +667,8 @@ case be aware of indentation or use environment variables.
 .~/.jreleaser/config.toml
 [source,toml]
 ----
+JRELEASER_MAVENCENTRAL_USERNAME = "<your-publisher-portal-username>"
+JRELEASER_MAVENCENTRAL_PASSWORD = "<your-publisher-portal-password>"
 JRELEASER_NEXUS2_USERNAME = "<your-sonatype-account-username>"
 JRELEASER_NEXUS2_PASSWORD = "<your-sonatype-account-password>"
 JRELEASER_GPG_PASSPHRASE = "<your-pgp-passphrase>"
