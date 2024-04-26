@@ -13,8 +13,8 @@ is used to create both release and snapshot releases:
 environment:
   properties:
     jdkPathPrefix: 'apps/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu17.32.13-ca-jdk17.0.2'
-    graalFilePrefix: 'graalvm-community-openjdk-21.0.2+13.1'
+    jdkFilePrefix: 'zulu17.50.19-ca-jdk17.0.11'
+    graalFilePrefix: 'graalvm-community-openjdk-22.0.1+8.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
@@ -300,13 +300,13 @@ assemble:
         - pattern: 'apps/jreleaser/build/dependencies/flat/*.jar'
         - pattern: 'plugins/jreleaser/build/dependencies/graalvm/*.jar'
       graalJdks:
-        - path: '{{jdkPathPrefix}}/graal21Osx/{{graalFilePrefix}}/Contents/Home'
+        - path: '{{jdkPathPrefix}}/graal22Osx/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-x86_64'
-        - path: '{{jdkPathPrefix}}/graal21OsxArm/{{graalFilePrefix}}/Contents/Home'
+        - path: '{{jdkPathPrefix}}/graal22OsxArm/{{graalFilePrefix}}/Contents/Home'
           platform: 'osx-aarch_64'
-        - path: '{{jdkPathPrefix}}/graal21Linux/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal22Linux/{{graalFilePrefix}}'
           platform: 'linux-x86_64'
-        - path: '{{jdkPathPrefix}}/graal21Windows/{{graalFilePrefix}}'
+        - path: '{{jdkPathPrefix}}/graal22Windows/{{graalFilePrefix}}'
           platform: 'windows-x86_64'
       upx:
         active: ALWAYS
@@ -492,6 +492,9 @@ distributions:
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-x86_64.pkg'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.pkg'
         platform: 'osx-x86_64'
+      - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-aarch64.pkg'
+        transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-aarch64.pkg'
+        platform: 'osx-aarch_64'
       - path: '{{jpackageDir}}/jreleaser_{{projectVersionNumber}}-1_amd64.deb'
         transform: '{{distributionName}}/{{distributionName}}_{{projectEffectiveVersion}}-1_amd64.deb'
         platform: 'linux-x86_64'
@@ -553,6 +556,7 @@ jreleaser-standalone-{jreleaser-effective-version}-windows-aarch64.zip
 jreleaser-standalone-{jreleaser-effective-version}-windows-x86_64.zip
 
 # binaries created by the Jpackage assembler
+jreleaser-installer-{jreleaser-effective-version}-osx-aarch64.pkg
 jreleaser-installer-{jreleaser-effective-version}-osx-x86_64.pkg
 jreleaser-installer-{jreleaser-effective-version}-1_amd64.deb
 jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm
@@ -589,6 +593,7 @@ jreleaser-standalone-{jreleaser-effective-version}-osx-aarch64.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-osx-x86_64.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-windows-aarch64.zip.asc
 jreleaser-standalone-{jreleaser-effective-version}-windows-x86_64.zip.asc
+jreleaser-installer-{jreleaser-effective-version}-osx-aarch64.pkg.asc
 jreleaser-installer-{jreleaser-effective-version}-osx-x86_64.pkg.asc
 jreleaser-installer-{jreleaser-effective-version}-1_amd64.deb.asc
 jreleaser-installer-{jreleaser-effective-version}-1.x86_64.rpm.asc
