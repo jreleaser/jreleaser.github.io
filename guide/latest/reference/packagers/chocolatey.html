@@ -557,6 +557,9 @@
     <a class="nav-link" href="../deploy/maven/gitlab.html">Gitlab</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/maven-central.html">MavenCentral</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/nexus2.html">Nexus2</a>
   </li>
 </ul>
@@ -1046,6 +1049,12 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       commitMessage: '{{distributionName}} {{tagName}}'
 
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+        foo: bar
+
     # Name of the Chocolatey package.
     # Defaults to `#{distribution.name}`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1184,6 +1193,11 @@ packagers:
   # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.commitMessage = "{{distributionName}} {{tagName}}"
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  repository.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
 
   # Name of the Chocolatey package.
   # Defaults to `#{distribution.name}`.
@@ -1332,7 +1346,14 @@ packagers:
         // Message when committing to the repository.
         // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "commitMessage": "{{distributionName}} {{tagName}}"
+        "commitMessage": "{{distributionName}} {{tagName}}",
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+          "foo": "bar"
+        }
       },
 
       // Name of the Chocolatey package.
@@ -1531,6 +1552,17 @@ packagers:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;commitMessage&gt;{{distributionName}} {{tagName}}&lt;/commitMessage&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
       &lt;/repository&gt;
 
       &lt;!--
@@ -1692,10 +1724,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__USE_ENVIRONMENT_VARIABLE__'
 
-        # Message when committing to the repository.
-        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        // Message when committing to the repository.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         commitMessage = '{{distributionName}} {{tagName}}'
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
       }
 
       // Name of the Chocolatey package.
@@ -2287,6 +2324,112 @@ to the target artifact to mark it as skipped for packaging with chocolatey.</p>
 <div class="paragraph">
 <p>If there&#8217;s a matching <code>LICENSE</code> file available at the root of the project it will be copied to the repository by default.
 You may set an extra property named <code>skipLicenseFile</code> on chocolatey to skip this behavior.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_repository"><a class="anchor" href="#_repository"></a>Repository</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>repository</code> section allows setting extra properties that may be used to provide additional hints when interacting
+with the git repository that holds packager files.</p>
+</div>
+<div class="sect2">
+<h3 id="_gitlab"><a class="anchor" href="#_gitlab"></a>GitLab</h3>
+<div class="paragraph">
+<p>Define a <code>projectIdentifier</code> property to directly locate the project associated with the repository, such as</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset2_yaml"></a>YAML</p>
+</li>
+<li>
+<p><a id="tabset2_toml"></a>TOML</p>
+</li>
+<li>
+<p><a id="tabset2_json"></a>JSON</p>
+</li>
+<li>
+<p><a id="tabset2_maven"></a>Maven</p>
+</li>
+<li>
+<p><a id="tabset2_gradle"></a>Gradle</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset2_yaml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">packagers:
+  chocolatey:
+    repository:
+      extraProperties:
+        projectIdentifier: 12345678</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_toml">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[packagers.chocolatey]
+  repository.extraProperties.projectIdentifier = "12345678"</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_json">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "packagers": {
+    "chocolatey": {
+      "repository": {
+        "extraProperties": {
+          "projectIdentifier": "12345678"
+        }
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_maven">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
+  &lt;packagers&gt;
+    &lt;chocolatey&gt;
+      &lt;repository&gt;
+        &lt;extraProperties&gt;
+          &lt;projectIdentifier&gt;12345678&lt;/projectIdentifier&gt;
+        &lt;/extraProperties&gt;
+      &lt;/repository&gt;
+    &lt;/chocolatey&gt;
+  &lt;/packagers&gt;
+&lt;/jreleaser&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset2_gradle">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
+  packagers {
+    chocolatey {
+      repository {
+        extraProperties.put("projectIdentifier", "12345678")
+      }
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>

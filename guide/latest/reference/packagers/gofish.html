@@ -557,6 +557,9 @@
     <a class="nav-link" href="../deploy/maven/gitlab.html">Gitlab</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../deploy/maven/maven-central.html">MavenCentral</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../deploy/maven/nexus2.html">Nexus2</a>
   </li>
 </ul>
@@ -1063,6 +1066,12 @@ packagers:
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       commitMessage: '{{distributionName}} {{tagName}}'
 
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+        foo: bar
+
     # Name of the Gofish package.
     # Defaults to `#{distribution.name}`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1167,6 +1176,11 @@ packagers:
   # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   repository.commitMessage = "{{distributionName}} {{tagName}}"
+
+  # Additional properties used when evaluating templates.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  repository.extraProperties.foo = "bar"
+  # Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
 
   # Name of the Gofish package.
   # Defaults to `#{distribution.name}`.
@@ -1281,7 +1295,14 @@ packagers:
         // Message when committing to the repository.
         // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "commitMessage": "{{distributionName}} {{tagName}}"
+        "commitMessage": "{{distributionName}} {{tagName}}",
+
+        // Additional properties used when evaluating templates.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "extraProperties": {
+          // Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+          "foo": "bar"
+        }
       },
 
       // Name of the Gofish package.
@@ -1446,6 +1467,17 @@ packagers:
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         --&gt;
         &lt;commitMessage&gt;{{distributionName}} {{tagName}}&lt;/commitMessage&gt;
+
+        &lt;!--
+          Additional properties used when evaluating templates.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        --&gt;
+        &lt;extraProperties&gt;
+          &lt;!--
+            Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+          --&gt;
+          &lt;foo&gt;bar&lt;/foo&gt;
+        &lt;/extraProperties&gt;
       &lt;/repository&gt;
 
       &lt;!--
@@ -1559,10 +1591,15 @@ packagers:
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         token = '__USE_ENVIRONMENT_VARIABLE__'
 
-        # Message when committing to the repository.
-        # If left unspecified, `{{distributionName}} {{tagName}}` will be used.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        // Message when committing to the repository.
+        // If left unspecified, `{{distributionName}} {{tagName}}` will be used.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         commitMessage = '{{distributionName}} {{tagName}}'
+
+        // Additional properties used when evaluating templates.
+        // Key will be capitalized and prefixed with `repository`, i.e, `repositoryFoo`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        extraProperties.put('foo', 'bar')
       }
 
       // Name of the Gofish package.
