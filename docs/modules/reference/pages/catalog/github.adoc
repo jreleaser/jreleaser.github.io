@@ -1,11 +1,28 @@
-= SLSA
-:cataloger_sys_key: slsa
-:cataloger_env_key: SLSA
+= Github Attestation
+:cataloger_sys_key: github
+:cataloger_env_key: GITHUB
 
-Generates subject attestations for link:https://slsa.dev/[SLSA] to be used in combination with JReleaser's
-link:https://github.com/jreleaser/release-action/blob/java/README.adoc#slsa-builder[SLSA builders].
+Generates a list of artifacts that may be supplied as input to the link:https://github.com/actions/attest-build-provenance[actions/attest-build-provenance]
+GitHub Action. The list will be saved in a file named after the chosen `attestationName`. The contents of this file may
+be used as an input, for example
 
-WARNING: This feature does not generate provenance on its own, you must combine it with a SLSA builder.
+*my-release-workflow.yml*
+```yaml
+      - name: Release
+        uses: jreleaser/release-action@v2
+        with:
+          arguments: release
+        env:
+          JRELEASER_PROJECT_VERSION: <my-project-version>
+
+      - run: echo "ARTIFACTS=$(cat out/jreleaser/catalogs/github/<my-chosen-attestation-name>)" >> $GITHUB_OUTPUT
+
+      - name: Attestations
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            ${{ ARTIFACTS }}
+```
 
 == Configuration
 
@@ -21,7 +38,7 @@ YAML::
 ----
 catalog:
   # icon:dot-circle[]
-  slsa:
+  github:
 
     # Enable or disable this cataloger.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -62,7 +79,7 @@ catalog:
     # Additional properties used when evaluating templates.
     # icon:dot-circle[] icon:file-alt[]
     extraProperties:
-      # Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+      # Key will be capitalized and prefixed with `github`, i.e, `githubFoo`.
       foo: bar
 ----
 --
@@ -73,7 +90,7 @@ TOML::
 [subs="+macros,attributes"]
 ----
 # icon:dot-circle[]
-[catalog.slsa]
+[catalog.github]
 
   # Enable or disable this cataloger.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -112,7 +129,7 @@ TOML::
   # Additional properties used when evaluating templates.
   # icon:dot-circle[] icon:file-alt[]
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+  # Key will be capitalized and prefixed with `github`, i.e, `githubFoo`.
 ----
 --
 JSON::
@@ -124,7 +141,7 @@ JSON::
 {
   "catalog": {
     // icon:dot-circle[]
-    "slsa": {
+    "github": {
 
       // Enable or disable this cataloger.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -163,7 +180,7 @@ JSON::
       // Additional properties used when evaluating templates.
       // icon:dot-circle[] icon:file-alt[]
       "extraProperties": {
-        // Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+        // Key will be capitalized and prefixed with `github`, i.e, `githubFoo`.
         "foo": "bar"
       }
     }
@@ -185,7 +202,7 @@ Maven::
     <!--
       icon:dot-circle[]
     -->
-    <slsa>
+    <github>
 
       <!--
         Enable or disable this cataloger.
@@ -245,11 +262,11 @@ Maven::
       -->
       <extraProperties>
         <!--
-          Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+          Key will be capitalized and prefixed with `github`, i.e, `githubFoo`.
         -->
         <foo>bar</foo>
       </extraProperties>
-    </slsa>
+    </github>
   </catalog>
 </jreleaser>
 ----
@@ -263,7 +280,7 @@ Gradle::
 jreleaser {
   catalog {
     // icon:dot-circle[]
-    slsa {
+    github {
 
       // Enable or disable this cataloger.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -300,7 +317,7 @@ jreleaser {
       exclude('**/*.asc')
 
       // Additional properties used when evaluating templates.
-      // Key will be capitalized and prefixed with `slsa`, i.e, `slsaFoo`.
+      // Key will be capitalized and prefixed with `github`, i.e, `githubFoo`.
       // icon:dot-circle[] icon:file-alt[]
       extraProperties.put('foo', 'bar')
     }
