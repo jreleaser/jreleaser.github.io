@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Native Image :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/assemble/native-image.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.8">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
@@ -510,6 +510,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../catalog/index.html">Catalog</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../catalog/github.html">Github Attestation</a>
+  </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../catalog/sbom/index.html">SBOM</a>
@@ -1056,7 +1059,51 @@ assemble:
 
         # Options to pass to the Java runtime
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        options: [-Xmx2048m]
+        jvmOptions:
+          # Included in all scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          universal:
+            - -Dprop=value
+          # Included in all non Windows scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          unix:
+            - -Dprop=value
+          # Included in all non Windows (except OSX) scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          linux:
+            - -Dprop=value
+          # Included only in OSX scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          osx:
+            - -Dprop=value
+          # Included in Windows scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          windows:
+            - -Dprop=value
+
+        # Environment variables used in launch scripts.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        environmentVariables:
+          # Included in all scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          universal:
+            KEY: value
+          # Included in all non Windows scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          unix:
+            KEY: value
+          # Included in all non Windows (except OSX) scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          linux:
+            KEY: value
+          # Included only in OSX scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          osx:
+            KEY: value
+          # Included in Windows scripts
+          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          windows:
+            KEY: value
 
         # Maven coordinates: groupId.
         # If left undefined, will use `#{project.java.groupId}`.
@@ -1375,8 +1422,48 @@ assemble:
   java.mainClass = "com.acme.Main"
 
   # Options to pass to the Java runtime
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.options = ["-Xmx2048m"]
+
+  # Included in all scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.jvmOptions.universal = ["-Dprop=value"]
+
+  # Included in all non Windows scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.jvmOptions.unix = ["-Dprop=value"]
+
+  # Included in all non Windows (except OSX) scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.jvmOptions.linux = ["-Dprop=value"]
+
+  # Included only in OSX scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.jvmOptions.osx = ["-Dprop=value"]
+
+  # Included in Windows scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.jvmOptions.windows = ["-Dprop=value"]
+
+  # Environment variables used in launch scripts.
+
+  # Included in all scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.environmentVariables.universal.KEY = "value"
+
+  # Included in all non Windows scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.environmentVariables.unix.KEY = "value"
+
+  # Included in all non Windows (except OSX) scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.environmentVariables.linux.KEY = "value"
+
+  # Included only in OSX scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.environmentVariables.osx.KEY = "value"
+
+  # Included in Windows scripts
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  java.environmentVariables.windows.KEY = "value"
 
   # Maven coordinates: groupId.
   # If left undefined, will use `#{project.java.groupId}`.
@@ -1723,7 +1810,63 @@ assemble:
 
           // Options to pass to the Java runtime
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "options": ["-Xmx2048m"],
+          "jvmOptions": {
+            // Included in all scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "universal": [
+              "-Dprop=value"
+            ],
+            // Included in all non Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "unix": [
+              "-Dprop=value"
+            ],
+            // Included in all non Windows (except OSX) scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "linux": [
+              "-Dprop=value"
+            ],
+            // Included only in OSX scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "osx": [
+              "-Dprop=value"
+            ],
+            // Included in Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "windows": [
+              "-Dprop=value"
+            ]
+          },
+
+          // Environment variables used in launch scripts.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "environmentVariables": {
+            // Included in all scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "universal": {
+              "KEY": "value"
+            },
+            // Included in all non Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "unix": {
+              "KEY": "value"
+            },
+            // Included in all non Windows (except OSX) scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "linux": {
+              "KEY": "value"
+            },
+            // Included only in OSX scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "osx": {
+              "KEY": "value"
+            },
+            // Included in Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            "windows": {
+              "KEY": "value"
+            }
+          },
 
           // Maven coordinates: groupId.
           // If left undefined, will use `#{project.java.groupId}`.
@@ -2187,7 +2330,75 @@ assemble:
             Options to pass to the Java runtime
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
-          &lt;options&gt;-Xmx2048m&lt;/options&gt;
+          &lt;jvmOptions&gt;
+            &lt;!--
+              Included in all scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;universal&gt;-Dprop=value&lt;/universal&gt;
+            &lt;!--
+              Included in all non Windows scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;unix&gt;-Dprop=value&lt;/unix&gt;
+            &lt;!--
+              Included in all non Windows (except OSX) scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;linux&gt;-Dprop=value&lt;/linux&gt;
+            &lt;!--
+              Included only in OSX scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;osx&gt;-Dprop=value&lt;/osx&gt;
+            &lt;!--
+              Included in Windows scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;windows&gt;-Dprop=value&lt;/windows&gt;
+          &lt;/jvmOptions&gt;
+
+          &lt;!--
+            Environment variables used in launch scripts.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;environmentVariables&gt;
+            &lt;!--
+              Included in all scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;universal&gt;
+              &lt;KEY&gt;value&lt;/KEY&gt;
+            &lt;/universal&gt;
+            &lt;!--
+              Included in all non Windows scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;unix&gt;
+              &lt;KEY&gt;value&lt;/KEY&gt;
+            &lt;/unix&gt;
+            &lt;!--
+              Included in all non Windows (except OSX) scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;linux&gt;
+              &lt;KEY&gt;value&lt;/KEY&gt;
+            &lt;/linux&gt;
+            &lt;!--
+              Included only in OSX scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;osx&gt;
+              &lt;KEY&gt;value&lt;/KEY&gt;
+            &lt;/osx&gt;
+            &lt;!--
+              Included in Windows scripts
+              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            --&gt;
+            &lt;windows&gt;
+              &lt;KEY&gt;value&lt;/KEY&gt;
+            &lt;/windows&gt;
+          &lt;/environmentVariables&gt;
 
           &lt;!--
             Maven coordinates&gt;groupId.
@@ -2628,7 +2839,43 @@ assemble:
 
           // Options to pass to the Java runtime
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          options = ['-Xmx2048m']
+          jvmOptions {
+            // Included in all scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            universal('-Dprop=value')
+            // Included in all non Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            unix('-Dprop=value')
+            // Included in all non Windows (except OSX) scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            linux('-Dprop=value')
+            // Included only in OSX scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            osx('-Dprop=value')
+            // Included in Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            windows('-Dprop=value')
+          }
+
+          // Environment variables used in launch scripts.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          environmentVariables {
+            // Included in all scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            universal('KEY', 'value')
+            // Included in all non Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            unix('KEY', 'value')
+            // Included in all non Windows (except OSX) scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            linux('KEY', 'value')
+            // Included only in OSX scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            osx('KEY', 'value')
+            // Included in Windows scripts
+            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+            windows('KEY', 'value')
+          }
 
           // Maven coordinates = groupId.
           // If left undefined, will use `#{project.java.groupId}`.

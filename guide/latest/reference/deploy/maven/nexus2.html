@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Nexus2 :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/deploy/maven/nexus2.html">
-    <meta name="generator" content="Antora 3.1.7">
+    <meta name="generator" content="Antora 3.1.8">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../../_/css/navbar-latest.css">
@@ -511,6 +511,9 @@
     <a class="nav-link" href="../../catalog/index.html">Catalog</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../catalog/github.html">Github Attestation</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../../catalog/sbom/index.html">SBOM</a>
 <ul class="nav-list">
@@ -932,6 +935,11 @@ deploy:
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         url: https://s01.oss.sonatype.org/service/local
 
+        # Activates publication of snapshot artifacts.
+        # Defaults to `false`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        snapshotSupported: true
+
         # The username required for authorization.
         # If left unspecified, the `JRELEASER_NEXUS2_${name}_USERNAME`
         # environment variable must be defined.
@@ -1050,7 +1058,25 @@ deploy:
         # Maximum number of attempts to verify state transition.
         # Defaults to `60`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        transitionMaxRetries: 60</code></pre>
+        transitionMaxRetries: 60
+
+        # Staging profile identifier, useful for faster lookups.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        stagingprofileId: com.acme
+
+        # Staging repository identifier, useful for staged releases.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        stagingProfileId: acme-1101
+
+        # Start stage for staged releases.
+        # Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        startStage: UPLOAD
+
+        # End stage for staged releases.
+        # Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        endStage: RELEASE</code></pre>
 </div>
 </div>
 </div>
@@ -1085,6 +1111,11 @@ deploy:
   # URL where the Nexus2 service is enabled.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   url = "https://s01.oss.sonatype.org/service/local"
+
+  # Activates publication of snapshot artifacts.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  snapshotSupported = true
 
   # The username required for authorization.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1199,7 +1230,25 @@ deploy:
   # Maximum number of attempts to verify state transition.
   # Defaults to `60`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  transitionMaxRetries = 60</code></pre>
+  transitionMaxRetries = 60
+
+  # Staging profile identifier, useful for faster lookups.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  stagingprofileId = "com.acme"
+
+  # Staging repository identifier, useful for staged releases.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  stagingProfileId = "acme-1101"
+
+  # Start stage for staged releases.
+  # Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  startStage = "UPLOAD"
+
+  # End stage for staged releases.
+  # Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  endStage = "RELEASE"</code></pre>
 </div>
 </div>
 </div>
@@ -1242,6 +1291,11 @@ deploy:
           // URL where the Nexus2 service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "url": "https://s01.oss.sonatype.org/service/local",
+
+          // Activates publication of snapshot artifacts.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "snapshotSupported": true,
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1356,6 +1410,24 @@ deploy:
           // Defaults to `60`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "transitionMaxRetries": 60,
+
+          // Staging profile identifier, useful for faster lookups.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "stagingprofileId": "com.acme",
+
+          // Staging repository identifier, useful for staged releases.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "stagingProfileId": "acme-1101",
+
+          // Start stage for staged releases.
+          // Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "startStage": "UPLOAD",
+
+          // End stage for staged releases.
+          // Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "endStage": "RELEASE",
           // Additional properties used when evaluating templates.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "extraProperties": {
@@ -1425,6 +1497,13 @@ deploy:
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
+
+          &lt;!--
+            Activates publication of snapshot artifacts.
+            Defaults to `false`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;snapshotSupported&gt;true&lt;/snapshotSupported&gt;
 
           &lt;!--
             The username required for authorization.
@@ -1594,6 +1673,32 @@ deploy:
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
           &lt;transitionMaxRetries&gt;60&lt;/transitionMaxRetries&gt;
+
+          &lt;!--
+            Staging profile identifier, useful for faster lookups.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;stagingprofileId&gt;com.acme&lt;/stagingprofileId&gt;
+
+          &lt;!--
+            Staging repository identifier, useful for staged releases.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;stagingProfileId&gt;acme-1101&lt;/stagingProfileId&gt;
+
+          &lt;!--
+            Start stage for staged releases.
+            Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;startStage&gt;UPLOAD&lt;/startStage&gt;
+
+          &lt;!--
+            End stage for staged releases.
+            Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;endStage&gt;RELEASE&lt;/endStage&gt;
         &lt;/app&gt;
       &lt;/nexus2&gt;
     &lt;/maven&gt;
@@ -1641,6 +1746,11 @@ deploy:
           // URL where the Nexus2 service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           url = 'https://s01.oss.sonatype.org/service/local'
+
+          // Activates publication of snapshot artifacts.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          snapshotSupported = true
 
           // The username required for authorization.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
@@ -1756,6 +1866,24 @@ deploy:
           // Defaults to `60`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           transitionMaxRetries = 60
+
+          // Staging profile identifier, useful for faster lookups.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          stagingprofileId = 'com.acme'
+
+          // Staging repository identifier, useful for staged releases.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          stagingProfileId = 'acme-1101'
+
+          // Start stage for staged releases.
+          // Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          startStage = 'UPLOAD'
+
+          // End stage for staged releases.
+          // Valid values are [`UPLOAD`, `CLOSE`, `RELEASE`]
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          endStage = 'RELEASE'
         }
       }
     }
@@ -2109,7 +2237,7 @@ You may define any of the following system properties or environment variables t
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>start</strong></p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>startStage</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.start.stage<br>
@@ -2122,7 +2250,7 @@ You may define any of the following system properties or environment variables t
   JRELEASER_NEXUS2_START_STAGE</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>end</strong></p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>endStage</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus2.${name}.end.stage<br>
