@@ -2,6 +2,7 @@
 :deployer_id:   mavenCentral
 :deployer_name: MavenCentral
 :deployer_url:  pass:[https://central.sonatype.com/api/v1/publisher]
+:deployer_verify_url: pass:[https://repo1.maven.org/maven2/{{path}}/{{filename}}]
 :default_auth:  BEARER
 :deployer_sys_key: mavencentral
 :deployer_env_key: MAVENCENTRAL
@@ -22,6 +23,11 @@ YAML::
 [subs="+macros,attributes"]
 ----
 include::partial$deploy/maven/yaml/common-head.adoc[]
+
+        # URL for checking artifacts may be already deployed.
+        # Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+        # icon:dot-circle[] icon:eye-slash[]
+        verifyUrl: '{deployer_verify_url}'
 
         # Registered publication namespace.
         # Defaults to `${project.java.groupId}`.
@@ -51,6 +57,11 @@ TOML::
 ----
 include::partial$deploy/maven/toml/common-head.adoc[]
 
+  # URL for checking artifacts may be already deployed.
+  # Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+  # icon:dot-circle[] icon:eye-slash[]
+  verifyUrl: "{deployer_verify_url}"
+
   # Registered publication namespace.
   # Defaults to `${project.java.groupId}`.
   # icon:dot-circle[]
@@ -78,6 +89,11 @@ JSON::
 [subs="+macros,attributes"]
 ----
 include::partial$deploy/maven/json/common-head.adoc[]
+
+          // URL for checking artifacts may be already deployed.
+          // Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+          // icon:dot-circle[] icon:eye-slash[]
+          "verifyUrl": "{deployer_verify_url}",
 
           // Registered publication namespace.
           // Defaults to `${project.java.groupId}`.
@@ -107,6 +123,13 @@ Maven::
 [subs="+macros,attributes,verbatim"]
 ----
 include::partial$deploy/maven/maven/common-head.adoc[]
+
+          <!--
+            URL for checking artifacts may be already deployed.
+            Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <verifyUrl>{deployer_verify_url}</verifyUrl>
 
           <!--
             Registered publication namespace.
@@ -144,6 +167,11 @@ Gradle::
 [subs="+macros,attributes"]
 ----
 include::partial$deploy/maven/gradle/common-head.adoc[]
+
+          // URL for checking artifacts may be already deployed.
+          // Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+          // icon:dot-circle[] icon:eye-slash[]
+          verifyUrl = "{deployer_verify_url}"
 
           // Registered publication namespace.
           // Defaults to `${project.java.groupId}`.

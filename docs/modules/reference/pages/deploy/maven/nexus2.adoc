@@ -3,6 +3,7 @@
 :deployer_name: Nexus2
 :deployer_url:  pass:[https://s01.oss.sonatype.org/service/local]
 :deployer_snapshot_url: pass:[https://s01.oss.sonatype.org/content/repositories/snapshots/]
+:deployer_verify_url: pass:[https://repo1.maven.org/maven2/{{path}}/{{filename}}]
 :default_auth:  BASIC
 :deployer_sys_key: nexus2
 :deployer_env_key: NEXUS2
@@ -31,6 +32,11 @@ include::partial$deploy/maven/yaml/common-head.adoc[]
         # URL where the {deployer_name} snapshots are enabled.
         # icon:exclamation-triangle[] icon:eye-slash[]
         snapshotUrl: {deployer_snapshot_url}
+
+        # URL for checking artifacts may be already deployed.
+        # Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+        # icon:dot-circle[] icon:eye-slash[]
+        verifyUrl: '{deployer_verify_url}'
 
         # Closes the staging repository.
         # Defaults to `false`.
@@ -79,9 +85,14 @@ TOML::
 ----
 include::partial$deploy/maven/toml/common-head.adoc[]
 
- # URL where the {deployer_name} snapshots are enabled.
- # icon:exclamation-triangle[] icon:eye-slash[]
- snapshotUrl = "{deployer_snapshot_url}"
+  # URL where the {deployer_name} snapshots are enabled.
+  # icon:exclamation-triangle[] icon:eye-slash[]
+  snapshotUrl = "{deployer_snapshot_url}"
+
+  # URL for checking artifacts may be already deployed.
+  # Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+  # icon:dot-circle[] icon:eye-slash[]
+  verifyUrl: "{deployer_verify_url}"
 
   # Closes the staging repository.
   # Defaults to `false`.
@@ -133,6 +144,11 @@ include::partial$deploy/maven/json/common-head.adoc[]
           // URL where the {deployer_name} snapshots are enabled.
           // icon:exclamation-triangle[] icon:eye-slash[]
           "snapshotUrl": "{deployer_snapshot_url}",
+
+          // URL for checking artifacts may be already deployed.
+          // Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+          // icon:dot-circle[] icon:eye-slash[]
+          "verifyUrl": "{deployer_verify_url}",
 
           // Closes the staging repository.
           // Defaults to `false`.
@@ -187,6 +203,13 @@ include::partial$deploy/maven/maven/common-head.adoc[]
             icon:exclamation-triangle[] icon:eye-slash[]
           -->
           <snapshotUrl>{deployer_snapshot_url}</snapshotUrl>
+
+          <!--
+            URL for checking artifacts may be already deployed.
+            Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+            icon:dot-circle[] icon:eye-slash[]
+          -->
+          <verifyUrl>{deployer_verify_url}</verifyUrl>
 
           <!--
             Closes the staging repository.
@@ -255,6 +278,11 @@ include::partial$deploy/maven/gradle/common-head.adoc[]
           // URL where the {deployer_name} snapshots are enabled.
           // icon:exclamation-triangle[] icon:eye-slash[]
           snapshotUrl = '{deployer_snapshot_url}'
+
+          // URL for checking artifacts may be already deployed.
+          // Additional template tokens: `groupId`, `artifactId`, `version`, `path`, `filename`.
+          // icon:dot-circle[] icon:eye-slash[]
+          verifyUrl = "{deployer_verify_url}"
 
           // Closes the staging repository.
           // Defaults to `false`.
