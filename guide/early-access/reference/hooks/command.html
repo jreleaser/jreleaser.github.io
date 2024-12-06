@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Command Hooks :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/hooks/command.html">
-    <meta name="generator" content="Antora 3.1.9">
+    <meta name="generator" content="Antora 3.1.10">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../_/css/navbar-early-access.css">
@@ -618,6 +618,9 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../matrix.html">Matrix</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../name-templates.html">Name Templates</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -891,9 +894,28 @@ hooks:
   condition: '"{{ Env.CI }}" == true'
 
   # A map of global environment variables.
+  # Accepts values from `matrix`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   environment:
     FOO: bar
+
+  # Includes the default matrix.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  applyDefaultMatrix: false
+
+  # Configures matrix variables.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  matrix:
+    vars:
+      os: [ linux, osx, windows ]
+      arch: [ arm64, amd64 ]
+    rows:
+      - { os: linux, arch: arm64 }
+      - { os: linux, arch: amd64 }
+      - { os: osx, arch: arm64 }
+      - { os: osx, arch: amd64 }
+      - { os: windows, arch: arm64 }
+      - { os: windows, arch: amd64 }
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   command:
@@ -908,9 +930,29 @@ hooks:
     condition: '"{{ Env.CI }}" == true'
 
     # A map of command environment variables.
+    # Accepts values from `matrix`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     environment:
       FOO: bar
+
+    # Includes the default matrix.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    applyDefaultMatrix: false
+
+    # Configures matrix variables.
+    # Values will be inherited from `hooks`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    matrix:
+      vars:
+        os: [ linux, osx, windows ]
+        arch: [ arm64, amd64 ]
+      rows:
+        - { os: linux, arch: arm64 }
+        - { os: linux, arch: amd64 }
+        - { os: osx, arch: arm64 }
+        - { os: osx, arch: amd64 }
+        - { os: windows, arch: arm64 }
+        - { os: windows, arch: amd64 }
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -933,15 +975,36 @@ hooks:
         active: ALWAYS
 
         # A map of local environment variables.
+        # Accepts values from `matrix`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         environment:
           FOO: bar
+
+        # Includes the default matrix.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        applyDefaultMatrix: false
+
+        # Configures matrix variables.
+        # Values will be inherited from `command`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        matrix:
+          vars:
+            os: [ linux, osx, windows ]
+            arch: [ arm64, amd64 ]
+          rows:
+            - { os: linux, arch: arm64 }
+            - { os: linux, arch: amd64 }
+            - { os: osx, arch: arm64 }
+            - { os: osx, arch: amd64 }
+            - { os: windows, arch: arm64 }
+            - { os: windows, arch: amd64 }
 
         # Execute the command if the condition evaluates to `true`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         condition: '"{{ Env.CI }}" == true'
 
         # The command to be invoked.
+        # Accepts values from `matrix`.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         cmd: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
 
@@ -976,8 +1039,24 @@ hooks:
   condition = "'{{ Env.CI }}' == true"
 
   # A map of global environment variables.
+  # Accepts values from `matrix`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   environment.FOO = "bar"
+
+  # Includes the default matrix.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  applyDefaultMatrix = false
+
+  # Configures matrix variables.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  matrix.vars.os = [ "linux", "osx", "windows" ]
+  matrix.vars.arch= [ "arm64", "amd64" ]
+  rows = [{ os = "linux", arch = "arm64" },
+          { os = "linux", arch = "amd64" },
+          { os = "osx", arch = "arm64" },
+          { os = "osx", arch = "amd64" },
+          { os = "windows", arch = "arm64" },
+          { os = "windows", arch = "amd64" }]
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [hooks.command]
@@ -992,8 +1071,25 @@ hooks:
     condition = "'{{ Env.CI }}' == true"
 
     # A map of command environment variables.
+    # Accepts values from `matrix`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     environment.FOO = "bar"
+
+    # Includes the default matrix.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    applyDefaultMatrix = false
+
+    # Configures matrix variables.
+    # Values will be inherited from `hooks`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    matrix.vars.os = [ "linux", "osx", "windows" ]
+    matrix.vars.arch= [ "arm64", "amd64" ]
+    rows = [{ os = "linux", arch = "arm64" },
+            { os = "linux", arch = "amd64" },
+            { os = "osx", arch = "arm64" },
+            { os = "osx", arch = "amd64" },
+            { os = "windows", arch = "arm64" },
+            { os = "windows", arch = "amd64" }]
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -1016,14 +1112,32 @@ hooks:
       active = "ALWAYS"
 
       # A map of local environment variables.
+      # Accepts values from `matrix`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       environment.FOO = "bar"
+
+      # Includes the default matrix.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      applyDefaultMatrix = false
+
+      # Configures matrix variables.
+      # Values will be inherited from `command`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      matrix.vars.os = [ "linux", "osx", "windows" ]
+      matrix.vars.arch= [ "arm64", "amd64" ]
+      rows = [{ os = "linux", arch = "arm64" },
+              { os = "linux", arch = "amd64" },
+              { os = "osx", arch = "arm64" },
+              { os = "osx", arch = "amd64" },
+              { os = "windows", arch = "arm64" },
+              { os = "windows", arch = "amd64" }]
 
       # Execute the command if the condition evaluates to `true`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       condition = "'{{ Env.CI }}' == true"
 
       # The command to be invoked.
+      # Accepts values from `matrix`.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
 
@@ -1056,9 +1170,31 @@ hooks:
     "condition": "'{{ Env.CI }}' == true",
 
     // A map of global environment variables.
+    // Accepts values from `matrix`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "environment": {
       "FOO": "bar"
+    },
+
+    // Includes the default matrix.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "applyDefaultMatrix": false,
+
+    // Configures matrix variables.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "matrix": {
+      "vars": {
+        "os": [ "linux", "osx", "windows" ],
+        "arch": [ "arm64", "amd64" ]
+      },
+      "rows": [
+        { "os": "linux", "arch": "arm64" },
+        { "os": "linux", "arch": "amd64" },
+        { "os": "osx", "arch": "arm64" },
+        { "os": "osx", "arch": "amd64" },
+        { "os": "windows", "arch": "arm64" },
+        { "os": "windows", "arch": "amd64" }
+      ]
     },
 
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1074,9 +1210,32 @@ hooks:
       "condition": "'{{ Env.CI }}' == true",
 
       // A map of command environment variables.
+      // Accepts values from `matrix`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "environment": {
         "FOO": "bar"
+      },
+
+      // Includes the default matrix.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "applyDefaultMatrix": false,
+
+      // Configures matrix variables.
+      // Values will be inherited from `hooks`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "matrix": {
+        "vars": {
+          "os": [ "linux", "osx", "windows" ],
+          "arch": [ "arm64", "amd64" ]
+        },
+        "rows": [
+          { "os": "linux", "arch": "arm64" },
+          { "os": "linux", "arch": "amd64" },
+          { "os": "osx", "arch": "arm64" },
+          { "os": "osx", "arch": "amd64" },
+          { "os": "windows", "arch": "arm64" },
+          { "os": "windows", "arch": "amd64" }
+        ]
       },
 
       // The type of hook
@@ -1101,9 +1260,32 @@ hooks:
           "active": "ALWAYS",
 
           // A map of local environment variables.
+          // Accepts values from `matrix`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "environment": {
             "FOO": "bar"
+          },
+
+          // Includes the default matrix.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "applyDefaultMatrix": false,
+
+          // Configures matrix variables.
+          // Values will be inherited from `script`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "matrix": {
+            "vars": {
+              "os": [ "linux", "osx", "windows" ],
+              "arch": [ "arm64", "amd64" ]
+            },
+            "rows": [
+              { "os": "linux", "arch": "arm64" },
+              { "os": "linux", "arch": "amd64" },
+              { "os": "osx", "arch": "arm64" },
+              { "os": "osx", "arch": "amd64" },
+              { "os": "windows", "arch": "arm64" },
+              { "os": "windows", "arch": "amd64" }
+            ]
           },
 
           // Execute the command if the condition evaluates to `true`.
@@ -1111,6 +1293,7 @@ hooks:
           "condition": "'{{ Env.CI }}' == true",
 
           // The command to be invoked.
+          // Accepts values from `matrix`.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           "cmd": "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}",
 
@@ -1160,11 +1343,62 @@ hooks:
 
     &lt;!--
       A map of global environment variables.
+      Accepts values from `matrix`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     --&gt;
     &lt;environment&gt;
       &lt;FOO&gt;bar&lt;/FOO&gt;
     &lt;/environment&gt;
+
+    &lt;!--
+      Includes the default matrix.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;applyDefaultMatrix&gt;false&lt;/applyDefaultMatrix&gt;
+
+    &lt;!--
+      Configures matrix variables.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;matrix&gt;
+      &lt;vars&gt;
+        &lt;os&gt;
+          &lt;e&gt;linux&lt;/e&gt;
+          &lt;e&gt;osx&lt;/e&gt;
+          &lt;e&gt;windows&lt;/e&gt;
+        &lt;/os&gt;
+        &lt;arch&gt;
+          &lt;e&gt;arm64&lt;/e&gt;
+          &lt;e&gt;amd64&lt;/e&gt;
+        &lt;/arch&gt;
+      &lt;/vars&gt;
+      &lt;rows&gt;
+        &lt;row&gt;
+          &lt;os&gt;linux&lt;/os&gt;
+          &lt;arch&gt;arm64&lt;/arch&gt;
+        &lt;/row&gt;
+        &lt;row&gt;
+          &lt;os&gt;linux&lt;/os&gt;
+          &lt;arch&gt;amd64&lt;/arch&gt;
+        &lt;/row&gt;
+        &lt;row&gt;
+          &lt;os&gt;osx&lt;/os&gt;
+          &lt;arch&gt;arm64&lt;/arch&gt;
+        &lt;/row&gt;
+        &lt;row&gt;
+          &lt;os&gt;osx&lt;/os&gt;
+          &lt;arch&gt;amd64&lt;/arch&gt;
+        &lt;/row&gt;
+        &lt;row&gt;
+          &lt;os&gt;windows&lt;/os&gt;
+          &lt;arch&gt;arm64&lt;/arch&gt;
+        &lt;/row&gt;
+        &lt;row&gt;
+          &lt;os&gt;windows&lt;/os&gt;
+          &lt;arch&gt;amd64&lt;/arch&gt;
+        &lt;/row&gt;
+      &lt;/rows&gt;
+    &lt;/matrix&gt;
 
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1186,11 +1420,63 @@ hooks:
 
       &lt;!--
         A map of command environment variables.
+        Accepts values from `matrix`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
       &lt;environment&gt;
         &lt;FOO&gt;bar&lt;/FOO&gt;
       &lt;/environment&gt;
+
+      &lt;!--
+        Includes the default matrix.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;applyDefaultMatrix&gt;false&lt;/applyDefaultMatrix&gt;
+
+      &lt;!--
+        Configures matrix variables.
+        Values will be inherited from `hooks`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;matrix&gt;
+        &lt;vars&gt;
+          &lt;os&gt;
+            &lt;e&gt;linux&lt;/e&gt;
+            &lt;e&gt;osx&lt;/e&gt;
+            &lt;e&gt;windows&lt;/e&gt;
+          &lt;/os&gt;
+          &lt;arch&gt;
+            &lt;e&gt;arm64&lt;/e&gt;
+            &lt;e&gt;amd64&lt;/e&gt;
+          &lt;/arch&gt;
+        &lt;/vars&gt;
+        &lt;rows&gt;
+          &lt;row&gt;
+            &lt;os&gt;linux&lt;/os&gt;
+            &lt;arch&gt;arm64&lt;/arch&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;os&gt;linux&lt;/os&gt;
+            &lt;arch&gt;amd64&lt;/arch&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;os&gt;osx&lt;/os&gt;
+            &lt;arch&gt;arm64&lt;/arch&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;os&gt;osx&lt;/os&gt;
+            &lt;arch&gt;amd64&lt;/arch&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;os&gt;windows&lt;/os&gt;
+            &lt;arch&gt;arm64&lt;/arch&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;os&gt;windows&lt;/os&gt;
+            &lt;arch&gt;amd64&lt;/arch&gt;
+          &lt;/row&gt;
+        &lt;/rows&gt;
+      &lt;/matrix&gt;
 
       &lt;!--
         The type of hook
@@ -1223,11 +1509,63 @@ hooks:
 
           &lt;!--
             A map of local environment variables.
+            Accepts values from `matrix`.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           --&gt;
           &lt;environment&gt;
             &lt;FOO&gt;bar&lt;/FOO&gt;
           &lt;/environment&gt;
+
+          &lt;!--
+            Includes the default matrix.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;applyDefaultMatrix&gt;false&lt;/applyDefaultMatrix&gt;
+
+          &lt;!--
+            Configures matrix variables.
+            Values will be inherited from `script`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;matrix&gt;
+            &lt;vars&gt;
+              &lt;os&gt;
+                &lt;e&gt;linux&lt;/e&gt;
+                &lt;e&gt;osx&lt;/e&gt;
+                &lt;e&gt;windows&lt;/e&gt;
+              &lt;/os&gt;
+              &lt;arch&gt;
+                &lt;e&gt;arm64&lt;/e&gt;
+                &lt;e&gt;amd64&lt;/e&gt;
+              &lt;/arch&gt;
+            &lt;/vars&gt;
+            &lt;rows&gt;
+              &lt;row&gt;
+                &lt;os&gt;linux&lt;/os&gt;
+                &lt;arch&gt;arm64&lt;/arch&gt;
+              &lt;/row&gt;
+              &lt;row&gt;
+                &lt;os&gt;linux&lt;/os&gt;
+                &lt;arch&gt;amd64&lt;/arch&gt;
+              &lt;/row&gt;
+              &lt;row&gt;
+                &lt;os&gt;osx&lt;/os&gt;
+                &lt;arch&gt;arm64&lt;/arch&gt;
+              &lt;/row&gt;
+              &lt;row&gt;
+                &lt;os&gt;osx&lt;/os&gt;
+                &lt;arch&gt;amd64&lt;/arch&gt;
+              &lt;/row&gt;
+              &lt;row&gt;
+                &lt;os&gt;windows&lt;/os&gt;
+                &lt;arch&gt;arm64&lt;/arch&gt;
+              &lt;/row&gt;
+              &lt;row&gt;
+                &lt;os&gt;windows&lt;/os&gt;
+                &lt;arch&gt;amd64&lt;/arch&gt;
+              &lt;/row&gt;
+            &lt;/rows&gt;
+          &lt;/matrix&gt;
 
           &lt;!--
             Execute the command if the condition evaluates to `true`.
@@ -1237,6 +1575,7 @@ hooks:
 
           &lt;!--
             The command to be invoked.
+            Accepts values from `matrix`.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           --&gt;
           &lt;cmd&gt;{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}&lt;/cmd&gt;
@@ -1284,8 +1623,27 @@ hooks:
     condition = '"{{ Env.CI }}" == true'
 
     // A map of global environment variables.
+    // Accepts values from `matrix`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     environment('FOO', 'bar')
+
+    // Includes the default matrix.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    applyDefaultMatrix = false
+
+    // Configures matrix variables.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    matrix {
+      variable('os', ['linux', 'osx', 'windows'])
+      variable('arch', ['arm64', 'amd64'])
+
+      row(os: 'linux', arch: 'arm64')
+      row(os: 'linux', arch: 'amd64')
+      row(os: 'osx', arch: 'arm64')
+      row(os: 'osx', arch: 'amd64')
+      row(os: 'windows', arch: 'arm64')
+      row(os: 'windows', arch: 'amd64')
+    }
 
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     command {
@@ -1300,8 +1658,28 @@ hooks:
       condition = '"{{ Env.CI }}" == true'
 
       // A map of command environment variables.
+      // Accepts values from `matrix`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       environment('FOO', 'bar')
+
+      // Includes the default matrix.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      applyDefaultMatrix = false
+
+      // Configures matrix variables.
+      // Values will be inherited from `hooks`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      matrix {
+        variable('os', ['linux', 'osx', 'windows'])
+        variable('arch', ['arm64', 'amd64'])
+
+        row(os: 'linux', arch: 'arm64')
+        row(os: 'linux', arch: 'amd64')
+        row(os: 'osx', arch: 'arm64')
+        row(os: 'osx', arch: 'amd64')
+        row(os: 'windows', arch: 'arm64')
+        row(os: 'windows', arch: 'amd64')
+      }
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -1324,14 +1702,35 @@ hooks:
         active = 'ALWAYS'
 
         // A map of local environment variables.
+        // Accepts values from `matrix`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         environment('FOO', 'bar')
+
+        // Includes the default matrix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        applyDefaultMatrix = false
+
+        // Configures matrix variables.
+        // Values will be inherited from `command`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        matrix {
+          variable('os', ['linux', 'osx', 'windows'])
+          variable('arch', ['arm64', 'amd64'])
+
+          row(os: 'linux', arch: 'arm64')
+          row(os: 'linux', arch: 'amd64')
+          row(os: 'osx', arch: 'arm64')
+          row(os: 'osx', arch: 'amd64')
+          row(os: 'windows', arch: 'arm64')
+          row(os: 'windows', arch: 'amd64')
+        }
 
         // Execute the command if the condition evaluates to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         condition = '"{{ Env.CI }}" == true'
 
         // The command to be invoked.
+        // Accepts values from `matrix`.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
 
