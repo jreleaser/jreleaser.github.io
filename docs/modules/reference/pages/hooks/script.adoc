@@ -29,9 +29,28 @@ hooks:
   condition: '"{{ Env.CI }}" == true'
 
   # A map of global environment variables.
+  # Accepts values from `matrix`.
   # icon:dot-circle[] icon:file-alt[]
   environment:
     FOO: bar
+
+  # Includes the default matrix.
+  # icon:dot-circle[]
+  applyDefaultMatrix: false
+
+  # Configures matrix variables.
+  # icon:dot-circle[]
+  matrix:
+    vars:
+      os: [ linux, osx, windows ]
+      arch: [ arm64, amd64 ]
+    rows:
+      - { os: linux, arch: arm64 }
+      - { os: linux, arch: amd64 }
+      - { os: osx, arch: arm64 }
+      - { os: osx, arch: amd64 }
+      - { os: windows, arch: arm64 }
+      - { os: windows, arch: amd64 }
 
   # icon:dot-circle[]
   script:
@@ -45,10 +64,30 @@ hooks:
     # icon:dot-circle[] icon:file-alt[]
     condition: '"{{ Env.CI }}" == true'
 
-    # A map of script environment variables..
+    # A map of script environment variables.
+    # Accepts values from `matrix`.
     # icon:dot-circle[] icon:file-alt[]
     environment:
       FOO: bar
+
+    # Includes the default matrix.
+    # icon:dot-circle[]
+    applyDefaultMatrix: false
+
+    # Configures matrix variables.
+    # Values will be inherited from `hooks`.
+    # icon:dot-circle[]
+    matrix:
+      vars:
+        os: [ linux, osx, windows ]
+        arch: [ arm64, amd64 ]
+      rows:
+        - { os: linux, arch: arm64 }
+        - { os: linux, arch: amd64 }
+        - { os: osx, arch: arm64 }
+        - { os: osx, arch: amd64 }
+        - { os: windows, arch: arm64 }
+        - { os: windows, arch: amd64 }
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -70,10 +109,29 @@ hooks:
         # icon:dot-circle[] icon:eye-slash[]
         active: ALWAYS
 
-        # A map of local environment variables..
+        # A map of local environment vatiables.
         # icon:dot-circle[] icon:file-alt[]
         environment:
           FOO: bar
+
+        # Includes the default matrix.
+        # icon:dot-circle[]
+        applyDefaultMatrix: false
+
+        # Configures matrix variables.
+        # Values will be inherited from `script`.
+        # icon:dot-circle[]
+        matrix:
+          vars:
+            os: [ linux, osx, windows ]
+            arch: [ arm64, amd64 ]
+          rows:
+            - { os: linux, arch: arm64 }
+            - { os: linux, arch: amd64 }
+            - { os: osx, arch: arm64 }
+            - { os: osx, arch: amd64 }
+            - { os: windows, arch: arm64 }
+            - { os: windows, arch: amd64 }
 
         # Execute the script if the condition evaluates to `true`.
         # icon:dot-circle[] icon:file-alt[]
@@ -86,6 +144,7 @@ hooks:
         shell: BASH
 
         # The script to be invoked.
+        # Accepts values from `matrix`.
         # icon:exclamation-triangle[] icon:file-alt[]
         run: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
 
@@ -121,9 +180,25 @@ TOML::
   # icon:dot-circle[] icon:file-alt[]
   condition = "'{{ Env.CI }}' == true"
 
-  # A map of global environment variables..
+  # A map of global environment vatiables.
+  # Accepts values from `matrix`.
   # icon:dot-circle[] icon:file-alt[]
   environment.FOO = "bar"
+
+  # Includes the default matrix.
+  # icon:dot-circle[]
+  applyDefaultMatrix = false
+
+  # Configures matrix variables.
+  # icon:dot-circle[]
+  matrix.vars.os = [ "linux", "osx", "windows" ]
+  matrix.vars.arch= [ "arm64", "amd64" ]
+  rows = [{ os = "linux", arch = "arm64" },
+          { os = "linux", arch = "amd64" },
+          { os = "osx", arch = "arm64" },
+          { os = "osx", arch = "amd64" },
+          { os = "windows", arch = "arm64" },
+          { os = "windows", arch = "amd64" }]
 
   # icon:dot-circle[]
   [hooks.script]
@@ -137,9 +212,25 @@ TOML::
     # icon:dot-circle[] icon:file-alt[]
     condition = "'{{ Env.CI }}' == true"
 
-    # A map of script environment variables..
+    # A map of script environment vatiables.
     # icon:dot-circle[] icon:file-alt[]
     environment.FOO = "bar"
+
+    # Includes the default matrix.
+    # icon:dot-circle[]
+    applyDefaultMatrix = false
+
+    # Configures matrix variables.
+    # Values will be inherited from `hooks`.
+    # icon:dot-circle[]
+    matrix.vars.os = [ "linux", "osx", "windows" ]
+    matrix.vars.arch= [ "arm64", "amd64" ]
+    rows = [{ os = "linux", arch = "arm64" },
+            { os = "linux", arch = "amd64" },
+            { os = "osx", arch = "arm64" },
+            { os = "osx", arch = "amd64" },
+            { os = "windows", arch = "arm64" },
+            { os = "windows", arch = "amd64" }]
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -161,9 +252,26 @@ TOML::
       # icon:dot-circle[] icon:eye-slash[]
       active = "ALWAYS"
 
-      # A map of local environment variables..
+      # A map of local environment vatiables.
+      # Accepts values from `matrix`.
       # icon:dot-circle[] icon:file-alt[]
       environment.FOO = "bar"
+
+      # Includes the default matrix.
+      # icon:dot-circle[]
+      applyDefaultMatrix = false
+
+      # Configures matrix variables.
+      # Values will be inherited from `script`.
+      # icon:dot-circle[]
+      matrix.vars.os = [ "linux", "osx", "windows" ]
+      matrix.vars.arch= [ "arm64", "amd64" ]
+      rows = [{ os = "linux", arch = "arm64" },
+              { os = "linux", arch = "amd64" },
+              { os = "osx", arch = "arm64" },
+              { os = "osx", arch = "amd64" },
+              { os = "windows", arch = "arm64" },
+              { os = "windows", arch = "amd64" }]
 
       # Execute the script if the condition evaluates to `true`.
       # icon:dot-circle[] icon:file-alt[]
@@ -176,6 +284,7 @@ TOML::
       shell = "BASH"
 
       # The script to be invoked.
+      # Accepts values from `matrix`.
       # icon:exclamation-triangle[] icon:file-alt[]
       run = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
 
@@ -209,10 +318,32 @@ JSON::
     // icon:dot-circle[] icon:file-alt[]
     "condition": "'{{ Env.CI }}' == true",
 
-    // A map of global environment variables..
+    // A map of global environment vatiables.
+    // Accepts values from `matrix`.
     // icon:dot-circle[] icon:eye-slash[]
     "environment": {
       "FOO": "bar"
+    },
+
+    // Includes the default matrix.
+    // icon:dot-circle[]
+    "applyDefaultMatrix": false,
+
+    // Configures matrix variables.
+    // icon:dot-circle[]
+    "matrix": {
+      "vars": {
+        "os": [ "linux", "osx", "windows" ],
+        "arch": [ "arm64", "amd64" ]
+      },
+      "rows": [
+        { "os": "linux", "arch": "arm64" },
+        { "os": "linux", "arch": "amd64" },
+        { "os": "osx", "arch": "arm64" },
+        { "os": "osx", "arch": "amd64" },
+        { "os": "windows", "arch": "arm64" },
+        { "os": "windows", "arch": "amd64" }
+      ]
     },
 
     // icon:dot-circle[]
@@ -227,10 +358,33 @@ JSON::
       // icon:dot-circle[] icon:file-alt[]
       "condition": "'{{ Env.CI }}' == true",
 
-      // A map of script environment variables..
+      // A map of script environment vatiables.
+      // Accepts values from `matrix`.
       // icon:dot-circle[] icon:eye-slash[]
       "environment": {
         "FOO": "bar"
+      },
+
+      // Includes the default matrix.
+      // icon:dot-circle[]
+      "applyDefaultMatrix": false,
+
+      // Configures matrix variables.
+      // Values will be inherited from `hooks`.
+      // icon:dot-circle[]
+      "matrix": {
+        "vars": {
+          "os": [ "linux", "osx", "windows" ],
+          "arch": [ "arm64", "amd64" ]
+        },
+        "rows": [
+          { "os": "linux", "arch": "arm64" },
+          { "os": "linux", "arch": "amd64" },
+          { "os": "osx", "arch": "arm64" },
+          { "os": "osx", "arch": "amd64" },
+          { "os": "windows", "arch": "arm64" },
+          { "os": "windows", "arch": "amd64" }
+        ]
       },
 
       // The type of hook
@@ -254,10 +408,33 @@ JSON::
           // icon:dot-circle[] icon:eye-slash[]
           "active": "ALWAYS",
 
-          // A map of local environment variables..
+          // A map of local environment vatiables.
+          // Accepts values from `matrix`.
           // icon:dot-circle[] icon:eye-slash[]
           "environment": {
             "FOO": "bar"
+          },
+
+          // Includes the default matrix.
+          // icon:dot-circle[]
+          "applyDefaultMatrix": false,
+
+          // Configures matrix variables.
+          // Values will be inherited from `script`.
+          // icon:dot-circle[]
+          "matrix": {
+            "vars": {
+              "os": [ "linux", "osx", "windows" ],
+              "arch": [ "arm64", "amd64" ]
+            },
+            "rows": [
+              { "os": "linux", "arch": "arm64" },
+              { "os": "linux", "arch": "amd64" },
+              { "os": "osx", "arch": "arm64" },
+              { "os": "osx", "arch": "amd64" },
+              { "os": "windows", "arch": "arm64" },
+              { "os": "windows", "arch": "amd64" }
+            ]
           },
 
           // Execute the script if the condition evaluates to `true`.
@@ -271,6 +448,7 @@ JSON::
           "shell": "BASH",
 
           // The script to be invoked.
+          // Accepts values from `matrix`.
           // icon:exclamation-triangle[] icon:file-alt[]
           "run": "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}",
 
@@ -322,11 +500,62 @@ Maven::
 
     <!--
       A map of global environment variables.
+      Accepts values from `matrix`.
       icon:dot-circle[] icon:file-alt[]
     -->
     <environment>
       <FOO>bar</FOO>
     </environment>
+
+    <!--
+      Includes the default matrix.
+      icon:dot-circle[]
+    -->
+    <applyDefaultMatrix>false</applyDefaultMatrix>
+
+    <!--
+      Configures matrix variables.
+      icon:dot-circle[]
+    -->
+    <matrix>
+      <vars>
+        <os>
+          <e>linux</e>
+          <e>osx</e>
+          <e>windows</e>
+        </os>
+        <arch>
+          <e>arm64</e>
+          <e>amd64</e>
+        </arch>
+      </vars>
+      <rows>
+        <row>
+          <os>linux</os>
+          <arch>arm64</arch>
+        </row>
+        <row>
+          <os>linux</os>
+          <arch>amd64</arch>
+        </row>
+        <row>
+          <os>osx</os>
+          <arch>arm64</arch>
+        </row>
+        <row>
+          <os>osx</os>
+          <arch>amd64</arch>
+        </row>
+        <row>
+          <os>windows</os>
+          <arch>arm64</arch>
+        </row>
+        <row>
+          <os>windows</os>
+          <arch>amd64</arch>
+        </row>
+      </rows>
+    </matrix>
 
     <!--
       icon:dot-circle[]
@@ -348,11 +577,63 @@ Maven::
 
       <!--
         A map of script environment variables.
+        Accepts values from `matrix`.
         icon:dot-circle[] icon:file-alt[]
       -->
       <environment>
         <FOO>bar</FOO>
       </environment>
+
+      <!--
+        Includes the default matrix.
+        icon:dot-circle[]
+      -->
+      <applyDefaultMatrix>false</applyDefaultMatrix>
+
+      <!--
+        Configures matrix variables.
+        Values will be inherited from `hooks`.
+        icon:dot-circle[]
+      -->
+      <matrix>
+        <vars>
+          <os>
+            <e>linux</e>
+            <e>osx</e>
+            <e>windows</e>
+          </os>
+          <arch>
+            <e>arm64</e>
+            <e>amd64</e>
+          </arch>
+        </vars>
+        <rows>
+          <row>
+            <os>linux</os>
+            <arch>arm64</arch>
+          </row>
+          <row>
+            <os>linux</os>
+            <arch>amd64</arch>
+          </row>
+          <row>
+            <os>osx</os>
+            <arch>arm64</arch>
+          </row>
+          <row>
+            <os>osx</os>
+            <arch>amd64</arch>
+          </row>
+          <row>
+            <os>windows</os>
+            <arch>arm64</arch>
+          </row>
+          <row>
+            <os>windows</os>
+            <arch>amd64</arch>
+          </row>
+        </rows>
+      </matrix>
 
       <!--
         The type of hook
@@ -385,11 +666,63 @@ Maven::
 
           <!--
             A map of local environment variables.
+            Accepts values from `matrix`.
             icon:dot-circle[] icon:file-alt[]
           -->
           <environment>
             <FOO>bar</FOO>
           </environment>
+
+          <!--
+            Includes the default matrix.
+            icon:dot-circle[]
+          -->
+          <applyDefaultMatrix>false</applyDefaultMatrix>
+
+          <!--
+            Configures matrix variables.
+            Values will be inherited from `script`.
+            icon:dot-circle[]
+          -->
+          <matrix>
+            <vars>
+              <os>
+                <e>linux</e>
+                <e>osx</e>
+                <e>windows</e>
+              </os>
+              <arch>
+                <e>arm64</e>
+                <e>amd64</e>
+              </arch>
+            </vars>
+            <rows>
+              <row>
+                <os>linux</os>
+                <arch>arm64</arch>
+              </row>
+              <row>
+                <os>linux</os>
+                <arch>amd64</arch>
+              </row>
+              <row>
+                <os>osx</os>
+                <arch>arm64</arch>
+              </row>
+              <row>
+                <os>osx</os>
+                <arch>amd64</arch>
+              </row>
+              <row>
+                <os>windows</os>
+                <arch>arm64</arch>
+              </row>
+              <row>
+                <os>windows</os>
+                <arch>amd64</arch>
+              </row>
+            </rows>
+          </matrix>
 
           <!--
             Execute the script if the condition evaluates to `true`.
@@ -407,6 +740,7 @@ Maven::
 
           <!--
             The script to be invoked.
+            Accepts values from `matrix`.
             icon:exclamation-triangle[] icon:file-alt[]
           -->
           <run>{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}</run>
@@ -456,8 +790,27 @@ jreleaser {
     condition = '"{{ Env.CI }}" == true'
 
     // A map of global environment variables.
+    // Accepts values from `matrix`.
     // icon:dot-circle[] icon:file-alt[]
     environment('FOO', 'bar')
+
+    // Includes the default matrix.
+    // icon:dot-circle[]
+    applyDefaultMatrix = false
+
+    // Configures matrix variables.
+    // icon:dot-circle[]
+    matrix {
+      variable('os', ['linux', 'osx', 'windows'])
+      variable('arch', ['arm64', 'amd64'])
+
+      row(os: 'linux', arch: 'arm64')
+      row(os: 'linux', arch: 'amd64')
+      row(os: 'osx', arch: 'arm64')
+      row(os: 'osx', arch: 'amd64')
+      row(os: 'windows', arch: 'arm64')
+      row(os: 'windows', arch: 'amd64')
+    }
 
     // icon:dot-circle[]
     script {
@@ -472,8 +825,28 @@ jreleaser {
       condition = '"{{ Env.CI }}" == true'
 
       // A map of script environment variables.
+      // Accepts values from `matrix`.
       // icon:dot-circle[] icon:file-alt[]
       environment('FOO', 'bar')
+
+      // Includes the default matrix.
+      // icon:dot-circle[]
+      applyDefaultMatrix = false
+
+      // Configures matrix variables.
+      // Values will be inherited from `hooks`.
+      // icon:dot-circle[]
+      matrix {
+        variable('os', ['linux', 'osx', 'windows'])
+        variable('arch', ['arm64', 'amd64'])
+
+        row(os: 'linux', arch: 'arm64')
+        row(os: 'linux', arch: 'amd64')
+        row(os: 'osx', arch: 'arm64')
+        row(os: 'osx', arch: 'amd64')
+        row(os: 'windows', arch: 'arm64')
+        row(os: 'windows', arch: 'amd64')
+      }
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -496,8 +869,28 @@ jreleaser {
         active = 'ALWAYS'
 
         // A map of local environment variables.
+        // Accepts values from `matrix`.
         // icon:dot-circle[] icon:file-alt[]
         environment('FOO', 'bar')
+
+        // Includes the default matrix.
+        // icon:dot-circle[]
+        applyDefaultMatrix = false
+
+        // Configures matrix variables.
+        // Values will be inherited from `script`.
+        // icon:dot-circle[]
+        matrix {
+          variable('os', ['linux', 'osx', 'windows'])
+          variable('arch', ['arm64', 'amd64'])
+
+          row(os: 'linux', arch: 'arm64')
+          row(os: 'linux', arch: 'amd64')
+          row(os: 'osx', arch: 'arm64')
+          row(os: 'osx', arch: 'amd64')
+          row(os: 'windows', arch: 'arm64')
+          row(os: 'windows', arch: 'amd64')
+        }
 
         // Execute the script if the condition evaluates to `true`.
         // icon:dot-circle[] icon:file-alt[]
@@ -510,6 +903,7 @@ jreleaser {
         shell = 'BASH'
 
         // The script to be invoked.
+        // Accepts values from `matrix`.
         // icon:exclamation-triangle[] icon:file-alt[]
         run = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
 
