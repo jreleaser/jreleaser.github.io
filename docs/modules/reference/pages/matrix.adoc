@@ -1,0 +1,325 @@
+= Matrix
+
+A matrix lets you define variables that can be used to parameterize xref:reference:hooks/index.adoc[],
+and xref:reference:assemble/archive.adoc[]. Other elements may be added in the future. These variables
+create multiple copies of the intended target.
+
+A matrix defined in this section is not automaticallt applied. You must configure the `applyDefaultMatrix`
+property in the given element. This allows you defining multiple matrices depending on the use case.
+
+== Configuration
+
+WARNING: You can only define `variables` or `rows` but not both.
+
+The following configuration shows the definition of a 3x3 matrix with both `variables` and `rows
+for reference.
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+# Configures matrix variables.
+# icon:dot-circle[]
+matrix:
+  vars:
+    os: [ linux, osx, windows ]
+    arch: [ arm64, amd64 ]
+  rows:
+    - { os: linux, arch: arm64 }
+    - { os: linux, arch: amd64 }
+    - { os: osx, arch: arm64 }
+    - { os: osx, arch: amd64 }
+    - { os: windows, arch: arm64 }
+    - { os: windows, arch: amd64 }
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+# Configures matrix variables.
+# icon:dot-circle[]
+[matrix]
+  vars.os = [ "linux", "osx", "windows" ]
+  vars.arch = [ "arm64", "amd64" ]
+  rows = [{ os = "linux", arch = "arm64" },
+          { os = "linux", arch = "amd64" },
+          { os = "osx", arch = "arm64" },
+          { os = "osx", arch = "amd64" },
+          { os = "windows", arch = "arm64" },
+          { os = "windows", arch = "amd64" }]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  // Configures matrix variables.
+  // icon:dot-circle[]
+  "matrix": {
+    "vars": {
+      "os": [ "linux", "osx", "windows" ],
+      "arch": [ "arm64", "amd64" ]
+    },
+    "rows": [
+      { "os": "linux", "arch": "arm64" },
+      { "os": "linux", "arch": "amd64" },
+      { "os": "osx", "arch": "arm64" },
+      { "os": "osx", "arch": "amd64" },
+      { "os": "windows", "arch": "arm64" },
+      { "os": "windows", "arch": "amd64" }
+    ]
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <!--
+    Configures matrix variables.
+    icon:dot-circle[]
+  -->
+  <matrix>
+    <vars>
+      <os>
+        <e>linux</e>
+        <e>osx</e>
+        <e>windows</e>
+      </os>
+      <arch>
+        <e>arm64</e>
+        <e>amd64</e>
+      </arch>
+    </vars>
+    <rows>
+      <row>
+        <os>linux</os>
+        <arch>arm64</arch>
+      </row>
+      <row>
+        <os>linux</os>
+        <arch>amd64</arch>
+      </row>
+      <row>
+        <os>osx</os>
+        <arch>arm64</arch>
+      </row>
+      <row>
+        <os>osx</os>
+        <arch>amd64</arch>
+      </row>
+      <row>
+        <os>windows</os>
+        <arch>arm64</arch>
+      </row>
+      <row>
+        <os>windows</os>
+        <arch>amd64</arch>
+      </row>
+    </rows>
+  </matrix>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  // Configures matrix variables.
+  // icon:dot-circle[]
+  matrix {
+    variable(os, [ 'linux', 'osx', 'windows' ])
+    variable('arch', [ 'arm64', 'amd64' ])
+
+    row(os: 'linux', arch: 'arm64')
+    row(os: 'linux', arch: 'amd64')
+    row(os: 'osx', arch: 'arm64')
+    row(os: 'osx', arch: 'amd64')
+    row(os: 'windows', arch: 'arm64')
+    row(os: 'windows', arch: 'amd64')
+  }
+}
+----
+--
+====
+
+== Special Keys
+
+The following keys have special meaning:
+
+[horizontal]
+platform:: Defines the platform for a given archive or artifact.
+
+== Example
+
+The following example showcases a self-contained Go project that relies on the matrix feature to configure:
+
+- a hook to compile the source code before assembly occurs.
+- an archive assembler to pack the binaries into a distribution
+- a distribution with all generated artifacts
+
+**jreleaser.yml**
+[source,yaml]
+----
+matrix:
+  rows:
+    - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
+    - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
+    - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
+    - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
+    - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
+    - { goos: windows, goarch: amd64, platform: windows-x86_64   }
+
+hooks:
+  script:
+    before:
+      - run: |
+          go build -o target/${GOOS}-${GOARCH}/ src/helloworld.go
+        applyDefaultMatrix: true
+        environment:
+          GOOS: '{{ matrix.goos }}'
+          GOARCH: '{{ matrix.goarch }}'
+        filter:
+          includes: ['assemble']
+
+project:
+  name: helloworld
+  description: HelloWorld in Go
+  longDescription: HelloWorld in Go
+  links:
+    homepage: https://github.com/jreleaser/helloworld-go
+  authors:
+    - Andres Almiray
+  license: MIT
+  inceptionYear: 2024
+  stereotype: CLI
+
+release:
+  github:
+    name: helloworld-go
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+assemble:
+  archive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      applyDefaultMatrix: true
+      archiveName: '{{distributionName}}-{{projectVersion}}-{{ matrix.goos }}-{{ matrix.goarch }}'
+      fileSets:
+        - input: 'target/{{ matrix.goos }}-{{ matrix.goarch }}'
+          output: 'bin'
+          includes: [ 'helloworld{.exe,}' ]
+        - input: '.'
+          includes: [ 'LICENSE' ]
+
+distributions:
+  helloworld:
+    type: BINARY
+    executable:
+      windowsExtension: exe
+----
+
+Executing `jreleaser assemble` results in the following binaries compiled by the Go compiler
+
+[source,shell]
+----
+$ tree target/
+target/
+├── darwin-amd64
+│   └── helloworld
+├── darwin-arm64
+│   └── helloworld
+├── linux-amd64
+│   └── helloworld
+├── linux-arm64
+│   └── helloworld
+├── windows-amd64
+│   └── helloworld.exe
+└── windows-arm64
+    └── helloworld.exe
+----
+
+And the following artifacts assembled by the xref:reference:assemble/archive.adoc[] assembler
+
+[source,shell]
+----
+$ ls out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-*
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-darwin-amd64.zip
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-darwin-arm64.zip
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-linux-amd64.zip
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-linux-arm64.zip
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-windows-amd64.zip
+out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-windows-arm64.zip
+----
+
+The assembler will automatically configure a distribution with the following resolved artifacts:
+
+[source,yaml]
+----
+distributions:
+  helloworld:
+    enabled: true
+    active: ALWAYS
+    type: BINARY
+    executable:
+      name: helloworld
+      windowsExtension: exe
+    platform:
+    artifacts:
+      artifact 0:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-linux-arm64.zip
+        platform: linux-aarch_64
+      artifact 1:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-linux-amd64.zip
+        platform: linux-x86_64
+      artifact 2:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-darwin-arm64.zip
+        platform: osx-aarch_64
+      artifact 3:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-darwin-amd64.zip
+        platform: osx-x86_64
+      artifact 4:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-windows-arm64.zip
+        platform: windows-aarch_64
+      artifact 5:
+        enabled: true
+        active: ALWAYS
+        path: out/jreleaser/assemble/helloworld/archive/helloworld-1.0.0-windows-amd64.zip
+        platform: windows-x86_64
+    stereotype: CLI
+----
