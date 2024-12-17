@@ -1,0 +1,841 @@
+= Debian
+:assembler_id: deb
+:archive:      true
+:platform:     true
+:assembler_sys_key: deb
+:assembler_env_key: DEB
+:group_sys_key: assemble
+:group_env_key: ASSEMBLE
+:actor_sys_key: {assembler_sys_key}
+:actor_env_key: {assembler_env_key}
+
+Creates `.deb` packages from archives and files.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$assemble/yaml/common-head.adoc[]
+
+      # Name of the executable launcher.
+      # If left undefined, will use `#{assembler.name}`.
+      # icon:dot-circle[]
+      executable: app
+
+      # Target architexture.
+      # Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+      # icon:exclamation-triangle[]
+      architecture: all
+
+      # Target path where files will be installed.
+      # icon:dot-circle[] icon:file-alt[]
+      installationPath: '/opt/{{packageName}}'
+
+      # References assembled artifacts from another assembler.
+      # icon:dot-circle[]
+      assemblerRef: 'app-archive'
+
+      # Defines values for control fields
+      # See link:https://www.debian.org/doc/debian-policy/ch-controlfields.html[]
+      # icon:exclamation-triangle[]
+      control:
+
+        # Name of the package.
+        # Defaults to `#{assembler.name}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package[]
+        # icon:dot-circle[]
+        packageName: app
+
+        # Package version.
+        # Defaults to `#{project.version}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version[]
+        # icon:dot-circle[]
+        packageVersion: 1.0.0
+
+        # Package revision.
+        # Defaults to `#{project.version}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version[]
+        # icon:dot-circle[]
+        packageRevision: 1
+
+        # Virtual package name.
+        # Defaults to `#{assembler.name}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
+        # icon:dot-circle[]
+        provides: app
+
+        # The package maintainer’s name and email address.
+        # https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer[]
+        # icon:exclamation-triangle[]
+        maintainer: Duke <duke@acme.com>
+
+        # Specifies an application area into which the package has been classified.
+        # Defaults to `misc`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#section[]
+        # icon:dot-circle[]
+        section: devel
+
+        # How important it is that the user have the package installed.
+        # Defaults to `optional`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority[]
+        # icon:dot-circle[]
+        priority: optional
+
+        # Is it an essential (non-removable) package or not.
+        # Defaults to `false`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential[]
+        # icon:dot-circle[]
+        essential: true
+
+        # The package's description.
+        # Defaults to `#{project.longDescription}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#description[]
+        # icon:dot-circle[]
+        description: Sample application
+
+        # The URL of the web site for this package.
+        # Defaults to `#{project.links.website}`.
+        # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage[]
+        # icon:dot-circle[]
+        homepage: pass:[https://github.com/duke/app]
+
+        # Additional source packages used to build the binary.
+        # link:https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using[]
+        # icon:dot-circle[]
+        builtUsing: 'gcc-4.6 (= 4.6.0-11)'
+
+        # Dependencies may be defined as a list of packages
+        # https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps
+        # icon:dot-circle[]
+        depends:
+          - foo
+        preDepends:
+          - bar
+        recommends:
+          - foobar
+        suggests:
+          - foobar
+        enhances:
+          - foofy
+        breaks:
+          - foofoo
+        conflicts:
+          - barbar
+include::partial$assemble/yaml/common-assembler.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$assemble/toml/common-head.adoc[]
+
+  # Name of the executable launcher.
+  # If left undefined, will use `#{assembler.name}`.
+  # icon:dot-circle[]
+  executable = "app"
+
+  # Target architexture.
+  # Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+  # icon:exclamation-triangle[]
+  architecture = "all"
+
+  # Target path where files will be installed.
+  # icon:dot-circle[] icon:file-alt[]
+  installationPath = "/opt/{{packageName}}"
+
+  # References assembled artifacts from another assembler.
+  # icon:dot-circle[]
+  assemblerRef = "app-archive"
+
+  # Defines values for control fields
+  # See link:https://www.debian.org/doc/debian-policy/ch-controlfields.html[]
+
+  # Name of the package.
+  # Defaults to `#{assembler.name}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package[]
+  # icon:dot-circle[]
+  control.packageName = "app"
+
+  # Package version.
+  # Defaults to `#{project.version}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version[]
+  # icon:dot-circle[]
+  control.packageVersion = "1.0.0"
+
+  # Package revision.
+  # Defaults to `#{project.version}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version[]
+  # icon:dot-circle[]
+  control.packageRevision = 1
+
+  # Virtual package name.
+  # Defaults to `#{assembler.name}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
+  # icon:dot-circle[]
+  control.provides = "app"
+
+  # The package maintainer’s name and email address.
+  # https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer[]
+  # icon:exclamation-triangle[]
+  control.maintainer = "Duke <duke@acme.com>"
+
+  # Specifies an application area into which the package has been classified.
+  # Defaults to `misc`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#section[]
+  # icon:dot-circle[]
+  control.section = "devel"
+
+  # How important it is that the user have the package installed.
+  # Defaults to `optional`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority[]
+  # icon:dot-circle[]
+  control.priority = "optional"
+
+  # Is it an essential (non-removable) package or not.
+  # Defaults to `false`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential[]
+  # icon:dot-circle[]
+  control.essential = true
+
+  # The package's description.
+  # Defaults to `#{project.longDescription}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#description[]
+  # icon:dot-circle[]
+  control.description = "Sample application"
+
+  # The URL of the web site for this package.
+  # Defaults to `#{project.links.website}`.
+  # link:https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage[]
+  # icon:dot-circle[]
+  control.homepage = "pass:[https://github.com/duke/app]"
+
+  # Additional source packages used to build the binary.
+  # link:https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using[]
+  # icon:dot-circle[]
+  control.builtUsing = "gcc-4.6 (= 4.6.0-11)"
+
+  # Dependencies may be defined as a list of packages
+  # https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps
+  # icon:dot-circle[]
+  control.depends = ["foo"]
+  control.preDepends = ["bar"]
+  control.recommends = ["foobar"]
+  control.suggests = ["foobar"]
+  control.enhances = ["foofy"]
+  control.breaks = ["foofoo"]
+  control.conflicts = ["barbar"]
+
+include::partial$assemble/toml/common-assembler.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$assemble/json/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use `#{assembler.name}`.
+        // icon:dot-circle[]
+        "executable": "app",
+
+        // Target architexture.
+        // Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+        // icon:exclamation-triangle[]
+        "architecture": "all",
+
+        // Target path where files will be installed.
+        // icon:dot-circle[] icon:file-alt[]
+        "installationPath": "/opt/{{packageName}}",
+
+        // References assembled artifacts from another assembler.
+        // icon:dot-circle[]
+        "assemblerRef": "app-archive",
+
+        // Defines values for control fields
+        // See link:https://www.debian.org/doc/debian-policy/ch-controlfields.html[]
+        // icon:exclamation-triangle[]
+        "control": {
+
+          // Name of the package.
+          // Defaults to `//{assembler.name}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package[]
+          // icon:dot-circle[]
+          "packageName": "app",
+
+          // Package version.
+          // Defaults to `//{project.version}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version[]
+          // icon:dot-circle[]
+          "packageVersion": "1.0.0",
+
+          // Package revision.
+          // Defaults to `//{project.version}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version[]
+          // icon:dot-circle[]
+          "packageRevision": "1",
+
+          // Virtual package name.
+          // Defaults to `//{assembler.name}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
+          // icon:dot-circle[]
+          "provides": "app",
+
+          // The package maintainer’s name and email address.
+          // https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer[]
+          // icon:exclamation-triangle[]
+          "maintainer": "Duke <duke@acme.com>",
+
+          // Specifies an application area into which the package has been classified.
+          // Defaults to `misc`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//section[]
+          // icon:dot-circle[]
+          "section": "devel",
+
+          // How important it is that the user have the package installed.
+          // Defaults to `optional`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority[]
+          // icon:dot-circle[]
+          "priority": "optional",
+
+          // Is it an essential (non-removable) package or not.
+          // Defaults to `false`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential[]
+          // icon:dot-circle[]
+          "essential": true,
+
+          // The package's description.
+          // Defaults to `//{project.longDescription}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//description[]
+          // icon:dot-circle[]
+          "description": "Sample application",
+
+          // The URL of the web site for this package.
+          // Defaults to `//{project.links.website}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage[]
+          // icon:dot-circle[]
+          "homepage": "pass:[https://github.com/duke/app]"
+
+          // Additional source packages used to build the binary.
+          // link:https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using[]
+          // icon:dot-circle[]
+          "builtUsing": "gcc-4.6 (= 4.6.0-11)",
+
+          // Dependencies may be defined as a list of packages
+          // https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps
+          // icon:dot-circle[]
+          "depends": ["foo"],
+          "preDepends": ["bar"],
+          "recommends": ["foobar"],
+          "suggests": ["foobar"],
+          "enhances": ["foofy"],
+          "breaks": ["foofoo"],
+          "conflicts": ["barbar"]
+        },
+
+include::partial$assemble/json/common-assembler.adoc[]
+
+include::partial$assemble/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$assemble/maven/common-head.adoc[]
+
+        <!--
+          Name of the executable launcher.
+          If left undefined, will use `#{assembler.name}`.
+          icon:dot-circle[]
+        -->
+        <executable>app</executable>
+
+          Target architexture.
+          Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+          icon:exclamation-triangle[]
+        <architecture>all</architecture>
+
+          Target path where files will be installed.
+          icon:dot-circle[] icon:file-alt[]
+        <installationPath>/opt/{{packageName}}</installationPath>
+
+          References assembled artifacts from another assembler.
+          icon:dot-circle[]
+        <assemblerRef>app-archive</assemblerRef>
+
+          Defines values for control fields
+          See link:https://www.debian.org/doc/debian-policy/ch-controlfields.html[]
+          icon:exclamation-triangle[]
+        <control>
+
+            Name of the package.
+            Defaults to ` {assembler.name}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-package[]
+            icon:dot-circle[]
+          <packageName>ap</packageName>
+
+            Package version.
+            Defaults to ` {project.version}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-version[]
+            icon:dot-circle[]
+          <packageVersion>1.0.0</packageVersion>
+
+            Package revision.
+            Defaults to ` {project.version}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-version[]
+            icon:dot-circle[]
+          <packageRevision>1</packageRevision>
+
+            Virtual package name.
+            Defaults to ` {assembler.name}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
+            icon:dot-circle[]
+          <provides>app</provides>
+
+            The package maintainer’s name and email address.
+            https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-maintainer[]
+            icon:exclamation-triangle[]
+          <maintainer>Duke &lt;duke@acme.com&gt;</maintainer>
+
+            Specifies an application area into which the package has been classified.
+            Defaults to `misc`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html section[]
+            icon:dot-circle[]
+          <section>devel</section>
+
+            How important it is that the user have the package installed.
+            Defaults to `optional`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html priority[]
+            icon:dot-circle[]
+          <priority>optional</priority>
+
+            Is it an essential (non-removable) package or not.
+            Defaults to `false`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html essential[]
+            icon:dot-circle[]
+          <essential>true</essential>
+
+            The package's description.
+            Defaults to ` {project.longDescription}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html description[]
+            icon:dot-circle[]
+          <description>Sample application</description>
+
+            The URL of the web site for this package.
+            Defaults to ` {project.links.website}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html homepage[]
+            icon:dot-circle[]
+          <homepage>pass:[https://github.com/duke/app]</homepage>
+
+            Additional source packages used to build the binary.
+            link:https://www.debian.org/doc/debian-policy/ch-relationships.html s-built-using[]
+            icon:dot-circle[]
+          <builtUsing>gcc-4.6 (= 4.6.0-11)</builtUsing>
+
+            Dependencies may be defined as a list of packages
+            https://www.debian.org/doc/debian-policy/ch-relationships.html s-binarydeps
+            icon:dot-circle[]
+          <depends>
+            <dependency>foo</dependency>
+          </depends>
+          <preDepends>
+            <dependency>bar</dependency>
+          </preDepends>
+          <recommends>
+            <dependency>foobar</dependency>
+          </recommends>
+          <suggests>
+            <dependency>foobar</dependency>
+          </suggests>
+          <enhances>
+            <dependency>foofy</dependency>
+          </enhances>
+          <breaks>
+            <dependency>foofoo</dependency>
+          </breaks>
+          <conflicts>
+            <dependency>barbar</dependency>
+          </conflicts>
+        </control>
+
+include::partial$assemble/maven/common-assembler.adoc[]
+
+include::partial$assemble/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$assemble/gradle/common-head.adoc[]
+
+        // Name of the executable launcher.
+        // If left undefined, will use `#{assembler.name}`.
+        // icon:dot-circle[]
+        executable = 'app'
+
+        // Target architexture.
+        // Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+        // icon:exclamation-triangle[]
+        architecture = 'all'
+
+        // Target path where files will be installed.
+        // icon:dot-circle[] icon:file-alt[]
+        installationPath = '/opt/{{packageName}}'
+
+        // References assembled artifacts from another assembler.
+        // icon:dot-circle[]
+        assemblerRef = 'app-archive'
+
+        // Defines values for control fields
+        // See link:https://www.debian.org/doc/debian-policy/ch-controlfields.html[]
+        // icon:exclamation-triangle[]
+        control {
+
+          // Name of the package.
+          // Defaults to `//{assembler.name}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package[]
+          // icon:dot-circle[]
+          packageName = "app"
+
+          // Package version.
+          // Defaults to `//{project.version}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version[]
+          // icon:dot-circle[]
+          packageVersion = '1.0.0'
+
+          // Package revision.
+          // Defaults to `//{project.version}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version[]
+          // icon:dot-circle[]
+          packageRevision = 1
+
+          // Virtual package name.
+          // Defaults to `//{assembler.name}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
+          // icon:dot-circle[]
+          provides = 'app'
+
+          // The package maintainer’s name and email address.
+          // https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer[]
+          // icon:exclamation-triangle[]
+          maintainer = 'Duke <duke@acme.com>'
+
+          // Specifies an application area into which the package has been classified.
+          // Defaults to `misc`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//section[]
+          // icon:dot-circle[]
+          section = 'devel'
+
+          // How important it is that the user have the package installed.
+          // Defaults to `optional`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority[]
+          // icon:dot-circle[]
+          priority = 'optional'
+
+          // Is it an essential (non-removable) package or not.
+          // Defaults to `false`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential[]
+          // icon:dot-circle[]
+          essential = true
+
+          // The package's description.
+          // Defaults to `//{project.longDescription}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//description[]
+          // icon:dot-circle[]
+          description = 'Sample application'
+
+          // The URL of the web site for this package.
+          // Defaults to `//{project.links.website}`.
+          // link:https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage[]
+          // icon:dot-circle[]
+          homepage = 'pass:[https://github.com/duke/app]'
+
+          // Additional source packages used to build the binary.
+          // link:https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using[]
+          // icon:dot-circle[]
+          builtUsing = 'gcc-4.6 (= 4.6.0-11)'
+
+          // Dependencies may be defined as a list of packages
+          // https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps
+          // icon:dot-circle[]
+          depends = ['foo']
+          preDepends = ['bar']
+          recommends = ['foobar']
+          suggests = ['foobar']
+          enhances = ['foofy']
+          breaks = ['foofoo']
+          conflicts = ['barbar']
+        }
+
+include::partial$assemble/gradle/common-assembler.adoc[]
+
+include::partial$assemble/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/assemblers/<distribution-name>/deb`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `control/control.tpl`
+* `control/postinst.tpl`
+* `control/postrm.tpl`
+* `control/preinst.tpl`
+* `control/prerm.tpl`
+
+Any additional files found in the template directories will be copied as is unless their filename ends with `.tpl` in
+which case xref:name-templates.adoc[] substitution will take place.
+
+== Skip Templates
+
+You may skip any template files by defining a set of skip rules in the `skipTemplates` property. For example, you may use
+any of these expressions to skip a template named `README.md.tpl`:
+
+* `README.md.tpl`: matches the full template name
+* `README.md`: matches the transformed template name
+* `README.*`: matches using a regex
+
+include::partial$assemble/additional-files.adoc[]
+
+== Example
+
+Given the following file structure
+
+[source]
+----
+.
+├── BUILD
+├── LICENSE
+├── README
+└── target
+    └── release
+        └── app
+----
+
+And this assembly configuration
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros"]
+----
+project:
+  version: 1.0.0
+  name: app
+  description: Sample application
+  authors:
+    - Duke
+  inceptionYear: 2020
+
+assemble:
+  deb:
+    app:
+      active: ALWAYS
+      architecture: amd64
+      control:
+        maintainer: Duke <duke@acme.com>
+      fileSets:
+        - input: '.'
+          includes:
+            - 'LICENSE'
+            - 'README'
+        - input: 'target/release'
+          output: 'bin'
+          includes: [ 'app' ]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros"]
+----
+[project]
+  version = "1.0.0"
+  name = "app"
+  description = "Sample application"
+  authors = [ "Duke" ]
+  inceptionYear = "2020"
+
+[assemble.archive.app]
+  active = "ALWAYS"
+  architecture = "amd64"
+  control.maintainer = "Duke <duke@acme.com>"
+  pass:[[[assemble.archive.app.fileSets]]]
+    input = "."
+    includes = ["LICENSE", "README"]
+  pass:[[[assemble.archive.app.fileSets]]]
+    input = "target/release"
+    output = "bin"
+    includes = [ "app" ]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros"]
+----
+{
+  "project": {
+    "version": "1.0.0",
+    "name": "app",
+    "description": "Sample application",
+    "authors": [ "Duke" ],
+    "inceptionYear": "2020"
+  },
+  "assemble": {
+    "archive": {
+      "app": {
+        "active": "ALWAYS",
+        "architexture": "amd64",
+        "control": {
+          "maintainer": "Duke <duke@acme.com>"
+        },
+        "fileSets": [
+          {
+            "input": ".",
+            "includes": ["LICENSE", "README"]
+          },
+          {
+            "input": "target/release",
+            "output": "bin",
+            "includes": [ "app" ]
+          }
+        ]
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,verbatim"]
+----
+<jreleaser>
+  <project>
+    <version>1.0.0</version>
+    <name>app</name>
+    <description>Sample application</description>
+    <authors>Duke</authors>
+    <inceptionYear>2020</inceptionYear>
+  </project>
+  <assemble>
+    <archive>
+      <app>
+        <active>ALWAYS</active>
+        <architexture>amd64</architecture>
+        <control>
+          <maintainer>Duke &lt;duke@acme.com&gt;</maintainer>
+        </control>
+        <fileSets>
+          <fileSet>
+            <input>.</input>
+            <includes>
+              <include>LICENSE</include>
+              <include>README</include>
+            </includes>
+          </fileSet>
+          <fileSet>
+            <input>target/release</input>
+            <output>bin</output>
+            <includes>
+              <include>app</include>
+            </includes>
+          </fileSet>
+        </fileSets>
+      </app>
+    </archive>
+  </assemble>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros"]
+----
+jreleaser {
+  project {
+    version = '1.0.0'
+    name = 'app'
+    description = 'Sample application'
+    author('Duke')
+    inceptionYear: '2020'
+  }
+  assemble {
+    archive {
+      app {
+        active = 'ALWAYS'
+        architecture = 'amd64'
+        control {
+          maintainer = 'Duke <duke@acme.com>'
+        }
+        fileSet {
+          input = '.'
+          includes = ['LICENSE', 'README']
+        }
+        fileSet {
+          input = 'target/release'
+          output = 'bin'
+          includes = [ 'app' ]
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
+Resulting in the following `.deb` package
+
+[source]
+.app-1.0.0-1_amd64.deb
+----
+$ tar tvf app-1.0.0-1_amd64.deb
+-rw-r--r--  0 0      0           4 Dec 15 12:31 debian-binary
+-rw-r--r--  0 0      0         496 Dec 15 12:31 control.tar.zst
+-rw-r--r--  0 0      0     1120139 Dec 15 12:31 data.tar.zst
+----
