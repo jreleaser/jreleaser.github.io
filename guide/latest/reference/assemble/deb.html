@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Java Archive :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/assemble/java-archive.html">
+    <title>Debian :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/assemble/deb.html">
     <meta name="generator" content="Antora 3.1.10">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -495,10 +495,10 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="archive.html">Archive</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="deb.html">Debian</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="java-archive.html">Java Archive</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -813,28 +813,28 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Reference</a></li>
     <li><a href="index.html">Assemble</a></li>
-    <li><a href="java-archive.html">Java Archive</a></li>
+    <li><a href="deb.html">Debian</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">latest</button>
   <div class="version-menu">
-    <a class="version is-current" href="java-archive.html">latest</a>
-    <a class="version" href="../../../early-access/reference/assemble/java-archive.html">early-access</a>
+    <a class="version is-current" href="deb.html">latest</a>
+    <a class="version" href="../../../early-access/reference/assemble/deb.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/assemble/java-archive.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/assemble/deb.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Java Archive</h1>
+<h1 class="page">Debian</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Creates an archive for a <a href="../../concepts/distributions/java-binary.html" class="xref page">Java Binary</a> distribution.</p>
+<p>Creates <code>.deb</code> packages from archives and files.</p>
 </div>
 </div>
 </div>
@@ -887,7 +887,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># <span class="icon"><i class="fa fa-dot-circle"></i></span>
 assemble:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  javaArchive:
+  deb:
     # Assemblers require a name.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     app:
@@ -912,139 +912,131 @@ assemble:
       # Additional properties used when evaluating templates.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       extraProperties:
-        # Key will be capitalized and prefixed with `javaArchive`, i.e, `javaArchiveFoo`.
+        # Key will be capitalized and prefixed with `deb`, i.e, `debFoo`.
         foo: bar
 
-      # Name of the archive.
-      # If left undefined, will use {{distributionName}}-{{projectVersion}}.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      platform:
+        # Key value pairs.
+        # Keys match a full platform or an os.name, os.arch.
+        # Same rules apply as in <a href="../platform.html" class="xref page">Platform</a>.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        replacements:
+          osx-x86_64: mac
+          aarch_64: aarch64
+          x86_64: amd64
+          linux_musl: alpine
+
+      # Name of the executable launcher.
+      # If left undefined, will use `#{assembler.name}`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      executable: app
+
+      # Target architexture.
+      # Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      architecture: all
+
+      # Target path where files will be installed.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      archiveName: 'app-{{projectVersion}}'
+      installationPath: '/opt/{{packageName}}'
 
+      # References assembled artifacts from another assembler.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      executable:
-        # Name of the executable launcher.
-        # If left undefined, will use `#{distribution.name}`.
+      assemblerRef: 'app-archive'
+
+      # Defines values for control fields
+      # See <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a>
+      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      control:
+
+        # Name of the package.
+        # Defaults to `#{assembler.name}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        name: app
+        packageName: app
 
-        # Executable extension on Linux/MacOS.
-        # If left undefined, value will be left empty.
+        # Package version.
+        # Defaults to `#{project.version}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        unixExtension: sh
+        packageVersion: 1.0.0
 
-        # Executable extension on Windows.
-        # If left undefined, will use `bat`.
+        # Package revision.
+        # Defaults to `#{project.version}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        windowsExtension: cmd
+        packageRevision: 1
 
-      # Set of archive formats to use.
-      # Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TAR_ZST`, `TBZ2`, `TGZ`, `TXZ`].
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      formats:
-        - ZIP
-        - TGZ
-
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      options:
-        # Timestamp to use for each entry.
-        # Must follow ISO-8601 +HH:MM timezone offset.
-        # Example: 2023-03-08T12:56:33.024578+01:00
-        # Defaults to timestamp for latest git commit or current time.
+        # Virtual package name.
+        # Defaults to `#{assembler.name}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        timestamp: '2020-01-01T00:00:00.000000+00:00'
+        provides: app
 
-        # Set longFileMode for tar archives.
-        # Possible values are [`ERROR`, `GNU`, `POSIX`, `TRUNCATE`].
-        # Defaults to `ERROR`.
+        # The package maintainer’s name and email address.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer</a>
+        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        maintainer: Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;
+
+        # Specifies an application area into which the package has been classified.
+        # Defaults to `misc`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#section" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#section</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        longFileMode: POSIX
+        section: devel
 
-        # Set bigNumberMode for tar archives.
-        # Possible values are [`ERROR`, `GNU`, `POSIX`].
-        # Defaults to `ERROR`.
+        # How important it is that the user have the package installed.
+        # Defaults to `optional`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        bigNumberMode: POSIX
+        priority: optional
 
-      # The executable JAR that contains the application.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      mainJar:
-        path: path/to/app.jar
-
-      # Defines a list of additional JARs as globs.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      jars:
-          # The pattern to use.
-          # May use glob or regex pattern syntax.
-          # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        - pattern: path/to/**/*.jar
-
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      java:
-        # Name of main module (if any).
-        # Define only if the application is modular.
+        # Is it an essential (non-removable) package or not.
+        # Defaults to `false`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        mainModule: com.acme.demo
+        essential: true
 
-        # The application's entry point.
-        # If left undefined, will use `#{project.java.mainClass}`.
+        # The package's description.
+        # Defaults to `#{project.longDescription}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#description" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#description</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        mainClass: com.acme.Main
+        description: Sample application
 
-        # Options to pass to the Java runtime
+        # The URL of the web site for this package.
+        # Defaults to `#{project.links.website}`.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        jvmOptions:
-          # Included in all scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          universal:
-            - -Dprop=value
-          # Included in all non Windows scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          unix:
-            - -Dprop=value
-          # Included in all non Windows (except OSX) scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          linux:
-            - -Dprop=value
-          # Included only in OSX scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          osx:
-            - -Dprop=value
-          # Included in Windows scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          windows:
-            - -Dprop=value
+        homepage: https://github.com/duke/app
 
-        # Environment variables used in launch scripts.
+        # Additional source packages used to build the binary.
+        # <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using</a>
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        environmentVariables:
-          # Included in all scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          universal:
-            KEY: value
-          # Included in all non Windows scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          unix:
-            KEY: value
-          # Included in all non Windows (except OSX) scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          linux:
-            KEY: value
-          # Included only in OSX scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          osx:
-            KEY: value
-          # Included in Windows scripts
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          windows:
-            KEY: value
+        builtUsing: 'gcc-4.6 (= 4.6.0-11)'
 
-
+        # Dependencies may be defined as a list of packages
+        # <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps</a>
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        depends:
+          - foo
+        preDepends:
+          - bar
+        recommends:
+          - foobar
+        suggests:
+          - foobar
+        enhances:
+          - foofy
+        breaks:
+          - foofoo
+        conflicts:
+          - barbar
 
       # Directory with file templates used to prepare the assembler.
-      # Defaults to `src/jreleaser/assemblers/#{distribution.name}/javaArchive`.
+      # Defaults to `src/jreleaser/assemblers/#{distribution.name}/deb`.
       # If specified, path must exist.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      templateDirectory: path/to/javaArchive/templates
+      templateDirectory: path/to/deb/templates
 
       # List of template files to be skipped.
       # Value may be an exact match or a regex.
@@ -1101,75 +1093,7 @@ assemble:
           # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           extraProperties:
             # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
-            foo: bar
-
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      swid:
-        # Tags require a name.
-        # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-        mytag:
-
-          # Enables or disables the tag.
-          # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-          # Defaults to `NEVER`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          active: ALWAYS
-
-          # Reference to a common tag.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          tagRef: swid-tag
-
-          # Path where the tag file will be placed.
-          # Defaults to `SWIDTAG`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          path: SWID
-
-          # A globally unique identifier and should be assigned a GUID reference.
-          # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          tagId: c526ec37-2715-328e-8bbc-4eb5a9f47c98
-
-          # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
-          # Defaults to `1`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          tagVersion: 2
-
-          # Language used in the tag document.
-          # Defaults to `en-US`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          lang: de
-
-          # If this SWID tag is a collection of information that describes the pre-installation data of software component.
-          # Defaults to `false`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          corpus: true
-
-          # If this SWID tag describes a product patch or modification to a different software element.
-          # Defaults to `false`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          patch: false
-
-          # List of organizations related to the software component referenced by this SWID tag.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          entities:
-              # name of the organization claiming a particular role in the SWID tag.
-              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            - name: Acme
-
-              # URI of the claiming organization.
-              # Defaults to `http://invalid.unavailable`.
-              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-              regid: https://acme.com
-
-              # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
-              # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
-              # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
-              # Other roles will be defined as the market uses the SWID tags.
-              # Defaults to [`tagCreator`, `softwareCreator`].
-              # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-              roles:
-                - tagCreator
-                - softwareCreator</code></pre>
+            foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -1178,7 +1102,7 @@ assemble:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Assemblers require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[assemble.javaArchive.app]
+[assemble.deb.app]
 
   # Enables or disables the assembler.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -1200,126 +1124,119 @@ assemble:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `javaArchive`, i.e, `javaArchiveFoo`.
+  # Key will be capitalized and prefixed with `deb`, i.e, `debFoo`.
 
-  # Name of the archive.
-  # If left undefined, will use {{distributionName}}-{{projectVersion}}.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  archiveName = "app-{{projectVersion}}"
-
+  # Key value pairs.
+  # Keys match a full platform or an os.name, os.arch.
+  # Same rules apply as in <a href="../platform.html" class="xref page">Platform</a>.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [assemble.javaArchive.app.executable]
-    # Name of the executable launcher.
-    # If left undefined, will use `#{distribution.name}`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    name = "app"
+  [assemble.deb.app.platform.replacements]
+    osx-x86_64 = "mac"
+    aarch_64 = "aarch64"
+    x86_64 = "amd64"
+    linux_musl = "alpine"
 
-    # Executable extension on Linux/MacOS.
-    # If left undefined, value will be left empty.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    unixExtension = "sh"
-
-    # Executable extension on Windows.
-    # If left undefined, will use `bat`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    windowsExtension = "cmd"
-
-  # Set of archive formats to use.
-  # Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TAR_ZST`, `TBZ2`, `TGZ`, `TXZ`].
+  # Name of the executable launcher.
+  # If left undefined, will use `#{assembler.name}`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  formats = [ "ZIP", "TGZ"]
+  executable = "app"
 
-  # Timestamp to use for each entry.
-  # Must follow ISO-8601 +HH:MM timezone offset.
-  # Example: 2023-03-08T12:56:33.024578+01:00
-  # Defaults to timestamp for latest git commit or current time.
+  # Target architexture.
+  # Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  architecture = "all"
+
+  # Target path where files will be installed.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  installationPath = "/opt/{{packageName}}"
+
+  # References assembled artifacts from another assembler.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  options.timestamp = "2020-01-01T00:00:00.000000+00:00"
+  assemblerRef = "app-archive"
 
-  # Set longFileMode for tar archives.
-  # Possible values are [`ERROR`, `GNU`, `POSIX`, `TRUNCATE`].
-  # Defaults to `ERROR`.
+  # Defines values for control fields
+  # See <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a>
+
+  # Name of the package.
+  # Defaults to `#{assembler.name}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-package</a>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  options.longFileMode = "POSIX"
+  control.packageName = "app"
 
-  # Set bigNumberMode for tar archives.
-  # Possible values are [`ERROR`, `GNU`, `POSIX`].
-  # Defaults to `ERROR`.
+  # Package version.
+  # Defaults to `#{project.version}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version</a>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  options.bigNumberMode = "POSIX"
+  control.packageVersion = "1.0.0"
 
-  # The executable JAR that contains the application.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  mainJar = { path = "path/to/app.jar" }
-
-  # Defines a list of additional JARs as globs.
+  # Package revision.
+  # Defaults to `#{project.version}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-version</a>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.jlink.app.jars]]
-    # The pattern to use.
-    # May use glob or regex pattern syntax.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    pattern = "path/to/**/*.jar"
+  control.packageRevision = 1
 
-  # Name of main module (if any).
-  # Define only if the application is modular.
+  # Virtual package name.
+  # Defaults to `#{assembler.name}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances</a>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.mainModule = "com.acme.demo"
+  control.provides = "app"
 
-  # The application's entry point.
-  # If left undefined, will use `#{project.java.mainClass}`.
+  # The package maintainer’s name and email address.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-maintainer</a>
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  control.maintainer = "Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;"
+
+  # Specifies an application area into which the package has been classified.
+  # Defaults to `misc`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#section" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#section</a>
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  java.mainClass = "com.acme.Main"
+  control.section = "devel"
 
-  # Options to pass to the Java runtime
+  # How important it is that the user have the package installed.
+  # Defaults to `optional`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#priority</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.priority = "optional"
 
-  # Included in all scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.jvmOptions.universal = ["-Dprop=value"]
+  # Is it an essential (non-removable) package or not.
+  # Defaults to `false`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#essential</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.essential = true
 
-  # Included in all non Windows scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.jvmOptions.unix = ["-Dprop=value"]
+  # The package's description.
+  # Defaults to `#{project.longDescription}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#description" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#description</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.description = "Sample application"
 
-  # Included in all non Windows (except OSX) scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.jvmOptions.linux = ["-Dprop=value"]
+  # The URL of the web site for this package.
+  # Defaults to `#{project.links.website}`.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html#homepage</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.homepage = "https://github.com/duke/app"
 
-  # Included only in OSX scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.jvmOptions.osx = ["-Dprop=value"]
+  # Additional source packages used to build the binary.
+  # <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.builtUsing = "gcc-4.6 (= 4.6.0-11)"
 
-  # Included in Windows scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.jvmOptions.windows = ["-Dprop=value"]
-
-  # Environment variables used in launch scripts.
-
-  # Included in all scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.environmentVariables.universal.KEY = "value"
-
-  # Included in all non Windows scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.environmentVariables.unix.KEY = "value"
-
-  # Included in all non Windows (except OSX) scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.environmentVariables.linux.KEY = "value"
-
-  # Included only in OSX scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.environmentVariables.osx.KEY = "value"
-
-  # Included in Windows scripts
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  java.environmentVariables.windows.KEY = "value"
-
+  # Dependencies may be defined as a list of packages
+  # <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps</a>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  control.depends = ["foo"]
+  control.preDepends = ["bar"]
+  control.recommends = ["foobar"]
+  control.suggests = ["foobar"]
+  control.enhances = ["foofy"]
+  control.breaks = ["foofoo"]
+  control.conflicts = ["barbar"]
 
   # Directory with file templates used to prepare the assembler.
-  # Defaults to `src/jreleaser/assemblers/#{distribution.name}/javaArchive`.
+  # Defaults to `src/jreleaser/assemblers/#{distribution.name}/deb`.
   # If specified, path must exist.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  templateDirectory = "path/to/javaArchive/templates"
+  templateDirectory = "path/to/deb/templates"
 
   # List of template files to be skipped.
   # Value may be an exact match or a regex.
@@ -1329,26 +1246,26 @@ assemble:
   # Defines a list of additional files as artifacts.
   # These files will be added to the assembled archive.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-  [[assemble.javaArchive.app.artifacts]]
+  [[assemble.deb.app.artifacts]]
     path = "path/to/file"
-  [[assemble.javaArchive.app.artifacts]]
+  [[assemble.deb.app.artifacts]]
     path = "path/to/another_file"
     transform = "path/inside/archive"
-  [[assemble.javaArchive.app.artifacts]]
+  [[assemble.deb.app.artifacts]]
     path = "path/to/platform/specific/file"
     platform = "osx-x86_64"
 
   # Defines a list of additional files as globs.
   # These files will be added to the assembled archive.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[assemble.javaArchive.app.files]]
+  [[assemble.deb.app.files]]
     # The pattern to use.
     # May use glob or regex pattern syntax.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     pattern = "path/to/**/*.txt"
 
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  [[assemble.javaArchive.app.fileSets]]
+  [[assemble.deb.app.fileSets]]
     # The input directory to copy files from.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     input = "path/to/input/directory"
@@ -1373,71 +1290,9 @@ assemble:
 
     # Additional properties used when evaluating templates.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-    [[assemble.javaArchive.app.fileSets.extraProperties]]
+    [[assemble.deb.app.fileSets.extraProperties]]
       # Key will be capitalized and prefixed with `artifact`, i.e, `artifactFoo`.
-      foo: bar
-
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [assemble.javaArchive.app.swid]
-    # Enables or disables the tag.
-    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-    # Defaults to `NEVER`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    active = "ALWAYS"
-
-    # Reference to a common tag.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    tagRef = "swid-tag"
-
-    # Path where the tag file will be placed.
-    # Defaults to `SWIDTAG`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    path = "SWID"
-
-    # A globally unique identifier and should be assigned a GUID reference.
-    # Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    tagId = "c526ec37-2715-328e-8bbc-4eb5a9f47c98"
-
-    # Indicates if a specific release of a software product has more than one tag that can represent that specific release.
-    # Defaults to `1`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    tagVersion = 2
-
-    # Language used in the tag document.
-    # Defaults to `en-US`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    lang = "de"
-
-    # If this SWID tag is a collection of information that describes the pre-installation data of software component.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    corpus = true
-
-    # If this SWID tag describes a product patch or modification to a different software element.
-    # Defaults to `false`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    patch = false
-
-    # List of organizations related to the software component referenced by this SWID tag.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    [[assemble.javaArchive.app.swid.entities]]
-      # name of the organization claiming a particular role in the SWID tag.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      name = "Acme"
-
-      # URI of the claiming organization.
-      # Defaults to `http://invalid.unavailable`.
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      regid = "https://acme.com"
-
-      # The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
-      # The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
-      # include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
-      # Other roles will be defined as the market uses the SWID tags.
-      # Defaults to [`tagCreator`, `softwareCreator`].
-      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      roles = ["tagCreator", "softwareCreator"]</code></pre>
+      foo: bar</code></pre>
 </div>
 </div>
 </div>
@@ -1448,7 +1303,7 @@ assemble:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   "assemble": {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "javaArchive": {
+    "deb": {
       // Assemblers require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       "app": {
@@ -1473,158 +1328,128 @@ assemble:
         // Additional properties used when evaluating templates.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         "extraProperties": {
-          // Key will be capitalized and prefixed with `javaArchive`, i.e, `javaArchiveFoo`.
+          // Key will be capitalized and prefixed with `deb`, i.e, `debFoo`.
           "foo": "bar"
         },
 
-        // Name of the archive.
-        // If left undefined, will use {{distributionName}}-{{projectVersion}}.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "archiveName": "app-{{projectVersion}}",
-
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "executable":  {
-          // Name of the executable launcher.
-          // If left undefined, will use `#{distribution.name}`.
+        platform: {
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="xref page">Platform</a>.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "name": "app",
-
-          // Executable extension on Linux/MacOS.
-          // If left undefined, value will be left empty.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "unixExtension": "sh",
-
-          // Executable extension on Windows.
-          // If left undefined, will use `bat`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "windowsExtension": "cmd"
-        },
-
-        // Set of archive formats to use.
-        // Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TAR_ZST`, `TBZ2`, `TGZ`, `TXZ`].
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "formats": [
-           "ZIP",
-           "TGZ"
-        ],
-
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "options": {
-          // Timestamp to use for each entry.
-          // Must follow ISO-8601 +HH:MM timezone offset.
-          // Example: 2023-03-08T12:56:33.024578+01:00
-          // Defaults to timestamp for latest git commit or current time.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "timestamp": "2020-01-01T00:00:00.000000+00:00",
-
-          // Set longFileMode for tar archives.
-          // Possible values are [`ERROR`, `GNU`, `POSIX`, `TRUNCATE`].
-          // Defaults to `ERROR`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "longFileMode": "POSIX",
-
-          // Set bigNumberMode for tar archives.
-          // Possible values are [`ERROR`, `GNU`, `POSIX`].
-          // Defaults to `ERROR`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "bigNumberMode": "POSIX"
-        },
-
-        // The executable JAR that contains the application.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        "mainJar": {
-          "path": "path/to/app.jar"
-        },
-
-        // Defines a list of additional JARs as globs.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "jars": [
-          {
-            // The pattern to use.
-            // May use glob or regex pattern syntax.
-            // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "pattern": "path/to/**/*.jar"
+          "replacements": {
+            "osx-x86_64": "mac",
+            "aarch_64": "aarch64",
+            "x86_64": "amd64",
+            "linux_musl": "alpine"
           }
-        ],
-
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "java": {
-          // Name of main module (if any).
-          // Define only if the application is modular.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "mainModule": "com.acme.demo",
-
-          // The application's entry point.
-          // If left undefined, will use `#{project.java.mainClass}`.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "mainClass": "com.acme.Main",
-
-          // Options to pass to the Java runtime
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "jvmOptions": {
-            // Included in all scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "universal": [
-              "-Dprop=value"
-            ],
-            // Included in all non Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "unix": [
-              "-Dprop=value"
-            ],
-            // Included in all non Windows (except OSX) scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "linux": [
-              "-Dprop=value"
-            ],
-            // Included only in OSX scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "osx": [
-              "-Dprop=value"
-            ],
-            // Included in Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "windows": [
-              "-Dprop=value"
-            ]
-          },
-
-          // Environment variables used in launch scripts.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "environmentVariables": {
-            // Included in all scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "universal": {
-              "KEY": "value"
-            },
-            // Included in all non Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "unix": {
-              "KEY": "value"
-            },
-            // Included in all non Windows (except OSX) scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "linux": {
-              "KEY": "value"
-            },
-            // Included only in OSX scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "osx": {
-              "KEY": "value"
-            },
-            // Included in Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            "windows": {
-              "KEY": "value"
-            }
-          },
-
         },
+
+        // Name of the executable launcher.
+        // If left undefined, will use `#{assembler.name}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "executable": "app",
+
+        // Target architexture.
+        // Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "architecture": "all",
+
+        // Target path where files will be installed.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        "installationPath": "/opt/{{packageName}}",
+
+        // References assembled artifacts from another assembler.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "assemblerRef": "app-archive",
+
+        // Defines values for control fields
+        // See <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a>
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        "control": {
+
+          // Name of the package.
+          // Defaults to `//{assembler.name}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "packageName": "app",
+
+          // Package version.
+          // Defaults to `//{project.version}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "packageVersion": "1.0.0",
+
+          // Package revision.
+          // Defaults to `//{project.version}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "packageRevision": "1",
+
+          // Virtual package name.
+          // Defaults to `//{assembler.name}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "provides": "app",
+
+          // The package maintainer’s name and email address.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer</a>
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          "maintainer": "Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;",
+
+          // Specifies an application area into which the package has been classified.
+          // Defaults to `misc`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//section" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//section</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "section": "devel",
+
+          // How important it is that the user have the package installed.
+          // Defaults to `optional`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "priority": "optional",
+
+          // Is it an essential (non-removable) package or not.
+          // Defaults to `false`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "essential": true,
+
+          // The package's description.
+          // Defaults to `//{project.longDescription}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//description" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//description</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "description": "Sample application",
+
+          // The URL of the web site for this package.
+          // Defaults to `//{project.links.website}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "homepage": "https://github.com/duke/app"
+
+          // Additional source packages used to build the binary.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "builtUsing": "gcc-4.6 (= 4.6.0-11)",
+
+          // Dependencies may be defined as a list of packages
+          // <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "depends": ["foo"],
+          "preDepends": ["bar"],
+          "recommends": ["foobar"],
+          "suggests": ["foobar"],
+          "enhances": ["foofy"],
+          "breaks": ["foofoo"],
+          "conflicts": ["barbar"]
+        },
+
         // Directory with file templates used to prepare the assembler.
-        // Defaults to `src/jreleaser/assemblers/#$#{distribution.name}/javaArchive`.
+        // Defaults to `src/jreleaser/assemblers/#$#{distribution.name}/deb`.
         // If specified, path must exist.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "templateDirectory": "path/to/javaArchive/templates",
+        "templateDirectory": "path/to/deb/templates",
 
         // List of template files to be skipped.
         // Value may be an exact match or a regex.
@@ -1695,79 +1520,7 @@ assemble:
             }
           }
         ],
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        "swid": {
-          // Tags require a name.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-          "mytag": {
 
-            // Enables or disables the tag.
-            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-            // Defaults to `NEVER`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-            "active": "ALWAYS",
-
-            // Reference to a common tag.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "tagRef": "swid-tag",
-
-            // Path where the tag file will be placed.
-            // Defaults to `SWIDTAG`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "path": "SWID",
-
-            // A globally unique identifier and should be assigned a GUID reference.
-            // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "tagId": "c526ec37-2715-328e-8bbc-4eb5a9f47c98",
-
-            // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
-            // Defaults to `1`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "tagVersion": 2,
-
-            // Language used in the tag document.
-            // Defaults to `en-US`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "lang": "de",
-
-            // If this SWID tag is a collection of information that describes the pre-installation data of software component.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "corpus": true,
-
-            // If this SWID tag describes a product patch or modification to a different software element.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "patch": false,
-
-            // List of organizations related to the software component referenced by this SWID tag.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            "entities": [
-              {
-                // name of the organization claiming a particular role in the SWID tag.
-                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                "name": "Acme",
-
-                // URI of the claiming organization.
-                // Defaults to `http://invalid.unavailable`.
-                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                "regid": "https://acme.com",
-
-                // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
-                // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
-                // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
-                // Other roles will be defined as the market uses the SWID tags.
-                // Defaults to [`tagCreator`, `softwareCreator`].
-                // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                "roles": [
-                  "tagCreator",
-                  "softwareCreator"
-                ]
-              }
-            ]
-          }
-        }
       }
     }
   }
@@ -1786,7 +1539,7 @@ assemble:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;javaArchive&gt;
+    &lt;deb&gt;
       &lt;!--
         Assemblers require a name.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -1821,208 +1574,152 @@ assemble:
         --&gt;
         &lt;extraProperties&gt;
           &lt;!--
-            Key will be capitalized and prefixed with `javaArchive`, i.e, `javaArchiveFoo`.
+            Key will be capitalized and prefixed with `deb`, i.e, `debFoo`.
           --&gt;
           &lt;foo&gt;bar&lt;/foo&gt;
         &lt;/extraProperties&gt;
 
         &lt;!--
-          Name of the archive.
-          If left undefined, will use {{distributionName}}-{{projectVersion}}.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;platform&gt;
+
+          &lt;!--
+            Key value pairs.
+            Keys match a full platform or an os.name, os.arch.
+            Same rules apply as in <a href="../platform.html" class="xref page">Platform</a>.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;replacements&gt;
+            &lt;osx-x86_64&gt;mac&lt;/osx-x86_64&gt;
+            &lt;aarch_64&gt;aarch64&lt;/aarch_64&gt;
+            &lt;x86_64&gt;amd64&lt;/x86_64&gt;
+            &lt;linux_musl&gt;alpine&lt;/linux_musl&gt;
+          &lt;/replacements&gt;
+        &lt;/platform&gt;
+
+        &lt;!--
+          Name of the executable launcher.
+          If left undefined, will use `#{assembler.name}`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;executable&gt;app&lt;/executable&gt;
+
+          Target architexture.
+          Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        &lt;architecture&gt;all&lt;/architecture&gt;
+
+          Target path where files will be installed.
           <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;archiveName&gt;app-{{projectVersion}}&lt;/archiveName&gt;
+        &lt;installationPath&gt;/opt/{{packageName}}&lt;/installationPath&gt;
 
-        &lt;!--
+          References assembled artifacts from another assembler.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;executable&gt;
-          &lt;!--
-            Name of the executable launcher.
-            If left undefined, will use `#{distribution.name}`.
+        &lt;assemblerRef&gt;app-archive&lt;/assemblerRef&gt;
+
+          Defines values for control fields
+          See <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a>
+          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        &lt;control&gt;
+
+            Name of the package.
+            Defaults to ` {assembler.name}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-package[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;name&gt;app&lt;/name&gt;
+          &lt;packageName&gt;ap&lt;/packageName&gt;
 
-          &lt;!--
-            Executable extension on Linux/MacOS.
-            If left undefined, value will be left empty.
+            Package version.
+            Defaults to ` {project.version}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-version[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;unixExtension&gt;sh&lt;/unixExtension&gt;
+          &lt;packageVersion&gt;1.0.0&lt;/packageVersion&gt;
 
-          &lt;!--
-            Executable extension on Windows.
-            If left undefined, will use `bat`.
+            Package revision.
+            Defaults to ` {project.version}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html s-f-version[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;windowsExtension&gt;cmd&lt;/windowsExtension&gt;
-        &lt;/executable&gt;
+          &lt;packageRevision&gt;1&lt;/packageRevision&gt;
 
-        &lt;!--
-          Set of archive formats to use.
-          Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TAR_ZST`, `TBZ2`, `TGZ`, `TXZ`].
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;formats&gt;
-          &lt;format&gt;ZIP&lt;/format&gt;
-          &lt;format&gt;TGZ&lt;/format&gt;
-        &lt;/formats&gt;
-
-        &lt;!--
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;options&gt;
-          &lt;!--
-            Timestamp to use for each entry.
-            Must follow ISO-8601 +HH:MM timezone offset.
-            Example: 2023-03-08T12:56:33.024578+01:00
-            Defaults to timestamp for latest git commit or current time.
+            Virtual package name.
+            Defaults to ` {assembler.name}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;timestamp&gt;2020-01-01T00:00:00.000000+00:00&lt;/timestamp&gt;
+          &lt;provides&gt;app&lt;/provides&gt;
 
-          &lt;!--
-            Set longFileMode for tar archives.
-            Possible values are [`ERROR`, `GNU`, `POSIX`, `TRUNCATE`].
-            Defaults to `ERROR`.
+            The package maintainer’s name and email address.
+            <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a> s-f-maintainer[]
+            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          &lt;maintainer&gt;Duke &amp;lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&amp;gt;&lt;/maintainer&gt;
+
+            Specifies an application area into which the package has been classified.
+            Defaults to `misc`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html section[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;longFileMode&gt;POSIX&lt;/longFileMode&gt;
+          &lt;section&gt;devel&lt;/section&gt;
 
-          &lt;!--
-            Set bigNumberMode for tar archives.
-            Possible values are [`ERROR`, `GNU`, `POSIX`].
-            Defaults to `ERROR`.
+            How important it is that the user have the package installed.
+            Defaults to `optional`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html priority[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;bigNumberMode&gt;POSIX&lt;/bigNumberMode&gt;
-        &lt;/options&gt;
+          &lt;priority&gt;optional&lt;/priority&gt;
 
-        &lt;!--
-          The executable JAR that contains the application.
-          <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        --&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;path/to/app.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-
-        &lt;!--
-          Defines a list of additional JARs as globs.
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;jars&gt;
-          &lt;jar&gt;
-            &lt;!--
-              The pattern to use.
-              May use glob or regex pattern syntax.
-              <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;pattern&gt;path/to/**/*.jar&lt;/pattern&gt;
-          &lt;/jar&gt;
-        &lt;/jars&gt;
-
-        &lt;!--
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;java&gt;
-          &lt;!--
-            Name of main module (if any).
-            Define only if the application is modular.
+            Is it an essential (non-removable) package or not.
+            Defaults to `false`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html essential[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;mainModule&gt;com.acme.demo&lt;/mainModule&gt;
+          &lt;essential&gt;true&lt;/essential&gt;
 
-          &lt;!--
-            The application's entry point.
-            If left undefined, will use `#{project.java.mainClass}`.
+            The package's description.
+            Defaults to ` {project.longDescription}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html description[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
+          &lt;description&gt;Sample application&lt;/description&gt;
 
-          &lt;!--
-            Options to pass to the Java runtime
+            The URL of the web site for this package.
+            Defaults to ` {project.links.website}`.
+            link:https://www.debian.org/doc/debian-policy/ch-controlfields.html homepage[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;jvmOptions&gt;
-            &lt;!--
-              Included in all scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;universal&gt;-Dprop=value&lt;/universal&gt;
-            &lt;!--
-              Included in all non Windows scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;unix&gt;-Dprop=value&lt;/unix&gt;
-            &lt;!--
-              Included in all non Windows (except OSX) scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;linux&gt;-Dprop=value&lt;/linux&gt;
-            &lt;!--
-              Included only in OSX scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;osx&gt;-Dprop=value&lt;/osx&gt;
-            &lt;!--
-              Included in Windows scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;windows&gt;-Dprop=value&lt;/windows&gt;
-          &lt;/jvmOptions&gt;
+          &lt;homepage&gt;https://github.com/duke/app&lt;/homepage&gt;
 
-          &lt;!--
-            Environment variables used in launch scripts.
+            Additional source packages used to build the binary.
+            link:https://www.debian.org/doc/debian-policy/ch-relationships.html s-built-using[]
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;environmentVariables&gt;
-            &lt;!--
-              Included in all scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;universal&gt;
-              &lt;KEY&gt;value&lt;/KEY&gt;
-            &lt;/universal&gt;
-            &lt;!--
-              Included in all non Windows scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;unix&gt;
-              &lt;KEY&gt;value&lt;/KEY&gt;
-            &lt;/unix&gt;
-            &lt;!--
-              Included in all non Windows (except OSX) scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;linux&gt;
-              &lt;KEY&gt;value&lt;/KEY&gt;
-            &lt;/linux&gt;
-            &lt;!--
-              Included only in OSX scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;osx&gt;
-              &lt;KEY&gt;value&lt;/KEY&gt;
-            &lt;/osx&gt;
-            &lt;!--
-              Included in Windows scripts
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            --&gt;
-            &lt;windows&gt;
-              &lt;KEY&gt;value&lt;/KEY&gt;
-            &lt;/windows&gt;
-          &lt;/environmentVariables&gt;
+          &lt;builtUsing&gt;gcc-4.6 (= 4.6.0-11)&lt;/builtUsing&gt;
 
-        &lt;/java&gt;
+            Dependencies may be defined as a list of packages
+            <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html</a> s-binarydeps
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          &lt;depends&gt;
+            &lt;dependency&gt;foo&lt;/dependency&gt;
+          &lt;/depends&gt;
+          &lt;preDepends&gt;
+            &lt;dependency&gt;bar&lt;/dependency&gt;
+          &lt;/preDepends&gt;
+          &lt;recommends&gt;
+            &lt;dependency&gt;foobar&lt;/dependency&gt;
+          &lt;/recommends&gt;
+          &lt;suggests&gt;
+            &lt;dependency&gt;foobar&lt;/dependency&gt;
+          &lt;/suggests&gt;
+          &lt;enhances&gt;
+            &lt;dependency&gt;foofy&lt;/dependency&gt;
+          &lt;/enhances&gt;
+          &lt;breaks&gt;
+            &lt;dependency&gt;foofoo&lt;/dependency&gt;
+          &lt;/breaks&gt;
+          &lt;conflicts&gt;
+            &lt;dependency&gt;barbar&lt;/dependency&gt;
+          &lt;/conflicts&gt;
+        &lt;/control&gt;
 
         &lt;!--
           Directory with file templates used to prepare the assembler.
-          Defaults to `src/jreleaser/assemblers/#{distribution.name}/javaArchive`.
+          Defaults to `src/jreleaser/assemblers/#{distribution.name}/deb`.
           If specified, path must exist.
           <span class="icon"><i class="fa fa-dot-circle"></i></span>
         --&gt;
-        &lt;templateDirectory&gt;path/to/javaArchive/templates&lt;/templateDirectory&gt;
+        &lt;templateDirectory&gt;path/to/deb/templates&lt;/templateDirectory&gt;
 
         &lt;!--
           List of template files to be skipped.
@@ -2122,109 +1819,8 @@ assemble:
           &lt;/fileSet&gt;
         &lt;/fileSets&gt;
 
-        &lt;!--
-          <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        --&gt;
-        &lt;swid&gt;
-          &lt;!--
-            Tags require a name.
-            <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-          --&gt;
-          &lt;mytag&gt;
-
-            &lt;!--
-              Enables or disables the tag.
-              Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-              Defaults to `NEVER`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-            --&gt;
-            &lt;active&gt;ALWAYS&lt;/active&gt;
-
-            &lt;!--
-              Reference to a common tag.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;tagRef&gt;swid-tag&lt;/tagRef&gt;
-
-            &lt;!--
-              Path where the tag file will be placed.
-              Defaults to `SWIDTAG`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;path&gt;SWID&lt;/path&gt;
-
-            &lt;!--
-              A globally unique identifier and should be assigned a GUID reference.
-              Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;tagId&gt;c526ec37-2715-328e-8bbc-4eb5a9f47c98&lt;/tagId&gt;
-
-            &lt;!--
-              Indicates if a specific release of a software product has more than one tag that can represent that specific release.
-              Defaults to `1`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;tagVersion&gt;2&lt;/tagVersion&gt;
-
-            &lt;!--
-              Language used in the tag document.
-              Defaults to `en-US`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;lang&gt;de&lt;/lang&gt;
-
-            &lt;!--
-              If this SWID tag is a collection of information that describes the pre-installation data of software component.
-              Defaults to `false`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;corpus&gt;true&lt;/corpus&gt;
-
-            &lt;!--
-              If this SWID tag describes a product patch or modification to a different software element.
-              Defaults to `false`.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;patch&gt;false&lt;/patch&gt;
-
-            &lt;!--
-              List of organizations related to the software component referenced by this SWID tag.
-              <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            --&gt;
-            &lt;entities&gt;
-              &lt;entity&gt;
-                &lt;!--
-                  name of the organization claiming a particular role in the SWID tag.
-                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                --&gt;
-                &lt;name&gt;Acme&lt;/name&gt;
-
-                &lt;!--
-                  URI of the claiming organization.
-                  Defaults to `http://invalid.unavailable`.
-                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                --&gt;
-                &lt;regid&gt;https://acme.com&lt;/regid&gt;
-
-                &lt;!--
-                  The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
-                  The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
-                  include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
-                  Other roles will be defined as the market uses the SWID tags.
-                  Defaults to [`tagCreator`, `softwareCreator`].
-                  <span class="icon"><i class="fa fa-dot-circle"></i></span>
-                --&gt;
-                &lt;roles&gt;
-                  &lt;role&gt;tagCreator&lt;/role&gt;
-                  &lt;role&gt;softwareCreator&lt;/role&gt;
-                &lt;/roles&gt;
-              &lt;/entity&gt;
-            &lt;/entities&gt;
-          &lt;/swid-tag&gt;
-        &lt;/swid&gt;
       &lt;/app&gt;
-    &lt;/javaArchive&gt;
+    &lt;/deb&gt;
   &lt;/assemble&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -2237,7 +1833,7 @@ assemble:
   // <span class="icon"><i class="fa fa-dot-circle"></i></span>
   assemble {
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    javaArchive {
+    deb {
       // Assemblers require a name.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app {
@@ -2260,137 +1856,129 @@ assemble:
         stereotype = 'CLI'
 
         // Additional properties used when evaluating templates.
-        // Key will be capitalized and prefixed with `javaArchive`, i.e, `javaArchiveFoo`.
+        // Key will be capitalized and prefixed with `deb`, i.e, `debFoo`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         extraProperties.put('foo', 'bar')
 
-        // Name of the archive.
-        // If left undefined, will use {{distributionName}}-{{projectVersion}}.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        platform {
+
+          // Key value pairs.
+          // Keys match a full platform or an os.name, os.arch.
+          // Same rules apply as in <a href="../platform.html" class="xref page">Platform</a>.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          replacements = [
+            'osx-x86_64': 'mac',
+            aarch_64: 'aarch64',
+            x86_64: 'amd64',
+            linux_musl: 'alpine'
+          ]
+        }
+
+        // Name of the executable launcher.
+        // If left undefined, will use `#{assembler.name}`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        executable = 'app'
+
+        // Target architexture.
+        // Valid values as defined by `dpkg-architecture -L` such as `all`, `aamd64`, etc.
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        architecture = 'all'
+
+        // Target path where files will be installed.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        archiveName = 'app-{{projectVersion}}'
+        installationPath = '/opt/{{packageName}}'
 
+        // References assembled artifacts from another assembler.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        executable {
-          // Name of the executable launcher.
-          // If left undefined, will use `#{distribution.name}`.
+        assemblerRef = 'app-archive'
+
+        // Defines values for control fields
+        // See <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html</a>
+        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        control {
+
+          // Name of the package.
+          // Defaults to `//{assembler.name}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-package</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          name = 'app'
+          packageName = "app"
 
-          // Executable extension on Linux/MacOS.
-          // If left undefined, value will be left empty.
+          // Package version.
+          // Defaults to `//{project.version}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          unixExtension = 'sh'
+          packageVersion = '1.0.0'
 
-          // Executable extension on Windows.
-          // If left undefined, will use `bat`.
+          // Package revision.
+          // Defaults to `//{project.version}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-version</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          windowsExtension = 'cmd'
-        }
+          packageRevision = 1
 
-        // Set of archive formats to use.
-        // Supported values are [`ZIP`, `TAR`, `TAR_BZ2`, `TAR_GZ`, `TAR_XZ`, `TAR_ZST`, `TBZ2`, `TGZ`, `TXZ`].
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        formats = [
-            'ZIP',
-            'TGZ'
-        ]
-
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        options {
-          // Timestamp to use for each entry.
-          // Must follow ISO-8601 + timezone offset.
-          // Example: 2023-03-08T12:56:33.024578+01:00
-          // Defaults to timestamp for latest git commit or current time.
+          // Virtual package name.
+          // Defaults to `//{assembler.name}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          timestamp = '2020-01-01T00:00:00.000000+00:00'
+          provides = 'app'
 
-          // Set longFileMode for tar archives.
-          // Possible values are [`ERROR`, `GNU`, `POSIX`, `TRUNCATE`].
-          // Defaults to `ERROR`.
+          // The package maintainer’s name and email address.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//s-f-maintainer</a>
+          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+          maintainer = 'Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;'
+
+          // Specifies an application area into which the package has been classified.
+          // Defaults to `misc`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//section" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//section</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          longFileMode = 'POSIX'
+          section = 'devel'
 
-          // Set bigNumberMode for tar archives.
-          // Possible values are [`ERROR`, `GNU`, `POSIX`].
-          // Defaults to `ERROR`.
+          // How important it is that the user have the package installed.
+          // Defaults to `optional`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//priority</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          bigNumberMode = 'POSIX'
-        }
+          priority = 'optional'
 
-        // The executable JAR that contains the application.
-        // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        mainJar {
-          path = 'path/to/app.jar'
-        }
-
-        // Defines a list of additional JARs as globs.
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        jars {
-          // The pattern to use.
-          // May use glob or regex pattern syntax.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          pattern = 'path/to/**/*.jar'
-        }
-
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        java {
-          // Name of main module (if any).
-          // Define only if the application is modular.
+          // Is it an essential (non-removable) package or not.
+          // Defaults to `false`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//essential</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          mainModule = 'com.acme.demo'
+          essential = true
 
-          // The application's entry point.
-          // If left undefined, will use `#{project.java.mainClass}`.
+          // The package's description.
+          // Defaults to `//{project.longDescription}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//description" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//description</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          mainClass = 'com.acme.Main'
+          description = 'Sample application'
 
-          // Options to pass to the Java runtime
+          // The URL of the web site for this package.
+          // Defaults to `//{project.links.website}`.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage" class="bare">https://www.debian.org/doc/debian-policy/ch-controlfields.html//homepage</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          jvmOptions {
-            // Included in all scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            universal('-Dprop=value')
-            // Included in all non Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            unix('-Dprop=value')
-            // Included in all non Windows (except OSX) scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            linux('-Dprop=value')
-            // Included only in OSX scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            osx('-Dprop=value')
-            // Included in Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            windows('-Dprop=value')
-          }
+          homepage = 'https://github.com/duke/app'
 
-          // Environment variables used in launch scripts.
+          // Additional source packages used to build the binary.
+          // <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html//s-built-using</a>
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          environmentVariables {
-            // Included in all scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            universal('KEY', 'value')
-            // Included in all non Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            unix('KEY', 'value')
-            // Included in all non Windows (except OSX) scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            linux('KEY', 'value')
-            // Included only in OSX scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            osx('KEY', 'value')
-            // Included in Windows scripts
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-            windows('KEY', 'value')
-          }
+          builtUsing = 'gcc-4.6 (= 4.6.0-11)'
 
+          // Dependencies may be defined as a list of packages
+          // <a href="https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps" class="bare">https://www.debian.org/doc/debian-policy/ch-relationships.html//s-binarydeps</a>
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          depends = ['foo']
+          preDepends = ['bar']
+          recommends = ['foobar']
+          suggests = ['foobar']
+          enhances = ['foofy']
+          breaks = ['foofoo']
+          conflicts = ['barbar']
         }
 
         // Directory with file templates used to prepare the assembler.
-        // Defaults to `src/jreleaser/assemblers/#{distribution.name}/javaArchive`.
+        // Defaults to `src/jreleaser/assemblers/#{distribution.name}/deb`.
         // If specified, path must exist.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        templateDirectory = 'path/to/javaArchive/templates'
+        templateDirectory = 'path/to/deb/templates'
 
         // List of template files to be skipped.
         // Value may be an exact match or a regex.
@@ -2452,75 +2040,6 @@ assemble:
           extraProperties.put('foo', 'bar')
         }
 
-        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        swid {
-          // Tags require a name.
-          // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-          mytag {
-
-            // Enables or disables the tag.
-            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-            // Defaults to `NEVER`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-            active = 'ALWAYS'
-
-            // Reference to a common tag.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            tagRef = 'swid-tag'
-
-            // Path where the tag file will be placed.
-            // Defaults to `SWIDTAG`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            path = 'SWID'
-
-            // A globally unique identifier and should be assigned a GUID reference.
-            // Defaults to a UUID generated with `groupId`, `artifactId`, `version`, `vendor`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            tagId = 'c526ec37-2715-328e-8bbc-4eb5a9f47c98'
-
-            // Indicates if a specific release of a software product has more than one tag that can represent that specific release.
-            // Defaults to `1`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            tagVersion = 2
-
-            // Language used in the tag document.
-            // Defaults to `en-US`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            lang = 'de'
-
-            // If this SWID tag is a collection of information that describes the pre-installation data of software component.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            corpus = true
-
-            // If this SWID tag describes a product patch or modification to a different software element.
-            // Defaults to `false`.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            patch = false
-
-            // List of organizations related to the software component referenced by this SWID tag.
-            // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-            entity {
-              // name of the organization claiming a particular role in the SWID tag.
-              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-              name = 'Acme'
-
-              // URI of the claiming organization.
-              // Defaults to `http://invalid.unavailable`.
-              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-              regid = 'https://acme.com'
-
-              // The relationship between this organization and this tag e.g. tag, `softwareCreator`, `licensor`, `tagCreator`, etc.
-              // The role of `tagCreator` is required for every SWID tag. May include any role value, but the pre-defined roles
-              // include: `aggregator`, `distributor`, `licensor`, `softwareCreator`, `tagCreator`.
-              // Other roles will be defined as the market uses the SWID tags.
-              // Defaults to [`tagCreator`, `softwareCreator`].
-              // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-              role('tagCreator')
-              role('softwareCreator')
-            }
-          }
-        }
       }
     }
   }
@@ -2555,10 +2074,10 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.assemble.java.archive.${name}.active<br>
-  jreleaser.assemble.java.archive.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ASSEMBLE_JAVA_ARCHIVE_${name}_ACTIVE<br>
-  JRELEASER_ASSEMBLE_JAVA_ARCHIVE_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.assemble.deb.${name}.active<br>
+  jreleaser.assemble.deb.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_ASSEMBLE_DEB_${name}_ACTIVE<br>
+  JRELEASER_ASSEMBLE_DEB_ACTIVE</p></td>
 </tr>
 </tbody>
 </table>
@@ -2634,7 +2153,7 @@ such that:</p>
 <p>The default location for templates is:</p>
 </div>
 <div class="paragraph">
-<p><code>src/jreleaser/assemblers/&lt;distribution-name&gt;/java-archive</code></p>
+<p><code>src/jreleaser/assemblers/&lt;distribution-name&gt;/deb</code></p>
 </div>
 <div class="paragraph">
 <p>The following list shows the filenames that may be used to override default templates:</p>
@@ -2642,10 +2161,19 @@ such that:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>bin/launcher.tpl</code></p>
+<p><code>control/control.tpl</code></p>
 </li>
 <li>
-<p><code>bin/launcher.bat.tpl</code></p>
+<p><code>control/postinst.tpl</code></p>
+</li>
+<li>
+<p><code>control/postrm.tpl</code></p>
+</li>
+<li>
+<p><code>control/preinst.tpl</code></p>
+</li>
+<li>
+<p><code>control/prerm.tpl</code></p>
 </li>
 </ul>
 </div>
@@ -2747,28 +2275,14 @@ will only be copied when the matching platform is compatible with <code>windows-
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This assembler ignores filtering artifacts by platform.
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_classpath"><a class="anchor" href="#_classpath"></a>Classpath</h3>
 <div class="paragraph">
-<p>Given the following file structure for an application that will be run on the classpath</p>
+<p>Given the following file structure</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2777,7 +2291,8 @@ This assembler ignores filtering artifacts by platform.
 ├── LICENSE
 ├── README
 └── target
-    └── app-1.0.0.jar</code></pre>
+    └── release
+        └── app</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2816,18 +2331,20 @@ This assembler ignores filtering artifacts by platform.
   inceptionYear: 2020
 
 assemble:
-  javaArchive:
+  deb:
     app:
       active: ALWAYS
+      architecture: amd64
+      control:
+        maintainer: Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;
       fileSets:
         - input: '.'
           includes:
             - 'LICENSE'
             - 'README'
-      mainJar:
-        path: target/{{distributionName}}-{{projectVersion}}.jar
-      java:
-        mainClass: com.acme.Main</code></pre>
+        - input: 'target/release'
+          output: 'bin'
+          includes: [ 'app' ]</code></pre>
 </div>
 </div>
 </div>
@@ -2841,15 +2358,17 @@ assemble:
   authors = [ "Duke" ]
   inceptionYear = "2020"
 
-[assemble.javaArchive.app]
+[assemble.archive.app]
   active = "ALWAYS"
+  architecture = "amd64"
+  control.maintainer = "Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;"
   [[assemble.archive.app.fileSets]]
     input = "."
     includes = ["LICENSE", "README"]
-  [[assemble.archive.app.mainJar]]
-    path = "target/{{distributionName}}-{{projectVersion}}.jar"
-  [[assemble.archive.app.java]]
-    mainClass = "com.acme.Main"</code></pre>
+  [[assemble.archive.app.fileSets]]
+    input = "target/release"
+    output = "bin"
+    includes = [ "app" ]</code></pre>
 </div>
 </div>
 </div>
@@ -2865,23 +2384,24 @@ assemble:
     "inceptionYear": "2020"
   },
   "assemble": {
-    "javaArchive": {
+    "archive": {
       "app": {
         "active": "ALWAYS",
+        "architexture": "amd64",
+        "control": {
+          "maintainer": "Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;"
+        },
         "fileSets": [
           {
             "input": ".",
             "includes": ["LICENSE", "README"]
-          }
-        ],
-        "mainJar": [
+          },
           {
-            "path": "target/{{distributionName}}-{{projectVersion}}.jar"
+            "input": "target/release",
+            "output": "bin",
+            "includes": [ "app" ]
           }
-        ],
-        "java": {
-          "mainClass": "com.acme.Main"
-        }
+        ]
       }
     }
   }
@@ -2901,9 +2421,13 @@ assemble:
     &lt;inceptionYear&gt;2020&lt;/inceptionYear&gt;
   &lt;/project&gt;
   &lt;assemble&gt;
-    &lt;javaArchive&gt;
+    &lt;archive&gt;
       &lt;app&gt;
         &lt;active&gt;ALWAYS&lt;/active&gt;
+        &lt;architexture&gt;amd64&lt;/architecture&gt;
+        &lt;control&gt;
+          &lt;maintainer&gt;Duke &amp;lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&amp;gt;&lt;/maintainer&gt;
+        &lt;/control&gt;
         &lt;fileSets&gt;
           &lt;fileSet&gt;
             &lt;input&gt;.&lt;/input&gt;
@@ -2912,15 +2436,16 @@ assemble:
               &lt;include&gt;README&lt;/include&gt;
             &lt;/includes&gt;
           &lt;/fileSet&gt;
+          &lt;fileSet&gt;
+            &lt;input&gt;target/release&lt;/input&gt;
+            &lt;output&gt;bin&lt;/output&gt;
+            &lt;includes&gt;
+              &lt;include&gt;app&lt;/include&gt;
+            &lt;/includes&gt;
+          &lt;/fileSet&gt;
         &lt;/fileSets&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;target/{{distributionName}}-{{projectVersion}}.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-        &lt;java&gt;
-          &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
-        &lt;/java&gt;
       &lt;/app&gt;
-    &lt;/javaArchive&gt;
+    &lt;/archive&gt;
   &lt;/assemble&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -2938,229 +2463,21 @@ assemble:
     inceptionYear: '2020'
   }
   assemble {
-    javaArchive {
+    archive {
       app {
         active = 'ALWAYS'
+        architecture = 'amd64'
+        control {
+          maintainer = 'Duke &lt;<a href="mailto:duke@acme.com">duke@acme.com</a>&gt;'
+        }
         fileSet {
           input = '.'
           includes = ['LICENSE', 'README']
         }
-        mainJar {
-          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
-        }
-        java {
-          mainClass = 'com.acme.Main'
-        }
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>Results in an assembled Zip archive named <code>app-1.0.0.zip</code> with the following entries</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── LICENSE
-├── README
-├── bin
-│   ├── app
-│   └── app.bat
-└── lib
-    └── app-1.0.0.jar</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_modulepath"><a class="anchor" href="#_modulepath"></a>Modulepath</h3>
-<div class="paragraph">
-<p>Given the following file structure for an application that will be run on the modulepath</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── BUILD
-├── LICENSE
-├── README
-└── target
-    └── app-1.0.0.jar</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And this assembly configuration</p>
-</div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
-<ul>
-<li>
-<p><a id="tabset3_yaml"></a>YAML</p>
-</li>
-<li>
-<p><a id="tabset3_toml"></a>TOML</p>
-</li>
-<li>
-<p><a id="tabset3_json"></a>JSON</p>
-</li>
-<li>
-<p><a id="tabset3_maven"></a>Maven</p>
-</li>
-<li>
-<p><a id="tabset3_gradle"></a>Gradle</p>
-</li>
-</ul>
-</div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset3_yaml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">project:
-  version: 1.0.0
-  description: Sample application
-  authors:
-    - Duke
-  inceptionYear: 2020
-
-assemble:
-  javaArchive:
-    app:
-      active: ALWAYS
-      fileSets:
-        - input: '.'
-          includes:
-            - 'LICENSE'
-            - 'README'
-      mainJar:
-        path: target/{{distributionName}}-{{projectVersion}}.jar
-      java:
-        mainClass: com.acme.Main
-        mainModule: com.acme</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset3_toml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[project]
-  version = "1.0.0"
-  description = "Sample application"
-  authors = [ "Duke" ]
-  inceptionYear = "2020"
-
-[assemble.javaArchive.app]
-  active = "ALWAYS"
-  [[assemble.archive.app.fileSets]]
-    input = "."
-    includes = ["LICENSE", "README"]
-  [[assemble.archive.app.mainJar]]
-    path = "target/{{distributionName}}-{{projectVersion}}.jar"
-  [[assemble.archive.app.java]]
-    mainClass = "com.acme.Main"
-    mainModule = "com.acme"</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset3_json">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "project": {
-    "version": "1.0.0",
-    "description": "Sample application",
-    "authors": [ "Duke" ],
-    "inceptionYear": "2020"
-  },
-  "assemble": {
-    "javaArchive": {
-      "app": {
-        "active": "ALWAYS",
-        "fileSets": [
-          {
-            "input": ".",
-            "includes": ["LICENSE", "README"]
-          }
-        ],
-        "mainJar": [
-          {
-            "path": "target/{{distributionName}}-{{projectVersion}}.jar"
-          }
-        ],
-        "java": {
-          "mainClass": "com.acme.Main",
-          "mainModule": "com.acme"
-        }
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset3_maven">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;project&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;description&gt;Sample application&lt;/description&gt;
-    &lt;authors&gt;Duke&lt;/authors&gt;
-    &lt;inceptionYear&gt;2020&lt;/inceptionYear&gt;
-  &lt;/project&gt;
-  &lt;assemble&gt;
-    &lt;javaArchive&gt;
-      &lt;app&gt;
-        &lt;active&gt;ALWAYS&lt;/active&gt;
-        &lt;fileSets&gt;
-          &lt;fileSet&gt;
-            &lt;input&gt;.&lt;/input&gt;
-            &lt;includes&gt;
-              &lt;include&gt;LICENSE&lt;/include&gt;
-              &lt;include&gt;README&lt;/include&gt;
-            &lt;/includes&gt;
-          &lt;/fileSet&gt;
-        &lt;/fileSets&gt;
-        &lt;mainJar&gt;
-          &lt;path&gt;target/{{distributionName}}-{{projectVersion}}.jar&lt;/path&gt;
-        &lt;/mainJar&gt;
-        &lt;java&gt;
-          &lt;mainClass&gt;com.acme.Main&lt;/mainClass&gt;
-          &lt;mainModule&gt;com.acme&lt;/mainModule&gt;
-        &lt;/java&gt;
-      &lt;/app&gt;
-    &lt;/javaArchive&gt;
-  &lt;/assemble&gt;
-&lt;/jreleaser&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset3_gradle">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  project {
-    version = '1.0.0'
-    description = 'Sample application'
-    author('Duke')
-    inceptionYear: '2020'
-  }
-  assemble {
-    javaArchive {
-      app {
-        active = 'ALWAYS'
         fileSet {
-          input = '.'
-          includes = ['LICENSE', 'README']
-        }
-        mainJar {
-          path = 'target/{{distributionName}}-{{projectVersion}}.jar'
-        }
-        java {
-          mainClass = 'com.acme.Main'
-          mainModule = 'com.acme'
+          input = 'target/release'
+          output = 'bin'
+          includes = [ 'app' ]
         }
       }
     }
@@ -3172,19 +2489,15 @@ assemble:
 </div>
 </div>
 <div class="paragraph">
-<p>Results in an assembled Zip archive named <code>app-1.0.0.zip</code> with the following entries</p>
+<p>Resulting in the following <code>.deb</code> package</p>
 </div>
 <div class="listingblock">
+<div class="title">app-1.0.0-1_amd64.deb</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">.
-├── LICENSE
-├── README
-├── bin
-│   ├── app
-│   └── app.bat
-└── lib
-    └── app-1.0.0.jar</code></pre>
-</div>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ tar tvf app-1.0.0-1_amd64.deb
+-rw-r--r--  0 0      0           4 Dec 15 12:31 debian-binary
+-rw-r--r--  0 0      0         496 Dec 15 12:31 control.tar.zst
+-rw-r--r--  0 0      0     1120139 Dec 15 12:31 data.tar.zst</code></pre>
 </div>
 </div>
 </div>
