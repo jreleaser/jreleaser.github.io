@@ -843,9 +843,9 @@ is used to create both release and snapshot releases:</p>
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"># Define properties we'll use later in this file
 environment:
   properties:
-    jdkPathPrefix: 'apps/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu17.50.19-ca-jdk17.0.11'
-    graalFilePrefix: 'graalvm-community-openjdk-22.0.1+8.1'
+    jdkPathPrefix: 'plugins/jreleaser/build/jdks'
+    jdkFilePrefix: 'zulu21.38.21-ca-jdk21.0.5'
+    graalFilePrefix: 'graalvm-community-openjdk-23.0.1+11.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
@@ -881,11 +881,12 @@ project:
     - url: https://raw.githubusercontent.com/jreleaser/jreleaser/main/src/media/icon_256x256.png
       width: 256
       height: 256
-  java:
-    groupId: org.jreleaser
-    version: 8
-    multiProject: true
-    mainClass: org.jreleaser.cli.Main
+  languages:
+    java:
+      groupId: org.jreleaser
+      version: 8
+      multiProject: true
+      mainClass: org.jreleaser.cli.Main
   tags:
     - 'jreleaser'
     - 'release'
@@ -1036,7 +1037,7 @@ assemble:
     jreleaser-standalone:
       active: ALWAYS
       java:
-        version: 17
+        version: 21
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1115,7 +1116,7 @@ assemble:
     jreleaser-native:
       active: ALWAYS
       java:
-        version: 17
+        version: 21
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1139,9 +1140,6 @@ assemble:
           platform: 'linux-x86_64'
         - path: '{{jdkPathPrefix}}/graal22Windows/{{graalFilePrefix}}'
           platform: 'windows-x86_64'
-      upx:
-        active: ALWAYS
-        version: '3.96'
       args:
         - '-Duser.language=en'
         - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
@@ -1326,7 +1324,7 @@ distributions:
       - path: '{{jpackageDir}}/JReleaser-{{projectVersionNumber}}-osx-aarch64.pkg'
         transform: '{{distributionName}}/{{distributionName}}-{{projectEffectiveVersion}}-osx-aarch64.pkg'
         platform: 'osx-aarch_64'
-      - path: '{{jpackageDir}}/jreleaser_{{projectVersionNumber}}-1_amd64.deb'
+      - path: '{{jpackageDir}}/jreleaser_{{projectVersionNumber}}_amd64.deb'
         transform: '{{distributionName}}/{{distributionName}}_{{projectEffectiveVersion}}-1_amd64.deb'
         platform: 'linux-x86_64'
       - path: '{{jpackageDir}}/jreleaser-{{projectVersionNumber}}-1.x86_64.rpm'
