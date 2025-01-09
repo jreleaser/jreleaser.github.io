@@ -49,23 +49,7 @@ include::partial$assemble/yaml/common-head.adoc[]
         - ZIP
         - TGZ
 
-      # Includes the default matrix.
-      # icon:dot-circle[]
-      applyDefaultMatrix: false
-
-      # Configures matrix variables.
-      # icon:dot-circle[]
-      matrix:
-        vars:
-          os: [ linux, osx, windows ]
-          arch: [ arm64, amd64 ]
-        rows:
-          - { os: linux, arch: arm64 }
-          - { os: linux, arch: amd64 }
-          - { os: osx, arch: arm64 }
-          - { os: osx, arch: amd64 }
-          - { os: windows, arch: arm64 }
-          - { os: windows, arch: amd64 }
+include::partial$matrix/yaml/matrix.adoc[indent=6]
 
 include::partial$assemble/yaml/common-archive-options.adoc[]
 
@@ -104,20 +88,7 @@ include::partial$assemble/toml/common-head.adoc[]
   # icon:dot-circle[]
   formats = [ "ZIP", "TGZ"]
 
-  # Includes the default matrix.
-  # icon:dot-circle[]
-  applyDefaultMatrix = false
-
-  # Configures matrix variables.
-  # icon:dot-circle[]
-  matrix.vars.os = [ "linux", "osx", "windows" ]
-  matrix.vars.arch= [ "arm64", "amd64" ]
-  rows = [{ os = "linux", arch = "arm64" },
-          { os = "linux", arch = "amd64" },
-          { os = "osx", arch = "arm64" },
-          { os = "osx", arch = "amd64" },
-          { os = "windows", arch = "arm64" },
-          { os = "windows", arch = "amd64" }]
+include::partial$matrix/toml/matrix.adoc[]
 
 include::partial$assemble/toml/common-archive-options.adoc[]
 
@@ -159,26 +130,7 @@ include::partial$assemble/json/common-head.adoc[]
            "TGZ"
         ],
 
-        // Includes the default matrix.
-        // icon:dot-circle[]
-        "applyDefaultMatrix": false,
-
-        // Configures matrix variables.
-        // icon:dot-circle[]
-        "matrix": {
-          "vars": {
-            "os": [ "linux", "osx", "windows" ],
-            "arch": [ "arm64", "amd64" ]
-          },
-          "rows": [
-            { "os": "linux", "arch": "arm64" },
-            { "os": "linux", "arch": "amd64" },
-            { "os": "osx", "arch": "arm64" },
-            { "os": "osx", "arch": "amd64" },
-            { "os": "windows", "arch": "arm64" },
-            { "os": "windows", "arch": "amd64" }
-          ]
-        }
+include::partial$matrix/json/matrix.adoc[indent=8]
 
 include::partial$assemble/json/common-archive-options.adoc[]
 
@@ -229,55 +181,7 @@ include::partial$assemble/maven/common-head.adoc[]
           <format>TGZ</format>
         </formats>
 
-        <!--
-          Includes the default matrix.
-          icon:dot-circle[]
-        -->
-        <applyDefaultMatrix>false</applyDefaultMatrix>
-
-        <!--
-          Configures matrix variables.
-          icon:dot-circle[]
-        -->
-        <matrix>
-          <vars>
-            <os>
-              <e>linux</e>
-              <e>osx</e>
-              <e>windows</e>
-            </os>
-            <arch>
-              <e>arm64</e>
-              <e>amd64</e>
-            </arch>
-          </vars>
-          <rows>
-            <row>
-              <os>linux</os>
-              <arch>arm64</arch>
-            </row>
-            <row>
-              <os>linux</os>
-              <arch>amd64</arch>
-            </row>
-            <row>
-              <os>osx</os>
-              <arch>arm64</arch>
-            </row>
-            <row>
-              <os>osx</os>
-              <arch>amd64</arch>
-            </row>
-            <row>
-              <os>windows</os>
-              <arch>arm64</arch>
-            </row>
-            <row>
-              <os>windows</os>
-              <arch>amd64</arch>
-            </row>
-          </rows>
-        </matrix>
+include::partial$matrix/maven/matrix.adoc[indent=8]
 
 include::partial$assemble/maven/common-archive-options.adoc[]
 
@@ -320,23 +224,7 @@ include::partial$assemble/gradle/common-head.adoc[]
             'TGZ'
         ]
 
-       // Includes the default matrix.
-       // icon:dot-circle[]
-       applyDefaultMatrix = false
-
-       // Configures matrix variables.
-       // icon:dot-circle[]
-       matrix {
-         variable('os', ['linux', 'osx', 'windows'])
-         variable('arch', ['arm64', 'amd64'])
-
-         row(os: 'linux', arch: 'arm64')
-         row(os: 'linux', arch: 'amd64')
-         row(os: 'osx', arch: 'arm64')
-         row(os: 'osx', arch: 'amd64')
-         row(os: 'windows', arch: 'arm64')
-         row(os: 'windows', arch: 'amd64')
-       }
+include::partial$matrix/gradle/matrix.adoc[indent=8]
 
 include::partial$assemble/gradle/common-archive-options.adoc[]
 
@@ -379,6 +267,84 @@ any of these expressions to skip a template named `README.md.tpl`:
 include::partial$assemble/additional-files.adoc[]
 
 NOTE: This assembler ignores filtering artifacts by platform when `attachPlatform` is not enabled.
+
+== Matrix
+
+Parameterize archive generation with a set of key/value pairs. For example the following definitions are equivalent
+
+[source,yaml]
+.With matrix
+----
+matrix:
+  rows:
+    - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
+    - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
+    - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
+    - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
+    - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
+    - { goos: windows, goarch: amd64, platform: windows-x86_64   }
+
+assemble:
+  archive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      applyDefaultMatrix: true
+      archiveName: '{{distributionName}}-{{projectVersion}}-{{ matrix.goos }}-{{ matrix.goarch }}'
+      fileSets:
+        - input: 'target/{{ matrix.goos }}-{{ matrix.goarch }}'
+          output: 'bin'
+          includes: [ 'helloworld{.exe,}' ]
+        - input: '.'
+          includes: [ 'LICENSE' ]
+
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe
+----
+
+[source,yaml]
+.Without matrix
+----
+assemble:
+  archive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      attachPlatform: true
+      fileSets:
+        - input: 'target/{{ osPlatformReplaced }}'
+          output: 'bin'
+          includes: [ 'helloworld{.exe,}' ]
+        - input: '.'
+          includes: [ 'LICENSE' ]
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe
+    artifacts:
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-darwin-arm64.zip'
+        platform: 'darwin-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-darwin-amd64.zip'
+        platform: 'darwin-amd64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-arm64.zip'
+        platform: 'windows-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-amd64.zip'
+        platform: 'windows-amd64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-arm64.zip'
+        platform: 'linux-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-amd64.zip'
+        platform: 'linux-amd64'
+----
+
+=== Special keys
+
+The following keys have special meaning:
+
+[horizontal]
+platform:: Sets the platform for a matching archive.
+skip*:: Any properties with `skip` as prefix will be set as `extraProperties` in the matching archive.
 
 == Example
 

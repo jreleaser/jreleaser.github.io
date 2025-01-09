@@ -52,6 +52,13 @@ include::partial$assemble/yaml/common-head.adoc[]
       # icon:dot-circle[]
       archiveFormat: TGZ
 
+include::partial$matrix/yaml/matrix.adoc[indent=6]
+
+      # Define a pattern for parameterizable graalJdks
+      # icon:dot-circle[] icon:file-alt[]
+      graalJdkPattern:
+        path: path/to/jdk
+
       # List of Graal JDKs.
       # icon:dot-circle[] icon:file-alt[]
       graalJdks:
@@ -151,6 +158,12 @@ include::partial$assemble/toml/common-head.adoc[]
   # icon:dot-circle[]
   archiveFormat = "TGZ"
 
+include::partial$matrix/toml/matrix.adoc[]
+
+  # Define a pattern for parameterizable graalJdks
+  # icon:dot-circle[] icon:file-alt[]
+  graalJdkPattern.path = "path/to/jdk"
+
   # List of Graal JDKs.
   # icon:dot-circle[] icon:file-alt[]
   graalJdks = [
@@ -241,6 +254,14 @@ include::partial$assemble/json/common-head.adoc[]
         // Defaults to `ZIP`.
         // icon:dot-circle[]
         "archiveFormat": "TGZ",
+
+include::partial$matrix/json/matrix.adoc[indent=8]
+
+        // Define a pattern for parameterizable graalJdks
+        // icon:dot-circle[] icon:file-alt[]
+        "graalJdkPattern": {
+          "path": "path/to/jdk"
+        },
 
         // List of Graal JDKs.
         // icon:dot-circle[] icon:file-alt[]
@@ -356,6 +377,16 @@ include::partial$assemble/maven/common-head.adoc[]
           icon:dot-circle[]
         -->
         <archiveFormat>TGZ</archiveFormat>
+
+include::partial$matrix/maven/matrix.adoc[indent=8]
+
+        <!--
+          Define a pattern for parameterizable graalJdks
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <graalJdkPattern>
+          <path>path/to/jdk</path>
+        </graalJdkPattern>
 
         <!--
           List of Graal JDKs.
@@ -498,6 +529,14 @@ include::partial$assemble/gradle/common-head.adoc[]
         // icon:dot-circle[]
         archiveFormat = 'TGZ'
 
+include::partial$matrix/gradle/matrix.adoc[indent=8]
+
+        // Define a pattern for parameterizable graalJdks
+        // icon:dot-circle[] icon:file-alt[]
+        graalJdkPattern {
+          path = 'path/to/jdk'
+        }
+
         // List of Graal JDKs.
         // icon:dot-circle[] icon:file-alt[]
         graalJdk {
@@ -579,6 +618,58 @@ include::partial$named-envvars/active.adoc[]
 |===
 
 include::partial$envvars-footer.adoc[]
+
+== Matrix
+
+Parameterize graalJdk resolution with a set of key/value pairs. For example the following definitions are equivalent
+
+[source,yaml]
+.With matrix
+----
+assemble:
+  nativeImage:
+    helloworld:
+      active: ALWAYS
+      imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
+      matrix:
+        rows:
+          - { platform: osx-aarch_64,   suffix: OsxArm,       dir: '/Contents/Home' }
+          - { platform: osx-x86_64,     suffix: OsxIntel,     dir: '/Contents/Home' }
+          - { platform: linux-x86_64,   suffix: LinuxIntel,   dir: '' }
+          - { platform: windows-x86_64, suffix: WindowsIntel, dir: '' }
+      graalJdkPattern:
+        path: '{{jdkPathPrefix}}/graalvm22{{matrix.suffix}}/{{graalFilePrefix}}{{matrix.dir}}'
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+----
+
+[source,yaml]
+.Without matrix
+----
+assemble:
+  nativeImage:
+    helloworld:
+      active: ALWAYS
+      imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+      graalJdks:
+        - path: '{{jdkPathPrefix}}/graalvm22OsxIntel/{{graalFilePrefix}}/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/graalvm22OsxArm/{{graalFilePrefix}}/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/graalvm22LinuxIntel/{{graalFilePrefix}}'
+          platform: 'linux-x86_64'
+        - path: '{{jdkPathPrefix}}/graalvm22WindowsIntel/{{graalFilePrefix}}'
+          platform: 'windows-x86_64'
+----
+
+=== Special keys
+
+The following keys have special meaning:
+
+[horizontal]
+platform:: Sets the platform for a matching JDK.
 
 == Graal JDKs
 
