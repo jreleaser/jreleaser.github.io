@@ -94,6 +94,13 @@ distributions:
         x86_64: amd64
         linux_musl: alpine
 
+include::partial$matrix/yaml/matrix.adoc[indent=4]
+
+    # Define a pattern for parameterizable artifacts
+    # icon:dot-circle[] icon:file-alt[]
+    artifactPattern:
+      path: path/to/archive
+
     # A list of artifacts.
     # At least on entry must be present.
     # icon:exclamation-triangle[] icon:file-alt[]
@@ -201,6 +208,12 @@ TOML::
     aarch_64 = "aarch64"
     x86_64 = "amd64"
     linux_musl = "alpine"
+
+include::partial$matrix/toml/matrix.adoc[]
+
+  # Define a pattern for parameterizable artifacts
+  # icon:dot-circle[] icon:file-alt[]
+  artifactPattern.path = "path/to/archive"
 
   # A list of artifacts.
   # At least on entry must be present.
@@ -316,6 +329,14 @@ JSON::
           "x86_64": "amd64",
           "linux_musl": "alpine"
         }
+      },
+
+include::partial$matrix/json/matrix.adoc[indent=6]
+
+      // Define a pattern for parameterizable artifacts
+      // icon:dot-circle[] icon:file-alt[]
+      "artifactPattern": {
+        "path": "path/to/archive"
       },
 
       // A list of artifacts.
@@ -479,6 +500,16 @@ Maven::
         </replacements>
       </platform>
 
+include::partial$matrix/maven/matrix.adoc[indent=6]
+
+      <!--
+        Define a pattern for parameterizable artifacts
+        icon:dot-circle[] icon:file-alt[]
+      -->
+      <artifactPattern>
+        <path>path/to/archive</path>
+      </artifactPattern>
+
       <!--
         A list of artifacts.
         At least on entry must be present.
@@ -626,6 +657,14 @@ jreleaser {
         ]
       }
 
+include::partial$matrix/gradle/matrix.adoc[indent=6]
+
+      // Define a pattern for parameterizable artifacts
+      // icon:dot-circle[] icon:file-alt[]
+      artifactPattern {
+        path = 'path/to/jdk'
+      }
+
       // A list of artifacts.
       // At least on entry must be present.
       // icon:exclamation-triangle[] icon:file-alt[]
@@ -697,3 +736,49 @@ include::partial$envvars-header.adoc[]
 |===
 
 include::partial$envvars-footer.adoc[]
+
+== Matrix
+
+Parameterize artifact resolution with a set of key/value pairs. For example the following definitions are equivalent
+
+[source,yaml]
+.With matrix
+----
+matrix:
+  rows:
+    - { platform: osx-aarch_64 }
+    - { platform: osx-x86_64   }
+    - { platform: linux-x86_64 }
+
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe
+    applyDefaultMatrix: true
+    artifactPattern:
+      path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-{{matrix.platform}}.zip'
+----
+
+[source,yaml]
+.Without matrix
+----
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe
+    artifacts:
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-osx-aarch_64.zip'
+        platform: 'osx-aarch_64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-osx-x86_64.zip'
+        platform: 'osx-x86_64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.zip'
+        platform: 'linux-x86_64'
+----
+
+=== Special keys
+
+The following keys have special meaning:
+
+[horizontal]
+platform:: Sets the platform for the artifact.
+extraProperties.*:: Any properties with `extraProperties.` as prefix will be set as `extraProperties` in the matching artifact.

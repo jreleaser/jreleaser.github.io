@@ -70,6 +70,13 @@ include::partial$assemble/yaml/common-head.adoc[]
         - jdk.crypto.ec
         - jdk.localedata
 
+include::partial$matrix/yaml/matrix.adoc[indent=6]
+
+      # Define a pattern for parameterizable targetJdks
+      # icon:dot-circle[] icon:file-alt[]
+      targetJdkPattern:
+        path: path/to/jdk
+
       # List of JDKs for generating cross-platform images.
       # icon:dot-circle[] icon:file-alt[]
       targetJdks:
@@ -203,6 +210,12 @@ include::partial$assemble/toml/common-head.adoc[]
     "jdk.crypto.ec",
     "jdk.localedata"]
 
+include::partial$matrix/toml/matrix.adoc[]
+
+  # Define a pattern for parameterizable targetJdks
+  # icon:dot-circle[] icon:file-alt[]
+  targetJdkPattern.path = "path/to/jdk"
+
   # List of JDKs for generating cross-platform images.
   # icon:dot-circle[] icon:file-alt[]
   targetJdks = [
@@ -332,6 +345,14 @@ include::partial$assemble/json/common-head.adoc[]
           "jdk.crypto.ec",
           "jdk.localedata"
         ],
+
+include::partial$matrix/json/matrix.adoc[indent=8]
+
+        // Define a pattern for parameterizable targetJdks
+        // icon:dot-circle[] icon:file-alt[]
+        "targetJdkPattern": {
+          "path": "path/to/jdk"
+        },
 
         // List of JDKs for generating cross-platform images.
         // icon:dot-circle[] icon:file-alt[]
@@ -492,6 +513,16 @@ include::partial$assemble/maven/common-head.adoc[]
           <additionalModuleName>jdk.crypto.ec</additionalModuleName>
           <additionalModuleName>jdk.localedata</additionalModuleName>
         </additionalModuleNames>
+
+include::partial$matrix/maven/matrix.adoc[indent=8]
+
+        <!--
+          Define a pattern for parameterizable targetJdks
+          icon:dot-circle[] icon:file-alt[]
+        -->
+        <targetJdkPattern>
+          <path>path/to/jdk</path>
+        </targetJdkPattern>
 
         <!--
           List of JDKs for generating cross-platform images.
@@ -668,6 +699,14 @@ include::partial$assemble/gradle/common-head.adoc[]
           'jdk.localedata'
         ]
 
+include::partial$matrix/gradle/matrix.adoc[indent=8]
+
+        // Define a pattern for parameterizable targetJdks
+        // icon:dot-circle[] icon:file-alt[]
+        targetJdkPattern {
+          path = 'path/to/jdk'
+        }
+
         // List of JDKs for generating cross-platform images.
         // icon:dot-circle[] icon:file-alt[]
         targetJdk {
@@ -811,6 +850,67 @@ Supported values for the `archiveFormat` property are [`ZIP`, `TAR`, `TAR_BZ2`, 
 default if left unspecified.
 
 include::partial$envvars-footer.adoc[]
+
+== Matrix
+
+Parameterize targetJdk resolution with a set of key/value pairs. For example the following definitions are equivalent
+
+[source,yaml]
+.With matrix
+----
+assemble:
+  jlink:
+    helloworld:
+      active: ALWAYS
+      imageName: '{{distributionName}}-{{projectVersion}}'
+      matrix:
+        rows:
+          - { platform: osx-aarch_64,      jdkdir: OsxArm,         filename: macosx_aarch64, suffix: '/zulu-17.jdk/Contents/Home' }
+          - { platform: osx-x86_64,        jdkdir: OsxIntel,       filename: macosx_x64,     suffix: '/zulu-17.jdk/Contents/Home' }
+          - { platform: linux_musl-x86_64, jdkdir: LinuxMuslIntel, filename: linux_musl_x64, suffix: '' }
+          - { platform: linux-x86_64,      jdkdir: LinuxIntel,     filename: linux_x64,      suffix: '' }
+          - { platform: linux-aarch_64,    jdkdir: LinuxArm,       filename: linux_aarch64,  suffix: '' }
+          - { platform: windows-x86_64,    jdkdir: WindowsIntel,   filename: win_x64,        suffix: '' }
+          - { platform: windows-aarch_64,  jdkdir: WindowsArm,     filename: win_aarch64,    suffix: '' }
+      targetJdkPattern:
+        path: '{{jdkPathPrefix}}/zulu17{{matrix.jdkdir}}/{{jdkFilePrefix}}-{{matrix.filename}}{{matrix.suffix}}'
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+----
+
+[source,yaml]
+.Without matrix
+----
+assemble:
+  jlink:
+    helloworld:
+      active: ALWAYS
+      imageName: '{{distributionName}}-{{projectVersion}}'
+      targetJdks:
+        - path: '{{jdkPathPrefix}}/zulu17OsxIntel/{{jdkFilePrefix}}-macosx_x64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17OsxArm/{{jdkFilePrefix}}-macosx_aarch64/zulu-17.jdk/Contents/Home'
+          platform: 'osx-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxIntel/{{jdkFilePrefix}}-linux_x64'
+          platform: 'linux-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxMuslIntel/{{jdkFilePrefix}}-linux_musl_x64'
+          platform: 'linux_musl-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17LinuxArm/{{jdkFilePrefix}}-linux_aarch64'
+          platform: 'linux-aarch_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsIntel/{{jdkFilePrefix}}-win_x64'
+          platform: 'windows-x86_64'
+        - path: '{{jdkPathPrefix}}/zulu17WindowsArm/{{jdkFilePrefix}}-win_aarch64'
+          platform: 'windows-aarch_64'
+      mainJar:
+        path: 'target/{{distributionName}}-{{projectVersion}}.jar'
+----
+
+=== Special keys
+
+The following keys have special meaning:
+
+[horizontal]
+platform:: Sets the platform for a matching JDK.
 
 == JDKs
 
