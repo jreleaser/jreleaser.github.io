@@ -100,12 +100,12 @@ install() {
   local mode=""
 
   case $platform in
-  *osx-x86_64* | *osx-aarch64* | *linux-x86_64* | *linux-aarch64* | *windows-x86_64*)
+  *osx-x86_64* | *osx-aarch64* | *linux-x86_64* | *windows-x86_64*)
     # native executable
     distroname="$distroname-native-$latest_version-$platform"
     mode="native"
     ;;
-  *windows-aarch64*)
+  *linux-aarch64* | *windows-aarch64*)
     # bundled Java runtime
     distroname="$distroname-standalone-$latest_version-$platform"
     mode="standalone"
@@ -136,7 +136,7 @@ install() {
   local version_banner=$($current_jreleaser_distribution -V)
   echo "$version_banner"
 
-  say "Add $current_jreleaser_distribution to your \$PATH"
+  say "Add $(dirname $current_jreleaser_distribution) to your \$PATH"
   if [ "$mode" = "java" ]; then
     say "You need a Java version 8 or greater to run JReleaser"
   fi
