@@ -252,7 +252,7 @@
     <a class="nav-link" href="../../examples/miscellaneous/crystal.html">Helloworld in Crystal</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../examples/miscellaneous/csharp-cross-platform.html">Helloworld in C#</a>
+    <a class="nav-link" href="../../examples/miscellaneous/csharp.html">Helloworld in C#</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../examples/miscellaneous/deno.html">Helloworld in Deno</a>
@@ -282,7 +282,7 @@
     <a class="nav-link" href="../../examples/miscellaneous/perl.html">Helloworld in Perl</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../examples/miscellaneous/rust-cross-platform.html">Helloworld in Rust</a>
+    <a class="nav-link" href="../../examples/miscellaneous/rust.html">Helloworld in Rust</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../examples/miscellaneous/swift.html">Helloworld in Swift</a>
@@ -1457,7 +1457,7 @@ assemble:
             { "os": "windows", "arch": "arm64" },
             { "os": "windows", "arch": "amd64" }
           ]
-        }
+        },
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         "options": {
@@ -2108,23 +2108,23 @@ assemble:
             'TGZ'
         ]
 
-       // Includes the default matrix.
-       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-       applyDefaultMatrix = false
+        // Includes the default matrix.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        applyDefaultMatrix = false
 
-       // Configures matrix variables.
-       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-       matrix {
-         variable('os', ['linux', 'osx', 'windows'])
-         variable('arch', ['arm64', 'amd64'])
+        // Configures matrix variables.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        matrix {
+          variable('os', ['linux', 'osx', 'windows'])
+          variable('arch', ['arm64', 'amd64'])
 
-         row(os: 'linux', arch: 'arm64')
-         row(os: 'linux', arch: 'amd64')
-         row(os: 'osx', arch: 'arm64')
-         row(os: 'osx', arch: 'amd64')
-         row(os: 'windows', arch: 'arm64')
-         row(os: 'windows', arch: 'amd64')
-       }
+          row(os: 'linux', arch: 'arm64')
+          row(os: 'linux', arch: 'amd64')
+          row(os: 'osx', arch: 'arm64')
+          row(os: 'osx', arch: 'amd64')
+          row(os: 'windows', arch: 'arm64')
+          row(os: 'windows', arch: 'amd64')
+        }
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
         options {
@@ -2504,6 +2504,106 @@ will only be copied when the matching platform is compatible with <code>windows-
 </td>
 <td class="content">
 This assembler ignores filtering artifacts by platform when <code>attachPlatform</code> is not enabled.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrix"><a class="anchor" href="#_matrix"></a>Matrix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Parameterize archive generation with a set of key/value pairs. For example the following definitions are equivalent</p>
+</div>
+<div class="listingblock">
+<div class="title">With matrix</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">matrix:
+  rows:
+    - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
+    - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
+    - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
+    - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
+    - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
+    - { goos: windows, goarch: amd64, platform: windows-x86_64   }
+
+assemble:
+  archive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      applyDefaultMatrix: true
+      archiveName: '{{distributionName}}-{{projectVersion}}-{{ matrix.goos }}-{{ matrix.goarch }}'
+      fileSets:
+        - input: 'target/{{ matrix.goos }}-{{ matrix.goarch }}'
+          output: 'bin'
+          includes: [ 'helloworld{.exe,}' ]
+        - input: '.'
+          includes: [ 'LICENSE' ]
+
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Without matrix</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">assemble:
+  archive:
+    helloworld:
+      active: ALWAYS
+      formats: [ ZIP ]
+      attachPlatform: true
+      fileSets:
+        - input: 'target/{{ osPlatformReplaced }}'
+          output: 'bin'
+          includes: [ 'helloworld{.exe,}' ]
+        - input: '.'
+          includes: [ 'LICENSE' ]
+distributions:
+  helloworld:
+    executable:
+      windowsExtension: exe
+    artifacts:
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-darwin-arm64.zip'
+        platform: 'darwin-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-darwin-amd64.zip'
+        platform: 'darwin-amd64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-arm64.zip'
+        platform: 'windows-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-amd64.zip'
+        platform: 'windows-amd64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-arm64.zip'
+        platform: 'linux-arm64'
+      - path: '{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-amd64.zip'
+        platform: 'linux-amd64'</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_special_keys"><a class="anchor" href="#_special_keys"></a>Special keys</h3>
+<div class="paragraph">
+<p>The following keys have special meaning:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+platform
+</td>
+<td class="hdlist2">
+<p>Sets the platform for a matching archive.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+skip*
+</td>
+<td class="hdlist2">
+<p>Any properties with <code>skip</code> as prefix will be set as <code>extraProperties</code> in the matching archive.</p>
 </td>
 </tr>
 </table>
