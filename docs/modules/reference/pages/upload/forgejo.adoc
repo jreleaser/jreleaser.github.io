@@ -1,0 +1,237 @@
+= Forgejo
+:uploader_id:   forgejo
+:uploader_name: FORGEJO
+:uploader_sys_key: forgejo
+:uploader_env_key: FORGEJO
+:group_sys_key: upload
+:group_env_key: UPLOAD
+:actor_sys_key: {uploader_sys_key}
+:actor_env_key: {uploader_env_key}
+
+Uploads artifacts, files, and signatures to a Forgejo instance via its
+link:https://forgejo.org/docs/latest/user/packages/[Packages] option.
+
+NOTE:: Only **generic** packages are supported at the moment.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$upload/yaml/common-head.adoc[]
+
+      # The Forgejo host url.
+      # icon:exclamation-triangle[]
+      host: my.forgejo.com
+
+      # The user or organization that owns the repository.
+      # icon:exclamation-triangle[]
+      owner: duke
+
+      # Token with write access to the repository.
+      # icon:dot-circle[] icon:eye-slash[]
+      token: __USE_ENVIRONMENT_VARIABLE__
+
+      # The package name to use.
+      # If unspecified, will use the uploader's name.
+      # icon:fot-circle[] icon:file-template[]
+      packageName: app
+
+      # The package version to use.
+      # If unspecified, will use the project's version.
+      # icon:fot-circle[] icon:file-template[]
+      packageVersion: '{{projectVersion}}'
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$upload/toml/common-head.adoc[]
+
+  # The Forgejo host url.
+  # icon:exclamation-triangle[]
+  host = "my.forgejo.com"
+
+  # The user or organization that owns the repository.
+  # icon:exclamation-triangle[]
+  owner = "duke"
+
+  # Token with write access to the repository.
+  # icon:dot-circle[] icon:eye-slash[]
+  token = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # The package name to use.
+  # If unspecified, will use the uploader's name.
+  # icon:fot-circle[] icon:file-template[]
+  packageName = "app"
+
+  # The package version to use.
+  # If unspecified, will use the project's version.
+  # icon:fot-circle[] icon:file-template[]
+  packageVersion = "{{projectVersion}}"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$upload/json/common-head.adoc[]
+
+        // The Forgejo host url.
+        // icon:exclamation-triangle[]
+        "host": "my.forgejo.com",
+
+        // The user or organization that owns the repository.
+        // icon:exclamation-triangle[]
+        "owner": "duke",
+
+        // Token with write access to the repository.
+        // icon:dot-circle[] icon:eye-slash[]
+        "token": "__USE_ENVIRONMENT_VARIABLE__",
+
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // icon:fot-circle[] icon:file-template[]
+        "packageName": "app",
+
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // icon:fot-circle[] icon:file-template[]
+        "packageVersion": "{{projectVersion}}"
+include::partial$upload/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$upload/maven/common-head.adoc[]
+
+        <!--
+           The Forgejo host url.
+           icon:exclamation-triangle[]
+        -->
+        <host>my.forgejo.com</host>
+
+        <!--
+          The user or organization that owns the repository.
+          icon:exclamation-triangle[]
+        -->
+        <owner>duke</owner>
+
+        <!--
+           Token with write access to the repository.
+           icon:dot-circle[] icon:eye-slash[]
+        -->
+        <token>__USE_ENVIRONMENT_VARIABLE__</token>
+
+        <!--
+           The package name to use.
+           If unspecified, will use the uploader's name.
+           icon:fot-circle[] icon:file-template[]
+        -->
+        <packageName>app</packageName>
+
+        <!--
+           The package version to use.
+           If unspecified, will use the project's version.
+           icon:fot-circle[] icon:file-template[]
+        -->
+        <packageVersion>{{projectVersion}}</packageVersion>
+include::partial$upload/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$upload/gradle/common-head.adoc[]
+
+        // The Forgejo host url.
+        // icon:exclamation-triangle[]
+        host = 'my.forgejo.com'
+
+        // The user or organization that owns the repository.
+        // icon:exclamation-triangle[]
+        owner = 'duke'
+
+        // Token with write access to the repository.
+        // icon:dot-circle[] icon:eye-slash[]
+        token = '__USE_ENVIRONMENT_VARIABLE__'
+
+        // The package name to use.
+        // If unspecified, will use the uploader's name.
+        // icon:fot-circle[] icon:file-template[]
+        packageName = 'app'
+
+        // The package version to use.
+        // If unspecified, will use the project's version.
+        // icon:fot-circle[] icon:file-template[]
+        packageVersion = '{{projectVersion}}'
+include::partial$upload/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property | Environment Variable
+include::partial$named-envvars/active.adoc[]
+|===
+
+include::partial$envvars-footer.adoc[]
+
+== UploadUrl
+
+The uploadUrl is the URL to upload the artifacts to.
+
+An example configuration may look like
+`uploadUrl: 'https://{{host}}/api/packages/{{owner}}/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'`.
+
+And will result in a final deployment like
+`pass:[https://my.forgejo.com/api/packages/duke/generic/app/1.0.0/app-1.0.0.zip]`.
+
+== DownloadUrl
+
+The downloadUrl is the URL used to download artifacts from.
+
+An example configuration may look like
+`downloadUrl: 'https://{{host}}/api/packages/{{owner}}/generic/{{packageName}}/{{packageVersion}}/{{artifactFile}}'`.
+
+And will result in a final URL like
+`pass:[https://my.forgejo.com/api/packages/duke/generic/app/1.0.0/app-1.0.0.zip]`.
+
+== Skip Upload
+
+Distributions and Artifacts may define extra properties that may stop them from being uploaded. These properties must
+conform to the following rules:
+
+* `skipUpload`: skipped from all uploaders.
+* `skipUpload<type>`: skipped from the typed uploader.
+* `skipUpload<type><name>`: skipped from the typed and named uploader.
+
+Where `<type>` resolves to `Forgejo` and `<name>` resolves to the capitalized name of the Forgejo instance, such
+that:
+
+* if the name is `foo` the resulting property key is `skipUploadForgejoFoo`.
+* if the name is `fooBar` the resulting property key is `skipUploadForgejoFooBar`.
+* if the name is `foo-bar` the resulting property key is `skipUploadForgejoFooBar`.
+
