@@ -1,0 +1,217 @@
+= Forgejo
+:gitservice_id:       forgejo
+:gitservice_name:     Forgejo
+:gitservice_env_name: FORGEJO
+:gitservice_host:     my.forgejo.com
+:gitservice_api:      pass:[https://my.forgejo.com]
+:gitservice_blob:     src
+:repo-owner:          duke
+:repo-name:           app
+:issue-tracker-url:   https://my.forgejo.com/{repo-owner}/{repo-name}/issues
+
+Configure releases to a {gitservice_name} instance.
+
+Refer to xref:reference:release/changelog.adoc[] for full options on changelog customizations.
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$release/yaml/common-head.adoc[]
+
+    # Marks the release as a draft.
+    # Defaults to `false`.
+    # icon:dot-circle[] icon:eye-slash[]
+    draft: false
+
+    # icon:dot-circle[]
+    prerelease:
+      # Marks the release as prerelease.
+      # Defaults to `false`.
+      # icon:dot-circle[]
+      enabled: false
+
+      # A regex to determine if the project version is a prerelease
+      # icon:dot-circle[] icon:eye-slash[]
+      pattern: .*-pre
+
+include::partial$release/yaml/commitauthor.adoc[]
+
+include::partial$release/yaml/milestone.adoc[]
+
+include::partial$release/yaml/issues.adoc[]
+
+include::partial$release/yaml/urls.adoc[]
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$release/toml/common-head.adoc[]
+
+  # Marks the release as a draft.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  draft = false
+
+  # Marks the release as prerelease.
+  # Defaults to `false`.
+  # icon:dot-circle[]
+  prerelease.enabled = false
+
+  # A regex to determine if the project version is a prerelease
+  # icon:dot-circle[] icon:eye-slash[]
+  prerelease.pattern = .*-pre
+
+include::partial$release/toml/commitauthor.adoc[]
+
+include::partial$release/toml/milestone.adoc[]
+
+include::partial$release/toml/issues.adoc[]
+
+include::partial$release/toml/urls.adoc[]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$release/json/common-head.adoc[]
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // icon:dot-circle[] icon:eye-slash[]
+      "draft": false,
+
+      // icon:dot-circle[]
+      "prerelease": {
+        // Marks the release as prerelease.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        "enabled": false,
+
+        // A regex to determine if the project version is a prerelease
+        // icon:dot-circle[] icon:eye-slash[]
+        "pattern": ".*-pre"
+      },
+
+include::partial$release/json/commitauthor.adoc[
+
+include::partial$release/json/milestone.adoc[]
+
+include::partial$release/json/issues.adoc[]
+
+include::partial$release/json/urls.adoc[]
+include::partial$release/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$release/maven/common-head.adoc[]
+
+      <!--
+        Marks the release as a draft.
+        Defaults to `false`.
+        icon:dot-circle[] icon:eye-slash[]
+      -->
+      <draft>false</draft>
+
+      <!--
+        icon:dot-circle[]
+      -->
+      <prerelease>
+        <!--
+          Marks the release as prerelease.
+          Defaults to `false`.
+          icon:dot-circle[]
+        -->
+        <enabled>false</enabled>
+
+        <!--
+          A regex to determine if the project version is a prerelease
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <pattern>.*-pre</enabled>
+      </prerelease>
+
+include::partial$release/maven/commitauthor.adoc[]
+
+include::partial$release/maven/milestone.adoc[]
+
+include::partial$release/maven/issues.adoc[]
+
+include::partial$release/maven/urls.adoc[]
+include::partial$release/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$release/gradle/common-head.adoc[]
+
+      // Marks the release as a draft.
+      // Defaults to `false`.
+      // icon:dot-circle[] icon:eye-slash[]
+      draft = false
+
+      // icon:dot-circle[]
+      prerelease {
+        // Marks the release as prerelease.
+        // Defaults to `false`.
+        // icon:dot-circle[]
+        enabled = false
+
+        // A regex to determine if the project version is a prerelease
+        // icon:dot-circle[] icon:eye-slash[]
+        pattern = '.*-pre'
+      }
+
+include::partial$release/gradle/commitauthor.adoc[]
+
+include::partial$release/gradle/milestone.adoc[]
+
+include::partial$release/gradle/issues.adoc[]
+
+include::partial$release/gradle/urls.adoc[]
+include::partial$release/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property            | Environment Variable
+include::partial$release/envvars.adoc[]
+2+| *draft*
+| jreleaser.draft            | JRELEASER_DRAFT
+2+| *prerelease.pattern*
+| jreleaser.prelease.pattern | JRELEASER_PRERELEASE_PATTERN
+|===
+
+include::partial$release/remote.adoc[]
+
+include::partial$release/skip-release.adoc[]
+
+include::partial$release/issues.adoc[]
