@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gitea :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/deploy/maven/gitea.html">
+    <title>Nexus3 :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/early-access/reference/deploy/maven/nexus3.html">
     <meta name="generator" content="Antora 3.1.10">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../../_/css/site-extra.css">
@@ -580,7 +580,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="forgejo.html">Forgejo</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="gitea.html">Gitea</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -595,7 +595,7 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="nexus2.html">Nexus2</a>
   </li>
-  <li class="nav-item" data-depth="4">
+  <li class="nav-item is-current-page" data-depth="4">
     <a class="nav-link" href="nexus3.html">Nexus3</a>
   </li>
 </ul>
@@ -844,29 +844,40 @@
     <li><a href="../../index.html">Reference</a></li>
     <li><a href="../index.html">Deploy</a></li>
     <li><a href="index.html">Maven</a></li>
-    <li><a href="gitea.html">Gitea</a></li>
+    <li><a href="nexus3.html">Nexus3</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">early-access</button>
   <div class="version-menu">
-    <a class="version" href="../../../../latest/reference/deploy/maven/gitea.html">latest</a>
-    <a class="version is-current" href="gitea.html">early-access</a>
+    <a class="version is-missing" href="../../../../latest/index.html">latest</a>
+    <a class="version is-current" href="nexus3.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/gitea.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/deploy/maven/nexus3.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Gitea</h1>
+<h1 class="page">Nexus3</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploys staged artifacts to a Gitea instance via its
-<a href="https://docs.gitea.io/en-us/packages/maven/">Maven Packages</a> option.</p>
+<p>Deploys staged artifacts to <a href="https://www.sonatype.com/products/sonatype-nexus-repository">Sonatype Nexus3 Repository Manager</a> instance.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Deploying signature and checksum files is disabled.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -875,8 +886,8 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This feature is primarily intended for deploying artifacts such as JARs and POMs to a Maven compatible repository.
-If you need to upload any other binaries then check the <a href="../../upload/gitea.html" class="xref page">Gitea Uploader</a>.
+This feature is primarily intended for deploying artifacts such as JARs and POMs to a Maven compatible repository, but
+you may upload any other files as long as they can be resolved.
 </td>
 </tr>
 </table>
@@ -945,7 +956,7 @@ Publication of snapshots is <strong>not</strong> allowed.
 deploy:
   maven:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    gitea:
+    nexus3:
       # Deployers require a name.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       app:
@@ -956,11 +967,11 @@ deploy:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         active: ALWAYS
 
-        # URL where the Gitea service is enabled.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_URL`
+        # URL where the Nexus3 service is enabled.
+        # If left unspecified, the `JRELEASER_NEXUS3_${name}_URL`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        url: https://codeberg.org/api/packages/{{owner}}/maven
+        url: http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases
 
         # Activates publication of snapshot artifacts.
         # Defaults to `false`.
@@ -968,13 +979,13 @@ deploy:
         snapshotSupported: true
 
         # The username required for authorization.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_USERNAME`
+        # If left unspecified, the `JRELEASER_NEXUS3_${name}_USERNAME`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         username: __USE_ENVIRONMENT_VARIABLE__
 
-        # Password for login into the GITEA service.
-        # If left unspecified, the `JRELEASER_GITEA_${name}_PASSWORD`
+        # Password for login into the NEXUS3 service.
+        # If left unspecified, the `JRELEASER_NEXUS3_${name}_PASSWORD`
         # environment variable must be defined.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
         password: __USE_ENVIRONMENT_VARIABLE__
@@ -983,9 +994,9 @@ deploy:
         # Supported values are [`NONE`, `BASIC`, `BEARER`].
         # `Basic` requires both username &amp; password.
         # `BEARER` requires a token (set as password).
-        # Defaults to `BEARER`.
+        # Defaults to `BASIC`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        authorization: BEARER
+        authorization: BASIC
 
         # Signs artifacts with the configured credentials.
         # The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1067,7 +1078,7 @@ deploy:
         # Additional properties used when evaluating templates.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         extraProperties:
-          # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+          # Key will be capitalized and prefixed with `nexus3`, i.e, `nexus3Foo`.
           foo: bar</code></pre>
 </div>
 </div>
@@ -1077,7 +1088,7 @@ deploy:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml"># Deployers require a name.
 # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-[deploy.maven.gitea.app]
+[deploy.maven.nexus3.app]
 
   # Enables or disables the deployer.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -1085,9 +1096,9 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
-  # URL where the Gitea service is enabled.
+  # URL where the Nexus3 service is enabled.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  url = "https://codeberg.org/api/packages/{{owner}}/maven"
+  url = "http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases"
 
   # Activates publication of snapshot artifacts.
   # Defaults to `false`.
@@ -1098,7 +1109,7 @@ deploy:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   username = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # Password for login into the GITEA service.
+  # Password for login into the NEXUS3 service.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   password = "__USE_ENVIRONMENT_VARIABLE__"
 
@@ -1106,9 +1117,9 @@ deploy:
   # Supported values are [`NONE`, `BASIC`, `BEARER`].
   # `Basic` requires both username &amp; password.
   # `BEARER` requires a token (set as password).
-  # Defaults to `BEARER`.
+  # Defaults to `BASIC`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  authorization = "BEARER"
+  authorization = "BASIC"
 
   # Signs artifacts with the configured credentials.
   # The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1145,7 +1156,7 @@ deploy:
 
   # Override artifact configuration
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [[deploy.maven.gitea.app.artifactOverrides]]
+  [[deploy.maven.nexus3.app.artifactOverrides]]
 
     # Match artifact by groupId
     # If undefined, will use `#{project.java.groupId}`.
@@ -1190,7 +1201,7 @@ deploy:
   # Additional properties used when evaluating templates.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   extraProperties.foo = "bar"
-  # Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.</code></pre>
+  # Key will be capitalized and prefixed with `nexus3`, i.e, `nexus3Foo`.</code></pre>
 </div>
 </div>
 </div>
@@ -1202,7 +1213,7 @@ deploy:
   "deploy": {
     "maven": {
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "gitea": {
+      "nexus3": {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         "app": {
@@ -1213,9 +1224,9 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "active": "ALWAYS",
 
-          // URL where the Gitea service is enabled.
+          // URL where the Nexus3 service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          "url": "https://codeberg.org/api/packages/{{owner}}/maven",
+          "url": "http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases",
 
           // Activates publication of snapshot artifacts.
           // Defaults to `false`.
@@ -1226,7 +1237,7 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "username": "__USE_ENVIRONMENT_VARIABLE__",
 
-          // Password for login into the GITEA service.
+          // Password for login into the NEXUS3 service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           "password": "__USE_ENVIRONMENT_VARIABLE__",
 
@@ -1234,9 +1245,9 @@ deploy:
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
           // `Basic` requires both username &amp; password.
           // `BEARER` requires a token (set as password).
-          // Defaults to `BEARER`.
+          // Defaults to `BASIC`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "authorization": "BEARER",
+          "authorization": "BASIC",
 
           // Signs artifacts with the configured credentials.
           // The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1318,11 +1329,10 @@ deploy:
           // Defaults to `60`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "readTimeout": 60,
-
           // Additional properties used when evaluating templates.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "extraProperties": {
-            // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+            // Key will be capitalized and prefixed with `nexus3`, i.e, `nexus3Foo`.
             "foo": "bar"
           }
         }
@@ -1345,7 +1355,7 @@ deploy:
       &lt;!--
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;gitea&gt;
+      &lt;nexus3&gt;
         &lt;!--
           Deployers require a name.
           <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
@@ -1360,10 +1370,10 @@ deploy:
           &lt;active&gt;ALWAYS&lt;/active&gt;
 
           &lt;!--
-            URL where the Gitea service is enabled.
+            URL where the Nexus3 service is enabled.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
-          &lt;url&gt;https://codeberg.org/api/packages/{{owner}}/maven&lt;/url&gt;
+          &lt;url&gt;http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases&lt;/url&gt;
 
           &lt;!--
             Activates publication of snapshot artifacts.
@@ -1379,7 +1389,7 @@ deploy:
           &lt;username&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/username&gt;
 
           &lt;!--
-            Password for login into the GITEA service.
+            Password for login into the NEXUS3 service.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           --&gt;
           &lt;password&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/password&gt;
@@ -1389,10 +1399,10 @@ deploy:
             Supported values are [`NONE`, `BASIC`, `BEARER`].
             `Basic` requires both username &amp; password.
             `BEARER` requires a token (set as password).
-            Defaults to `BEARER`.
+            Defaults to `BASIC`.
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
-          &lt;authorization&gt;BEARER&lt;/authorization&gt;
+          &lt;authorization&gt;BASIC&lt;/authorization&gt;
 
           &lt;!--
             Signs artifacts with the configured credentials.
@@ -1513,12 +1523,12 @@ deploy:
           --&gt;
           &lt;extraProperties&gt;
             &lt;!--
-              Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+              Key will be capitalized and prefixed with `nexus3`, i.e, `nexus3Foo`.
             --&gt;
             &lt;foo&gt;bar&lt;/foo&gt;
           &lt;/extraProperties&gt;
         &lt;/app&gt;
-      &lt;/gitea&gt;
+      &lt;/nexus3&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1533,7 +1543,7 @@ deploy:
   deploy {
     maven {
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      gitea {
+      nexus3 {
         // Deployers require a name.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
         app {
@@ -1544,9 +1554,9 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           active = 'ALWAYS'
 
-          // URL where the Gitea service is enabled.
+          // URL where the Nexus3 service is enabled.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-          url = 'https://codeberg.org/api/packages/{{owner}}/maven'
+          url = 'http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases'
 
           // Activates publication of snapshot artifacts.
           // Defaults to `false`.
@@ -1557,7 +1567,7 @@ deploy:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           username = '__USE_ENVIRONMENT_VARIABLE__'
 
-          // Password for login into the GITEA service.
+          // Password for login into the NEXUS3 service.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
           password = '__USE_ENVIRONMENT_VARIABLE__'
 
@@ -1565,9 +1575,9 @@ deploy:
           // Supported values are [`NONE`, `BASIC`, `BEARER`].
           // `Basic` requires both username &amp; password.
           // `BEARER` requires a token (set as password).
-          // Defaults to `BEARER`.
+          // Defaults to `BASIC`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          authorization = 'BEARER'
+          authorization = 'BASIC'
 
           // Signs artifacts with the configured credentials.
           // The <a href="../../signing.html" class="xref page">Signing</a> section must be configured as well.
@@ -1647,7 +1657,7 @@ deploy:
           readTimeout = 60
 
           // Additional properties used when evaluating templates.
-          // Key will be capitalized and prefixed with `gitea`, i.e, `giteaFoo`.
+          // Key will be capitalized and prefixed with `nexus3`, i.e, `nexus3Foo`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           extraProperties.put('foo', 'bar')
         }
@@ -1685,57 +1695,57 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.active<br>
-  jreleaser.deploy.maven.gitea.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_ACTIVE<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus3.${name}.active<br>
+  jreleaser.deploy.maven.nexus3.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS3_${name}_ACTIVE<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_ACTIVE</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>url</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.url<br>
-  jreleaser.deploy.maven.gitea.url<br>
-  jreleaser.gitea.${name}.url<br>
-  jreleaser.gitea.url</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_URL<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_URL<br>
-  JRELEASER_GITEA_${name}_URL<br>
-  JRELEASER_GITEA_URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus3.${name}.url<br>
+  jreleaser.deploy.maven.nexus3.url<br>
+  jreleaser.nexus3.${name}.url<br>
+  jreleaser.nexus3.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS3_${name}_URL<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_URL<br>
+  JRELEASER_NEXUS3_${name}_URL<br>
+  JRELEASER_NEXUS3_URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>username</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.username<br>
-  jreleaser.deploy.maven.gitea.username<br>
-  jreleaser.gitea.${name}.username<br>
-  jreleaser.gitea.username</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_USERNAME<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_USERNAME<br>
-  JRELEASER_GITEA_${name}_USERNAME<br>
-  JRELEASER_GITEA_USERNAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus3.${name}.username<br>
+  jreleaser.deploy.maven.nexus3.username<br>
+  jreleaser.nexus3.${name}.username<br>
+  jreleaser.nexus3.username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS3_${name}_USERNAME<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_USERNAME<br>
+  JRELEASER_NEXUS3_${name}_USERNAME<br>
+  JRELEASER_NEXUS3_USERNAME</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>password</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.gitea.${name}.password<br>
-  jreleaser.deploy.maven.gitea.${name}.token<br>
-  jreleaser.deploy.maven.gitea.password<br>
-  jreleaser.deploy.maven.gitea.token<br>
-  jreleaser.gitea.${name}.password<br>
-  jreleaser.gitea.${name}.token<br>
-  jreleaser.gitea.password<br>
-  jreleaser.gitea.token</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_GITEA_${name}_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_${name}_TOKEN<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_PASSWORD<br>
-  JRELEASER_DEPLOY_MAVEN_GITEA_TOKEN<br>
-  JRELEASER_GITEA_${name}_PASSWORD<br>
-  JRELEASER_GITEA_${name}_TOKEN<br>
-  JRELEASER_GITEA_PASSWORD<br>
-  JRELEASER_GITEA_TOKEN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.deploy.maven.nexus3.${name}.password<br>
+  jreleaser.deploy.maven.nexus3.${name}.token<br>
+  jreleaser.deploy.maven.nexus3.password<br>
+  jreleaser.deploy.maven.nexus3.token<br>
+  jreleaser.nexus3.${name}.password<br>
+  jreleaser.nexus3.${name}.token<br>
+  jreleaser.nexus3.password<br>
+  jreleaser.nexus3.token</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_DEPLOY_MAVEN_NEXUS3_${name}_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_${name}_TOKEN<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_PASSWORD<br>
+  JRELEASER_DEPLOY_MAVEN_NEXUS3_TOKEN<br>
+  JRELEASER_NEXUS3_${name}_PASSWORD<br>
+  JRELEASER_NEXUS3_${name}_TOKEN<br>
+  JRELEASER_NEXUS3_PASSWORD<br>
+  JRELEASER_NEXUS3_TOKEN</p></td>
 </tr>
 </tbody>
 </table>
@@ -1833,10 +1843,10 @@ such that:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy:
   maven:
-    gitea:
+    nexus3:
       app:
         active: ALWAYS
-        url: https://codeberg.org/api/packages/{{owner}}/maven
+        url: http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases
         stagingRepositories:
           - target/staging-deploy</code></pre>
 </div>
@@ -1845,9 +1855,9 @@ such that:</p>
 <div class="tab-pane" aria-labelledby="tabset2_toml">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.gitea.app]
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[deploy.maven.nexus3.app]
   active = "ALWAYS"
-  host = "https://codeberg.org/api/packages/{{owner}}/maven"
+  url = "http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases"
   stagingRepositories = ["target/staging-deploy"]</code></pre>
 </div>
 </div>
@@ -1859,10 +1869,10 @@ such that:</p>
   "jreleaser": {
     "deploy": {
       "maven": {
-        "gitea": {
+        "nexus3": {
           "app": {
             "active": "ALWAYS",
-            "host": "https://codeberg.org/api/packages/{{owner}}/maven",
+            "url": "http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases",
             "stagingRepositories": [
               "target/staging-deploy"
             ]
@@ -1881,13 +1891,13 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
   &lt;deploy&gt;
     &lt;maven&gt;
-      &lt;gitea&gt;
+      &lt;nexus3&gt;
         &lt;app&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
-          &lt;host&gt;https://codeberg.org/api/packages/{{owner}}/maven&lt;/host&gt;
+          &lt;url&gt;http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases&lt;/url&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
         &lt;/app&gt;
-      &lt;/gitea&gt;
+      &lt;/nexus3&gt;
     &lt;/maven&gt;
   &lt;/deploy&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1900,10 +1910,10 @@ such that:</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
   deploy {
     maven {
-      gitea {
+      nexus3 {
         app {
           active = 'ALWAYS'
-          host = 'https://codeberg.org/api/packages/{{owner}}/maven'
+          url = 'http://my-nexus3.acme.com:8081/service/rest/v1/components?repository=maven-releases'
           stagingRepository('target/staging-deploy')
         }
       }
@@ -1921,40 +1931,40 @@ such that:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_USERNAME</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_APP_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_USERNAME</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_USERNAME</code></p>
+<p><code>JRELEASER_NEXUS3_APP_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_USERNAME</code></p>
+<p><code>JRELEASER_NEXUS3_USERNAME</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_PASSWORD</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_APP_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_APP_TOKEN</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_APP_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_PASSWORD</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_DEPLOY_MAVEN_GITEA_TOKEN</code></p>
+<p><code>JRELEASER_DEPLOY_MAVEN_NEXUS3_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_PASSWORD</code></p>
+<p><code>JRELEASER_NEXUS3_APP_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_APP_TOKEN</code></p>
+<p><code>JRELEASER_NEXUS3_APP_TOKEN</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_PASSWORD</code></p>
+<p><code>JRELEASER_NEXUS3_PASSWORD</code></p>
 </li>
 <li>
-<p><code>JRELEASER_GITEA_TOKEN</code></p>
+<p><code>JRELEASER_NEXUS3_TOKEN</code></p>
 </li>
 </ul>
 </div>
