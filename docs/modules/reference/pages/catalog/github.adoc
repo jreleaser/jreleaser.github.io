@@ -24,6 +24,24 @@ be used as an input, for example
             ${{ ARTIFACTS }}
 ```
 
+As an alternative you may supply the checksums file as input
+
+```yaml
+      - name: Release
+        uses: jreleaser/release-action@v2
+        with:
+          arguments: release
+        env:
+          JRELEASER_PROJECT_VERSION: <my-project-version>
+
+      - name: Attestations
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-checksums: out/jreleaser/checksums/checksums_sha256.txt
+          predicate-type: 'https://example.com/predicate/v1'
+          predicate: '{}'
+```
+
 == Configuration
 
 include::partial$legend.adoc[]
