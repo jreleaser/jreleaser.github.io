@@ -1202,9 +1202,9 @@ Documentation found at https://jreleaser.org</code></pre>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                        [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                        [--announce | -a | --changelog | -d]
+Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                        [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                        [-sp=&lt;platform&gt;]... [--announce | -a | --changelog | -d]
 
 Options:
   -a, --assembly                            Display assembly configuration.
@@ -1228,6 +1228,7 @@ Options:
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1331,22 +1332,23 @@ the value of <code>--assembler-name</code> must match any of the available <a hr
 <h3 id="_template_eval"><a class="anchor" href="#_template_eval"></a>template eval</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template eval
+<pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser template eval -h
 Evaluate a template or templates.
 
-Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                                [-od=&lt;directory&gt;] --target-directory=&lt;directory&gt; [-D=&lt;key=value&gt;]...
-                               [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]... [--announce | -a |
-                               --changelog | -d] (--input-file=&lt;file&gt; | --input-directory=&lt;directory&gt;)
+                               [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]... (--announce |
+                               --assembly | --changelog | --download) (--input-file=&lt;file&gt; |
+                               --input-directory=&lt;directory&gt;)
 
 Options:
-  -a, --assembly                            Eval model in assembly configuration.
       --announce                            Eval model in announce configuration.
+      --assembly                            Eval model in assembly configuration.
   -b, --basedir=&lt;directory&gt;                 Base directory.
   -c, --config-file=&lt;file&gt;                  The config file.
       --changelog                           Eval model in changelog configuration.
-  -d, --download                            Eval model in download configuration.
   -D=&lt;key=value&gt;                            Sets a System property. 🔁
+      --download                            Eval model in download configuration.
   -g, --debug                               Set log level to debug.
       -grs, --git-root-search               Searches for the Git root.
   -h, --help                                Show this help message and exit.
@@ -1364,6 +1366,7 @@ Options:
       --target-directory=&lt;directory&gt;        Directory where evaluated template(s) will be placed.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1386,7 +1389,7 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser download -h
 Download assets.
 
-Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                           [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-d=&lt;downloader&gt;]...
                           [-dn=&lt;name&gt;]...] | [[-xd=&lt;downloader&gt;]... [-xdn=&lt;name&gt;]...]]
 
@@ -1405,6 +1408,7 @@ Options:
       --strict                                 Enable strict mode.
   -V, --version                                Print version information and exit.
   -w, --warn                                   Set log level to warn.
+      --yolo                                   Skips non-configured operations.
 
 Include Filter:
   -d, --downloader=&lt;downloader&gt;                Include a downloader by type. 🔁
@@ -1446,10 +1450,10 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                          [[[-s=&lt;assembler&gt;]... [-d=&lt;distribution&gt;]...] | [[-xs=&lt;assembler&gt;]...
-                          [-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                          [-sp=&lt;platform&gt;]... [[[-s=&lt;assembler&gt;]... [-d=&lt;distribution&gt;]...] |
+                          [[-xs=&lt;assembler&gt;]... [-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -1468,6 +1472,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -1509,7 +1514,7 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                            [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
 
 Options:
@@ -1527,6 +1532,7 @@ Options:
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1549,10 +1555,12 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser catalog -h
 Catalog artifacts and files.
 
-Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[--distribution=&lt;distribution&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
-                         [[--exclude-distribution=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
+Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[--distribution=&lt;distribution&gt;]...
+                         [--cataloger=&lt;cataloger&gt;]... [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...] |
+                         [[--exclude-distribution=&lt;distribution&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...
+                         [-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                   Base directory.
@@ -1571,14 +1579,19 @@ Options:
       --strict                                Enable strict mode.
   -V, --version                               Print version information and exit.
   -w, --warn                                  Set log level to warn.
+      --yolo                                  Skips non-configured operations.
 
 Include Filter:
       --cataloger=&lt;cataloger&gt;                 Include a cataloger. 🔁
       --distribution=&lt;distribution&gt;           Include a distribution. 🔁
+  -y, --deployer=&lt;deployer&gt;                   Include a deployer by type. 🔁
+      -yn, --deployer-name=&lt;name&gt;             Include a deployer by name. 🔁
 
 Exclude Filter:
       --exclude-cataloger=&lt;cataloger&gt;         Exclude a cataloger. 🔁
       --exclude-distribution=&lt;distribution&gt;   Exclude a distribution. 🔁
+      -xy, --exclude-deployer=&lt;deployer&gt;      Exclude a deployer by type. 🔁
+      -xyn, --exclude-deployer-name=&lt;name&gt;    Exclude a deployer by name. 🔁
 
 Documentation found at https://jreleaser.org</code></pre>
 </div>
@@ -1601,9 +1614,9 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                          [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                          [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -1622,6 +1635,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -1654,9 +1668,9 @@ in the <a href="../reference/distributions.html" class="xref page">distribution<
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                      [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                      [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
+Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                      [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                      [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]...] | [[-xd=&lt;distribution&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -1675,6 +1689,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -1707,7 +1722,7 @@ in the <a href="../reference/distributions.html" class="xref page">distribution<
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser deploy -h
 Deploy all staged artifacts.
 
-Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-y=&lt;deployer&gt;]...
                         [-yn=&lt;name&gt;]...] | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...]]
 
@@ -1726,6 +1741,7 @@ Options:
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
+      --yolo                                 Skips non-configured operations.
 
 Include Filter:
   -y, --deployer=&lt;deployer&gt;                  Include a deployer by type. 🔁
@@ -1812,7 +1828,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                         [-sp=&lt;platform&gt;]... [[[-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]...
                         [--cataloger=&lt;cataloger&gt;]...] | [[-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]...
@@ -1836,6 +1852,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
       --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
@@ -1926,7 +1943,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
                          [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [--cataloger=&lt;cataloger&gt;]...] |
@@ -1964,6 +1981,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
       --cataloger=&lt;cataloger&gt;                      Include a cataloger. 🔁
@@ -2096,10 +2114,10 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;] [-od=&lt;directory&gt;]
-                         [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]...
-                         [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] | [[-xd=&lt;distribution&gt;]...
-                         [-xp=&lt;packager&gt;]...]]
+Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+                         [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
+                         [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
+                         [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
 
 Options:
   -b, --basedir=&lt;directory&gt;                        Base directory.
@@ -2118,6 +2136,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -2191,7 +2210,7 @@ found at the current directory.</p>
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
                          [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
@@ -2214,6 +2233,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -2300,7 +2320,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                          [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
                          [-sp=&lt;platform&gt;]... [[[-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...] |
                          [[-xd=&lt;distribution&gt;]... [-xp=&lt;packager&gt;]...]]
@@ -2323,6 +2343,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=&lt;distribution&gt;                Include a distribution. 🔁
@@ -2409,7 +2430,7 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
                           [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [[[-a=&lt;announcer&gt;]...] |
                           [[-xa=&lt;announcer&gt;]...]]
 
@@ -2428,6 +2449,7 @@ Options:
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
+      --yolo                                 Skips non-configured operations.
 
 Include Filter:
   -a, --announcer=&lt;announcer&gt;                Include an announcer. 🔁
@@ -2492,12 +2514,12 @@ mutations should occur when this mode is activated.
 <pre class="highlightjs highlight"><code class="language-none hljs">$ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=&lt;directory&gt;] [-c=&lt;file&gt;]
-                              [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]... [-rp=&lt;platform&gt;]...
-                              [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]... [-u=&lt;uploader&gt;]...
-                              [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]... [-a=&lt;announcer&gt;]...
-                              [--cataloger=&lt;cataloger&gt;]...] | [[-xy=&lt;deployer&gt;]... [-xyn=&lt;name&gt;]...
-                              [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=&lt;directory&gt;]
+                              [-c=&lt;file&gt;] [-od=&lt;directory&gt;] [-D=&lt;key=value&gt;]... [-P=&lt;key=value&gt;]...
+                              [-rp=&lt;platform&gt;]... [-sp=&lt;platform&gt;]... [[[-y=&lt;deployer&gt;]... [-yn=&lt;name&gt;]...
+                              [-u=&lt;uploader&gt;]... [-un=&lt;name&gt;]... [-d=&lt;distribution&gt;]... [-p=&lt;packager&gt;]...
+                              [-a=&lt;announcer&gt;]... [--cataloger=&lt;cataloger&gt;]...] | [[-xy=&lt;deployer&gt;]...
+                              [-xyn=&lt;name&gt;]... [-xu=&lt;uploader&gt;]... [-xun=&lt;name&gt;]... [-xd=&lt;distribution&gt;]...
                               [-xp=&lt;packager&gt;]... [-xa=&lt;announcer&gt;]... [--exclude-cataloger=&lt;cataloger&gt;]...]]
 
 Options:
@@ -2518,6 +2540,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -a, --announcer=&lt;announcer&gt;                      Include an announcer. 🔁
