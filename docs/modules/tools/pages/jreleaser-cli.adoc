@@ -226,9 +226,9 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 $ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                        [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                        [--announce | -a | --changelog | -d]
+Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                        [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                        [-sp=<platform>]... [--announce | -a | --changelog | -d]
 
 Options:
   -a, --assembly                            Display assembly configuration.
@@ -252,9 +252,9 @@ Options:
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org
-
 ----
 
 If `--config-file` is undefined then the command assumes the file is named `jreleaser.[yml|toml|json]` and it's
@@ -344,22 +344,23 @@ The value of `--packager` must match any of the available xref:reference:package
 
 [source]
 ----
-$ jreleaser template eval
+$ jreleaser template eval -h
 Evaluate a template or templates.
 
-Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                                [-od=<directory>] --target-directory=<directory> [-D=<key=value>]...
-                               [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... [--announce | -a |
-                               --changelog | -d] (--input-file=<file> | --input-directory=<directory>)
+                               [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... (--announce |
+                               --assembly | --changelog | --download) (--input-file=<file> |
+                               --input-directory=<directory>)
 
 Options:
-  -a, --assembly                            Eval model in assembly configuration.
       --announce                            Eval model in announce configuration.
+      --assembly                            Eval model in assembly configuration.
   -b, --basedir=<directory>                 Base directory.
   -c, --config-file=<file>                  The config file.
       --changelog                           Eval model in changelog configuration.
-  -d, --download                            Eval model in download configuration.
   -D=<key=value>                            Sets a System property. 🔁
+      --download                            Eval model in download configuration.
   -g, --debug                               Set log level to debug.
       -grs, --git-root-search               Searches for the Git root.
   -h, --help                                Show this help message and exit.
@@ -377,6 +378,7 @@ Options:
       --target-directory=<directory>        Directory where evaluated template(s) will be placed.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org
 ----
@@ -395,7 +397,7 @@ Executes the xref:concepts:workflow.adoc#_download[Download] workflow step.
 $ jreleaser download -h
 Download assets.
 
-Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                           [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-d=<downloader>]...
                           [-dn=<name>]...] | [[-xd=<downloader>]... [-xdn=<name>]...]]
 
@@ -414,6 +416,7 @@ Options:
       --strict                                 Enable strict mode.
   -V, --version                                Print version information and exit.
   -w, --warn                                   Set log level to warn.
+      --yolo                                   Skips non-configured operations.
 
 Include Filter:
   -d, --downloader=<downloader>                Include a downloader by type. 🔁
@@ -448,10 +451,10 @@ Executes the xref:concepts:workflow.adoc#_assemble[Assemble] workflow step.
 $ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                          [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                          [[[-s=<assembler>]... [-d=<distribution>]...] | [[-xs=<assembler>]...
-                          [-xd=<distribution>]...]]
+Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                          [-sp=<platform>]... [[[-s=<assembler>]... [-d=<distribution>]...] |
+                          [[-xs=<assembler>]... [-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -470,6 +473,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -504,7 +508,7 @@ Executes the xref:concepts:workflow.adoc#_changelog[Changelog] workflow step.
 $ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                            [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]...
 
 Options:
@@ -522,6 +526,7 @@ Options:
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
+      --yolo                                Skips non-configured operations.
 
 Documentation found at https://jreleaser.org
 ----
@@ -540,10 +545,12 @@ Executes the xref:concepts:workflow.adoc#_catalog[Catalog] workflow step.
 $ jreleaser catalog -h
 Catalog artifacts and files.
 
-Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                         [[[--distribution=<distribution>]... [--cataloger=<cataloger>]...] |
-                         [[--exclude-distribution=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
+Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                         [-sp=<platform>]... [[[--distribution=<distribution>]...
+                         [--cataloger=<cataloger>]... [-y=<deployer>]... [-yn=<name>]...] |
+                         [[--exclude-distribution=<distribution>]... [--exclude-cataloger=<cataloger>]...
+                         [-xy=<deployer>]... [-xyn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                   Base directory.
@@ -562,14 +569,19 @@ Options:
       --strict                                Enable strict mode.
   -V, --version                               Print version information and exit.
   -w, --warn                                  Set log level to warn.
+      --yolo                                  Skips non-configured operations.
 
 Include Filter:
       --cataloger=<cataloger>                 Include a cataloger. 🔁
       --distribution=<distribution>           Include a distribution. 🔁
+  -y, --deployer=<deployer>                   Include a deployer by type. 🔁
+      -yn, --deployer-name=<name>             Include a deployer by name. 🔁
 
 Exclude Filter:
       --exclude-cataloger=<cataloger>         Exclude a cataloger. 🔁
       --exclude-distribution=<distribution>   Exclude a distribution. 🔁
+      -xy, --exclude-deployer=<deployer>      Exclude a deployer by type. 🔁
+      -xyn, --exclude-deployer-name=<name>    Exclude a deployer by name. 🔁
 
 Documentation found at https://jreleaser.org
 ----
@@ -588,9 +600,9 @@ Executes the xref:concepts:workflow.adoc#_checksum[Checksum] workflow step.
 $ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                          [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                          [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
+Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                          [-sp=<platform>]... [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -609,6 +621,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -636,9 +649,9 @@ Executes the xref:concepts:workflow.adoc#_sign[Sign] workflow step.
 $ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                      [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                      [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
+Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                      [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                      [-sp=<platform>]... [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -657,6 +670,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -684,7 +698,7 @@ Executes the xref:concepts:workflow.adoc#_deploy[Deploy] workflow step.
 $ jreleaser deploy -h
 Deploy all staged artifacts.
 
-Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-y=<deployer>]...
                         [-yn=<name>]...] | [[-xy=<deployer>]... [-xyn=<name>]...]]
 
@@ -703,6 +717,7 @@ Options:
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
+      --yolo                                 Skips non-configured operations.
 
 Include Filter:
   -y, --deployer=<deployer>                  Include a deployer by type. 🔁
@@ -764,7 +779,7 @@ Executes the xref:concepts:workflow.adoc#_upload[Upload] workflow step.
 $ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                         [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]... [-d=<distribution>]...
                         [--cataloger=<cataloger>]...] | [[-xu=<uploader>]... [-xun=<name>]...
@@ -788,6 +803,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
       --cataloger=<cataloger>                      Include a cataloger. 🔁
@@ -853,7 +869,7 @@ Executes the xref:concepts:workflow.adoc#_release[Release] workflow step.
 $ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                          [-sp=<platform>]... [[[-d=<distribution>]... [-y=<deployer>]... [-yn=<name>]...
                          [-u=<uploader>]... [-un=<name>]... [--cataloger=<cataloger>]...] |
@@ -891,6 +907,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
       --cataloger=<cataloger>                      Include a cataloger. 🔁
@@ -985,10 +1002,10 @@ Executes the xref:concepts:workflow.adoc#_prepare[Prepare] workflow step.
 $ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>] [-od=<directory>]
-                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
-                         [[[-d=<distribution>]... [-p=<packager>]...] | [[-xd=<distribution>]...
-                         [-xp=<packager>]...]]
+Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
+                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                         [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
+                         [[-xd=<distribution>]... [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1007,6 +1024,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -1065,7 +1083,7 @@ Executes the xref:concepts:workflow.adoc#_package[Package] workflow step.
 $ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                          [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
                          [[-xd=<distribution>]... [-xp=<packager>]...]]
@@ -1088,6 +1106,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -1149,7 +1168,7 @@ Executes the xref:concepts:workflow.adoc#_publish[Publish] workflow step.
 $ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
                          [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
                          [[-xd=<distribution>]... [-xp=<packager>]...]]
@@ -1172,6 +1191,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -d, --distribution=<distribution>                Include a distribution. 🔁
@@ -1233,7 +1253,7 @@ Executes the xref:concepts:workflow.adoc#_announce[Announce] workflow step.
 $ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [-b=<directory>] [-c=<file>]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
                           [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-a=<announcer>]...] |
                           [[-xa=<announcer>]...]]
 
@@ -1252,6 +1272,7 @@ Options:
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
+      --yolo                                 Skips non-configured operations.
 
 Include Filter:
   -a, --announcer=<announcer>                Include an announcer. 🔁
@@ -1296,12 +1317,12 @@ Executes the xref:concepts:workflow.adoc#_full_release[Full Release] workflow st
 $ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [-b=<directory>] [-c=<file>]
-                              [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                              [-sp=<platform>]... [[[-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]...
-                              [-un=<name>]... [-d=<distribution>]... [-p=<packager>]... [-a=<announcer>]...
-                              [--cataloger=<cataloger>]...] | [[-xy=<deployer>]... [-xyn=<name>]...
-                              [-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>]
+                              [-c=<file>] [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]...
+                              [-rp=<platform>]... [-sp=<platform>]... [[[-y=<deployer>]... [-yn=<name>]...
+                              [-u=<uploader>]... [-un=<name>]... [-d=<distribution>]... [-p=<packager>]...
+                              [-a=<announcer>]... [--cataloger=<cataloger>]...] | [[-xy=<deployer>]...
+                              [-xyn=<name>]... [-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...
                               [-xp=<packager>]... [-xa=<announcer>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
@@ -1322,6 +1343,7 @@ Options:
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
   -w, --warn                                       Set log level to warn.
+      --yolo                                       Skips non-configured operations.
 
 Include Filter:
   -a, --announcer=<announcer>                      Include an announcer. 🔁
