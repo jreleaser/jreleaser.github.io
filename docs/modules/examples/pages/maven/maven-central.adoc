@@ -150,6 +150,184 @@ jreleaser {
 --
 ====
 
+=== Publishing Snapshots
+
+Publishing snapshots to the Maven Central Portal requires an additional xref:reference:deploy/maven/nexus2.adoc[] deployer
+as shown next:
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+signing:
+  active: ALWAYS
+  armored: true
+
+deploy:
+  maven:
+    mavenCentral:
+      release-deploy:
+        active: RELEASE
+        url: {central_url}
+        stagingRepositories:
+          - target/staging-deploy
+    nexus2:
+      snapshot-deploy:
+        active: SNAPSHOT
+        snapshotUrl: {central_snapshot_url}
+        applyMavenCentralRules: true
+        snapshotSupported: true
+        closeRepository: true
+        releaseRepository: true
+        stagingRepositories:
+          - target/staging-deploy
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[signing]
+  active = "ALWAYS"
+  armored = true
+
+[deploy.maven.mavenCentral.release-deploy]
+  active = "RELEASE"
+  url = "{central_url}"
+  stagingRepositories = ["target/staging-deploy"]
+
+[deploy.maven.nexus2.snapshot-deploy]
+  active = "SNAPSHOT"
+  snapshotUrl = "{central_snapshot_url}"
+  applyMavenCentralRules = true
+  snapshotSupported = true
+  closeRepository = true
+  releaseRepository = true
+  stagingRepositories = ["target/staging-deploy"]
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "jreleaser": {
+    "signing": {
+      "active": "ALWAYS",
+      "armored": true
+    },
+    "deploy": {
+      "maven": {
+        "mavenCentral": {
+          "release-deploy": {
+            "active": "RELEASE",
+            "url": "{central_url}",
+            "stagingRepositories": [
+              "target/staging-deploy"
+            ]
+          }
+        },
+        "nexus2": {
+          "snapshot-deploy": {
+            "active": "SNAPSHOT",
+            "snapshotUrl": "{central_snapshot_url}",
+            "applyMavenCentralRules": true,
+            "snapshotSupported": true,
+            "closeRepository": true,
+            "releaseRepository": false,
+            "stagingRepositories": [
+              "target/staging-deploy"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <signing>
+    <active>ALWAYS</active>
+    <armored>true</armored>
+  </signing>
+  <deploy>
+    <maven>
+      <mavenCentral>
+        <release-deploy>
+          <active>RELEASE</active>
+          <url>{central_url}</url>
+          <stagingRepositories>target/staging-deploy</stagingRepositories>
+        </release-deploy>
+      </mavenCentral>
+      <nexus2>
+        <snapshot-deploy>
+          <active>SNAPSHOT</active>
+          <snapshotUrl>{central_snapshot_url}</snapshotUrl>
+          <applyMavenCentralRules>true</applyMavenCentralRules>
+          <snapshotSupported>true</snapshotSupported>
+          <closeRepository>true</closeRepository>
+          <releaseRepository>true</releaseRepository>
+          <stagingRepositories>target/staging-deploy</stagingRepositories>
+        </snapshot-deploy>
+      </nexus2>
+    </maven>
+  </deploy>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  signing {
+    active = 'ALWAYS'
+    armored = true
+  }
+  deploy {
+    maven {
+      mavenCentral {
+        'release-deploy' {
+          active = 'RELEASE'
+          url = '{central_url}'
+          stagingRepository('target/staging-deploy')
+        }
+      }
+      nexus2 {
+        'snapshot-deploy' {
+          active = 'SNAPSHOT'
+          snapshotUrl = '{central_snapshot_url}'
+          applyMavenCentralRules = true
+          snapshotSupported = true
+          closeRepository = true
+          releaseRepository = true
+          stagingRepository('target/staging-deploy')
+        }
+      }
+    }
+  }
+}
+----
+--
+====
+
 == OSSRH
 
 Publishing to OSSRH requires using the xref:reference:deploy/maven/nexus2.adoc[] deployer.
