@@ -578,9 +578,6 @@
     <a class="nav-link" href="../../reference/deploy/maven/azure.html">Azure</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../reference/deploy/maven/forgejo.html">Forgejo</a>
-  </li>
-  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../../reference/deploy/maven/gitea.html">Gitea</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -594,9 +591,6 @@
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../../reference/deploy/maven/nexus2.html">Nexus2</a>
-  </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../reference/deploy/maven/nexus3.html">Nexus3</a>
   </li>
 </ul>
   </li>
@@ -715,9 +709,6 @@
     <a class="nav-link" href="../../reference/release/codeberg.html">Codeberg</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../reference/release/forgejo.html">Forgejo</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../reference/release/generic.html">Generic</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -746,9 +737,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../reference/upload/ftp.html">Ftp</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../reference/upload/forgejo.html">Forgejo</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../reference/upload/gitea.html">Gitea</a>
@@ -1046,195 +1034,6 @@ deploy:
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_publishing_snapshots"><a class="anchor" href="#_publishing_snapshots"></a>Publishing Snapshots</h3>
-<div class="paragraph">
-<p>Publishing snapshots to the Maven Central Portal requires an additional <a href="../../reference/deploy/maven/nexus2.html" class="xref page">Nexus2</a> deployer
-as shown next:</p>
-</div>
-<div class="tabset is-loading">
-<div class="ulist tabs">
-<ul>
-<li>
-<p><a id="tabset2_yaml"></a>YAML</p>
-</li>
-<li>
-<p><a id="tabset2_toml"></a>TOML</p>
-</li>
-<li>
-<p><a id="tabset2_json"></a>JSON</p>
-</li>
-<li>
-<p><a id="tabset2_maven"></a>Maven</p>
-</li>
-<li>
-<p><a id="tabset2_gradle"></a>Gradle</p>
-</li>
-</ul>
-</div>
-<div class="content">
-<div class="tab-pane" aria-labelledby="tabset2_yaml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">signing:
-  active: ALWAYS
-  armored: true
-
-deploy:
-  maven:
-    mavenCentral:
-      release-deloy:
-        active: RELEASE
-        url: https://central.sonatype.com/api/v1/publisher
-        stagingRepositories:
-          - target/staging-deploy
-    nexus2:
-      snapshot-deploy:
-        active: SNAPSHOT
-        snapshotUrl: https://central.sonatype.com/repository/maven-snapshots
-        applyMavenCentralRules: true
-        snapshotSupported: true
-        closeRepository: true
-        releaseRepository: true
-        stagingRepositories:
-          - target/staging-deploy</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_toml">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[signing]
-  active = "ALWAYS"
-  armored = true
-
-[deploy.maven.mavenCentral.release-deploy]
-  active = "RELEASE"
-  url = "https://central.sonatype.com/api/v1/publisher"
-  stagingRepositories = ["target/staging-deploy"]
-
-[deploy.maven.nexus2.snapshot-deploy]
-  active = "SNAPSHOT"
-  snapshotUrl = "https://central.sonatype.com/repository/maven-snapshots"
-  applyMavenCentralRules = true
-  snapshotSupported = true
-  closeRepository = true
-  releaseRepository = true
-  stagingRepositories = ["target/staging-deploy"]</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_json">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "jreleaser": {
-    "signing": {
-      "active": "ALWAYS",
-      "armored": true
-    },
-    "deploy": {
-      "maven": {
-        "mavenCentral": {
-          "release-deploy": {
-            "active": "RELEASE",
-            "url": "https://central.sonatype.com/api/v1/publisher",
-            "stagingRepositories": [
-              "target/staging-deploy"
-            ]
-          }
-        },
-        "nexus2": {
-          "snapshot-deploy": {
-            "active": "SNAPSHOT",
-            "snapshotUrl": "https://central.sonatype.com/repository/maven-snapshots",
-            "applyMavenCentralRules": true,
-            "snapshotSupported": true,
-            "closeRepository": true,
-            "releaseRepository": false,
-            "stagingRepositories": [
-              "target/staging-deploy"
-            ]
-          }
-        }
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_maven">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
-  &lt;signing&gt;
-    &lt;active&gt;ALWAYS&lt;/active&gt;
-    &lt;armored&gt;true&lt;/armored&gt;
-  &lt;/signing&gt;
-  &lt;deploy&gt;
-    &lt;maven&gt;
-      &lt;mavenCentral&gt;
-        &lt;release-deploy&gt;
-          &lt;active&gt;RELEASE&lt;/active&gt;
-          &lt;url&gt;https://central.sonatype.com/api/v1/publisher&lt;/url&gt;
-          &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
-        &lt;/release-deploy&gt;
-      &lt;/mavenCentral&gt;
-      &lt;nexus2&gt;
-        &lt;snapshot-deploy&gt;
-          &lt;active&gt;SNAPSHOT&lt;/active&gt;
-          &lt;snapshotUrl&gt;https://central.sonatype.com/repository/maven-snapshots&lt;/snapshotUrl&gt;
-          &lt;applyMavenCentralRules&gt;true&lt;/applyMavenCentralRules&gt;
-          &lt;snapshotSupported&gt;true&lt;/snapshotSupported&gt;
-          &lt;closeRepository&gt;true&lt;/closeRepository&gt;
-          &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
-          &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
-        &lt;/snapshot-deploy&gt;
-      &lt;/nexus2&gt;
-    &lt;/maven&gt;
-  &lt;/deploy&gt;
-&lt;/jreleaser&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset2_gradle">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
-  signing {
-    active = 'ALWAYS'
-    armored = true
-  }
-  deploy {
-    maven {
-      mavenCentral {
-        'release-deploy' {
-          active = 'RELEASE'
-          url = 'https://central.sonatype.com/api/v1/publisher'
-          stagingRepository('target/staging-deploy')
-        }
-      }
-      nexus2 {
-        'snapshot-deploy' {
-          active = 'SNAPSHOT'
-          snapshotUrl = 'https://central.sonatype.com/repository/maven-snapshots'
-          applyMavenCentralRules = true
-          snapshotSupported = true
-          closeRepository = true
-          releaseRepository = true
-          stagingRepository('target/staging-deploy')
-        }
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1275,24 +1074,24 @@ a 'Could not find a staging profile matching &#8230;&#8203;' error.
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset3_yaml"></a>YAML</p>
+<p><a id="tabset2_yaml"></a>YAML</p>
 </li>
 <li>
-<p><a id="tabset3_toml"></a>TOML</p>
+<p><a id="tabset2_toml"></a>TOML</p>
 </li>
 <li>
-<p><a id="tabset3_json"></a>JSON</p>
+<p><a id="tabset2_json"></a>JSON</p>
 </li>
 <li>
-<p><a id="tabset3_maven"></a>Maven</p>
+<p><a id="tabset2_maven"></a>Maven</p>
 </li>
 <li>
-<p><a id="tabset3_gradle"></a>Gradle</p>
+<p><a id="tabset2_gradle"></a>Gradle</p>
 </li>
 </ul>
 </div>
 <div class="content">
-<div class="tab-pane" aria-labelledby="tabset3_yaml">
+<div class="tab-pane" aria-labelledby="tabset2_yaml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">signing:
@@ -1305,7 +1104,7 @@ deploy:
       maven-central:
         active: ALWAYS
         url: https://s01.oss.sonatype.org/service/local
-        snapshotUrl: https://s01.oss.sonatype.org/content/repositories/snapshots
+        snapshotUrl: https://s01.oss.sonatype.org/content/repositories/snapshots/
         closeRepository: true
         releaseRepository: false
         stagingRepositories:
@@ -1313,7 +1112,7 @@ deploy:
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset3_toml">
+<div class="tab-pane" aria-labelledby="tabset2_toml">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[signing]
@@ -1323,14 +1122,14 @@ deploy:
 [deploy.maven.nexus2.maven-central]
   active = "ALWAYS"
   url = "https://s01.oss.sonatype.org/service/local"
-  snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+  snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
   closeRepository = true
   releaseRepository = false
   stagingRepositories = ["target/staging-deploy"]</code></pre>
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset3_json">
+<div class="tab-pane" aria-labelledby="tabset2_json">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1345,7 +1144,7 @@ deploy:
           "maven-central": {
             "active": "ALWAYS",
             "url": "https://s01.oss.sonatype.org/service/local",
-            "snapshotUrl": "https://s01.oss.sonatype.org/content/repositories/snapshots",
+            "snapshotUrl": "https://s01.oss.sonatype.org/content/repositories/snapshots/",
             "closeRepository": true,
             "releaseRepository": false,
             "stagingRepositories": [
@@ -1360,7 +1159,7 @@ deploy:
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset3_maven">
+<div class="tab-pane" aria-labelledby="tabset2_maven">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jreleaser&gt;
@@ -1374,7 +1173,7 @@ deploy:
         &lt;maven-central&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
           &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
-          &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots&lt;/snapshotUrl&gt;
+          &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots/&lt;/snapshotUrl&gt;
           &lt;closeRepository&gt;true&lt;/closeRepository&gt;
           &lt;releaseRepository&gt;false&lt;/releaseRepository&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
@@ -1386,7 +1185,7 @@ deploy:
 </div>
 </div>
 </div>
-<div class="tab-pane" aria-labelledby="tabset3_gradle">
+<div class="tab-pane" aria-labelledby="tabset2_gradle">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">jreleaser {
@@ -1400,7 +1199,7 @@ deploy:
         'maven-central' {
           active = 'ALWAYS'
           url = 'https://s01.oss.sonatype.org/service/local'
-          snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+          snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
           closeRepository = true
           releaseRepository = false
           stagingRepository('target/staging-deploy')
@@ -1560,7 +1359,7 @@ file:</p>
                 &lt;plugin&gt;
                     &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
                     &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-                    &lt;version&gt;1.18.0&lt;/version&gt;
+                    &lt;version&gt;1.17.0&lt;/version&gt;
                 &lt;/plugin&gt;
             &lt;/plugins&gt;
         &lt;/pluginManagement&gt;
@@ -1580,7 +1379,7 @@ file:</p>
                                     &lt;maven-central&gt;
                                         &lt;active&gt;ALWAYS&lt;/active&gt;
                                         &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
-                                        &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots&lt;/snapshotUrl&gt;
+                                        &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots/&lt;/snapshotUrl&gt;
                                         &lt;closeRepository&gt;true&lt;/closeRepository&gt;
                                         &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
                                         &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
@@ -1763,7 +1562,7 @@ DO NOT commit public and private key files to source control!
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'org.jreleaser' version '1.18.0'
+    id 'org.jreleaser' version '1.17.0'
 }
 
 java {
@@ -1823,7 +1622,7 @@ jreleaser {
                 'maven-central' {
                     active = 'ALWAYS'
                     url = 'https://s01.oss.sonatype.org/service/local'
-                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
                     closeRepository = true
                     releaseRepository = true
                     stagingRepository('build/staging-deploy')
@@ -1834,7 +1633,7 @@ jreleaser {
                 sonatype {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
-                    stagingRepository('build/staging-deploy')
+                    stagingRepository('target/staging-deploy')
                 }
             }
             */
