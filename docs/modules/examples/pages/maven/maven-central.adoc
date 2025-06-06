@@ -591,6 +591,14 @@ The following `pom.xml` file shows the minimum required configuration
                         </signing>
                         <deploy>
                             <maven>
+                                <mavenCentral>
+                                    <sonatype>
+                                        <active>ALWAYS</active>
+                                        <url>{central_url}</url>
+                                        <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                    </sonatype>
+                                </mavenCentral>
+                                <!-- Legacy OSSRH
                                 <nexus2>
                                     <maven-central>
                                         <active>ALWAYS</active>
@@ -601,14 +609,6 @@ The following `pom.xml` file shows the minimum required configuration
                                         <stagingRepositories>target/staging-deploy</stagingRepositories>
                                     </maven-central>
                                 </nexus2>
-                                <!-- Portal Publisher API
-                                <mavenCentral>
-                                    <sonatype>
-                                        <active>ALWAYS</active>
-                                        <url>{central_url}</url>
-                                        <stagingRepositories>target/staging-deploy</stagingRepositories>
-                                    </sonatype>
-                                </mavenCentral>
                                 -->
                             </maven>
                         </deploy>
@@ -744,7 +744,7 @@ $ mvn -Ppublication
 
 [source]
 ----
-$ mvn jreleaser:full-release
+$ mvn jreleaser:deploy
 ----
 
 == Gradle
@@ -814,6 +814,14 @@ jreleaser {
     }
     deploy {
         maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = '{central_url}'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+            /* Legacy OSSRH
             nexus2 {
                 'maven-central' {
                     active = 'ALWAYS'
@@ -821,14 +829,6 @@ jreleaser {
                     snapshotUrl = '{deployer_snapshot_url}'
                     closeRepository = true
                     releaseRepository = true
-                    stagingRepository('build/staging-deploy')
-                }
-            }
-            /* Portal Publisher API
-            mavenCentral {
-                sonatype {
-                    active = 'ALWAYS'
-                    url = '{central_url}'
                     stagingRepository('build/staging-deploy')
                 }
             }
@@ -919,5 +919,5 @@ $ ./gradlew publish
 
 [source]
 ----
-$ ./gradlew jreleaserFullRelease
+$ ./gradlew jreleaserDeploy
 ----
