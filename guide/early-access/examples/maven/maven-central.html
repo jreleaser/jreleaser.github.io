@@ -1091,7 +1091,7 @@ deploy:
     nexus2:
       snapshot-deploy:
         active: SNAPSHOT
-        snapshotUrl: https://central.sonatype.com/repository/maven-snapshots
+        snapshotUrl: {central_snapshot_url}
         applyMavenCentralRules: true
         snapshotSupported: true
         closeRepository: true
@@ -1115,7 +1115,7 @@ deploy:
 
 [deploy.maven.nexus2.snapshot-deploy]
   active = "SNAPSHOT"
-  snapshotUrl = "https://central.sonatype.com/repository/maven-snapshots"
+  snapshotUrl = "{central_snapshot_url}"
   applyMavenCentralRules = true
   snapshotSupported = true
   closeRepository = true
@@ -1147,7 +1147,7 @@ deploy:
         "nexus2": {
           "snapshot-deploy": {
             "active": "SNAPSHOT",
-            "snapshotUrl": "https://central.sonatype.com/repository/maven-snapshots",
+            "snapshotUrl": "{central_snapshot_url}",
             "applyMavenCentralRules": true,
             "snapshotSupported": true,
             "closeRepository": true,
@@ -1184,7 +1184,7 @@ deploy:
       &lt;nexus2&gt;
         &lt;snapshot-deploy&gt;
           &lt;active&gt;SNAPSHOT&lt;/active&gt;
-          &lt;snapshotUrl&gt;https://central.sonatype.com/repository/maven-snapshots&lt;/snapshotUrl&gt;
+          &lt;snapshotUrl&gt;{central_snapshot_url}&lt;/snapshotUrl&gt;
           &lt;applyMavenCentralRules&gt;true&lt;/applyMavenCentralRules&gt;
           &lt;snapshotSupported&gt;true&lt;/snapshotSupported&gt;
           &lt;closeRepository&gt;true&lt;/closeRepository&gt;
@@ -1218,7 +1218,7 @@ deploy:
       nexus2 {
         'snapshot-deploy' {
           active = 'SNAPSHOT'
-          snapshotUrl = 'https://central.sonatype.com/repository/maven-snapshots'
+          snapshotUrl = '{central_snapshot_url}'
           applyMavenCentralRules = true
           snapshotSupported = true
           closeRepository = true
@@ -1305,7 +1305,7 @@ deploy:
       maven-central:
         active: ALWAYS
         url: https://s01.oss.sonatype.org/service/local
-        snapshotUrl: https://s01.oss.sonatype.org/content/repositories/snapshots
+        snapshotUrl: https://s01.oss.sonatype.org/content/repositories/snapshots/
         closeRepository: true
         releaseRepository: false
         stagingRepositories:
@@ -1323,7 +1323,7 @@ deploy:
 [deploy.maven.nexus2.maven-central]
   active = "ALWAYS"
   url = "https://s01.oss.sonatype.org/service/local"
-  snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+  snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
   closeRepository = true
   releaseRepository = false
   stagingRepositories = ["target/staging-deploy"]</code></pre>
@@ -1345,7 +1345,7 @@ deploy:
           "maven-central": {
             "active": "ALWAYS",
             "url": "https://s01.oss.sonatype.org/service/local",
-            "snapshotUrl": "https://s01.oss.sonatype.org/content/repositories/snapshots",
+            "snapshotUrl": "https://s01.oss.sonatype.org/content/repositories/snapshots/",
             "closeRepository": true,
             "releaseRepository": false,
             "stagingRepositories": [
@@ -1374,7 +1374,7 @@ deploy:
         &lt;maven-central&gt;
           &lt;active&gt;ALWAYS&lt;/active&gt;
           &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
-          &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots&lt;/snapshotUrl&gt;
+          &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots/&lt;/snapshotUrl&gt;
           &lt;closeRepository&gt;true&lt;/closeRepository&gt;
           &lt;releaseRepository&gt;false&lt;/releaseRepository&gt;
           &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
@@ -1400,7 +1400,7 @@ deploy:
         'maven-central' {
           active = 'ALWAYS'
           url = 'https://s01.oss.sonatype.org/service/local'
-          snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+          snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
           closeRepository = true
           releaseRepository = false
           stagingRepository('target/staging-deploy')
@@ -1576,17 +1576,6 @@ file:</p>
                         &lt;/signing&gt;
                         &lt;deploy&gt;
                             &lt;maven&gt;
-                                &lt;nexus2&gt;
-                                    &lt;maven-central&gt;
-                                        &lt;active&gt;ALWAYS&lt;/active&gt;
-                                        &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
-                                        &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots&lt;/snapshotUrl&gt;
-                                        &lt;closeRepository&gt;true&lt;/closeRepository&gt;
-                                        &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
-                                        &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
-                                    &lt;/maven-central&gt;
-                                &lt;/nexus2&gt;
-                                &lt;!-- Portal Publisher API
                                 &lt;mavenCentral&gt;
                                     &lt;sonatype&gt;
                                         &lt;active&gt;ALWAYS&lt;/active&gt;
@@ -1594,6 +1583,17 @@ file:</p>
                                         &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
                                     &lt;/sonatype&gt;
                                 &lt;/mavenCentral&gt;
+                                &lt;!-- Legacy OSSRH
+                                &lt;nexus2&gt;
+                                    &lt;maven-central&gt;
+                                        &lt;active&gt;ALWAYS&lt;/active&gt;
+                                        &lt;url&gt;https://s01.oss.sonatype.org/service/local&lt;/url&gt;
+                                        &lt;snapshotUrl&gt;https://s01.oss.sonatype.org/content/repositories/snapshots/&lt;/snapshotUrl&gt;
+                                        &lt;closeRepository&gt;true&lt;/closeRepository&gt;
+                                        &lt;releaseRepository&gt;true&lt;/releaseRepository&gt;
+                                        &lt;stagingRepositories&gt;target/staging-deploy&lt;/stagingRepositories&gt;
+                                    &lt;/maven-central&gt;
+                                &lt;/nexus2&gt;
                                 --&gt;
                             &lt;/maven&gt;
                         &lt;/deploy&gt;
@@ -1746,7 +1746,7 @@ DO NOT commit public and private key files to source control!
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ mvn jreleaser:full-release</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ mvn jreleaser:deploy</code></pre>
 </div>
 </div>
 </div>
@@ -1819,21 +1819,21 @@ jreleaser {
     }
     deploy {
         maven {
-            nexus2 {
-                'maven-central' {
-                    active = 'ALWAYS'
-                    url = 'https://s01.oss.sonatype.org/service/local'
-                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
-                    closeRepository = true
-                    releaseRepository = true
-                    stagingRepository('build/staging-deploy')
-                }
-            }
-            /* Portal Publisher API
             mavenCentral {
                 sonatype {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+            /* Legacy OSSRH
+            nexus2 {
+                'maven-central' {
+                    active = 'ALWAYS'
+                    url = 'https://s01.oss.sonatype.org/service/local'
+                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                    closeRepository = true
+                    releaseRepository = true
                     stagingRepository('build/staging-deploy')
                 }
             }
@@ -1941,7 +1941,7 @@ DO NOT commit public and private key files to source control!
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">$ ./gradlew jreleaserFullRelease</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">$ ./gradlew jreleaserDeploy</code></pre>
 </div>
 </div>
 </div>
