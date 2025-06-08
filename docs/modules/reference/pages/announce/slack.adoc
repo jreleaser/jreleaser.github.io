@@ -20,6 +20,8 @@ scopes set:
 IMPORTANT: Webhooks are not protected, anyone with access to the webhook URI can send messages to the target room. Prefer
 setting the `JRELEASER_SLACK_WEBHOOK` environment variable over explicitly setting a value in the configuration DSL.
 
+NOTE: You must use the token option to send a message to multiple channels.
+
 == Configuration
 
 include::partial$legend.adoc[]
@@ -46,6 +48,13 @@ include::partial$announce/yaml/common-head.adoc[]
     # Defaults to `#announce`.
     # icon:dot-circle[]
     channel: '#announce'
+
+    # The channels where the message will be sent to
+    # Defaults to [`#announce`].
+    # icon:dot-circle[]
+    channels:
+      - '#announce'
+      - '#general'
 
     # The announcement message.
     # Review the available xref:reference:name-templates.adoc[].
@@ -80,6 +89,11 @@ include::partial$announce/toml/common-head.adoc[]
   # icon:dot-circle[]
   channel = "#announce"
 
+  # The channels where the message will be sent to
+  # Defaults to `[#announce`].
+  # icon:dot-circle[]
+  channels = ["#announce", "#general"]
+
   # The announcement message.
   # Review the available xref:reference:name-templates.adoc[].
   # icon:dot-circle[] icon:file-alt[]
@@ -112,6 +126,14 @@ include::partial$announce/json/common-head.adoc[]
       // Defaults to `#announce`.
       // icon:dot-circle[]
       "channel": "#announce",
+
+      // The channels where the message will be sent to
+      // Defaults to [`#announce`].
+      // icon:dot-circle[]
+      "channel": [
+        "#announce",
+        "#general"
+      ],
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
@@ -154,6 +176,16 @@ include::partial$announce/maven/common-head.adoc[]
       <channel>#announce</channel>
 
       <!--
+        The channels where the message will be sent to
+        Defaults to [`#announce`].
+        icon:dot-circle[]
+      -->
+      <channels>
+        <channel>#announce</channel>
+        <channel>#general</channel>
+      </channels>
+
+      <!--
         The announcement message.
         Review the available xref:reference:name-templates.adoc[].
         icon:dot-circle[] icon:file-alt[]
@@ -190,6 +222,11 @@ include::partial$announce/gradle/common-head.adoc[]
       // Defaults to `#announce`.
       // icon:dot-circle[]
       channel = '#announce'
+
+      // The channels where the message will be sent to
+      // Defaults to [`#announce`].
+      // icon:dot-circle[]
+      channels = ['#announce', '#general']
 
       // The announcement message.
       // Review the available xref:reference:name-templates.adoc[].
