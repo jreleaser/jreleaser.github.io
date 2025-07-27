@@ -2191,6 +2191,49 @@ adds a key named <code>foo</code> with a value <code>bar</code> before the <code
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_groups"><a class="anchor" href="#_groups"></a>Groups</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Script hooks may also be grouped by name, allowing for better readability</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
+  script:
+    groups:
+      github-summary:
+        condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        before:
+          - filter:
+              includes: ['package']
+            run: |
+              echo "### {{command}}" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "| Step | Outcome |" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "| ---- | ------- |" &gt;&gt; $GITHUB_STEP_SUMMARY
+        success:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :white_check_mark: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+        failure:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :x: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: |
+              echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "### Failure" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "{{event.stacktrace}}\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "" &gt;&gt; $GITHUB_STEP_SUMMARY</code></pre>
+</div>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>
