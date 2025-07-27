@@ -180,15 +180,18 @@ The following commands are supported:
 $ jreleaser env -h
 Display environment variable names.
 
-Usage: jreleaser env [-hV] [-D=<key=value>]...
+Usage: jreleaser env [-hV] [--settings-file=<file>] [-D=<key=value>]...
 
 Options:
-  -D=<key=value>    Sets a System property. 🔁
-  -h, --help        Show this help message and exit.
-  -V, --version     Print version information and exit.
+  -D=<key=value>               Sets a System property. 🔁
+  -h, --help                   Show this help message and exit.
+      --settings-file=<file>   The settings file.
+  -V, --version                Print version information and exit.
 
 Documentation found at https://jreleaser.org
 ----
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 === init
 
@@ -227,8 +230,8 @@ $ jreleaser config -h
 Display current configuration.
 
 Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                        [-sp=<platform>]... [--announce | -a | --changelog | -d]
+                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                        [-rp=<platform>]... [-sp=<platform>]... [--announce | -a | --changelog | -d]
 
 Options:
   -a, --assembly                            Display assembly configuration.
@@ -248,6 +251,7 @@ Options:
   -q, --quiet                               Log errors only.
       -rp, --reject-platform=<platform>     Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform       Activates paths matching the current platform.
+      --settings-file=<file>                The settings file.
       -sp, --select-platform=<platform>     Activates paths matching the given platform. 🔁
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
@@ -261,6 +265,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+if `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 === template
 
@@ -348,10 +354,10 @@ $ jreleaser template eval -h
 Evaluate a template or templates.
 
 Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                               [-od=<directory>] --target-directory=<directory> [-D=<key=value>]...
-                               [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... (--announce |
-                               --assembly | --changelog | --download) (--input-file=<file> |
-                               --input-directory=<directory>)
+                               [-od=<directory>] [--settings-file=<file>] --target-directory=<directory>
+                               [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
+                               [-sp=<platform>]... (--announce | --assembly | --changelog | --download)
+                               (--input-file=<file> | --input-directory=<directory>)
 
 Options:
       --announce                            Eval model in announce configuration.
@@ -373,6 +379,7 @@ Options:
   -q, --quiet                               Log errors only.
       -rp, --reject-platform=<platform>     Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform       Activates paths matching the current platform.
+      --settings-file=<file>                The settings file.
       -sp, --select-platform=<platform>     Activates paths matching the given platform. 🔁
       --strict                              Enable strict mode.
       --target-directory=<directory>        Directory where evaluated template(s) will be placed.
@@ -388,6 +395,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 === download
 
 Executes the xref:concepts:workflow.adoc#_download[Download] workflow step.
@@ -398,8 +407,8 @@ $ jreleaser download -h
 Download assets.
 
 Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-d=<downloader>]...
-                          [-dn=<name>]...] | [[-xd=<downloader>]... [-xdn=<name>]...]]
+                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                          [[[-d=<downloader>]... [-dn=<name>]...] | [[-xd=<downloader>]... [-xdn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                    Base directory.
@@ -413,6 +422,7 @@ Options:
       -od, --output-directory=<directory>      Output directory.
   -P, --set-property=<key=value>               Sets the value of a property. 🔁
   -q, --quiet                                  Log errors only.
+      --settings-file=<file>                   The settings file.
       --strict                                 Enable strict mode.
   -V, --version                                Print version information and exit.
   -w, --warn                                   Set log level to warn.
@@ -434,6 +444,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 The value of `--downloader` and `--exclude-downloader-type` must match the type of configured
 xref:reference:download/index.adoc[downloader].
 
@@ -452,9 +464,9 @@ $ jreleaser assemble -h
 Assemble distributions.
 
 Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                          [-sp=<platform>]... [[[-s=<assembler>]... [-d=<distribution>]...] |
-                          [[-xs=<assembler>]... [-xd=<distribution>]...]]
+                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                          [-rp=<platform>]... [-sp=<platform>]... [[[-s=<assembler>]...
+                          [-d=<distribution>]...] | [[-xs=<assembler>]... [-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -469,6 +481,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -491,6 +504,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 The value of `--assembler` and `--exclude-assembler` must match any of the available
 xref:reference:assemble/index.adoc[assemblers].
 
@@ -509,7 +524,7 @@ $ jreleaser changelog -h
 Calculate the changelog.
 
 Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                           [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]...
+                           [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
 
 Options:
   -b, --basedir=<directory>                 Base directory.
@@ -523,6 +538,7 @@ Options:
       -od, --output-directory=<directory>   Output directory.
   -P, --set-property=<key=value>            Sets the value of a property. 🔁
   -q, --quiet                               Log errors only.
+      --settings-file=<file>                The settings file.
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
   -w, --warn                                Set log level to warn.
@@ -536,6 +552,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 === catalog
 
 Executes the xref:concepts:workflow.adoc#_catalog[Catalog] workflow step.
@@ -546,8 +564,8 @@ $ jreleaser catalog -h
 Catalog artifacts and files.
 
 Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                         [-sp=<platform>]... [[[--distribution=<distribution>]...
+                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                         [-rp=<platform>]... [-sp=<platform>]... [[[--distribution=<distribution>]...
                          [--cataloger=<cataloger>]... [-y=<deployer>]... [-yn=<name>]...] |
                          [[--exclude-distribution=<distribution>]... [--exclude-cataloger=<cataloger>]...
                          [-xy=<deployer>]... [-xyn=<name>]...]]
@@ -565,6 +583,7 @@ Options:
   -q, --quiet                                 Log errors only.
       -rp, --reject-platform=<platform>       Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform         Activates paths matching the current platform.
+      --settings-file=<file>                  The settings file.
       -sp, --select-platform=<platform>       Activates paths matching the given platform. 🔁
       --strict                                Enable strict mode.
   -V, --version                               Print version information and exit.
@@ -591,6 +610,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 === checksum
 
 Executes the xref:concepts:workflow.adoc#_checksum[Checksum] workflow step.
@@ -601,8 +622,9 @@ $ jreleaser checksum -h
 Calculate checksums.
 
 Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                          [-sp=<platform>]... [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
+                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                          [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...] |
+                          [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -617,6 +639,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -636,6 +659,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
 in the xref:reference:distributions.adoc[distribution] section.
@@ -650,8 +675,9 @@ $ jreleaser sign -h
 Sign release artifacts.
 
 Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                      [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                      [-sp=<platform>]... [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
+                      [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                      [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...] |
+                      [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -666,6 +692,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -686,6 +713,8 @@ found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
 
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
+
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
 in the xref:reference:distributions.adoc[distribution] section.
 
@@ -699,8 +728,8 @@ $ jreleaser deploy -h
 Deploy all staged artifacts.
 
 Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-y=<deployer>]...
-                        [-yn=<name>]...] | [[-xy=<deployer>]... [-xyn=<name>]...]]
+                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                        [[[-y=<deployer>]... [-yn=<name>]...] | [[-xy=<deployer>]... [-xyn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                  Base directory.
@@ -714,6 +743,7 @@ Options:
       -od, --output-directory=<directory>    Output directory.
   -P, --set-property=<key=value>             Sets the value of a property. 🔁
   -q, --quiet                                Log errors only.
+      --settings-file=<file>                 The settings file.
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
@@ -734,6 +764,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--deployer` and `--exclude-deployer` must match the type of configured
 xref:reference:deploy/index.adoc[deployer].
@@ -780,10 +812,10 @@ $ jreleaser upload -h
 Upload all artifacts.
 
 Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                        [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]... [-d=<distribution>]...
-                        [--cataloger=<cataloger>]...] | [[-xu=<uploader>]... [-xun=<name>]...
-                        [-xd=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
+                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                        [-rp=<platform>]... [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]...
+                        [-d=<distribution>]... [--cataloger=<cataloger>]...] | [[-xu=<uploader>]...
+                        [-xun=<name>]... [-xd=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -799,6 +831,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -824,6 +857,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--uploader` and `--exclude-uploader-type` must match the type of configured
 xref:reference:upload/index.adoc[uploader].
@@ -870,9 +905,9 @@ $ jreleaser release -h
 Create or update a release.
 
 Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                         [-sp=<platform>]... [[[-d=<distribution>]... [-y=<deployer>]... [-yn=<name>]...
-                         [-u=<uploader>]... [-un=<name>]... [--cataloger=<cataloger>]...] |
+                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-y=<deployer>]...
+                         [-yn=<name>]... [-u=<uploader>]... [-un=<name>]... [--cataloger=<cataloger>]...] |
                          [[-xd=<distribution>]... [-xy=<deployer>]... [-xyn=<name>]... [-xu=<uploader>]...
                          [-xun=<name>]... [--exclude-cataloger=<cataloger>]...] | [[--auto-config]
                          [--project-name=<name>] [--project-version=<version>]
@@ -903,6 +938,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -976,7 +1012,7 @@ If `--basedir` is undefined then the command assumes it's the same directory whe
 
 The `--file` parameter is repeatable.
 
-The `--glob` parameter must be quote, for example `--glob "target/*.jar"`.
+The `--glob` parameter must be quoted, for example `--glob "target/*.jar"`.
 
 *Explicit Configuration file*
 
@@ -984,6 +1020,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured distribution found
 in the xref:reference:distributions.adoc[distribution] section.
@@ -1003,9 +1041,9 @@ $ jreleaser prepare -h
 Prepare all distributions.
 
 Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                         [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
-                         [[-xd=<distribution>]... [-xp=<packager>]...]]
+                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
+                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1020,6 +1058,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -1041,6 +1080,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured
 xref:reference:distributions.adoc[distribution].
@@ -1084,9 +1125,9 @@ $ jreleaser package -h
 Package all distributions.
 
 Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                         [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
-                         [[-xd=<distribution>]... [-xp=<packager>]...]]
+                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
+                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1102,6 +1143,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -1123,6 +1165,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured
 xref:reference:distributions.adoc[distribution].
@@ -1169,9 +1213,9 @@ $ jreleaser publish -h
 Publish all distributions.
 
 Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                         [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...] |
-                         [[-xd=<distribution>]... [-xp=<packager>]...]]
+                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
+                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1187,6 +1231,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -1208,6 +1253,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--distribution` and `--exclude-distribution` must match the name of a configured
 xref:reference:distributions.adoc[distribution].
@@ -1254,8 +1301,8 @@ $ jreleaser announce -h
 Announce a release.
 
 Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]... [[[-a=<announcer>]...] |
-                          [[-xa=<announcer>]...]]
+                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+                          [[[-a=<announcer>]...] | [[-xa=<announcer>]...]]
 
 Options:
   -b, --basedir=<directory>                  Base directory.
@@ -1269,6 +1316,7 @@ Options:
       -od, --output-directory=<directory>    Output directory.
   -P, --set-property=<key=value>             Sets the value of a property. 🔁
   -q, --quiet                                Log errors only.
+      --settings-file=<file>                 The settings file.
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
   -w, --warn                                 Set log level to warn.
@@ -1287,6 +1335,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 The value of `--announcer` and `--exclude-announcer` must match any of the available
 xref:reference:announce/index.adoc[announcers].
@@ -1318,11 +1368,12 @@ $ jreleaser full-release -h
 Perform a full release.
 
 Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>]
-                              [-c=<file>] [-od=<directory>] [-D=<key=value>]... [-P=<key=value>]...
-                              [-rp=<platform>]... [-sp=<platform>]... [[[-y=<deployer>]... [-yn=<name>]...
-                              [-u=<uploader>]... [-un=<name>]... [-d=<distribution>]... [-p=<packager>]...
-                              [-a=<announcer>]... [--cataloger=<cataloger>]...] | [[-xy=<deployer>]...
-                              [-xyn=<name>]... [-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...
+                              [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                              [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                              [[[-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]... [-un=<name>]...
+                              [-d=<distribution>]... [-p=<packager>]... [-a=<announcer>]...
+                              [--cataloger=<cataloger>]...] | [[-xy=<deployer>]... [-xyn=<name>]...
+                              [-xu=<uploader>]... [-xun=<name>]... [-xd=<distribution>]...
                               [-xp=<packager>]... [-xa=<announcer>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
@@ -1339,6 +1390,7 @@ Options:
   -q, --quiet                                      Log errors only.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
+      --settings-file=<file>                       The settings file.
       -sp, --select-platform=<platform>            Activates paths matching the given platform. 🔁
       --strict                                     Enable strict mode.
   -V, --version                                    Print version information and exit.
@@ -1372,6 +1424,8 @@ If `--config-file` is undefined then the command assumes the file is named `jrel
 found at the current directory.
 
 If `--basedir` is undefined then the command assumes it's the same directory that contains the resolved config file.
+
+If `--settings-file` is undefined then settings will be loaded from `$JRELEASER_HOME/config.[properties|yml|toml|json]`.
 
 NOTE: Use `--dry-run` during development to verify your configuration settings. No network uploads nor repository
 mutations should occur when this mode is activated.
