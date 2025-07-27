@@ -1106,3 +1106,42 @@ hooks:
         run: 'echo JRELEASER_OUTPUT:foo=bar'
 ----
 
+
+== Groups
+
+Script hooks may also be grouped by name, allowing for better readability
+
+[source,yaml]
+----
+hooks:
+  script:
+    groups:
+      github-summary:
+        condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        before:
+          - filter:
+              includes: ['package']
+            run: |
+              echo "### {{command}}" >> $GITHUB_STEP_SUMMARY
+              echo "| Step | Outcome |" >> $GITHUB_STEP_SUMMARY
+              echo "| ---- | ------- |" >> $GITHUB_STEP_SUMMARY
+        success:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :white_check_mark: |" >> $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: echo "" >> $GITHUB_STEP_SUMMARY
+        failure:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :x: |" >> $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: |
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Failure" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "{{event.stacktrace}}\`\`\`" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+----

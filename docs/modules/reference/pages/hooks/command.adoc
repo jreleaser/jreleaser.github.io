@@ -1036,3 +1036,33 @@ hooks:
         cmd: 'echo JRELEASER_OUTPUT:foo=bar'
 ----
 
+== Groups
+
+Command hooks may also be grouped by name, allowing for better readability
+
+[source,yaml]
+----
+hooks:
+  command:
+    groups:
+      github-summary:
+        condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        before:
+          - filter:
+              includes: ['package']
+            cmd: 'github-summary header {{command}}'
+        success:
+          - filter:
+              excludes: ['session']
+            cmd: 'github-summary success {{event.name}}'
+          - filter:
+              includes: ['session']
+            cmd: 'github-summary new-row'
+        failure:
+          - filter:
+              excludes: ['session']
+            cmd: 'github-summary failure {{event.name}}'
+          - filter:
+              includes: ['session']
+            cmd: 'github-summary footer {{event.stacktrace}}'
+----
