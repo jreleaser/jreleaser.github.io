@@ -452,26 +452,26 @@ distributions:
         - 'VOLUME /workspace'
       # configure 2 specs
       specs:
-        slim:
+        jreleaser-slim:
           imageNames:
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:{{tagName}}'
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
+            - 'jreleaser/{{dockerSpecName}}:{{tagName}}'
+            - 'jreleaser/{{dockerSpecName}}:latest'
           # match by platform
           matchers:
             platform: 'linux-x86_64'
           preCommands:
             - 'ARG DEBIAN_FRONTEND=noninteractive'
             - 'ENV TZ=Europe/Zurich'
-            - 'RUN apt-get update && apt-get install -y unzip binutils fakeroot rpm'
-        alpine:
+            - 'RUN apt-get update && apt-get install -y unzip binutils fakeroot rpm git'
+        jreleaser-alpine:
           imageNames:
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:{{tagName}}'
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
+            - 'jreleaser/{{dockerSpecName}}:{{tagName}}'
+            - 'jreleaser/{{dockerSpecName}}:latest'
           # match by platform
           matchers:
             platform: 'linux_musl-x86_64'
           preCommands:
-            - 'RUN apk add unzip binutils fakeroot rpm'
+            - 'RUN apk add unzip binutils fakeroot rpm bash git'
 
   # Distribution 4 is of type NATIVE_PACKAGE
   # Name matches the assembled jpackage distribution
