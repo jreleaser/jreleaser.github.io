@@ -90,7 +90,7 @@ public final class MyExtension implements Extension {
     }
 
     @Override
-    public Set<? extends ExtensionPoint> provides() {
+    public Set<ExtensionPoint> provides() {
         return Collections.singleton(new MyExtensionPoint());
     }
 }
@@ -146,10 +146,11 @@ to write extensions as single Java files that are automatically compiled and pac
 Create a Java file with the following structure:
 
 [source,java]
+[subs="+macros,attributes"]
 .MyJReleaserExtension.java
 ----
 //DEPS org.jreleaser:jreleaser-model-api:{jreleaser-version}
-//DEPS org.kordamp.jipsy:jipsy-annotations:1.0.0
+//DEPS org.kordamp.jipsy:jipsy-annotations:1.2.0
 
 package com.acme;
 
@@ -168,7 +169,7 @@ public final class MyJReleaserExtension implements Extension {
     }
 
     @Override
-    public Set<? extends ExtensionPoint> provides() {
+    public Set<ExtensionPoint> provides() {
         return Collections.singleton(new MyExtensionPoint());
     }
 }
@@ -180,6 +181,7 @@ The script above demonstrates the basic requirements for a JReleaser extension:
 * Include the `jreleaser-model-api` dependency with the appropriate version
 * Implement the `Extension` interface as shown above
 * Register the extension using `@ServiceProviderFor(Extension.class)`
+* Finally, you must provide an implementation of an xref:extension-points/index.adoc[ExtensionPoint].
 
 === Using JBang Extensions
 
