@@ -29,7 +29,7 @@ extensions:
     enabled: true
 
     # Maven GAV coordinates used to resolve JARs.
-    # Mutually exclusive with `directory`.
+    # Mutually exclusive with `directory` and `jbang`.
     # icon:dot-circle[]
     gav: com.acme:my-jreleaser-extension:1.2.3
 
@@ -37,6 +37,14 @@ extensions:
     # Mutually exclusive with `gav`.
     # icon:dot-circle[]
     directory: path/to/my-jreleaser-extension/jars
+
+    # JBang script reference to use.
+    # Any reference that produces a JAR file can be used.
+    # i.e. local or remote .java, .kt, .groovy, .jar or file, 
+    # a GAV or a jbang-catalog reference.
+    # Mutually exclusive with `gav` and `directory`.
+    # icon:dot-circle[]
+    jbang: src/jreleaser-ext/my-jreleaser-extension.java
 
     # Customize extension providers individually.
     # icon:dot-circle[]
@@ -73,6 +81,14 @@ TOML::
   # Mutually exclusive with `gav`.
   # icon:dot-circle[]
   directory = "path/to/my-jreleaser-extension/jars"
+
+  # JBang script reference to use.
+  # Any reference that produces a JAR file can be used.
+  # i.e. local or remote .java, .kt, .groovy, .jar or file, 
+  # a GAV or a jbang-catalog reference.
+  # Mutually exclusive with `gav` and `directory`.
+  # icon:dot-circle[]
+  jbang = "src/jreleaser-ext/my-jreleaser-extension.java"
 
   # Customize extension providers individually.
   # icon:dot-circle[]
@@ -112,6 +128,14 @@ JSON::
       // Mutually exclusive with `gav`.
       // icon:dot-circle[]
       "directory": "path/to/my-jreleaser-extension/jars",
+
+      // JBang script reference to use.
+      // Any reference that produces a JAR file can be used.
+      // i.e. local or remote .java, .kt, .groovy, .jar or file, 
+      // a GAV or a jbang-catalog reference.
+      // Mutually exclusive with `gav` and `directory`.
+      // icon:dot-circle[]
+      "jbang": "src/jreleaser-ext/my-jreleaser-extension.java",
 
       // Customize extension providers individually.
       // icon:dot-circle[]
@@ -171,6 +195,16 @@ Maven::
       <directory>path/to/my-jreleaser-extension/jars</directory>
 
       <!--
+        JBang script reference to use.
+        Any reference that produces a JAR file can be used.
+        i.e. local or remote .java, .kt, .groovy, .jar or file, 
+        a GAV or a jbang-catalog reference.
+        Mutually exclusive with `gav` and `directory`.
+        icon:dot-circle[]
+      -->
+      <jbang>src/jreleaser-ext/my-jreleaser-extension.java</jbang>
+
+      <!--
         Customize extension providers individually.
         icon:dot-circle[]
       -->
@@ -224,6 +258,14 @@ jreleaser {
       // icon:dot-circle[]
       directory = 'path/to/my-jreleaser-extension/jars'
 
+      // JBang script reference to use.
+      // Any reference that produces a JAR file can be used.
+      // i.e. local or remote .java, .kt, .groovy, .jar or file, 
+      // a GAV or a jbang-catalog reference.
+      // Mutually exclusive with `gav` and `directory`.
+      // icon:dot-circle[]
+      jbang = 'src/jreleaser-ext/my-jreleaser-extension.java'
+
       // Customize extension providers individually.
       // icon:dot-circle[]
       provider {
@@ -257,8 +299,7 @@ include::partial$envvars-footer.adoc[]
 
 == Packaging
 
-Extensions should be packaged as JAR files. If the extension has additional dependencies then those JARs may be placed
-next to the extension JAR _or_ the extension may be repackaged as an uberjar or fatjar.
+Extensions should be packaged as JAR files. If the extension has additional dependencies then those JARs may be placed in the same directory or subdirectory as the extension JAR _or_ the extension may be repackaged as an uberjar or fatjar.
 
 WARNING: Do not shade nor bundle JReleaser classes with your extension.
 
@@ -276,6 +317,7 @@ ${JRELEASER_USER_HOME}/extensions/
 ├── bar
 │   ├── bar-2.0.0.jar
 │   └── guava-31.1-jre.jar
+│   └── lib/other.jar
 └── foo
     └── foo-1.0.0.jar
 ----
@@ -285,5 +327,11 @@ ${JRELEASER_USER_HOME}/extensions/
 As an alternative to explicitly placing extension JARs at a given location, JReleaser may download the extension JAR (plus
 any dependencies it may have) from a Maven compatible repository.
 
-WARNING: Do not configure `gav` and `directory` at the same time. These properties are mutually exclusive to each other.
+=== JBang
+
+`jbang` provides an alternative to `gav` and `directory` for loading extensions.
+
+JBang allows you to reference any resource that JBang can execute, including local and remote JAR files, GAV coordinates, and scripts. When using scripts, you can point to local source files that will be automatically compiled and packaged, providing a convenient way to extend JReleaser without additional project setup.
+
+WARNING: Do not configure `gav`, `directory`, or `jbang` simultaneously. These properties are mutually exclusive.
 

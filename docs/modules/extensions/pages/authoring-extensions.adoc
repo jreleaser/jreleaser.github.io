@@ -5,7 +5,7 @@ Follow these steps to create your own extensions.
 
 == 1. Build Tool
 
-Pick your Java build tool of choice (Maven, Gradle, etc). Declare the following dependency for compilation only,
+Pick your Java build tool of choice (Maven, Gradle, JBang, etc). Declare the following dependency for compilation only,
 for example:
 
 [tabs]
@@ -34,6 +34,15 @@ Gradle::
 dependencies {
     compileOnly 'org.jreleaser:jreleaser-model-api:{jreleaser-version}'
 }
+----
+--
+JBang::
++
+--
+[source,java]
+[subs="+macros,attributes"]
+----
+//DEPS org.jreleaser:jreleaser-model-api:{jreleaser-version}
 ----
 --
 ====
@@ -123,6 +132,69 @@ provided by JReleaser when loading the extension.
 
 You have the choice to publish the extension to a Maven compatible repository (such as Maven Central) or your local
 Artifact Repository Manager. Consumers of your extension may configure GAV coordinates to let JReleaser download the
-extension JARs plus any additional transitive dependencies it may require, or the can manually download the JARs and
+extension JARs plus any additional transitive dependencies it may require, or they can manually download the JARs and
 place them inside the default location or a custom location of their own. Review the xref:reference:extensions.adoc[extensions]
 DSL for more information on these options.
+
+== 6. JBang Scripts
+
+As an alternative to traditional JAR packaging, you can create extensions using JBang scripts. This approach allows you
+to write extensions as single Java files that are automatically compiled and packaged by JBang when JReleaser loads them.
+
+=== Creating a JBang Extension
+
+Create a Java file with the following structure:
+
+[source,java]
+.MyJReleaserExtension.java
+----
+//DEPS org.jreleaser:jreleaser-model-api:{jreleaser-version}
+//DEPS org.kordamp.jipsy:jipsy-annotations:1.0.0
+
+package com.acme;
+
+import org.jreleaser.extensions.api.Extension;
+import org.jreleaser.extensions.api.ExtensionPoint;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+
+import java.util.Collections;
+import java.util.Set;
+
+@ServiceProviderFor(Extension.class)
+public final class MyJReleaserExtension implements Extension {
+    @Override
+    public String getName() {
+        return "my-jbang-extension";
+    }
+
+    @Override
+    public Set<? extends ExtensionPoint> provides() {
+        return Collections.singleton(new MyExtensionPoint());
+    }
+}
+----
+
+The script above demonstrates the basic requirements for a JReleaser extension:
+
+* Use `//DEPS` directives to declare dependencies
+* Include the `jreleaser-model-api` dependency with the appropriate version
+* Implement the `Extension` interface as shown above
+* Register the extension using `@ServiceProviderFor(Extension.class)`
+
+=== Using JBang Extensions
+
+Consumers can reference your JBang script in their configuration using the `jbang` property:
+
+[source,yaml]
+----
+extensions:
+  my-jbang-extension:
+    jbang: src/jreleaser-ext/MyJReleaserExtension.java
+----
+
+The script can be referenced as a local file path, remote URL, or JBang catalog reference. JBang will automatically
+handle compilation and dependency resolution when JReleaser loads the extension.
+
+Since JBang compiles and packages the script as a JAR file, you can leverage any JBang feature to extend JReleaser.
+For example, JBang scripts can span multiple files using `//SOURCES **/*.java` to include all Java files in the current
+directory and subdirectories, or explicitly list specific files using `//SOURCES file1.java, file2.java`. 
