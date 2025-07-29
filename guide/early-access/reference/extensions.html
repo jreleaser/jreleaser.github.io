@@ -929,7 +929,7 @@ extensions:
     enabled: true
 
     # Maven GAV coordinates used to resolve JARs.
-    # Mutually exclusive with `directory`.
+    # Mutually exclusive with `directory` and `jbang`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     gav: com.acme:my-jreleaser-extension:1.2.3
 
@@ -937,6 +937,14 @@ extensions:
     # Mutually exclusive with `gav`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     directory: path/to/my-jreleaser-extension/jars
+
+    # JBang script reference to use.
+    # Any reference that produces a JAR file can be used.
+    # i.e. local or remote .java, .kt, .groovy, .jar or file,
+    # a GAV or a jbang-catalog reference.
+    # Mutually exclusive with `gav` and `directory`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    jbang: src/jreleaser-ext/my-jreleaser-extension.java
 
     # Customize extension providers individually.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -971,6 +979,14 @@ extensions:
   # Mutually exclusive with `gav`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   directory = "path/to/my-jreleaser-extension/jars"
+
+  # JBang script reference to use.
+  # Any reference that produces a JAR file can be used.
+  # i.e. local or remote .java, .kt, .groovy, .jar or file,
+  # a GAV or a jbang-catalog reference.
+  # Mutually exclusive with `gav` and `directory`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  jbang = "src/jreleaser-ext/my-jreleaser-extension.java"
 
   # Customize extension providers individually.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1008,6 +1024,14 @@ extensions:
       // Mutually exclusive with `gav`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "directory": "path/to/my-jreleaser-extension/jars",
+
+      // JBang script reference to use.
+      // Any reference that produces a JAR file can be used.
+      // i.e. local or remote .java, .kt, .groovy, .jar or file,
+      // a GAV or a jbang-catalog reference.
+      // Mutually exclusive with `gav` and `directory`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "jbang": "src/jreleaser-ext/my-jreleaser-extension.java",
 
       // Customize extension providers individually.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1065,6 +1089,16 @@ extensions:
       &lt;directory&gt;path/to/my-jreleaser-extension/jars&lt;/directory&gt;
 
       &lt;!--
+        JBang script reference to use.
+        Any reference that produces a JAR file can be used.
+        i.e. local or remote .java, .kt, .groovy, .jar or file,
+        a GAV or a jbang-catalog reference.
+        Mutually exclusive with `gav` and `directory`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;jbang&gt;src/jreleaser-ext/my-jreleaser-extension.java&lt;/jbang&gt;
+
+      &lt;!--
         Customize extension providers individually.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
@@ -1115,6 +1149,14 @@ extensions:
       // Mutually exclusive with `gav`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       directory = 'path/to/my-jreleaser-extension/jars'
+
+      // JBang script reference to use.
+      // Any reference that produces a JAR file can be used.
+      // i.e. local or remote .java, .kt, .groovy, .jar or file,
+      // a GAV or a jbang-catalog reference.
+      // Mutually exclusive with `gav` and `directory`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      jbang = 'src/jreleaser-ext/my-jreleaser-extension.java'
 
       // Customize extension providers individually.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1235,8 +1277,7 @@ such that:</p>
 <h2 id="_packaging"><a class="anchor" href="#_packaging"></a>Packaging</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Extensions should be packaged as JAR files. If the extension has additional dependencies then those JARs may be placed
-next to the extension JAR <em>or</em> the extension may be repackaged as an uberjar or fatjar.</p>
+<p>Extensions should be packaged as JAR files. If the extension has additional dependencies then those JARs may be placed in the same directory or subdirectory as the extension JAR <em>or</em> the extension may be repackaged as an uberjar or fatjar.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1269,6 +1310,7 @@ An extension named <code>bar</code> with JAR file <code>bar-2.0.0.jar</code> and
 ├── bar
 │   ├── bar-2.0.0.jar
 │   └── guava-31.1-jre.jar
+│   └── lib/other.jar
 └── foo
     └── foo-1.0.0.jar</code></pre>
 </div>
@@ -1282,6 +1324,14 @@ An extension named <code>bar</code> with JAR file <code>bar-2.0.0.jar</code> and
 <p>As an alternative to explicitly placing extension JARs at a given location, JReleaser may download the extension JAR (plus
 any dependencies it may have) from a Maven compatible repository.</p>
 </div>
+<div class="sect2">
+<h3 id="_jbang"><a class="anchor" href="#_jbang"></a>JBang</h3>
+<div class="paragraph">
+<p><code>jbang</code> provides an alternative to <code>gav</code> and <code>directory</code> for loading extensions.</p>
+</div>
+<div class="paragraph">
+<p>JBang allows you to reference any resource that JBang can execute, including local and remote JAR files, GAV coordinates, and scripts. When using scripts, you can point to local source files that will be automatically compiled and packaged, providing a convenient way to extend JReleaser without additional project setup.</p>
+</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1289,10 +1339,11 @@ any dependencies it may have) from a Maven compatible repository.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Do not configure <code>gav</code> and <code>directory</code> at the same time. These properties are mutually exclusive to each other.
+Do not configure <code>gav</code>, <code>directory</code>, or <code>jbang</code> simultaneously. These properties are mutually exclusive.
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>

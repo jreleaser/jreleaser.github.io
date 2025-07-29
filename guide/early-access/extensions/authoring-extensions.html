@@ -872,7 +872,7 @@ Follow these steps to create your own extensions.</p>
 <h2 id="_1_build_tool"><a class="anchor" href="#_1_build_tool"></a>1. Build Tool</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Pick your Java build tool of choice (Maven, Gradle, etc). Declare the following dependency for compilation only,
+<p>Pick your Java build tool of choice (Maven, Gradle, JBang, etc). Declare the following dependency for compilation only,
 for example:</p>
 </div>
 <div class="tabset is-loading">
@@ -883,6 +883,9 @@ for example:</p>
 </li>
 <li>
 <p><a id="tabset1_gradle"></a>Gradle</p>
+</li>
+<li>
+<p><a id="tabset1_jbang"></a>JBang</p>
 </li>
 </ul>
 </div>
@@ -906,6 +909,13 @@ for example:</p>
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
     compileOnly 'org.jreleaser:jreleaser-model-api:1.20.0-SNAPSHOT'
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_jbang">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//DEPS org.jreleaser:jreleaser-model-api:1.20.0-SNAPSHOT</code></pre>
 </div>
 </div>
 </div>
@@ -1088,9 +1098,94 @@ provided by JReleaser when loading the extension.</p>
 <div class="paragraph">
 <p>You have the choice to publish the extension to a Maven compatible repository (such as Maven Central) or your local
 Artifact Repository Manager. Consumers of your extension may configure GAV coordinates to let JReleaser download the
-extension JARs plus any additional transitive dependencies it may require, or the can manually download the JARs and
+extension JARs plus any additional transitive dependencies it may require, or they can manually download the JARs and
 place them inside the default location or a custom location of their own. Review the <a href="../reference/extensions.html" class="xref page">extensions</a>
 DSL for more information on these options.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_6_jbang_scripts"><a class="anchor" href="#_6_jbang_scripts"></a>6. JBang Scripts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an alternative to traditional JAR packaging, you can create extensions using JBang scripts. This approach allows you
+to write extensions as single Java files that are automatically compiled and packaged by JBang when JReleaser loads them.</p>
+</div>
+<div class="sect2">
+<h3 id="_creating_a_jbang_extension"><a class="anchor" href="#_creating_a_jbang_extension"></a>Creating a JBang Extension</h3>
+<div class="paragraph">
+<p>Create a Java file with the following structure:</p>
+</div>
+<div class="listingblock">
+<div class="title">MyJReleaserExtension.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">//DEPS org.jreleaser:jreleaser-model-api:{jreleaser-version}
+//DEPS org.kordamp.jipsy:jipsy-annotations:1.0.0
+
+package com.acme;
+
+import org.jreleaser.extensions.api.Extension;
+import org.jreleaser.extensions.api.ExtensionPoint;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+
+import java.util.Collections;
+import java.util.Set;
+
+@ServiceProviderFor(Extension.class)
+public final class MyJReleaserExtension implements Extension {
+    @Override
+    public String getName() {
+        return "my-jbang-extension";
+    }
+
+    @Override
+    public Set&lt;? extends ExtensionPoint&gt; provides() {
+        return Collections.singleton(new MyExtensionPoint());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script above demonstrates the basic requirements for a JReleaser extension:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use <code>//DEPS</code> directives to declare dependencies</p>
+</li>
+<li>
+<p>Include the <code>jreleaser-model-api</code> dependency with the appropriate version</p>
+</li>
+<li>
+<p>Implement the <code>Extension</code> interface as shown above</p>
+</li>
+<li>
+<p>Register the extension using <code>@ServiceProviderFor(Extension.class)</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_jbang_extensions"><a class="anchor" href="#_using_jbang_extensions"></a>Using JBang Extensions</h3>
+<div class="paragraph">
+<p>Consumers can reference your JBang script in their configuration using the <code>jbang</code> property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">extensions:
+  my-jbang-extension:
+    jbang: src/jreleaser-ext/MyJReleaserExtension.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script can be referenced as a local file path, remote URL, or JBang catalog reference. JBang will automatically
+handle compilation and dependency resolution when JReleaser loads the extension.</p>
+</div>
+<div class="paragraph">
+<p>Since JBang compiles and packages the script as a JAR file, you can leverage any JBang feature to extend JReleaser.
+For example, JBang scripts can span multiple files using <code>//SOURCES <strong>*/</strong>.java</code> to include all Java files in the current
+directory and subdirectories, or explicitly list specific files using <code>//SOURCES file1.java, file2.java</code>.</p>
+</div>
 </div>
 </div>
 </div>
