@@ -1,6 +1,6 @@
-= Command Hooks
+= JBang Hooks
 
-Defines command hooks to be executed before or after a JReleaser step.
+Defines JBang hooks to be executed before or after a JReleaser step.
 
 == Configuration
 
@@ -12,7 +12,7 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 # icon:dot-circle[]
 hooks:
@@ -51,18 +51,18 @@ hooks:
       - { os: windows, arch: amd64 }
 
   # icon:dot-circle[]
-  command:
+  jbang:
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
     # icon:dot-circle[] icon:eye-slash[]
     active: ALWAYS
 
-    # Execute commands if the condition evaluates to `true`.
+    # Execute scripts if the condition evaluates to `true`.
     # icon:dot-circle[] icon:file-alt[]
     condition: '"{{ Env.CI }}" == true'
 
-    # A map of command environment variables.
+    # A map of jbang environment variables.
     # Accepts values from `matrix`.
     # icon:dot-circle[] icon:file-alt[]
     environment:
@@ -86,6 +86,10 @@ hooks:
         - { os: osx, arch: amd64 }
         - { os: windows, arch: arm64 }
         - { os: windows, arch: amd64 }
+
+    # JBang version to launch the script.
+    # icon:dot-circle[]
+    version: {jbang-version}
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -132,14 +136,25 @@ hooks:
             - { os: windows, arch: arm64 }
             - { os: windows, arch: amd64 }
 
-        # Execute the command if the condition evaluates to `true`.
+        # Execute the script if the condition evaluates to `true`.
         # icon:dot-circle[] icon:file-alt[]
         condition: '"{{ Env.CI }}" == true'
 
-        # The command to be invoked.
-        # Accepts values from `matrix`.
+        # JBang script reference to use.
+        # Any reference that produces a JAR file can be used.
+        # i.e. local or remote .java, .kt, .groovy, .jar or file,
+        # a GAV or a jbang-catalog reference.
         # icon:exclamation-triangle[] icon:file-alt[]
-        cmd: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
+        script: src/jbang/hello.java
+
+        # Args required by the script.
+        # icon:dot-circle[] icon:file-alt[]
+        args:
+          - foo
+
+        # JBang version to launch the script.
+        # icon:dot-circle[]
+        version: {jbang-version}
 
         # Filters this hook based on the given step.
         # icon:dot-circle[]
@@ -159,7 +174,7 @@ TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 # icon:dot-circle[]
 [hooks]
@@ -194,18 +209,18 @@ TOML::
           { os = "windows", arch = "amd64" }]
 
   # icon:dot-circle[]
-  [hooks.command]
+  [hooks.jbang]
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
     # icon:dot-circle[] icon:eye-slash[]
     active = "ALWAYS"
 
-    # Execute commands if the condition evaluates to `true`.
+    # Execute scripts if the condition evaluates to `true`.
     # icon:dot-circle[] icon:file-alt[]
     condition = "'{{ Env.CI }}' == true"
 
-    # A map of command environment variables.
+    # A map of jbang environment variables.
     # Accepts values from `matrix`.
     # icon:dot-circle[] icon:file-alt[]
     environment.FOO = "bar"
@@ -226,10 +241,14 @@ TOML::
             { os = "windows", arch = "arm64" },
             { os = "windows", arch = "amd64" }]
 
+    # JBang version to launch the script.
+    # icon:dot-circle[]
+    version = "{jbang-version}"
+
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
     # icon:dot-circle[]
-    [[hooks.command.before]]
+    [[hooks.jbang.before]]
       # Let the release continue if the hook fails.
       # Defaults to `false`.
       # icon:dot-circle[]
@@ -267,14 +286,24 @@ TOML::
               { os = "windows", arch = "arm64" },
               { os = "windows", arch = "amd64" }]
 
-      # Execute the command if the condition evaluates to `true`.
+      # Execute the script if the condition evaluates to `true`.
       # icon:dot-circle[] icon:file-alt[]
       condition = "'{{ Env.CI }}' == true"
 
-      # The command to be invoked.
-      # Accepts values from `matrix`.
+      # JBang script reference to use.
+      # Any reference that produces a JAR file can be used.
+      # i.e. local or remote .java, .kt, .groovy, .jar or file,
+      # a GAV or a jbang-catalog reference.
       # icon:exclamation-triangle[] icon:file-alt[]
-      cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+      script = "src/jbang/hello.java"
+
+      # Args required by the script.
+      # icon:dot-circle[] icon:file-alt[]
+      args = ["foo"]
+
+      # JBang version to launch the script.
+      # icon:dot-circle[]
+      version = "{jbang-version}"
 
       # Filters this hook based on the given step.
       # icon:dot-circle[]
@@ -291,7 +320,7 @@ JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 {
   // icon:dot-circle[]
@@ -335,18 +364,18 @@ JSON::
     },
 
     // icon:dot-circle[]
-    "command": {
+    "jbang": {
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // icon:dot-circle[] icon:eye-slash[]
       "active": "ALWAYS",
 
-      // Execute commands if the condition evaluates to `true`.
+      // Execute scripts if the condition evaluates to `true`.
       // icon:dot-circle[] icon:file-alt[]
       "condition": "'{{ Env.CI }}' == true",
 
-      // A map of command environment variables.
+      // A map of jbang environment variables.
       // Accepts values from `matrix`.
       // icon:dot-circle[] icon:eye-slash[]
       "environment": {
@@ -374,6 +403,10 @@ JSON::
           { "os": "windows", "arch": "amd64" }
         ]
       },
+
+     // JBang version to launch the script.
+     // icon:dot-circle[]
+     "version": "{jbang-version}",
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -425,14 +458,26 @@ JSON::
             ]
           },
 
-          // Execute the command if the condition evaluates to `true`.
+          // Execute the script if the condition evaluates to `true`.
           // icon:dot-circle[] icon:file-alt[]
           "condition": "'{{ Env.CI }}' == true",
 
-          // The command to be invoked.
-          // Accepts values from `matrix`.
+          // JBang script reference to use.
+          // Any reference that produces a JAR file can be used.
+          // i.e. local or remote .java, .kt, .groovy, .jar or file,
+          // a GAV or a jbang-catalog reference.
           // icon:exclamation-triangle[] icon:file-alt[]
-          "cmd": "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}",
+          "script": "src/jbang/hello.java",
+
+          // Args required by the script.
+          // icon:dot-circle[] icon:file-alt[]
+          "args": [
+            "foo"
+          ],
+
+          // JBang version to launch the script.
+          // icon:dot-circle[]
+          "version": "{jbang-version}",
 
           // Filters this hook based on the given step.
           // icon:dot-circle[]
@@ -459,7 +504,7 @@ Maven::
 +
 --
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="+macros,verbatim,attributes"]
 ----
 <jreleaser>
   <!--
@@ -542,7 +587,7 @@ Maven::
     <!--
       icon:dot-circle[]
     -->
-    <command>
+    <jbang>
       <!--
         Enable or disable all before, success, and failure hooks.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -552,13 +597,13 @@ Maven::
       <active>ALWAYS</active>
 
       <!--
-        Execute commands if the condition evaluates to `true`.
+        Execute scripts if the condition evaluates to `true`.
         icon:dot-circle[] icon:file-alt[]
       -->
       <condition>"{{ Env.CI }}" == true</condition>
 
       <!--
-        A map of command environment variables.
+        A map of jbang environment variables.
         Accepts values from `matrix`.
         icon:dot-circle[] icon:file-alt[]
       -->
@@ -616,6 +661,12 @@ Maven::
           </row>
         </rows>
       </matrix>
+
+      <!--
+        JBang version to launch the script.
+        icon:dot-circle[]
+      -->
+      <version>{jbang-version}</version>
 
       <!--
         The type of hook
@@ -707,17 +758,32 @@ Maven::
           </matrix>
 
           <!--
-            Execute the command if the condition evaluates to `true`.
+            Execute the script if the condition evaluates to `true`.
             icon:dot-circle[] icon:file-alt[]
           -->
           <condition>"{{ Env.CI }}" == true</condition>
 
-          <!--
-            The command to be invoked.
-            Accepts values from `matrix`.
+            JBang script reference to use.
+            Any reference that produces a JAR file can be used.
+            i.e. local or remote .java, .kt, .groovy, .jar or file,
+            a GAV or a jbang-catalog reference.
             icon:exclamation-triangle[] icon:file-alt[]
           -->
-          <cmd>{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}</cmd>
+          <script>src/jbang/hello.java</script>
+
+          <!--
+            Args required by the script.
+            icon:dot-circle[] icon:file-alt[]
+          -->
+          <args>
+            <arg>foo</arg>
+          </args>
+
+          <!--
+            JBang version to launch the script.
+            icon:dot-circle[]
+          -->
+          <version>{jbang-version}</version>
 
           <!--
             Filters this hook based on the given step.
@@ -739,7 +805,7 @@ Maven::
           </platforms>
         </commandHook>
       </before>
-    </command>
+    </jbang>
   </hooks>
 </jreleaser>
 ----
@@ -748,7 +814,7 @@ Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 jreleaser {
   // icon:dot-circle[]
@@ -787,18 +853,18 @@ jreleaser {
     }
 
     // icon:dot-circle[]
-    command {
+    jbang {
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // icon:dot-circle[] icon:eye-slash[]
       active: ALWAYS
 
-      // Execute commands if the condition evaluates to `true`.
+      // Execute scripts if the condition evaluates to `true`.
       // icon:dot-circle[] icon:file-alt[]
       condition = '"{{ Env.CI }}" == true'
 
-      // A map of command environment variables.
+      // A map of jbang environment variables.
       // Accepts values from `matrix`.
       // icon:dot-circle[] icon:file-alt[]
       environment('FOO', 'bar')
@@ -821,6 +887,10 @@ jreleaser {
         row(os: 'windows', arch: 'arm64')
         row(os: 'windows', arch: 'amd64')
       }
+
+      // JBang version to launch the script.
+      // icon:dot-circle[]
+      version = '{jbang-version}'
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -866,14 +936,24 @@ jreleaser {
           row(os: 'windows', arch: 'amd64')
         }
 
-        // Execute the command if the condition evaluates to `true`.
+        // Execute the script if the condition evaluates to `true`.
         // icon:dot-circle[] icon:file-alt[]
         condition = '"{{ Env.CI }}" == true'
 
-        // The command to be invoked.
-        // Accepts values from `matrix`.
+        // JBang script reference to use.
+        // Any reference that produces a JAR file can be used.
+        // i.e. local or remote .java, .kt, .groovy, .jar or file,
+        // a GAV or a jbang-catalog reference.
         // icon:exclamation-triangle[] icon:file-alt[]
-        cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+        script = 'src/jbang/hello.java'
+
+        // Args required by the script.
+        // icon:dot-circle[] icon:file-alt[]
+        arg('foo')
+
+        // JBang version to launch the script.
+        // icon:dot-circle[]
+        version = '{jbang-version}'
 
         // Filters this hook based on the given step.
         // icon:dot-circle[]
@@ -901,8 +981,8 @@ include::partial$envvars-header.adoc[]
 |===
 | System Property | Environment Variable
 2+| *active*
-| jreleaser.hooks.command.active
-| JRELEASER_HOOKS_COMMAND_ACTIVE
+| jreleaser.hooks.jbang.active
+| JRELEASER_HOOKS_JBANG_ACTIVE
 |===
 
 **Before hooks**
@@ -910,8 +990,8 @@ include::partial$envvars-header.adoc[]
 |===
 | System Property | Environment Variable
 2+| *active*
-| jreleaser.hooks.command.before.${index}.active
-| JRELEASER_HOOKS_COMMAND_BEFORE_${index}_ACTIVE
+| jreleaser.hooks.jbang.before.${index}.active
+| JRELEASER_HOOKS_JBANG_BEFORE_${index}_ACTIVE
 |===
 
 **Success hooks**
@@ -919,8 +999,8 @@ include::partial$envvars-header.adoc[]
 |===
 | System Property | Environment Variable
 2+| *active*
-| jreleaser.hooks.command.success.${index}.active
-| JRELEASER_HOOKS_COMMAND_SUCCESS_${index}_ACTIVE
+| jreleaser.hooks.jbang.success.${index}.active
+| JRELEASER_HOOKS_JBANG_SUCCESS_${index}_ACTIVE
 |===
 
 **Failure hooks**
@@ -928,8 +1008,8 @@ include::partial$envvars-header.adoc[]
 |===
 | System Property | Environment Variable
 2+| *active*
-| jreleaser.hooks.command.failure.${index}.active
-| JRELEASER_HOOKS_COMMAND_FAILURE_${index}_ACTIVE
+| jreleaser.hooks.jbang.failure.${index}.active
+| JRELEASER_HOOKS_JBANG_FAILURE_${index}_ACTIVE
 |===
 
 == Step Names
@@ -973,13 +1053,13 @@ hooks:
     KEY1: global1
     KEY2: global2
     KEY3: global3
-  command:
+  jbang:
     environment:
       KEY2: script1
       KEY4: script2
       KEY5: script3
     before:
-      - cmd: './output.sh'
+      - script: 'hello.java'
         verbose: true
         environment:
           KEY3: local1
@@ -1012,7 +1092,7 @@ has an environment variable `CI` set to true, which is typically the case in xre
 hooks:
   command:
     before:
-      - cmd: './mvnw -ntp verify'
+      - script: 'hello.java'
         condition: '"{{ Env.CI }}" == true'
         verbose: true
         filter:
@@ -1021,22 +1101,6 @@ hooks:
 
 NOTE: Use quotes around name templates if their evaluation may result in an empty string.
 
-== Output
-
-Command hooks have the option to provide key/value pairs as input for other steps in the current workflow. Simply
-use `JRELEASER_OUTPUT:` as prefix in the command's output followed by `key=value`. For example, the following configuration
-adds a key named `foo` with a value `bar` before the `changelog` step is invoked:
-
-[source,yaml]
-----
-hooks:
-  command:
-    before:
-      - filter:
-          includes: [changelog]
-        cmd: 'echo JRELEASER_OUTPUT:foo=bar'
-----
-
 == Groups
 
 Command hooks may also be grouped by name, allowing for better readability
@@ -1044,26 +1108,36 @@ Command hooks may also be grouped by name, allowing for better readability
 [source,yaml]
 ----
 hooks:
-  command:
+  jbang:
     groups:
       github-summary:
         condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        script: 'github-summary.java'
         before:
           - filter:
               includes: ['package']
-            cmd: 'github-summary header {{command}}'
+            args:
+              - 'header'
+              - '{{command}}'
         success:
           - filter:
               excludes: ['session']
-            cmd: 'github-summary success {{event.name}}'
+            args:
+              - 'success'
+              - '{{event.name}}'
           - filter:
               includes: ['session']
-            cmd: 'github-summary new-row'
+            args:
+              - 'new-row'
         failure:
           - filter:
               excludes: ['session']
-            cmd: 'github-summary failure {{event.name}}'
+            args:
+              - 'failure'
+              - '{{event.name}}'
           - filter:
               includes: ['session']
-            cmd: 'github-summary footer {{event.stacktrace}}'
+            args:
+              - 'footer'
+              - '{{event.stacktrace}}'
 ----
