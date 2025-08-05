@@ -941,56 +941,52 @@ catalog:
   sbom:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     syft:
-      # Catalogers require a name.
-      # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      app:
+      # Enables or disables the cataloger.
+      # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      # Defaults to `NEVER`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      active: ALWAYS
 
-        # Enables or disables the cataloger.
-        # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
-        # Defaults to `NEVER`.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-        active: ALWAYS
+      # Enables distribution artifacts for cataloging.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      distributions: true
 
-        # Enables distribution artifacts for cataloging.
-        # Defaults to `true`.
+      # Enables files for cataloging.
+      # Defaults to `true`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files: true
+
+      # Additional properties used when evaluating templates.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      extraProperties:
+        # Key will be capitalized and prefixed with `syft`, i.e, `syftFoo`.
+        foo: bar
+
+      # Archive all SBOMs.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      pack:
+        # Enables or disables archiving.
+        # Defaults to `false`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        distributions: true
+        enabled: true
 
-        # Enables files for cataloging.
-        # Defaults to `true`.
+        # Defines the name of the archive.
+        # Defaults to `{{projectName}}-{{projectVersion}}-sboms`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        files: true
+        name: '{{projectName}}-{{projectVersion}}-sboms'
 
-        # Additional properties used when evaluating templates.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        extraProperties:
-          # Key will be capitalized and prefixed with `syft`, i.e, `syftFoo`.
-          foo: bar
+      # Version of tool to use.
+      # If unspecified, will use 1.27.1.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      version: 1.27.1
 
-        # Archive all SBOMs.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        pack:
-          # Enables or disables archiving.
-          # Defaults to `false`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          enabled: true
-
-          # Defines the name of the archive.
-          # Defaults to `{{projectName}}-{{projectVersion}}-sboms`.
-          # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          name: '{{projectName}}-{{projectVersion}}-sboms'
-
-        # Version of tool to use.
-        # If unspecified, will use 1.27.1.
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        version: 1.27.1
-
-        # Target SBOM format(s).
-        # If unspecified, [`SPDX_JSON`].
-        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-        formats:
-          - SPDX_JSON
-          - CYCLONEDX_JSON</code></pre>
+      # Target SBOM format(s).
+      # If unspecified, [`SPDX_JSON`].
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      formats:
+        - SPDX_JSON
+        - CYCLONEDX_JSON</code></pre>
 </div>
 </div>
 </div>
@@ -1092,18 +1088,18 @@ catalog:
           "name" = "{{projectName}}-{{projectVersion}}-sboms"
         },
 
-          // Version of tool to use.
-          // If unspecified, will use 1.27.1.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "version": "1.27.1",
+        // Version of tool to use.
+        // If unspecified, will use 1.27.1.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "version": "1.27.1",
 
-          // Target SBOM format(s).
-          // If unspecified, [`SPDX_JSON`].
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          "formats": [
-            "SPDX_JSON",
-            "CYCLONEDX_JSON"
-          ]
+        // Target SBOM format(s).
+        // If unspecified, [`SPDX_JSON`].
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "formats": [
+          "SPDX_JSON",
+          "CYCLONEDX_JSON"
+        ]
       }
     }
   }
@@ -1176,22 +1172,22 @@ catalog:
           &lt;name&gt;{{projectName}}-{{projectVersion}}-sboms&lt;/name&gt;
         &lt;/pack&gt;
 
-          &lt;!--
-            Version of tool to use.
-            If unspecified, will use 1.27.1.
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;version&gt;1.27.1&lt;/version&gt;
+        &lt;!--
+          Version of tool to use.
+          If unspecified, will use 1.27.1.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;version&gt;1.27.1&lt;/version&gt;
 
-          &lt;!--
-            Target SBOM format(s).
-            If unspecified, [`SPDX_JSON`].
-            <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          --&gt;
-          &lt;formats&gt;
-            &lt;format&gt;SPDX_JSON&lt;/format&gt;
-            &lt;format&gt;CYCLONEDX_JSON&lt;/format&gt;
-          &lt;/formats&gt;
+        &lt;!--
+          Target SBOM format(s).
+          If unspecified, [`SPDX_JSON`].
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;formats&gt;
+          &lt;format&gt;SPDX_JSON&lt;/format&gt;
+          &lt;format&gt;CYCLONEDX_JSON&lt;/format&gt;
+        &lt;/formats&gt;
       &lt;/syft&gt;
     &lt;/sbom&gt;
   &lt;/catalog&gt;
@@ -1241,18 +1237,18 @@ catalog:
           // Defaults to `{{projectName}}-{{projectVersion}}-sboms`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           name = '{{projectName}}-{{projectVersion}}-sboms'
-       }
+        }
 
-          // Version of tool to use.
-          // If unspecified, will use 1.27.1.
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          version = '1.27.1'
+        // Version of tool to use.
+        // If unspecified, will use 1.27.1.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        version = '1.27.1'
 
-          // Target SBOM format(s).
-          // If unspecified, [`SPDX_JSON`].
-          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-          format('SPDX_JSON')
-          format('CYCLONEDX_JSON')
+        // Target SBOM format(s).
+        // If unspecified, [`SPDX_JSON`].
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        format('SPDX_JSON')
+        format('CYCLONEDX_JSON')
       }
     }
   }
