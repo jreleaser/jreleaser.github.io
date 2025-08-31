@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Docker :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/packagers/docker.html">
-    <meta name="generator" content="Antora 3.1.10">
+    <meta name="generator" content="Antora 3.1.12">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
@@ -640,6 +640,9 @@
     <a class="nav-link" href="../hooks/command.html">Command Hooks</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hooks/jbang.html">JBang Hooks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../hooks/script.html">Script Hooks</a>
   </li>
 </ul>
@@ -1024,6 +1027,11 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     continueOnError: true
 
+    # Skip publication to remove services.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    skipPublishing: true
+
     # Custom download URL.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     downloadUrl: https://my.server.com/{{projectName}}/{{tagName}}/{{artifactFile}}
@@ -1124,6 +1132,15 @@ packagers:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     baseImage: "alpine:latest"
 
+    # The image's entrypoint.
+    # Defaults to `["/{{distributionArtifactRootEntryName}}/bin/{{distributionExecutableUnix}}"]`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    entrypoint: '["/app/bin/launch"]'
+
+    # The image's CMD instruction.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    cmd: '["--help"]'
+
     # A list of image names.
     # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
     # will be created.
@@ -1204,6 +1221,12 @@ packagers:
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
       - serverName: myRegistry
 
+        # Enables or disables publication to this registry.
+        # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        # Defaults to same value as the packager.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        active: ALWAYS
+
         # The address of the docker registry.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
         server: https://myregistry.com
@@ -1244,6 +1267,11 @@ packagers:
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   continueOnError = true
+
+  # Skip publication to remove services.
+  # Defaults to `false`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  skipPublishing = true
 
   # Custom download URL.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1340,6 +1368,15 @@ packagers:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   baseImage = "alpine:latest"
 
+  # The image's entrypoint.
+  # Defaults to `["/{{distributionArtifactRootEntryName}}/bin/{{distributionExecutableUnix}}"]`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  entrypoint = "[\"/app/bin/launch\"]"
+
+  # The image's CMD instruction.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+  cmd = "[\"--help\"]"
+
   # A list of image names.
   # If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
   # will be created.
@@ -1409,6 +1446,12 @@ packagers:
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
     serverName = "myRegistry"
 
+    # Enables or disables publication to this registry.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to same value as the packager.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    active = "ALWAYS"
+
     # The address of the docker registry.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
     server = "https://myregistry.com"
@@ -1452,6 +1495,11 @@ packagers:
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "continueOnError": true,
+
+      // Skip publication to remove services.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "skipPublishing": true,
 
       // Custom download URL.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -1558,6 +1606,15 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "baseImage": "alpine:latest",
 
+      // The image's entrypoint.
+      // Defaults to `["/{{distributionArtifactRootEntryName}}/bin/{{distributionExecutableUnix}}"]`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "entrypoint": "[\"/app/bin/launch\"]",
+
+      // The image's CMD instruction.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      "cmd": "[\"--help\"]",
+
       // A list of image names.
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
       // will be created.
@@ -1647,6 +1704,12 @@ packagers:
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
           "serverName": "myRegistry",
 
+          // Enables or disables publication to this registry.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to same value as the packager.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "active": "ALWAYS",
+
           // The address of the docker registry.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
           "server": "https://myregistry.com",
@@ -1703,6 +1766,13 @@ packagers:
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;continueOnError&gt;true&lt;/continueOnError&gt;
+
+      &lt;!--
+        Skip publication to remove services.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;skipPublishing&gt;true&lt;/skipPublishing&gt;
 
       &lt;!--
         Custom download URL.
@@ -1855,6 +1925,19 @@ packagers:
       &lt;baseImage&gt;alpine:latest&lt;/baseImage&gt;
 
       &lt;!--
+        The image's entrypoint.
+        Defaults to `["/{{distributionArtifactRootEntryName}}/bin/{{distributionExecutableUnix}}"]`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;entrypoint&gt;["/app/bin/launch"]&lt;/entrypoint&gt;
+
+      &lt;!--
+        The image's CMD instruction.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      --&gt;
+      &lt;cmd&gt;["--help"]&lt;/cmd&gt;
+
+      &lt;!--
         A list of image names.
         If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
         will be created.
@@ -1970,6 +2053,14 @@ packagers:
           &lt;serverName&gt;myRegistry&lt;/serverName&gt;
 
           &lt;!--
+            Enables or disables publication to this registry.
+            Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            Defaults to same value as the packager.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;active&gt;ALWAYS&lt;/active&gt;
+
+          &lt;!--
             The address of the docker registry.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
           --&gt;
@@ -2027,6 +2118,11 @@ packagers:
       // Defaults to `false`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       continueOnError = true
+
+      // Skip publication to remove services.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      skipPublishing = true
 
       // Custom download URL.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
@@ -2127,6 +2223,15 @@ packagers:
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       baseImage = 'alpine:latest'
 
+      // The image's entrypoint.
+      // Defaults to `["/{{distributionArtifactRootEntryName}}/bin/{{distributionExecutableUnix}}"]`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      entrypoint = '["/app/bin/launch"]'
+
+      // The image's CMD instruction.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      cmd = '["--help"]'
+
       // A list of image names.
       // If unspecified, a single image `{{repoOwner}}/{{distributionName}}:{{tagName}}`
       // will be created.
@@ -2205,6 +2310,12 @@ packagers:
           // The address of the docker registry.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> if `serverName != DEFAULT`.
           server = 'https://myregistry.com'
+
+          // Enables or disables publication to this registry.
+          // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+          // Defaults to same value as the packager.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          active = 'ALWAYS'
 
           // Expect login/lougout to be carried out by external means.
           // Defaults to `false`.
@@ -2599,6 +2710,7 @@ LABEL "org.opencontainers.image.url"="https://acme.com/app"
 LABEL "org.opencontainers.image.licenses"="Apache-2.0"
 LABEL "org.opencontainers.image.version"="1.2.3"
 LABEL "org.opencontainers.image.revision"="de0266d314b91dd201765616e207d0a8706d0b99"
+LABEL "org.opencontainers.image.source"="https://github.com/acme/app"
 
 COPY assembly/* /
 
@@ -2662,6 +2774,9 @@ ENTRYPOINT ["/app-1.2.3/bin/app"]</code></pre>
 </li>
 <li>
 <p>org.opencontainers.image.revision = {{commitFullHash}}</p>
+</li>
+<li>
+<p>org.opencontainers.image.source = https://{{repoHost}}/{{repoOwner}}/{{repoName}}</p>
 </li>
 </ul>
 </div>
@@ -3041,20 +3156,20 @@ distributions:
         - 'VOLUME /workspace'
       # configure 2 specs
       specs:
-        slim:
+        jreleaser-slim:
           imageNames:
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:{{tagName}}'
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
+            - 'jreleaser/{{dockerSpecName}}:{{tagName}}'
+            - 'jreleaser/{{dockerSpecName}}:latest'
           # match by platform
           matchers:
             platform: 'linux'
           preCommands:
             - 'RUN apt-get update -y'
             - 'RUN apt-get install unzip'
-        alpine:
+        jreleaser-alpine:
           imageNames:
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:{{tagName}}'
-            - 'jreleaser/jreleaser-{{dockerSpecName}}:latest'
+            - 'jreleaser/{{dockerSpecName}}:{{tagName}}'
+            - 'jreleaser/{{dockerSpecName}}:latest'
           # match by platform
           matchers:
             platform: 'linux_musl'

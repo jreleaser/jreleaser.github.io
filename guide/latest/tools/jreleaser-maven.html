@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>JReleaser Maven Plugin :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/tools/jreleaser-maven.html">
-    <meta name="generator" content="Antora 3.1.10">
+    <meta name="generator" content="Antora 3.1.12">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="stylesheet" href="../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../_/css/navbar-latest.css">
@@ -640,6 +640,9 @@
     <a class="nav-link" href="../reference/hooks/command.html">Command Hooks</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../reference/hooks/jbang.html">JBang Hooks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../reference/hooks/script.html">Script Hooks</a>
   </li>
 </ul>
@@ -876,7 +879,7 @@
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
   &lt;groupId&gt;org.jreleaser&lt;/groupId&gt;
   &lt;artifactId&gt;jreleaser-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.19.0&lt;/version&gt;
+  &lt;version&gt;1.20.0&lt;/version&gt;
   &lt;inherited&gt;false&lt;/inherited&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
@@ -1024,6 +1027,11 @@ first, if not found then <code>&lt;developer&gt;&lt;id&gt;</code> will be used a
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;yolo&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_YOLO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;gitRootSearch&gt;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_GIT_ROOT_SEARCH</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
@@ -1148,6 +1156,12 @@ should happen in your build.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1227,6 +1241,12 @@ Type: boolean<br>
 User property: <code>jreleaser.config.changelog</code></p>
 </li>
 <li>
+<p>deploy<br>
+Display deploy configuration.<br>
+Type: boolean<br>
+User property: <code>jreleaser.config.deploy</code></p>
+</li>
+<li>
 <p>download<br>
 Display download configuration.<br>
 Type: boolean<br>
@@ -1261,6 +1281,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -1339,6 +1365,12 @@ User property: <code>jreleaser.template.overwrite</code></p>
 The name of the packager.<br>
 Type: String<br>
 User property: <code>jreleaser.template.packager.name</code></p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -1438,6 +1470,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1521,6 +1559,12 @@ User property: jreleaser.downloaders</p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -1614,6 +1658,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1661,6 +1711,12 @@ User property: <code>jreleaser.git.root.search</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -1766,6 +1822,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -1843,6 +1905,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -1924,6 +1992,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -2001,6 +2075,12 @@ User property: jreleaser.deployer.names</p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -2122,6 +2202,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -2270,6 +2356,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -2371,6 +2463,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -2476,6 +2574,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -2579,6 +2683,12 @@ Type: String[]<br>
 User property: jreleaser.select.platforms</p>
 </li>
 <li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
+</li>
+<li>
 <p>skip<br>
 Skip execution.<br>
 Type: boolean<br>
@@ -2638,6 +2748,12 @@ User property: <code>jreleaser.announcers</code></p>
 <p>outputDirectory (Default: ${project.build.directory}/jreleaser)<br>
 Type: File<br>
 User property: <code>jreleaser.output.directory</code></p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -2807,6 +2923,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>skip<br>
@@ -3023,6 +3145,12 @@ User property: jreleaser.select.current.platform</p>
 Activates paths matching the given platform.<br>
 Type: String[]<br>
 User property: jreleaser.select.platforms</p>
+</li>
+<li>
+<p>settingsFile<br>
+The settings file.<br>
+Type: File<br>
+User property: <code>jreleaser.settings.file</code></p>
 </li>
 <li>
 <p>signing<br>

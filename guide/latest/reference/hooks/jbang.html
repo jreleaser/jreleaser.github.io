@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Command Hooks :: JReleaser</title>
-    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/hooks/command.html">
+    <title>JBang Hooks :: JReleaser</title>
+    <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/hooks/jbang.html">
     <meta name="generator" content="Antora 3.1.12">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
@@ -636,10 +636,10 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Hooks</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="command.html">Command Hooks</a>
   </li>
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="jbang.html">JBang Hooks</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -846,28 +846,28 @@
     <li><a href="../../index.html">JReleaser</a></li>
     <li><a href="../index.html">Reference</a></li>
     <li><a href="index.html">Hooks</a></li>
-    <li><a href="command.html">Command Hooks</a></li>
+    <li><a href="jbang.html">JBang Hooks</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">latest</button>
   <div class="version-menu">
-    <a class="version is-current" href="command.html">latest</a>
-    <a class="version" href="../../../early-access/reference/hooks/command.html">early-access</a>
+    <a class="version is-current" href="jbang.html">latest</a>
+    <a class="version" href="../../../early-access/reference/hooks/jbang.html">early-access</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/hooks/command.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/jreleaser/jreleaser.github.io/edit/development/docs/modules/reference/pages/hooks/jbang.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Command Hooks</h1>
+<h1 class="page">JBang Hooks</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Defines command hooks to be executed before or after a JReleaser step.</p>
+<p>Defines JBang hooks to be executed before or after a JReleaser step.</p>
 </div>
 </div>
 </div>
@@ -954,18 +954,18 @@ hooks:
       - { os: windows, arch: amd64 }
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  command:
+  jbang:
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active: ALWAYS
 
-    # Execute commands if the condition evaluates to `true`.
+    # Execute scripts if the condition evaluates to `true`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     condition: '"{{ Env.CI }}" == true'
 
-    # A map of command environment variables.
+    # A map of jbang environment variables.
     # Accepts values from `matrix`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     environment:
@@ -989,6 +989,10 @@ hooks:
         - { os: osx, arch: amd64 }
         - { os: windows, arch: arm64 }
         - { os: windows, arch: amd64 }
+
+    # JBang version to launch the script.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    version: 0.128.5
 
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
@@ -1035,14 +1039,25 @@ hooks:
             - { os: windows, arch: arm64 }
             - { os: windows, arch: amd64 }
 
-        # Execute the command if the condition evaluates to `true`.
+        # Execute the script if the condition evaluates to `true`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         condition: '"{{ Env.CI }}" == true'
 
-        # The command to be invoked.
-        # Accepts values from `matrix`.
+        # JBang script reference to use.
+        # Any reference that produces a JAR file can be used.
+        # i.e. local or remote .java, .kt, .groovy, .jar or file,
+        # a GAV or a jbang-catalog reference.
         # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        cmd: '{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}'
+        script: src/jbang/hello.java
+
+        # Args required by the script.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        args:
+          - foo
+
+        # JBang version to launch the script.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        version: 0.128.5
 
         # Filters this hook based on the given step.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1095,18 +1110,18 @@ hooks:
           { os = "windows", arch = "amd64" }]
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  [hooks.command]
+  [hooks.jbang]
     # Enable or disable all before, success, and failure hooks.
     # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
     # Defaults to `ALWAYS`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active = "ALWAYS"
 
-    # Execute commands if the condition evaluates to `true`.
+    # Execute scripts if the condition evaluates to `true`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     condition = "'{{ Env.CI }}' == true"
 
-    # A map of command environment variables.
+    # A map of jbang environment variables.
     # Accepts values from `matrix`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     environment.FOO = "bar"
@@ -1127,10 +1142,14 @@ hooks:
             { os = "windows", arch = "arm64" },
             { os = "windows", arch = "amd64" }]
 
+    # JBang version to launch the script.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    version = "0.128.5"
+
     # The type of hook
     # Valid entries are `before`, `success`, `failure`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    <a id="hooks.command.before"></a>
+    <a id="hooks.jbang.before"></a>
       # Let the release continue if the hook fails.
       # Defaults to `false`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1168,14 +1187,24 @@ hooks:
               { os = "windows", arch = "arm64" },
               { os = "windows", arch = "amd64" }]
 
-      # Execute the command if the condition evaluates to `true`.
+      # Execute the script if the condition evaluates to `true`.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       condition = "'{{ Env.CI }}' == true"
 
-      # The command to be invoked.
-      # Accepts values from `matrix`.
+      # JBang script reference to use.
+      # Any reference that produces a JAR file can be used.
+      # i.e. local or remote .java, .kt, .groovy, .jar or file,
+      # a GAV or a jbang-catalog reference.
       # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-      cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+      script = "src/jbang/hello.java"
+
+      # Args required by the script.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+      args = ["foo"]
+
+      # JBang version to launch the script.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      version = "0.128.5"
 
       # Filters this hook based on the given step.
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1234,18 +1263,18 @@ hooks:
     },
 
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "command": {
+    "jbang": {
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "active": "ALWAYS",
 
-      // Execute commands if the condition evaluates to `true`.
+      // Execute scripts if the condition evaluates to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       "condition": "'{{ Env.CI }}' == true",
 
-      // A map of command environment variables.
+      // A map of jbang environment variables.
       // Accepts values from `matrix`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "environment": {
@@ -1273,6 +1302,10 @@ hooks:
           { "os": "windows", "arch": "amd64" }
         ]
       },
+
+     // JBang version to launch the script.
+     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+     "version": "0.128.5",
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -1324,14 +1357,26 @@ hooks:
             ]
           },
 
-          // Execute the command if the condition evaluates to `true`.
+          // Execute the script if the condition evaluates to `true`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           "condition": "'{{ Env.CI }}' == true",
 
-          // The command to be invoked.
-          // Accepts values from `matrix`.
+          // JBang script reference to use.
+          // Any reference that produces a JAR file can be used.
+          // i.e. local or remote .java, .kt, .groovy, .jar or file,
+          // a GAV or a jbang-catalog reference.
           // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          "cmd": "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}",
+          "script": "src/jbang/hello.java",
+
+          // Args required by the script.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "args": [
+            "foo"
+          ],
+
+          // JBang version to launch the script.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "version": "0.128.5",
 
           // Filters this hook based on the given step.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1439,7 +1484,7 @@ hooks:
     &lt;!--
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
-    &lt;command&gt;
+    &lt;jbang&gt;
       &lt;!--
         Enable or disable all before, success, and failure hooks.
         Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -1449,13 +1494,13 @@ hooks:
       &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        Execute commands if the condition evaluates to `true`.
+        Execute scripts if the condition evaluates to `true`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
       &lt;condition&gt;"{{ Env.CI }}" == true&lt;/condition&gt;
 
       &lt;!--
-        A map of command environment variables.
+        A map of jbang environment variables.
         Accepts values from `matrix`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       --&gt;
@@ -1513,6 +1558,12 @@ hooks:
           &lt;/row&gt;
         &lt;/rows&gt;
       &lt;/matrix&gt;
+
+      &lt;!--
+        JBang version to launch the script.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;version&gt;0.128.5&lt;/version&gt;
 
       &lt;!--
         The type of hook
@@ -1604,17 +1655,32 @@ hooks:
           &lt;/matrix&gt;
 
           &lt;!--
-            Execute the command if the condition evaluates to `true`.
+            Execute the script if the condition evaluates to `true`.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           --&gt;
           &lt;condition&gt;"{{ Env.CI }}" == true&lt;/condition&gt;
 
-          &lt;!--
-            The command to be invoked.
-            Accepts values from `matrix`.
+            JBang script reference to use.
+            Any reference that produces a JAR file can be used.
+            i.e. local or remote .java, .kt, .groovy, .jar or file,
+            a GAV or a jbang-catalog reference.
             <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           --&gt;
-          &lt;cmd&gt;{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}&lt;/cmd&gt;
+          &lt;script&gt;src/jbang/hello.java&lt;/script&gt;
+
+          &lt;!--
+            Args required by the script.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;args&gt;
+            &lt;arg&gt;foo&lt;/arg&gt;
+          &lt;/args&gt;
+
+          &lt;!--
+            JBang version to launch the script.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;version&gt;0.128.5&lt;/version&gt;
 
           &lt;!--
             Filters this hook based on the given step.
@@ -1636,7 +1702,7 @@ hooks:
           &lt;/platforms&gt;
         &lt;/commandHook&gt;
       &lt;/before&gt;
-    &lt;/command&gt;
+    &lt;/jbang&gt;
   &lt;/hooks&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1682,18 +1748,18 @@ hooks:
     }
 
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    command {
+    jbang {
       // Enable or disable all before, success, and failure hooks.
       // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
       // Defaults to `ALWAYS`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       active: ALWAYS
 
-      // Execute commands if the condition evaluates to `true`.
+      // Execute scripts if the condition evaluates to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       condition = '"{{ Env.CI }}" == true'
 
-      // A map of command environment variables.
+      // A map of jbang environment variables.
       // Accepts values from `matrix`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
       environment('FOO', 'bar')
@@ -1716,6 +1782,10 @@ hooks:
         row(os: 'windows', arch: 'arm64')
         row(os: 'windows', arch: 'amd64')
       }
+
+      // JBang version to launch the script.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      version = '0.128.5'
 
       // The type of hook
       // Valid entries are `before`, `success`, `failure`.
@@ -1761,14 +1831,24 @@ hooks:
           row(os: 'windows', arch: 'amd64')
         }
 
-        // Execute the command if the condition evaluates to `true`.
+        // Execute the script if the condition evaluates to `true`.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         condition = '"{{ Env.CI }}" == true'
 
-        // The command to be invoked.
-        // Accepts values from `matrix`.
+        // JBang script reference to use.
+        // Any reference that produces a JAR file can be used.
+        // i.e. local or remote .java, .kt, .groovy, .jar or file,
+        // a GAV or a jbang-catalog reference.
         // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-        cmd = "{{basedir}}/notifier.sh {{event.name}} {{event.type}} {{projectVersion}}"
+        script = 'src/jbang/hello.java'
+
+        // Args required by the script.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        arg('foo')
+
+        // JBang version to launch the script.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        version = '0.128.5'
 
         // Filters this hook based on the given step.
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1816,8 +1896,8 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.command.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_COMMAND_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.jbang.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_JBANG_ACTIVE</p></td>
 </tr>
 </tbody>
 </table>
@@ -1840,8 +1920,8 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.command.before.${index}.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_COMMAND_BEFORE_${index}_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.jbang.before.${index}.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_JBANG_BEFORE_${index}_ACTIVE</p></td>
 </tr>
 </tbody>
 </table>
@@ -1864,8 +1944,8 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.command.success.${index}.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_COMMAND_SUCCESS_${index}_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.jbang.success.${index}.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_JBANG_SUCCESS_${index}_ACTIVE</p></td>
 </tr>
 </tbody>
 </table>
@@ -1888,8 +1968,8 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>active</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.command.failure.${index}.active</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_COMMAND_FAILURE_${index}_ACTIVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.hooks.jbang.failure.${index}.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_HOOKS_JBANG_FAILURE_${index}_ACTIVE</p></td>
 </tr>
 </tbody>
 </table>
@@ -2007,13 +2087,13 @@ goes from most specific scope to the most generic.</p>
     KEY1: global1
     KEY2: global2
     KEY3: global3
-  command:
+  jbang:
     environment:
       KEY2: script1
       KEY4: script2
       KEY5: script3
     before:
-      - cmd: './output.sh'
+      - script: 'hello.java'
         verbose: true
         environment:
           KEY3: local1
@@ -2052,7 +2132,7 @@ has an environment variable <code>CI</code> set to true, which is typically the 
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
   command:
     before:
-      - cmd: './mvnw -ntp verify'
+      - script: 'hello.java'
         condition: '"{{ Env.CI }}" == true'
         verbose: true
         filter:
@@ -2074,26 +2154,6 @@ Use quotes around name templates if their evaluation may result in an empty stri
 </div>
 </div>
 <div class="sect1">
-<h2 id="_output"><a class="anchor" href="#_output"></a>Output</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Command hooks have the option to provide key/value pairs as input for other steps in the current workflow. Simply
-use <code>JRELEASER_OUTPUT:</code> as prefix in the command&#8217;s output followed by <code>key=value</code>. For example, the following configuration
-adds a key named <code>foo</code> with a value <code>bar</code> before the <code>changelog</code> step is invoked:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
-  command:
-    before:
-      - filter:
-          includes: [changelog]
-        cmd: 'echo JRELEASER_OUTPUT:foo=bar'</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_groups"><a class="anchor" href="#_groups"></a>Groups</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -2102,28 +2162,38 @@ adds a key named <code>foo</code> with a value <code>bar</code> before the <code
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
-  command:
+  jbang:
     groups:
       github-summary:
         condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        script: 'github-summary.java'
         before:
           - filter:
               includes: ['package']
-            cmd: 'github-summary header {{command}}'
+            args:
+              - 'header'
+              - '{{command}}'
         success:
           - filter:
               excludes: ['session']
-            cmd: 'github-summary success {{event.name}}'
+            args:
+              - 'success'
+              - '{{event.name}}'
           - filter:
               includes: ['session']
-            cmd: 'github-summary new-row'
+            args:
+              - 'new-row'
         failure:
           - filter:
               excludes: ['session']
-            cmd: 'github-summary failure {{event.name}}'
+            args:
+              - 'failure'
+              - '{{event.name}}'
           - filter:
               includes: ['session']
-            cmd: 'github-summary footer {{event.stacktrace}}'</code></pre>
+            args:
+              - 'footer'
+              - '{{event.stacktrace}}'</code></pre>
 </div>
 </div>
 </div>

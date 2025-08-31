@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Jpackage :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/assemble/jpackage.html">
-    <meta name="generator" content="Antora 3.1.10">
+    <meta name="generator" content="Antora 3.1.12">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
@@ -640,6 +640,9 @@
     <a class="nav-link" href="../hooks/command.html">Command Hooks</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hooks/jbang.html">JBang Hooks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../hooks/script.html">Script Hooks</a>
   </li>
 </ul>
@@ -1031,9 +1034,21 @@ assemble:
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         copyright: Duke 2021
 
+        # Path to a Properties file that contains list of key, value pairs.
+        # The keys "extension", "mime-type", "icon", and "description"
+        # can be used to describe the association.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        fileAssociations:
+          - 'path/to/file.properties'
+
         # Path to the license file.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
         licenseFile: path/to/LICENSE
+
+        # Request to create an installer that will register the main application launcher as a background service-type application.
+        # Defaults to `false`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        launcherAsService: true
 
       # <span class="icon"><i class="fa fa-dot-circle"></i></span>
       launcher:
@@ -1263,6 +1278,19 @@ assemble:
         # Defaults to `false`.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
         shortcut: true
+
+        # Adds a dialog to enable the user to choose if shortcuts will be created by installer.
+        # Defaults to `false`.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        shortcutPrompt: true
+
+        # URL where user can obtain further information or technical support.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        helpUrl: https://acme.com/help
+
+        # URL of available application update information.
+        # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+        updateUrl: https://acme.com/update
 
         # Start Menu group this application is placed in.
         # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -1523,9 +1551,20 @@ assemble:
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     copyright = "Duke 2021"
 
+    # Path to a Properties file that contains list of key, value pairs.
+    # The keys "extension", "mime-type", "icon", and "description"
+    # can be used to describe the association.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    fileAssociations: = ["path/to/file.properties"]
+
     # Path to the license file.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
     licenseFile = "path/to/LICENSE"
+
+    # Request to create an installer that will register the main application launcher as a background service-type application.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    launcherAsService = true
 
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   [assemble.jpackage.app.launcher]
@@ -1752,6 +1791,19 @@ assemble:
     # Defaults to `false`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     shortcut = true
+
+    # Adds a dialog to enable the user to choose if shortcuts will be created by installer.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    shortcutPrompt = true
+
+    # URL where user can obtain further information or technical support.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    helpUrl = "https://acme.com/help"
+
+    # URL of available application update information.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+    updateUrl = "https://acme.com/update"
 
     # Start Menu group this application is placed in.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2023,9 +2075,22 @@ assemble:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "copyright": "Duke 2021",
 
+          // Path to a Properties file that contains list of key, value pairs.
+          // The keys "extension", "mime-type", "icon", and "description"
+          // can be used to describe the association.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "fileAssociations": [
+            "path/to/file.properties"
+          ],
+
           // Path to the license file.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
-          "licenseFile": "path/to/LICENSE"
+          "licenseFile": "path/to/LICENSE",
+
+          // Request to create an installer that will register the main application launcher as a background service-type application.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "launcherAsService": "true"
         },
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2262,6 +2327,19 @@ assemble:
           // Defaults to `false`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           "shortcut": true,
+
+          // Adds a dialog to enable the user to choose if shortcuts will be created by installer.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          "shortcutPrompt": true,
+
+          // URL where user can obtain further information or technical support.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "helpUrl": "https://acme.com/help",
+
+          // URL of available application update information.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          "updateUrl": "https://acme.com/update",
 
           // Start Menu group this application is placed in.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -2617,10 +2695,29 @@ assemble:
           &lt;copyright&gt;Duke 2021&lt;/copyright&gt;
 
           &lt;!--
+            Path to a Properties file that contains list of key, value pairs.
+            The keys "extension", "mime-type", "icon", and "description"
+            can be used to describe the association.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;fileAssociations&gt;
+            &lt;fileAssociation&gt;
+              path/to/file.properties
+            &lt;/fileAssociation&gt;
+          &lt;/fileAssociations&gt;
+
+          &lt;!--
             Path to the license file.
             <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           --&gt;
           &lt;licenseFile&gt;path/to/LICENSE&lt;l/icenseFile&gt;
+
+          &lt;!--
+            Request to create an installer that will register the main application launcher as a background service-type application.
+            Defaults to `false`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;launcherAsService&gt;true&lt;/launcherAsService&gt;
         &lt;/applicationPackage&gt;
 
         &lt;!--
@@ -2946,6 +3043,25 @@ assemble:
             <span class="icon"><i class="fa fa-dot-circle"></i></span>
           --&gt;
           &lt;shortcut&gt;true&lt;/shortcut&gt;
+
+          &lt;!--
+            Adds a dialog to enable the user to choose if shortcuts will be created by installer.
+            Defaults to `false`.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          --&gt;
+          &lt;shortcutPrompt&gt;true&lt;/shortcutPrompt&gt;
+
+          &lt;!--
+            URL where user can obtain further information or technical support.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;helpUrl&gt;https://acme.com/help&lt;/helpUrl&gt;
+
+          &lt;!--
+            URL of available application update information.
+            <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          --&gt;
+          &lt;updateUrl&gt;https://acme.com/update&lt;/updateUrl&gt;
 
           &lt;!--
             Start Menu group this application is placed in.
@@ -3331,9 +3447,20 @@ assemble:
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           copyright = 'Duke 2021'
 
+          // Path to a Properties file that contains list of key, value pairs.
+          // The keys "extension", "mime-type", "icon", and "description"
+          // can be used to describe the association.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          fileAssociations = ['path/to/file.properties']
+
           // Path to the license file.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
           licenseFile = 'path/to/LICENSE'
+
+          // Request to create an installer that will register the main application launcher as a background service-type application.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          launcherAsService = true
         }
 
         // <span class="icon"><i class="fa fa-dot-circle"></i></span>
@@ -3570,6 +3697,19 @@ assemble:
           // Defaults to `false`.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>
           shortcut = true
+
+          // Adds a dialog to enable the user to choose if shortcuts will be created by installer.
+          // Defaults to `false`.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+          shortcutPrompt = true
+
+          // URL where user can obtain further information or technical support.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          helpUrl = 'https://acme.com/help'
+
+          // URL of available application update information.
+          // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
+          updateUrl = 'https://acme.com/update'
 
           // Start Menu group this application is placed in.
           // <span class="icon"><i class="fa fa-dot-circle"></i></span>

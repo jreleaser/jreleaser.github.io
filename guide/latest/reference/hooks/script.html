@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Script Hooks :: JReleaser</title>
     <link rel="canonical" href="https://jreleaser.org/guide/latest/reference/hooks/script.html">
-    <meta name="generator" content="Antora 3.1.10">
+    <meta name="generator" content="Antora 3.1.12">
     <link rel="stylesheet" href="../../../../_/css/site.css">
     <link rel="stylesheet" href="../../../../_/css/site-extra.css">
     <link rel="stylesheet" href="../../../../_/css/navbar-latest.css">
@@ -639,6 +639,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="command.html">Command Hooks</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="jbang.html">JBang Hooks</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="script.html">Script Hooks</a>
   </li>
@@ -934,7 +937,7 @@ hooks:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active: ALWAYS
 
-  # Execute scripts if the condition evaluates to `true`.
+  # Execute hooks if the condition evaluates to `true`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-file-alt"></i></span>
   condition: '"{{ Env.CI }}" == true'
 
@@ -2020,6 +2023,14 @@ property as shown in the table. The system property takes precedence over the en
 <p>Full stacktrace (if any) when <code>type</code> is equal to <code>failure</code>.</p>
 </td>
 </tr>
+<tr>
+<td class="hdlist1">
+{{jreleaser}}
+</td>
+<td class="hdlist2">
+<p>The resolved model.</p>
+</td>
+</tr>
 </table>
 </div>
 </div>
@@ -2187,6 +2198,49 @@ adds a key named <code>foo</code> with a value <code>bar</code> before the <code
       - filter:
           includes: [changelog]
         run: 'echo JRELEASER_OUTPUT:foo=bar'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groups"><a class="anchor" href="#_groups"></a>Groups</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Script hooks may also be grouped by name, allowing for better readability</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">hooks:
+  script:
+    groups:
+      github-summary:
+        condition: '"{{ Env.GITHUB_STEP_SUMMARY }}".empty() != true'
+        before:
+          - filter:
+              includes: ['package']
+            run: |
+              echo "### {{command}}" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "| Step | Outcome |" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "| ---- | ------- |" &gt;&gt; $GITHUB_STEP_SUMMARY
+        success:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :white_check_mark: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+        failure:
+          - filter:
+              excludes: ['session']
+            run: 'echo "| {{event.name}} | :x: |" &gt;&gt; $GITHUB_STEP_SUMMARY'
+          - filter:
+              includes: ['session']
+            run: |
+              echo "" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "### Failure" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "{{event.stacktrace}}\`\`\`" &gt;&gt; $GITHUB_STEP_SUMMARY
+              echo "" &gt;&gt; $GITHUB_STEP_SUMMARY</code></pre>
 </div>
 </div>
 </div>
