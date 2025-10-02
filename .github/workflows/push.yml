@@ -11,17 +11,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: 21.7.3
+          node-version: 22.20.0
 
       - name: Run Antora
-        run: npx antora antora-playbook.yml
+        run: |
+          npm -i antora
+          npx antora -v
+          npx antora antora-playbook.yml
 
       - name: Copy landing page
         run: |
@@ -34,7 +37,7 @@ jobs:
           touch $GITHUB_WORKSPACE/website/.nojekyll
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.0.0
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: website
           branch: 'gh-pages'
