@@ -1,0 +1,360 @@
+= Reddit
+:announcer_id:      reddit
+:announcer_name:    Reddit
+:announcer_sys_key: reddit
+:announcer_env_key: REDDIT
+
+Submits a post to link:https://www.reddit.com[Reddit]. Reddit requires all API clients to authenticate with link:https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki[OAUTH 2]. You much create an account (with a verified email address), setup an application (script type) and note the following:
+
+* client_id
+* client_secret
+
+== Configuration
+
+include::partial$legend.adoc[]
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+include::partial$announce/yaml/common-head.adoc[]
+
+    # Reddit API client ID for OAuth authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    clientId: __USE_ENVIRONMENT_VARIABLE__
+
+    # Reddit API client secret for OAuth authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    clientSecret: __USE_ENVIRONMENT_VARIABLE__
+
+    # Reddit username for authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    username: __USE_ENVIRONMENT_VARIABLE__
+
+    # Reddit password for authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    password: __USE_ENVIRONMENT_VARIABLE__
+
+    # Target subreddit name for posting announcements (without r/ prefix).
+    # icon:exclamation-triangle[]
+    subreddit: programming
+
+    # The title of the Reddit post.
+    # icon:dot-circle[] icon:file-text[]
+    title: '{{projectName}} {{projectVersion}} Released!'
+
+    # The type of Reddit submission to create.
+    # Supported values are  ['self', 'link'].
+    # icon:dot-circle[] icon:file-text[]
+    submissionType: self
+
+    # The url of the page being submitted.
+    # Required when submission type is 'link'.
+    # icon:file-text[]
+    url: http://www.reddit.com/reddit/reddit
+
+    # The body of the post.
+    # Required when submission type is 'self'.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    text: '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    # Path to a template file that contains the text.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[]
+    textTemplate: path/to/template/reddit.tpl
+
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+include::partial$announce/toml/common-head.adoc[]
+
+    # Reddit API client ID for OAuth authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    clientId = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Reddit API client secret for OAuth authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    clientSecret = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Reddit username for authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    username = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Reddit password for authentication.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    password = "__USE_ENVIRONMENT_VARIABLE__"
+
+    # Target subreddit name for posting announcements (without r/ prefix).
+    # icon:exclamation-triangle[]
+    subreddit = "programming"
+
+    # The title of the Reddit post.
+    # icon:dot-circle[] icon:file-text[]
+    title = "{{projectName}} {{projectVersion}} Released!"
+
+    # The type of Reddit submission to create.
+    # Supported values are  ['self', 'link'].
+    # icon:dot-circle[] icon:file-text[]
+    submissionType = "self"
+
+    # The url of the page being submitted.
+    # Required when submission type is 'link'.
+    # icon:file-text[]
+    url = "http://www.reddit.com/reddit/reddit"
+
+    # The body of the post.
+    # Required when submission type is 'self'.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[] icon:file-alt[]
+    text = "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+    # Path to a template file that contains the text.
+    # Review the available xref:reference:name-templates.adoc[].
+    # icon:dot-circle[]
+    textTemplate = "path/to/template/reddit.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+include::partial$announce/json/common-head.adoc[]
+
+    // Reddit API client ID for OAuth authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    "clientId": "__USE_ENVIRONMENT_VARIABLE__"
+
+    // Reddit API client secret for OAuth authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    "clientSecret": "__USE_ENVIRONMENT_VARIABLE__"
+
+    // Reddit username for authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    "username": "__USE_ENVIRONMENT_VARIABLE__"
+
+    // Reddit password for authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    "password": "__USE_ENVIRONMENT_VARIABLE__"
+
+    // Target subreddit name for posting announcements (without r/ prefix).
+    // icon:exclamation-triangle[]
+    "subreddit": "programming"
+
+    // The title of the Reddit post.
+    // icon:dot-circle[] icon:file-text[]
+    "title": "{{projectName}} {{projectVersion}} Released!"
+
+    // The type of Reddit submission to create.
+    // Supported values are  ['self', 'link'].
+    // icon:dot-circle[] icon:file-text[]
+    "submissionType": "self"
+
+    // The url of the page being submitted.
+    // Required when submission type is 'link'.
+    // icon:file-text[]
+    "url": "http://www.reddit.com/reddit/reddit"
+
+    // The body of the post.
+    // Required when submission type is 'self'.
+    // Review the available xref:reference:name-templates.adoc[].
+    // icon:dot-circle[] icon:file-alt[]
+    "text": "🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}"
+
+    // Path to a template file that contains the text.
+    // Review the available xref:reference:name-templates.adoc[].
+    // icon:dot-circle[]
+    "textTemplate": "path/to/template/reddit.tpl"
+
+include::partial$announce/json/common-footer.adoc[]
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+include::partial$announce/maven/common-head.adoc[]
+
+    <!--
+      Reddit API client ID for OAuth authentication.
+      icon:exclamation-triangle[] icon:eye-slash[]
+    -->
+    <clientId>__USE_ENVIRONMENT_VARIABLE__</clientId>
+
+    <!--
+      Reddit API client secret for OAuth authentication.
+      icon:exclamation-triangle[] icon:eye-slash[]
+    -->
+    <clientSecret>__USE_ENVIRONMENT_VARIABLE__</clientSecret>
+
+    <!--
+      Reddit username for authentication.
+      icon:exclamation-triangle[] icon:eye-slash[]
+    -->
+    <username>__USE_ENVIRONMENT_VARIABLE__</username>
+
+    <!--
+      Reddit password for authentication.
+      icon:exclamation-triangle[] icon:eye-slash[]
+    -->
+    <password>__USE_ENVIRONMENT_VARIABLE__</password>
+
+    <!--
+      Target subreddit name for posting announcements (without r/ prefix).
+      icon:exclamation-triangle[]
+    -->
+    <subreddit>programming</subreddit>
+
+    <!--
+      The title of the Reddit post.
+      icon:dot-circle[] icon:file-text[]
+    -->
+    <title>{{projectName}} {{projectVersion}} Released!</title>
+
+    <!--
+      The type of Reddit submission to create.
+      Supported values are  ['self', 'link'].
+      icon:dot-circle[] icon:file-text[]
+    -->
+    <submissionType>self</submissionType>
+
+    <!--
+      The url of the page being submitted.
+      Required when submission type is 'link'.
+      icon:file-text[]
+    -->
+    <url>http://www.reddit.com/reddit/reddit</url>
+
+    <!--
+      The body of the post.
+      Required when submission type is 'self'.
+      Review the available xref:reference:name-templates.adoc[].
+      icon:dot-circle[] icon:file-alt[]
+    -->
+    <text>🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}</text>
+
+    <!--
+      Path to a template file that contains the text.
+      Review the available xref:reference:name-templates.adoc[].
+      icon:dot-circle[]
+    -->
+    <textTemplate>path/to/template/reddit.tpl</textTemplate>
+
+include::partial$announce/maven/common-footer.adoc[]
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+include::partial$announce/gradle/common-head.adoc[]
+
+    // Reddit API client ID for OAuth authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    clientId = '__USE_ENVIRONMENT_VARIABLE__'
+
+    // Reddit API client secret for OAuth authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    clientSecret = '__USE_ENVIRONMENT_VARIABLE__'
+
+    // Reddit username for authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    username = '__USE_ENVIRONMENT_VARIABLE__'
+
+    // Reddit password for authentication.
+    // icon:exclamation-triangle[] icon:eye-slash[]
+    password = '__USE_ENVIRONMENT_VARIABLE__'
+
+    // Target subreddit name for posting announcements (without r/ prefix).
+    // icon:exclamation-triangle[]
+    subreddit = 'programming'
+
+    // The title of the Reddit post.
+    // icon:dot-circle[] icon:file-text[]
+    title = '{{projectName}} {{projectVersion}} Released!'
+
+    // The type of Reddit submission to create.
+    // Supported values are  ['self', 'link'].
+    // icon:dot-circle[] icon:file-text[]
+    submissionType = 'self'
+
+    // The url of the page being submitted.
+    // Required when submission type is 'link'.
+    // icon:file-text[]
+    url = 'http://www.reddit.com/reddit/reddit'
+
+    // The body of the post.
+    // Required when submission type is 'self'.
+    // Review the available xref:reference:name-templates.adoc[].
+    // icon:dot-circle[] icon:file-alt[]
+    text = '🚀 {{projectNameCapitalized}} {{projectVersion}} has been released! {{releaseNotesUrl}}'
+
+    // Path to a template file that contains the text.
+    // Review the available xref:reference:name-templates.adoc[].
+    // icon:dot-circle[]
+    textTemplate = 'path/to/template/reddit.tpl'
+include::partial$announce/gradle/common-footer.adoc[]
+----
+--
+====
+
+include::partial$envvars-header.adoc[]
+
+[%header, cols="<1,<1", width="100%"]
+|===
+| System Property                    | Environment Variable
+2+| *active*
+| jreleaser.announce.{announcer_sys_key}.active | JRELEASER_ANNOUNCE_{announcer_env_key}_ACTIVE
+2+| *clientId*
+| jreleaser.announce.{announcer_sys_key}.clientId +
+  jreleaser.{announcer_sys_key}.clientId
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CLIENT_ID +
+  JRELEASER_{announcer_env_key}_CLIENT_ID
+2+| *clientSecret*
+| jreleaser.announce.{announcer_sys_key}.clientSecret +
+  jreleaser.{announcer_sys_key}.clientSecret
+| JRELEASER_ANNOUNCE_{announcer_env_key}_CLIENT_SECRET +
+  JRELEASER_{announcer_env_key}_CLIENT_SECRET
+2+| *username*
+| jreleaser.announce.{announcer_sys_key}.username +
+  jreleaser.{announcer_sys_key}.username
+| JRELEASER_ANNOUNCE_{announcer_env_key}_USERNAME +
+  JRELEASER_{announcer_env_key}_USERNAME
+2+| *password*
+| jreleaser.announce.{announcer_sys_key}.password +
+  jreleaser.{announcer_sys_key}.password
+| JRELEASER_ANNOUNCE_{announcer_env_key}_PASSWORD +
+  JRELEASER_{announcer_env_key}_PASSWORD
+|===
+
+== Templates
+
+The default location for templates is:
+
+`src/jreleaser/templates`
+
+The following list shows the filenames that may be used to override default templates:
+
+* `reddit.tpl`
+
+Templates may be initialized using the `template` command
+
+* xref:tools:jreleaser-cli.adoc#_template_generate[{icon_cli_s} template generate]
+* xref:tools:jreleaser-maven.adoc#_jreleasertemplate_generate[{icon_maven_s} jreleaser:template-generate]
+* xref:tools:jreleaser-gradle.adoc#_jreleasertemplategenerate[{icon_gradle_s} jreleaserTemplateGenerate]
+* xref:tools:jreleaser-ant.adoc#_jreleaser_template_generate[{icon_ant_s} jreleaser-template-generate]
