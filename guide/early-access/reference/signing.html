@@ -877,7 +877,8 @@ generated signature with your public signing key.</p>
 </div>
 <div class="paragraph">
 <p>JReleaser can sign all files, including distribution archives and any extra files attached to the project. This section
-must be configured if you intend to sign commits as well. You may sign using PGP or <a href="https://www.sigstore.dev/">Sigstore</a>'s cosign.</p>
+must be configured if you intend to sign commits as well. You may sign using PGP, <a href="https://www.sigstore.dev/">Sigstore</a>'s cosign,
+or <a href="https://jedisct1.github.io/minisign/">minisign</a>.</p>
 </div>
 <div class="paragraph">
 <p>Use the following options to customize how files may be signed:</p>
@@ -950,7 +951,7 @@ signing:
   verify: false
 
   # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
   # Defaults to `MEMORY`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   mode: MEMORY
@@ -1037,6 +1038,23 @@ signing:
 
     # The public cosign key.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    publicKeyFile: __USE_ENVIRONMENT_VARIABLE__
+
+  # Settings used when mode = `MINISIGN`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  minisign:
+    # Tool version.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    version: 0.12
+
+    # The secret minisign key.
+    # Defaults to `~/.minisign/minisign.key`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    secretKeyFile: __USE_ENVIRONMENT_VARIABLE__
+
+    # The public minisign key.
+    # Defaults to `{{basedir}}/minisign.pub`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     publicKeyFile: __USE_ENVIRONMENT_VARIABLE__</code></pre>
 </div>
 </div>
@@ -1064,7 +1082,7 @@ signing:
   verify = false
 
   # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
   # Defaults to `MEMORY`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   mode = 'MEMORY'
@@ -1150,7 +1168,21 @@ signing:
 
   # The public cosign key.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  cosign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"</code></pre>
+  cosign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # Tool version.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  minisign.version = "0.12"
+
+  # The secret minisign key.
+  # Defaults to `~/.minisign/minisign.key`.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  minisign.secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # The public minisign key.
+  # Defaults to `{{basedir}}/minisign.pub`.
+  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  minisign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"</code></pre>
 </div>
 </div>
 </div>
@@ -1178,7 +1210,7 @@ signing:
     "verify": false,
 
     // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
     // Defaults to `MEMORY`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "mode": "MEMORY",
@@ -1269,6 +1301,24 @@ signing:
       // The public cosign key.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
+    },
+
+    // Settings used when mode = `MINISIGN`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    "minisign": {
+      // Tool version.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      "version": "0.12",
+
+      // The secret minisign key.
+      // Defaults to `~/.minisign/minisign.key`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "secretKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
+
+      // The public minisign key.
+      // Defaults to `{{basedir}}/minisign.pub`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
     }
   }
 }</code></pre>
@@ -1309,7 +1359,7 @@ signing:
 
     &lt;!--
       How should GPG keys be handled.
-      Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+      Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
       Defaults to `MEMORY`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
@@ -1435,6 +1485,32 @@ signing:
       --&gt;
       &lt;publicKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKeyFile&gt;
     &lt;/cosign&gt;
+
+    &lt;!--
+      Settings used when mode = `MINISIGN`.
+      <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    --&gt;
+    &lt;minisign&gt;
+      &lt;!--
+        Tool version.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      --&gt;
+      &lt;version&gt;0.12&lt;/version&gt;
+
+      &lt;!--
+        The secret minisign key.
+        Defaults to `~/.minisign/minisign.key`.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;secretKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKeyFile&gt;
+
+      &lt;!--
+        The public minisign key.
+        Defaults to `{{basedir}}/minisign.pub`.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;publicKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKeyFile&gt;
+    &lt;/minisign&gt;
   &lt;/signing&gt;
 &lt;/jreleaser&gt;</code></pre>
 </div>
@@ -1464,7 +1540,7 @@ signing:
     verify = false
 
     // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
     // Defaults to `MEMORY`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     mode = 'MEMORY'
@@ -1553,6 +1629,24 @@ signing:
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
     }
+
+    // Settings used when mode = `MINISIGN`.
+    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    minisign {
+      // Tool version.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      version = '1.4.1'
+
+      // The secret minisign key.
+      // Defaults to `~/.minisign/minisign.key`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      secretKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // The public minisign key.
+      // Defaults to `{{basedir}}/minisign.pub`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+    }
   }
 }</code></pre>
 </div>
@@ -1604,9 +1698,13 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>passphrase</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.password<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.password<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.minisign.password<br>
   jreleaser.gpg.passphrase</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PASSWORD<br>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PASSWORD<br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_MINISIGN_PASSWORD<br>
   JRELEASER_GPG_PASSPHRASE<br></p></td>
 </tr>
 <tr>
@@ -1665,6 +1763,20 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.private.key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PRIVATE_KEY</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>minisign.publicKeyFile</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.minisign.public.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_MINISIGN_PUBLIC_KEY</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>minisign.secretKeyFile</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.minisign.secret.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_MINISIGN_SECRET_KEY</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1702,7 +1814,26 @@ download a binary  that matches the current platform. If you do not have existin
 will generate a key pair for you and store them in <code>$JRELEASER_USER_HOME</code> which matches <code>~/.jreleaser</code> by default.</p>
 </div>
 <div class="paragraph">
-<p>The public cosing key file will automatically be uploaded as a release asset.</p>
+<p>The public cosign key file will automatically be uploaded as a release asset.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_minisign"><a class="anchor" href="#_minisign"></a>Minisign</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may sign artifacts, files, and checksums using <a href="https://jedisct1.github.io/minisign/">minisign</a> however
+you <strong>can not</strong> sign commits nor tags when <code>MINISIGN</code> mode is active.</p>
+</div>
+<div class="paragraph">
+<p>You may use <code>JRELEASER_MINISIGN_PASSWORD</code> instead of <code>JRELEASER_GPG_PASSPHRASE</code> to define the password required by minisign.</p>
+</div>
+<div class="paragraph">
+<p>You must define a value for the version property. JReleaser will check if a matching binary exists in the system or
+download a binary  that matches the current platform.</p>
+</div>
+<div class="paragraph">
+<p>The public minisign key file will automatically be uploaded as a release asset.</p>
 </div>
 </div>
 </div>
