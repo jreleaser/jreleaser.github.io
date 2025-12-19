@@ -13,8 +13,8 @@ is used to create both release and snapshot releases:
 environment:
   properties:
     jdkPathPrefix: 'plugins/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu21.38.21-ca-jdk21.0.5'
-    graalFilePrefix: 'graalvm-community-openjdk-23.0.1+11.1'
+    jdkFilePrefix: 'zulu25.30.17-ca-jdk25.0.1'
+    graalFilePrefix: 'graalvm-jdk-25.0.1+8.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
@@ -144,12 +144,12 @@ catalog:
 # Deploy JARs and POMs to Maven Central
 deploy:
   maven:
-    nexus2:
-      maven-central:
+    mavenCentral:
+      release-deploy:
         active: RELEASE
-        url: pass:[https://s01.oss.sonatype.org/service/local]
-        closeRepository: true
-        releaseRepository: true
+        url: https://central.sonatype.com/api/v1/publisher
+        maxRetries: 150
+        retryDelay: 30
         stagingRepositories:
           - build/repos/local/release
 
@@ -158,26 +158,13 @@ announce:
   bluesky:
     active: RELEASE
     statusTemplate: src/jreleaser/bluesky.tpl
-  twitter:
-    active: RELEASE
-    statusTemplate: src/jreleaser/twitter.tpl
   mastodon:
     active: RELEASE
-    host: pass:[https://fosstodon.org]
+    host: https://fosstodon.org
     statusTemplate: src/jreleaser/mastodon.tpl
   openCollective:
     active: RELEASE
     message: '{{#f_md2html}}🚀 JReleaser {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}'
-  http:
-    noticeable:
-      active: RELEASE
-      url: pass:[https://api.noticeable.io/graphql]
-      authorization: BEARER
-      bearerKeyword: Apikey
-      method: POST
-      headers:
-        Accept: application/json
-        Content-Type: application/json
 
 assemble:
   # Configure the universal Java binary distribution
@@ -206,7 +193,7 @@ assemble:
     jreleaser-standalone:
       active: ALWAYS
       java:
-        version: 21
+        version: 25
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -286,7 +273,7 @@ assemble:
     jreleaser-native:
       active: ALWAYS
       java:
-        version: 21
+        version: 25
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -314,8 +301,8 @@ assemble:
           platform: 'windows-x86_64'
       args:
         - '-Duser.language=en'
-        - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
-        - '-H:Optimize=2'
+        - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru,ko'
+        - '-H:Optimize=s'
         - '-H:+RemoveUnusedSymbols'
       swid:
         tagRef: swid-tag
@@ -645,5 +632,4 @@ JARs and POMs will be posted to Maven Central:
 
  * https://search.maven.org/search?q=jreleaser
 
-Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at link:https://jreleaser.noticeable.news[]
-and the link:https://opencollective.com/jreleaser[] pages.
+Finally, Mastodon, and Bluesky threads will be posted, as well as a news item at the link:https://opencollective.com/jreleaser[] page.
