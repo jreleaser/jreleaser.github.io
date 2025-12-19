@@ -883,8 +883,8 @@ is used to create both release and snapshot releases:</p>
 environment:
   properties:
     jdkPathPrefix: 'plugins/jreleaser/build/jdks'
-    jdkFilePrefix: 'zulu21.38.21-ca-jdk21.0.5'
-    graalFilePrefix: 'graalvm-community-openjdk-23.0.1+11.1'
+    jdkFilePrefix: 'zulu25.30.17-ca-jdk25.0.1'
+    graalFilePrefix: 'graalvm-jdk-25.0.1+8.1'
     nativeImageDir: out/jreleaser/assemble/jreleaser-native/native-image
     jpackageDir: out/jreleaser/assemble/jreleaser-installer/jpackage
     javaArchiveDir: out/jreleaser/assemble/jreleaser/java-archive
@@ -1014,12 +1014,12 @@ catalog:
 # Deploy JARs and POMs to Maven Central
 deploy:
   maven:
-    nexus2:
-      maven-central:
+    mavenCentral:
+      release-deploy:
         active: RELEASE
-        url: https://s01.oss.sonatype.org/service/local
-        closeRepository: true
-        releaseRepository: true
+        url: <a href="https://central.sonatype.com/api/v1/publisher" class="bare">https://central.sonatype.com/api/v1/publisher</a>
+        maxRetries: 150
+        retryDelay: 30
         stagingRepositories:
           - build/repos/local/release
 
@@ -1028,26 +1028,13 @@ announce:
   bluesky:
     active: RELEASE
     statusTemplate: src/jreleaser/bluesky.tpl
-  twitter:
-    active: RELEASE
-    statusTemplate: src/jreleaser/twitter.tpl
   mastodon:
     active: RELEASE
-    host: https://fosstodon.org
+    host: <a href="https://fosstodon.org" class="bare">https://fosstodon.org</a>
     statusTemplate: src/jreleaser/mastodon.tpl
   openCollective:
     active: RELEASE
     message: '{{#f_md2html}}🚀 JReleaser {{projectVersion}} has been released! [{{releaseNotesUrl}}]({{releaseNotesUrl}}){{/f_md2html}}'
-  http:
-    noticeable:
-      active: RELEASE
-      url: https://api.noticeable.io/graphql
-      authorization: BEARER
-      bearerKeyword: Apikey
-      method: POST
-      headers:
-        Accept: application/json
-        Content-Type: application/json
 
 assemble:
   # Configure the universal Java binary distribution
@@ -1076,7 +1063,7 @@ assemble:
     jreleaser-standalone:
       active: ALWAYS
       java:
-        version: 21
+        version: 25
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1156,7 +1143,7 @@ assemble:
     jreleaser-native:
       active: ALWAYS
       java:
-        version: 21
+        version: 25
       imageName: '{{distributionName}}-{{projectEffectiveVersion}}'
       executable: jreleaser
       fileSets:
@@ -1184,8 +1171,8 @@ assemble:
           platform: 'windows-x86_64'
       args:
         - '-Duser.language=en'
-        - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru'
-        - '-H:Optimize=2'
+        - '-H:IncludeLocales=en,ca,de,es,fr,hi,it,ja,nl,pt_BR,zh_TW,ru,ko'
+        - '-H:Optimize=s'
         - '-H:+RemoveUnusedSymbols'
       swid:
         tagRef: swid-tag
@@ -1557,8 +1544,7 @@ VERSION</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>Finally, Twitter, Mastodon, Bluesky threads will be posted, as well as a news item at <a href="https://jreleaser.noticeable.news" class="bare">https://jreleaser.noticeable.news</a>
-and the <a href="https://opencollective.com/jreleaser" class="bare">https://opencollective.com/jreleaser</a> pages.</p>
+<p>Finally, Mastodon, and Bluesky threads will be posted, as well as a news item at the <a href="https://opencollective.com/jreleaser" class="bare">https://opencollective.com/jreleaser</a> page.</p>
 </div>
 </article>
   </div>
