@@ -939,112 +939,152 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active: ALWAYS
 
-  # Generates an armored signature.
-  # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  armored: true
-
-  # Verify signature files.
-  # If `false` then `publicKey` may be ommitted.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  verify: false
-
-  # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-  # Defaults to `MEMORY`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  mode: MEMORY
-
-  # The passphrase required to read secret keys.
-  # If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  passphrase: __USE_ENVIRONMENT_VARIABLE__
-
-  # The public GPG (ascii armored) used to sign files and commits.
-  # Required when mode = `MEMORY` || `FILE`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  publicKey: __USE_ENVIRONMENT_VARIABLE__
-
-  # The private GPG (ascii armored) used to sign files and commits.
-  # Required when mode = `MEMORY` || `FILE`.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  secretKey: __USE_ENVIRONMENT_VARIABLE__
-
-  # Sign files.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  files: true
-
-  # Sign distribution artifacts.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  artifacts: true
-
-  # Sign checksum files.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  checksums: true
-
-  # Settings used when mode = `COMMAND`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  command:
-    # The executable used for signing.
-    # Defaults to `gpg[.exe]`.
-    # When mode = `COMMAND`.
+  pgp:
+    # Enables or disables PGP.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    executable: gpg
+    active: ALWAYS
 
-    # The directory from which gpg will load keyrings.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
+    # Generates an armored signature.
+    # Defaults to `false`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    armored: true
+
+    # How should GPG keys be handled.
+    # Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+    # Defaults to `MEMORY`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    mode: MEMORY
+
+    # The passphrase required to read secret keys.
+    # If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    homeDir: /home/users/duke/.gnugpg
+    passphrase: __USE_ENVIRONMENT_VARIABLE__
 
-    # The "name" of the key to sign with.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    keyName: 0CB28B71EF50
+    # The public GPG (ascii armored) used to sign files and commits.
+    # Required when mode = `MEMORY` || `FILE`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    publicKey: __USE_ENVIRONMENT_VARIABLE__
 
-    # The path to a public keyring to add to the list of keyrings.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
-    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    publicKeyring: my-pubring.gpg
+    # The secret GPG (ascii armored) used to sign files and commits.
+    # Required when mode = `MEMORY` || `FILE`.
+    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    secretKey: __USE_ENVIRONMENT_VARIABLE__
 
-    # Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+    # Verify signature files.
+    # If `false` then `publicKey` may be ommitted.
     # Defaults to `true`.
-    # When mode = `COMMAND`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    defaultKeyring: true
+    verify: false
 
-    # Sets the arguments to be passed to gpg.
-    # When mode = `COMMAND`.
+    # Sign files.
+    # Defaults to `true`.
     # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    args:
-      - '--no-random-seed-file'
+    files: true
 
-  # Settings used when mode = `COSIGN`.
+    # Sign distribution artifacts.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    artifacts: true
+
+    # Sign checksum files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    checksums: true
+
+    # Settings used when mode = `COMMAND`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    command:
+      # The executable used for signing.
+      # Defaults to `gpg[.exe]`.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      executable: gpg
+
+      # The directory from which gpg will load keyrings.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      homeDir: /home/users/duke/.gnugpg
+
+      # The "name" of the key to sign with.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      keyName: 0CB28B71EF50
+
+      # The path to a public keyring to add to the list of keyrings.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      publicKeyring: my-pubring.gpg
+
+      # Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+      # Defaults to `true`.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      defaultKeyring: true
+
+      # Sets the arguments to be passed to gpg.
+      # When mode = `COMMAND`.
+      # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      args:
+        - '--no-random-seed-file'
+
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   cosign:
-    # Tool version.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-    version: 1.4.1
+    # Enables or disables Cosign.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    active: ALWAYS
 
-    # The private cosign key.
+    # Tool version.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    version: 3.0.3
+
+    # The secret cosign key.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    privateKeyFile: __USE_ENVIRONMENT_VARIABLE__
+    secretKeyFile: __USE_ENVIRONMENT_VARIABLE__
 
     # The public cosign key.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     publicKeyFile: __USE_ENVIRONMENT_VARIABLE__
 
+    # Verify signature files.
+    # If `false` then `publicKey` may be ommitted.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    verify: false
+
+    # Sign files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    files: true
+
+    # Sign distribution artifacts.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    artifacts: true
+
+    # Sign checksum files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    checksums: true
+
   # Settings used when mode = `MINISIGN`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   minisign:
+    # Enables or disables Minisign.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+    active: ALWAYS
+
     # Tool version.
-    # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
     version: 0.12
 
     # The secret minisign key.
@@ -1055,7 +1095,28 @@ signing:
     # The public minisign key.
     # Defaults to `{{basedir}}/minisign.pub`.
     # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    publicKeyFile: __USE_ENVIRONMENT_VARIABLE__</code></pre>
+    publicKeyFile: __USE_ENVIRONMENT_VARIABLE__
+
+    # Verify signature files.
+    # If `false` then `publicKey` may be ommitted.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    verify: false
+
+    # Sign files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    files: true
+
+    # Sign distribution artifacts.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    artifacts: true
+
+    # Sign checksum files.
+    # Defaults to `true`.
+    # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+    checksums: true</code></pre>
 </div>
 </div>
 </div>
@@ -1070,19 +1131,21 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   active = "ALWAYS"
 
+# <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[signing.pgp]
+  # Enables or disables PGP.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  active = "ALWAYS"
+
   # Generates an armored signature.
   # Defaults to `false`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   armored = true
 
-  # Verify signature files.
-  # If `false` then `publicKey` may be ommitted.
-  # Defaults to `true`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
-  verify = false
-
   # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
+  # Supported values are [`MEMORY`, `FILE`, `COMMAND`].
   # Defaults to `MEMORY`.
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   mode = 'MEMORY'
@@ -1097,10 +1160,16 @@ signing:
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   publicKey = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The private GPG (ascii armored) used to sign files and commits.
+  # The secret GPG (ascii armored) used to sign files and commits.
   # Required when mode = `MEMORY` || `FILE`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
   secretKey = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  verify = false
 
   # Sign files.
   # Defaults to `true`.
@@ -1155,34 +1224,89 @@ signing:
   # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   command.args = ["--no-random-seed-file"]
 
-  # Settings used when mode = `COSIGN`.
-  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+# <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[signing.cosign]
+  # Enables or disables Cosign.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  active = "ALWAYS"
 
   # Tool version.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-  cosign.version = "1.4.1"
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  version = "3.0.3"
 
-  # The private cosign key.
+  # The secret cosign key.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  cosign.privateKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public cosign key.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  cosign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  verify = false
+
+  # Sign files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  files = true
+
+  # Sign distribution artifacts.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  artifacts = true
+
+  # Sign checksum files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  checksums = true
+
+# <span class="icon"><i class="fa fa-dot-circle"></i></span>
+[signing.minisign]
+  # Enables or disables Minisign.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+  active = "ALWAYS"
 
   # Tool version.
-  # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
   minisign.version = "0.12"
 
   # The secret minisign key.
   # Defaults to `~/.minisign/minisign.key`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  minisign.secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public minisign key.
   # Defaults to `{{basedir}}/minisign.pub`.
   # <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-  minisign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"</code></pre>
+  publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+  # Verify signature files.
+  # If `false` then `publicKey` may be ommitted.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  verify = false
+
+  # Sign files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  files = true
+
+  # Sign distribution artifacts.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  artifacts = true
+
+  # Sign checksum files.
+  # Defaults to `true`.
+  # <span class="icon"><i class="fa fa-dot-circle"></i></span>
+  checksums = true</code></pre>
 </div>
 </div>
 </div>
@@ -1198,116 +1322,155 @@ signing:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     "active": "ALWAYS",
 
-    // Generates an armored signature.
-    // Defaults to `false`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "armored": true,
-
-    // Verify signature files.
-    // If `false` then `publicKey` may be ommitted.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "verify": false,
-
-    // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-    // Defaults to `MEMORY`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "mode": "MEMORY",
-
-    // The passphrase required to read secret keys.
-    // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "passphrase": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // The public GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "publicKey": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // The private GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // Sign files.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "files": true,
-
-    // Sign distribution artifacts.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "artifacts": true,
-
-    // Sign checksum files.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "checksums": true,
-
-    // Settings used when mode = `COMMAND`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    "command": {
-
-      // The executable used for signing.
-      // Defaults to `gpg[.exe]`.
-      // When mode = `COMMAND`.
+    "pgp": {
+      // Enables or disables PGP.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "executable": "gpg",
+      "active": "ALWAYS",
 
-      // The directory from which gpg will load keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
+      // Generates an armored signature.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "armored": true,
+
+      // How should GPG keys be handled.
+      // Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+      // Defaults to `MEMORY`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "mode": "MEMORY",
+
+      // The passphrase required to read secret keys.
+      // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "homeDir": "/home/users/duke/.gnugpg",
+      "passphrase": "__USE_ENVIRONMENT_VARIABLE__",
 
-      // The "name" of the key to sign with.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "keyName": "0CB28B71EF50",
+      // The public GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "publicKey": "__USE_ENVIRONMENT_VARIABLE__",
 
-      // The path to a public keyring to add to the list of keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "publicKeyring": "my-pubring.gpg",
+      // The secret GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
 
-      // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
       // Defaults to `true`.
-      // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "defaultKeyring": true,
+      "verify": false,
 
-      // Sets the arguments to be passed to gpg.
-      // When mode = `COMMAND`.
+      // Sign files.
+      // Defaults to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      "args": [
-        "--no-random-seed-file"
-      ]
+      "files": true,
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "artifacts": true,
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "checksums": true
+
+      // Settings used when mode = `COMMAND`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "command": {
+
+        // The executable used for signing.
+        // Defaults to `gpg[.exe]`.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "executable": "gpg",
+
+        // The directory from which gpg will load keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "homeDir": "/home/users/duke/.gnugpg",
+
+        // The "name" of the key to sign with.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "keyName": "0CB28B71EF50",
+
+        // The path to a public keyring to add to the list of keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        "publicKeyring": "my-pubring.gpg",
+
+        // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+        // Defaults to `true`.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "defaultKeyring": true,
+
+        // Sets the arguments to be passed to gpg.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        "args": [
+          "--no-random-seed-file"
+        ]
+      }
     },
 
-    // Settings used when mode = `COSIGN`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "cosign": {
-      // Tool version.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      "version": "1.4.1",
+      // Enables or disables Cosign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "active": "ALWAYS",
 
-      // The private cosign key.
+      // Tool version.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "version": "3.0.3",
+
+      // The secret cosign key.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      "privateKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
+      "secretKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The public cosign key.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
+
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "verify": false,
+
+      // Sign files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "files": true,
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "artifacts": true,
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "checksums": true
     },
 
-    // Settings used when mode = `MINISIGN`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     "minisign": {
+      // Enables or disables Minisign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      "active": "ALWAYS",
+
       // Tool version.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
       "version": "0.12",
 
       // The secret minisign key.
@@ -1319,6 +1482,27 @@ signing:
       // Defaults to `{{basedir}}/minisign.pub`.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
+
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "verify": false,
+
+      // Sign files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "files": true,
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "artifacts": true,
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      "checksums": true
     }
   }
 }</code></pre>
@@ -1333,7 +1517,6 @@ signing:
     <span class="icon"><i class="fa fa-dot-circle"></i></span>
   --&gt;
   &lt;signing&gt;
-
     &lt;!--
       Enables or disables file signing.
       Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -1342,158 +1525,211 @@ signing:
     --&gt;
     &lt;active&gt;ALWAYS&lt;/active&gt;
 
-    &lt;!--
-      Generates an armored signature.
-      Defaults to `false`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;armored&gt;true&lt;/armored&gt;
-
-    &lt;!--
-      Verify signature files.
-      If `false` then `publicKey` may be ommitted.
-      Defaults to `true`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;verify&gt;false&lt;/verify&gt;
-
-    &lt;!--
-      How should GPG keys be handled.
-      Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-      Defaults to `MEMORY`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;mode&gt;MEMORY&lt;/mode&gt;
-
-    &lt;!--
-      The passphrase required to read secret keys.
-      Required when mode = `MEMORY` || `FILE`.
-      If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    --&gt;
-    &lt;passphrase&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/passphrase&gt;
-
-    &lt;!--
-      The public GPG (ascii armored) used to sign files and commits.
-      Required when mode = `MEMORY` || `FILE`.
-      <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    --&gt;
-    &lt;publicKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKey&gt;
-
-    &lt;!--
-      The private GPG (ascii armored) used to sign files and commits.
-      <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    --&gt;
-    &lt;secretKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKey&gt;
-
-    &lt;!--
-      Sign files.
-      Defaults to `true`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;files&gt;true&lt;/files&gt;
-
-    &lt;!--
-      Sign distribution artifacts.
-      Defaults to `true`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;artifacts&gt;true&lt;/artifacts&gt;
-
-    &lt;!--
-      Sign checksum files.
-      Defaults to `true`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;checksums&gt;true&lt;/checksums&gt;
-
-    &lt;!--
-      Settings used when mode = `COMMAND`.
-      <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    --&gt;
-    &lt;command&gt;
+    &lt;pgp&gt;
       &lt;!--
-        The executable used for signing.
-        Defaults to `gpg[.exe]`.
-        When mode = `COMMAND`.
+        Enables or disables PGP.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;executable&gt;gpg&lt;/executable&gt;
+      &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        The directory from which gpg will load keyrings.
-        Defaults to empty.
-        When mode = `COMMAND`.
+        Generates an armored signature.
+        Defaults to `false`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;armored&gt;true&lt;/armored&gt;
+
+      &lt;!--
+        How should GPG keys be handled.
+        Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+        Defaults to `MEMORY`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;mode&gt;MEMORY&lt;/mode&gt;
+
+      &lt;!--
+        The passphrase required to read secret keys.
+        Required when mode = `MEMORY` || `FILE`.
+        If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
         <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;homeDir&gt;/home/users/duke/.gnugpg&lt;/homeDir&gt;
+      &lt;passphrase&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/passphrase&gt;
 
       &lt;!--
-        The "name" of the key to sign with.
-        Defaults to empty.
-        When mode = `COMMAND`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        The public GPG (ascii armored) used to sign files and commits.
+        Required when mode = `MEMORY` || `FILE`.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;keyName&gt;0CB28B71EF50&lt;/keyName&gt;
+      &lt;publicKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKey&gt;
 
       &lt;!--
-        The path to a public keyring to add to the list of keyrings.
-        Defaults to empty.
-        When mode = `COMMAND`.
-        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        The secret GPG (ascii armored) used to sign files and commits.
+        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;publicKeyring&gt;my-pubring.gpg&lt;/publicKeyring&gt;
+      &lt;secretKey&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKey&gt;
 
       &lt;!--
-        Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+        Verify signature files.
+        If `false` then `publicKey` may be ommitted.
         Defaults to `true`.
-        When mode = `COMMAND`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;defaultKeyring&gt;true&lt;/defaultKeyring&gt;
+      &lt;verify&gt;false&lt;/verify&gt;
 
       &lt;!--
-        Sets the arguments to be passed to gpg.
-        When mode = `COMMAND`.
+        Sign files.
+        Defaults to `true`.
         <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
-      &lt;args&gt;
-        &lt;arg&gt;--no-random-seed-file&lt;/arg&gt;
-      &lt;/args&gt;
-    &lt;/command&gt;
+      &lt;files&gt;true&lt;/files&gt;
+
+      &lt;!--
+        Sign distribution artifacts.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;artifacts&gt;true&lt;/artifacts&gt;
+
+      &lt;!--
+        Sign checksum files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;checksums&gt;true&lt;/checksums&gt;
+
+      &lt;!--
+        Settings used when mode = `COMMAND`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;command&gt;
+        &lt;!--
+          The executable used for signing.
+          Defaults to `gpg[.exe]`.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;executable&gt;gpg&lt;/executable&gt;
+
+        &lt;!--
+          The directory from which gpg will load keyrings.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;homeDir&gt;/home/users/duke/.gnugpg&lt;/homeDir&gt;
+
+        &lt;!--
+          The "name" of the key to sign with.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;keyName&gt;0CB28B71EF50&lt;/keyName&gt;
+
+        &lt;!--
+          The path to a public keyring to add to the list of keyrings.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        --&gt;
+        &lt;publicKeyring&gt;my-pubring.gpg&lt;/publicKeyring&gt;
+
+        &lt;!--
+          Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+          Defaults to `true`.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;defaultKeyring&gt;true&lt;/defaultKeyring&gt;
+
+        &lt;!--
+          Sets the arguments to be passed to gpg.
+          When mode = `COMMAND`.
+          <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        --&gt;
+        &lt;args&gt;
+          &lt;arg&gt;--no-random-seed-file&lt;/arg&gt;
+        &lt;/args&gt;
+      &lt;/command&gt;
+    &lt;/pgp&gt;
 
     &lt;!--
-      Settings used when mode = `COSIGN`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;cosign&gt;
       &lt;!--
-        Tool version.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        Enables or disables Cosign.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;version&gt;1.4.1&lt;/version&gt;
+      &lt;active&gt;ALWAYS&lt;/active&gt;
 
       &lt;!--
-        The private cosign key.
+        Tool version.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;version&gt;3.0.3&lt;/version&gt;
+
+      &lt;!--
+        The secret cosign key.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
-      &lt;privateKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/privateKeyFile&gt;
+      &lt;secretKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/secretKeyFile&gt;
 
       &lt;!--
         The public cosign key.
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;publicKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKeyFile&gt;
+
+      &lt;!--
+        Verify signature files.
+        If `false` then `publicKey` may be ommitted.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;verify&gt;false&lt;/verify&gt;
+
+      &lt;!--
+        Sign files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;files&gt;true&lt;/files&gt;
+
+      &lt;!--
+        Sign distribution artifacts.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;artifacts&gt;true&lt;/artifacts&gt;
+
+      &lt;!--
+        Sign checksum files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;checksums&gt;true&lt;/checksums&gt;
     &lt;/cosign&gt;
 
     &lt;!--
-      Settings used when mode = `MINISIGN`.
       <span class="icon"><i class="fa fa-dot-circle"></i></span>
     --&gt;
     &lt;minisign&gt;
       &lt;!--
+        Enables or disables Minisign.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      --&gt;
+      &lt;active&gt;ALWAYS&lt;/active&gt;
+
+      &lt;!--
         Tool version.
-        <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
       --&gt;
       &lt;version&gt;0.12&lt;/version&gt;
 
@@ -1510,6 +1746,35 @@ signing:
         <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       --&gt;
       &lt;publicKeyFile&gt;__USE_ENVIRONMENT_VARIABLE__&lt;/publicKeyFile&gt;
+
+      &lt;!--
+        Verify signature files.
+        If `false` then `publicKey` may be ommitted.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;verify&gt;false&lt;/verify&gt;
+
+      &lt;!--
+        Sign files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;files&gt;true&lt;/files&gt;
+
+      &lt;!--
+        Sign distribution artifacts.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;artifacts&gt;true&lt;/artifacts&gt;
+
+      &lt;!--
+        Sign checksum files.
+        Defaults to `true`.
+        <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      --&gt;
+      &lt;checksums&gt;true&lt;/checksums&gt;
     &lt;/minisign&gt;
   &lt;/signing&gt;
 &lt;/jreleaser&gt;</code></pre>
@@ -1528,114 +1793,153 @@ signing:
     // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
     active = 'ALWAYS'
 
-    // Generates an armored signature.
-    // Defaults to `false`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    armored = true
-
-    // Verify signature files.
-    // If `false` then `publicKey` may be ommitted.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    verify = false
-
-    // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-    // Defaults to `MEMORY`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    mode = 'MEMORY'
-
-    // The passphrase required to read secret keys.
-    // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    passphrase = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // The public GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    publicKey = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // The private GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-    secretKey = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // Sign files.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    files = true
-
-    // Sign distribution artifacts.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    artifacts = true
-
-    // Sign checksum files.
-    // Defaults to `true`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    checksums = true
-
-    // Settings used when mode = `COMMAND`.
-    // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-    command {
-      // The executable used for signing.
-      // Defaults to `gpg[.exe]`.
-      // When mode = `COMMAND`.
+    pgp {
+      // Enables or disables PGP.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      executable = 'gpg'
+      active = 'ALWAYS'
 
-      // The directory from which gpg will load keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
+      // Generates an armored signature.
+      // Defaults to `false`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      armored = true
+
+      // How should GPG keys be handled.
+      // Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+      // Defaults to `MEMORY`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      mode = 'MEMORY'
+
+      // The passphrase required to read secret keys.
+      // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      homeDir = '/home/users/duke/.gnugpg'
+      passphrase = '__USE_ENVIRONMENT_VARIABLE__'
 
-      // The "name" of the key to sign with.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      keyName = '0CB28B71EF50'
+      // The public GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      publicKey = '__USE_ENVIRONMENT_VARIABLE__'
 
-      // The path to a public keyring to add to the list of keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      publicKeyring = 'my-pubring.gpg'
+      // The secret GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      secretKey = '__USE_ENVIRONMENT_VARIABLE__'
 
-      // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
       // Defaults to `true`.
-      // When mode = `COMMAND`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      defaultKeyring = true
+      verify = false
 
-      // Sets the arguments to be passed to gpg.
-      // When mode = `COMMAND`.
+      // Sign files.
+      // Defaults to `true`.
       // <span class="icon"><i class="fa fa-dot-circle"></i></span>
-      args = ['--no-random-seed-file']
+      files = true
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      artifacts = true
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      checksums = true
+
+      // Settings used when mode = `COMMAND`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      command {
+        // The executable used for signing.
+        // Defaults to `gpg[.exe]`.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        executable = 'gpg'
+
+        // The directory from which gpg will load keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        homeDir = '/home/users/duke/.gnugpg'
+
+        // The "name" of the key to sign with.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        keyName = '0CB28B71EF50'
+
+        // The path to a public keyring to add to the list of keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+        publicKeyring = 'my-pubring.gpg'
+
+        // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+        // Defaults to `true`.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        defaultKeyring = true
+
+        // Sets the arguments to be passed to gpg.
+        // When mode = `COMMAND`.
+        // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+        args = ['--no-random-seed-file']
+      }
     }
 
-    // Settings used when mode = `COSIGN`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     cosign {
-      // Tool version.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      version = '1.4.1'
+      // Enables or disables Cosign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      active = 'ALWAYS'
 
-      // The private cosign key.
+      // Tool version.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      version = '3.0.3'
+
+      // The secret cosign key.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
-      privateKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+      secretKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The public cosign key.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      verify = false
+
+      // Sign files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files = true
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      artifacts = true
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      checksums = true
     }
 
-    // Settings used when mode = `MINISIGN`.
     // <span class="icon"><i class="fa fa-dot-circle"></i></span>
     minisign {
+      // Enables or disables Minisign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
+      active = 'ALWAYS'
+
       // Tool version.
-      // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
-      version = '1.4.1'
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      version = '3.0.3'
 
       // The secret minisign key.
       // Defaults to `~/.minisign/minisign.key`.
@@ -1646,6 +1950,27 @@ signing:
       // Defaults to `{{basedir}}/minisign.pub`.
       // <span class="icon"><i class="fa fa-exclamation-triangle"></i></span> <span class="icon"><i class="fa fa-eye-slash"></i></span>
       publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // Verify signature files.
+      // If `false` then `publicKey` may be ommitted.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      verify = false
+
+      // Sign files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      files = true
+
+      // Sign distribution artifacts.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      artifacts = true
+
+      // Sign checksum files.
+      // Defaults to `true`.
+      // <span class="icon"><i class="fa fa-dot-circle"></i></span>
+      checksums = true
     }
   }
 }</code></pre>
@@ -1757,11 +2082,11 @@ property as shown in the table. The system property takes precedence over the en
 <td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PUBLIC_KEY</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>cosign.privateKeyFile</strong></p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>cosign.secretKeyFile</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.private.key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_PRIVATE_KEY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jreleaser.cosign.secret.key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JRELEASER_COSIGN_SECRET_KEY</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><strong>minisign.publicKeyFile</strong></p></td>
@@ -1803,14 +2128,14 @@ signing executable (<code>gpg</code> by default). Signing and verification will 
 <div class="sectionbody">
 <div class="paragraph">
 <p>You may sign artifacts, files, and checksums using Sigstore&#8217;s <a href="https://github.com/sigstore/cosign">cosign</a> however
-you <strong>can not</strong> sign commits nor tags when <code>COSIGN</code> mode is active.</p>
+you <strong>can not</strong> sign commits nor tags when <code>COSIGN</code> is active.</p>
 </div>
 <div class="paragraph">
 <p>You may use <code>JRELEASER_COSIGN_PASSWORD</code> instead of <code>JRELEASER_GPG_PASSPHRASE</code> to define the password required by cosign.</p>
 </div>
 <div class="paragraph">
 <p>You must define a value for the version property. JReleaser will check if a matching binary exists in the system or
-download a binary  that matches the current platform. If you do not have existing private/public keys then JReleaser
+download a binary  that matches the current platform. If you do not have existing secret/public keys then JReleaser
 will generate a key pair for you and store them in <code>$JRELEASER_USER_HOME</code> which matches <code>~/.jreleaser</code> by default.</p>
 </div>
 <div class="paragraph">
@@ -1823,7 +2148,7 @@ will generate a key pair for you and store them in <code>$JRELEASER_USER_HOME</c
 <div class="sectionbody">
 <div class="paragraph">
 <p>You may sign artifacts, files, and checksums using <a href="https://jedisct1.github.io/minisign/">minisign</a> however
-you <strong>can not</strong> sign commits nor tags when <code>MINISIGN</code> mode is active.</p>
+you <strong>can not</strong> sign commits nor tags when <code>MINISIGN</code> is active.</p>
 </div>
 <div class="paragraph">
 <p>You may use <code>JRELEASER_MINISIGN_PASSWORD</code> instead of <code>JRELEASER_GPG_PASSPHRASE</code> to define the password required by minisign.</p>
@@ -1860,7 +2185,7 @@ setting a value for <code>publicKey</code> as well.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<code>COSIGN</code> mode does require both <code>publicKeyFile</code> and <code>privateKeyFile</code> regardless of the value set in <code>verify</code>.
+<code>COSIGN</code>  does require both <code>publicKeyFile</code> and <code>secretKeyFile</code> regardless of the value set in <code>verify</code>.
 </td>
 </tr>
 </table>
