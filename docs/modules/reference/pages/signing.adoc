@@ -19,7 +19,7 @@ YAML::
 +
 --
 [source,yaml]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 # icon:dot-circle[]
 signing:
@@ -29,113 +29,115 @@ signing:
   # icon:dot-circle[] icon:eye-slash[]
   active: ALWAYS
 
-  # Generates an armored signature.
-  # Defaults to `false`.
   # icon:dot-circle[]
-  armored: true
-
-  # Verify signature files.
-  # If `false` then `publicKey` may be ommitted.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  verify: false
-
-  # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-  # Defaults to `MEMORY`.
-  # icon:dot-circle[]
-  mode: MEMORY
-
-  # The passphrase required to read secret keys.
-  # If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-  # icon:dot-circle[] icon:eye-slash[]
-  passphrase: __USE_ENVIRONMENT_VARIABLE__
-
-  # The public GPG (ascii armored) used to sign files and commits.
-  # Required when mode = `MEMORY` || `FILE`.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  publicKey: __USE_ENVIRONMENT_VARIABLE__
-
-  # The private GPG (ascii armored) used to sign files and commits.
-  # Required when mode = `MEMORY` || `FILE`.
-  # icon:exclamation-triangle[] icon:eye-slash[]
-  secretKey: __USE_ENVIRONMENT_VARIABLE__
-
-  # Sign files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  files: true
-
-  # Sign distribution artifacts.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  artifacts: true
-
-  # Sign checksum files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  checksums: true
-
-  # Settings used when mode = `COMMAND`.
-  # icon:dot-circle[]
-  command:
-    # The executable used for signing.
-    # Defaults to `gpg[.exe]`.
-    # When mode = `COMMAND`.
+  pgp:
+    # Enables or disables PGP.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
     # icon:dot-circle[] icon:eye-slash[]
-    executable: gpg
+    active: ALWAYS
 
-    # The directory from which gpg will load keyrings.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
-    # icon:dot-circle[] icon:eye-slash[]
-    homeDir: /home/users/duke/.gnugpg
-
-    # The "name" of the key to sign with.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
-    # icon:dot-circle[] icon:eye-slash[]
-    keyName: 0CB28B71EF50
-
-    # The path to a public keyring to add to the list of keyrings.
-    # Defaults to empty.
-    # When mode = `COMMAND`.
-    # icon:dot-circle[] icon:eye-slash[]
-    publicKeyring: my-pubring.gpg
-
-    # Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
-    # Defaults to `true`.
-    # When mode = `COMMAND`.
+    # Generates an armored signature.
+    # Defaults to `false`.
     # icon:dot-circle[]
-    defaultKeyring: true
-
-    # Sets the arguments to be passed to gpg.
-    # When mode = `COMMAND`.
+    armored: true
+  
+    # How should GPG keys be handled.
+    # Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+    # Defaults to `MEMORY`.
     # icon:dot-circle[]
-    args:
-      - '--no-random-seed-file'
+    mode: MEMORY
+  
+    # The passphrase required to read secret keys.
+    # If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
+    # icon:dot-circle[] icon:eye-slash[]
+    passphrase: __USE_ENVIRONMENT_VARIABLE__
+  
+    # The public GPG (ascii armored) used to sign files and commits.
+    # Required when mode = `MEMORY` || `FILE`.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    publicKey: __USE_ENVIRONMENT_VARIABLE__
+  
+    # The secret GPG (ascii armored) used to sign files and commits.
+    # Required when mode = `MEMORY` || `FILE`.
+    # icon:exclamation-triangle[] icon:eye-slash[]
+    secretKey: __USE_ENVIRONMENT_VARIABLE__
+  
+include::partial$signing/yaml/common.adoc[]
+  
+    # Settings used when mode = `COMMAND`.
+    # icon:dot-circle[]
+    command:
+      # The executable used for signing.
+      # Defaults to `gpg[.exe]`.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[] icon:eye-slash[]
+      executable: gpg
+  
+      # The directory from which gpg will load keyrings.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[] icon:eye-slash[]
+      homeDir: /home/users/duke/.gnugpg
+  
+      # The "name" of the key to sign with.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[] icon:eye-slash[]
+      keyName: 0CB28B71EF50
+  
+      # The path to a public keyring to add to the list of keyrings.
+      # Defaults to empty.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[] icon:eye-slash[]
+      publicKeyring: my-pubring.gpg
+  
+      # Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+      # Defaults to `true`.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[]
+      defaultKeyring: true
+  
+      # Sets the arguments to be passed to gpg.
+      # When mode = `COMMAND`.
+      # icon:dot-circle[]
+      args:
+        - '--no-random-seed-file'
 
-  # Settings used when mode = `COSIGN`.
   # icon:dot-circle[]
   cosign:
-    # Tool version.
-    # icon:exclamation-triangle[]
-    version: 1.4.1
+    # Enables or disables Cosign.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[] icon:eye-slash[]
+    active: ALWAYS
 
-    # The private cosign key.
+    # Tool version.
+    # icon:dot-circle[]
+    version: {cosign-version}
+
+    # The secret cosign key.
     # icon:exclamation-triangle[] icon:eye-slash[]
-    privateKeyFile: __USE_ENVIRONMENT_VARIABLE__
+    secretKeyFile: __USE_ENVIRONMENT_VARIABLE__
 
     # The public cosign key.
     # icon:exclamation-triangle[] icon:eye-slash[]
     publicKeyFile: __USE_ENVIRONMENT_VARIABLE__
 
+include::partial$signing/yaml/common.adoc[]
+
   # Settings used when mode = `MINISIGN`.
   # icon:dot-circle[]
   minisign:
+    # Enables or disables Minisign.
+    # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+    # Defaults to `NEVER`.
+    # icon:dot-circle[] icon:eye-slash[]
+    active: ALWAYS
+
     # Tool version.
-    # icon:exclamation-triangle[]
-    version: 0.12
+    # icon:dot-circle[]
+    version: {minisign-version}
 
     # The secret minisign key.
     # Defaults to `~/.minisign/minisign.key`.
@@ -146,17 +148,27 @@ signing:
     # Defaults to `{{basedir}}/minisign.pub`.
     # icon:exclamation-triangle[] icon:eye-slash[]
     publicKeyFile: __USE_ENVIRONMENT_VARIABLE__
+
+include::partial$signing/yaml/common.adoc[]
 ----
 --
 TOML::
 +
 --
 [source,toml]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 # icon:dot-circle[]
 [signing]
   # Enables or disables file signing.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  active = "ALWAYS"
+
+# icon:dot-circle[]
+[signing.pgp]
+  # Enables or disables PGP.
   # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
   # Defaults to `NEVER`.
   # icon:dot-circle[] icon:eye-slash[]
@@ -167,14 +179,8 @@ TOML::
   # icon:dot-circle[]
   armored = true
 
-  # Verify signature files.
-  # If `false` then `publicKey` may be ommitted.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  verify = false
-
   # How should GPG keys be handled.
-  # Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
+  # Supported values are [`MEMORY`, `FILE`, `COMMAND`].
   # Defaults to `MEMORY`.
   # icon:dot-circle[]
   mode = 'MEMORY'
@@ -189,25 +195,12 @@ TOML::
   # icon:exclamation-triangle[] icon:eye-slash[]
   publicKey = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # The private GPG (ascii armored) used to sign files and commits.
+  # The secret GPG (ascii armored) used to sign files and commits.
   # Required when mode = `MEMORY` || `FILE`.
   # icon:exclamation-triangle[] icon:eye-slash[]
   secretKey = "__USE_ENVIRONMENT_VARIABLE__"
 
-  # Sign files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  files = true
-
-  # Sign distribution artifacts.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  artifacts = true
-
-  # Sign checksum files.
-  # Defaults to `true`.
-  # icon:dot-circle[]
-  checksums = true
+include::partial$signing/toml/common.adoc[]
 
   # Settings used when mode = `COMMAND`.
   # icon:dot-circle[]
@@ -247,41 +240,58 @@ TOML::
   # icon:dot-circle[]
   command.args = ["--no-random-seed-file"]
 
-  # Settings used when mode = `COSIGN`.
-  # icon:dot-circle[]
+# icon:dot-circle[]
+[signing.cosign]
+  # Enables or disables Cosign.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  active = "ALWAYS"
 
   # Tool version.
-  # icon:exclamation-triangle[]
-  cosign.version = "1.4.1"
+  # icon:dot-circle[]
+  version = "{cosign-version}"
 
-  # The private cosign key.
+  # The secret cosign key.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  cosign.privateKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public cosign key.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  cosign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+include::partial$signing/toml/common.adoc[]
+
+# icon:dot-circle[]
+[signing.minisign]
+  # Enables or disables Minisign.
+  # Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  # icon:dot-circle[] icon:eye-slash[]
+  active = "ALWAYS"
 
   # Tool version.
-  # icon:exclamation-triangle[]
-  minisign.version = "0.12"
+  # icon:dot-circle[]
+  minisign.version = "{minisign-version}"
 
   # The secret minisign key.
   # Defaults to `~/.minisign/minisign.key`.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  minisign.secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  secretKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
 
   # The public minisign key.
   # Defaults to `{{basedir}}/minisign.pub`.
   # icon:exclamation-triangle[] icon:eye-slash[]
-  minisign.publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+  publicKeyFile = "__USE_ENVIRONMENT_VARIABLE__"
+
+include::partial$signing/toml/common.adoc[]
 ----
 --
 JSON::
 +
 --
 [source,json]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 {
   // icon:dot-circle[]
@@ -292,117 +302,118 @@ JSON::
     // icon:dot-circle[] icon:eye-slash[]
     "active": "ALWAYS",
 
-    // Generates an armored signature.
-    // Defaults to `false`.
-    // icon:dot-circle[]
-    "armored": true,
-
-    // Verify signature files.
-    // If `false` then `publicKey` may be ommitted.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    "verify": false,
-
-    // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-    // Defaults to `MEMORY`.
-    // icon:dot-circle[]
-    "mode": "MEMORY",
-
-    // The passphrase required to read secret keys.
-    // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-    // icon:dot-circle[] icon:eye-slash[]
-    "passphrase": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // The public GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // icon:exclamation-triangle[] icon:eye-slash[]
-    "publicKey": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // The private GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // icon:exclamation-triangle[] icon:eye-slash[]
-    "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
-
-    // Sign files.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    "files": true,
-
-    // Sign distribution artifacts.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    "artifacts": true,
-
-    // Sign checksum files.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    "checksums": true,
-
-    // Settings used when mode = `COMMAND`.
-    // icon:dot-circle[]
-    "command": {
-
-      // The executable used for signing.
-      // Defaults to `gpg[.exe]`.
-      // When mode = `COMMAND`.
+    "pgp": {
+      // Enables or disables PGP.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[] icon:eye-slash[]
-      "executable": "gpg",
+      "active": "ALWAYS",
 
-      // The directory from which gpg will load keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "homeDir": "/home/users/duke/.gnugpg",
-
-      // The "name" of the key to sign with.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "keyName": "0CB28B71EF50",
-
-      // The path to a public keyring to add to the list of keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      "publicKeyring": "my-pubring.gpg",
-
-      // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
-      // Defaults to `true`.
-      // When mode = `COMMAND`.
+      // Generates an armored signature.
+      // Defaults to `false`.
       // icon:dot-circle[]
-      "defaultKeyring": true,
+      "armored": true,
 
-      // Sets the arguments to be passed to gpg.
-      // When mode = `COMMAND`.
+      // How should GPG keys be handled.
+      // Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+      // Defaults to `MEMORY`.
       // icon:dot-circle[]
-      "args": [
-        "--no-random-seed-file"
-      ]
+      "mode": "MEMORY",
+
+      // The passphrase required to read secret keys.
+      // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
+      // icon:dot-circle[] icon:eye-slash[]
+      "passphrase": "__USE_ENVIRONMENT_VARIABLE__",
+
+      // The public GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "publicKey": "__USE_ENVIRONMENT_VARIABLE__",
+
+      // The secret GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      "secretKey": "__USE_ENVIRONMENT_VARIABLE__",
+
+include::partial$signing/json/common.adoc[]
+
+      // Settings used when mode = `COMMAND`.
+      // icon:dot-circle[]
+      "command": {
+
+        // The executable used for signing.
+        // Defaults to `gpg[.exe]`.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        "executable": "gpg",
+
+        // The directory from which gpg will load keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        "homeDir": "/home/users/duke/.gnugpg",
+
+        // The "name" of the key to sign with.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        "keyName": "0CB28B71EF50",
+
+        // The path to a public keyring to add to the list of keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        "publicKeyring": "my-pubring.gpg",
+
+        // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+        // Defaults to `true`.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[]
+        "defaultKeyring": true,
+
+        // Sets the arguments to be passed to gpg.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[]
+        "args": [
+          "--no-random-seed-file"
+        ]
+      }
     },
 
-    // Settings used when mode = `COSIGN`.
     // icon:dot-circle[]
     "cosign": {
-      // Tool version.
-      // icon:exclamation-triangle[]
-      "version": "1.4.1",
+      // Enables or disables Cosign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      "active": "ALWAYS",
 
-      // The private cosign key.
+      // Tool version.
+      // icon:dot-circle[]
+      "version": "{cosign-version}",
+
+      // The secret cosign key.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      "privateKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
+      "secretKeyFile": "__USE_ENVIRONMENT_VARIABLE__",
 
       // The public cosign key.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
+
+include::partial$signing/json/common.adoc[]
     },
 
-    // Settings used when mode = `MINISIGN`.
     // icon:dot-circle[]
     "minisign": {
+      // Enables or disables Minisign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      "active": "ALWAYS",
+
       // Tool version.
-      // icon:exclamation-triangle[]
-      "version": "0.12",
+      // icon:dot-circle[]
+      "version": "{minisign-version}",
 
       // The secret minisign key.
       // Defaults to `~/.minisign/minisign.key`.
@@ -413,6 +424,8 @@ JSON::
       // Defaults to `{{basedir}}/minisign.pub`.
       // icon:exclamation-triangle[] icon:eye-slash[]
       "publicKeyFile": "__USE_ENVIRONMENT_VARIABLE__"
+
+include::partial$signing/json/common.adoc[]
     }
   }
 }
@@ -422,14 +435,13 @@ Maven::
 +
 --
 [source,xml]
-[subs="+macros,verbatim"]
+[subs="+macros,attributes,verbatim"]
 ----
 <jreleaser>
   <!--
     icon:dot-circle[]
   -->
   <signing>
-
     <!--
       Enables or disables file signing.
       Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
@@ -438,160 +450,159 @@ Maven::
     -->
     <active>ALWAYS</active>
 
-    <!--
-      Generates an armored signature.
-      Defaults to `false`.
-      icon:dot-circle[]
-    -->
-    <armored>true</armored>
-
-    <!--
-      Verify signature files.
-      If `false` then `publicKey` may be ommitted.
-      Defaults to `true`.
-      icon:dot-circle[]
-    -->
-    <verify>false</verify>
-
-    <!--
-      How should GPG keys be handled.
-      Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-      Defaults to `MEMORY`.
-      icon:dot-circle[]
-    -->
-    <mode>MEMORY</mode>
-
-    <!--
-      The passphrase required to read secret keys.
-      Required when mode = `MEMORY` || `FILE`.
-      If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-      icon:dot-circle[] icon:eye-slash[]
-    -->  
-    <passphrase>__USE_ENVIRONMENT_VARIABLE__</passphrase>
-
-    <!--
-      The public GPG (ascii armored) used to sign files and commits.
-      Required when mode = `MEMORY` || `FILE`.
-      icon:exclamation-triangle[] icon:eye-slash[]
-    -->
-    <publicKey>__USE_ENVIRONMENT_VARIABLE__</publicKey>
-
-    <!--
-      The private GPG (ascii armored) used to sign files and commits.
-      icon:exclamation-triangle[] icon:eye-slash[]
-    -->
-    <secretKey>__USE_ENVIRONMENT_VARIABLE__</secretKey>
-
-    <!--
-      Sign files.
-      Defaults to `true`.
-      icon:dot-circle[]
-    -->
-    <files>true</files>
-
-    <!--
-      Sign distribution artifacts.
-      Defaults to `true`.
-      icon:dot-circle[]
-    -->
-    <artifacts>true</artifacts>
-
-    <!--
-      Sign checksum files.
-      Defaults to `true`.
-      icon:dot-circle[]
-    -->
-    <checksums>true</checksums>
-
-    <!--
-      Settings used when mode = `COMMAND`.
-      icon:dot-circle[]
-    -->
-    <command>
+    <pgp>
       <!--
-        The executable used for signing.
-        Defaults to `gpg[.exe]`.
-        When mode = `COMMAND`.
+        Enables or disables PGP.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
         icon:dot-circle[] icon:eye-slash[]
       -->
-      <executable>gpg</executable>
+      <active>ALWAYS</active>
 
       <!--
-        The directory from which gpg will load keyrings.
-        Defaults to empty.
-        When mode = `COMMAND`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <homeDir>/home/users/duke/.gnugpg</homeDir>
-
-      <!--
-        The "name" of the key to sign with.
-        Defaults to empty.
-        When mode = `COMMAND`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <keyName>0CB28B71EF50</keyName>
-
-      <!--
-        The path to a public keyring to add to the list of keyrings.
-        Defaults to empty.
-        When mode = `COMMAND`.
-        icon:dot-circle[] icon:eye-slash[]
-      -->
-      <publicKeyring>my-pubring.gpg</publicKeyring>
-
-      <!--
-        Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
-        Defaults to `true`.
-        When mode = `COMMAND`.
+        Generates an armored signature.
+        Defaults to `false`.
         icon:dot-circle[]
       -->
-      <defaultKeyring>true</defaultKeyring>
+      <armored>true</armored>
 
       <!--
-        Sets the arguments to be passed to gpg.
-        When mode = `COMMAND`.
+        How should GPG keys be handled.
+        Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+        Defaults to `MEMORY`.
         icon:dot-circle[]
       -->
-      <args>
-        <arg>--no-random-seed-file</arg>
-      </args>
-    </command>
+      <mode>MEMORY</mode>
+
+      <!--
+        The passphrase required to read secret keys.
+        Required when mode = `MEMORY` || `FILE`.
+        If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
+        icon:dot-circle[] icon:eye-slash[]
+      -->
+      <passphrase>__USE_ENVIRONMENT_VARIABLE__</passphrase>
+
+      <!--
+        The public GPG (ascii armored) used to sign files and commits.
+        Required when mode = `MEMORY` || `FILE`.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <publicKey>__USE_ENVIRONMENT_VARIABLE__</publicKey>
+
+      <!--
+        The secret GPG (ascii armored) used to sign files and commits.
+        icon:exclamation-triangle[] icon:eye-slash[]
+      -->
+      <secretKey>__USE_ENVIRONMENT_VARIABLE__</secretKey>
+
+include::partial$signing/maven/common.adoc[]
+
+      <!--
+        Settings used when mode = `COMMAND`.
+        icon:dot-circle[]
+      -->
+      <command>
+        <!--
+          The executable used for signing.
+          Defaults to `gpg[.exe]`.
+          When mode = `COMMAND`.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <executable>gpg</executable>
+
+        <!--
+          The directory from which gpg will load keyrings.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <homeDir>/home/users/duke/.gnugpg</homeDir>
+
+        <!--
+          The "name" of the key to sign with.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <keyName>0CB28B71EF50</keyName>
+
+        <!--
+          The path to a public keyring to add to the list of keyrings.
+          Defaults to empty.
+          When mode = `COMMAND`.
+          icon:dot-circle[] icon:eye-slash[]
+        -->
+        <publicKeyring>my-pubring.gpg</publicKeyring>
+
+        <!--
+          Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+          Defaults to `true`.
+          When mode = `COMMAND`.
+          icon:dot-circle[]
+        -->
+        <defaultKeyring>true</defaultKeyring>
+
+        <!--
+          Sets the arguments to be passed to gpg.
+          When mode = `COMMAND`.
+          icon:dot-circle[]
+        -->
+        <args>
+          <arg>--no-random-seed-file</arg>
+        </args>
+      </command>
+    </pgp>
 
     <!--
-      Settings used when mode = `COSIGN`.
       icon:dot-circle[]
     -->
     <cosign>
       <!--
-        Tool version.
-        icon:exclamation-triangle[]
+        Enables or disables Cosign.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        icon:dot-circle[] icon:eye-slash[]
       -->
-      <version>1.4.1</version>
+      <active>ALWAYS</active>
 
       <!--
-        The private cosign key.
+        Tool version.
+        icon:dot-circle[]
+      -->
+      <version>{cosign-version}</version>
+
+      <!--
+        The secret cosign key.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
-      <privateKeyFile>__USE_ENVIRONMENT_VARIABLE__</privateKeyFile>
+      <secretKeyFile>__USE_ENVIRONMENT_VARIABLE__</secretKeyFile>
 
       <!--
         The public cosign key.
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <publicKeyFile>__USE_ENVIRONMENT_VARIABLE__</publicKeyFile>
+
+include::partial$signing/maven/common.adoc[]
     </cosign>
 
     <!--
-      Settings used when mode = `MINISIGN`.
       icon:dot-circle[]
     -->
     <minisign>
       <!--
-        Tool version.
-        icon:exclamation-triangle[]
+        Enables or disables Minisign.
+        Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        Defaults to `NEVER`.
+        icon:dot-circle[] icon:eye-slash[]
       -->
-      <version>0.12</version>
+      <active>ALWAYS</active>
+
+      <!--
+        Tool version.
+        icon:dot-circle[]
+      -->
+      <version>{minisign-version}</version>
 
       <!--
         The secret minisign key.
@@ -606,6 +617,8 @@ Maven::
         icon:exclamation-triangle[] icon:eye-slash[]
       -->
       <publicKeyFile>__USE_ENVIRONMENT_VARIABLE__</publicKeyFile>
+
+include::partial$signing/maven/common.adoc[]
     </minisign>
   </signing>
 </jreleaser>
@@ -615,7 +628,7 @@ Gradle::
 +
 --
 [source,groovy]
-[subs="+macros"]
+[subs="+macros,attributes"]
 ----
 jreleaser {
   // icon:dot-circle[]
@@ -626,114 +639,115 @@ jreleaser {
     // icon:dot-circle[] icon:eye-slash[]
     active = 'ALWAYS'
 
-    // Generates an armored signature.
-    // Defaults to `false`.
-    // icon:dot-circle[]
-    armored = true
-
-    // Verify signature files.
-    // If `false` then `publicKey` may be ommitted.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    verify = false
-
-    // How should GPG keys be handled.
-    // Supported values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`, `MINISIGN`].
-    // Defaults to `MEMORY`.
-    // icon:dot-circle[]
-    mode = 'MEMORY'
-
-    // The passphrase required to read secret keys.
-    // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
-    // icon:dot-circle[] icon:eye-slash[]
-    passphrase = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // The public GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // icon:exclamation-triangle[] icon:eye-slash[]
-    publicKey = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // The private GPG (ascii armored) used to sign files and commits.
-    // Required when mode = `MEMORY` || `FILE`.
-    // icon:exclamation-triangle[] icon:eye-slash[]
-    secretKey = '__USE_ENVIRONMENT_VARIABLE__'
-
-    // Sign files.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    files = true
-
-    // Sign distribution artifacts.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    artifacts = true
-
-    // Sign checksum files.
-    // Defaults to `true`.
-    // icon:dot-circle[]
-    checksums = true
-
-    // Settings used when mode = `COMMAND`.
-    // icon:dot-circle[]
-    command {
-      // The executable used for signing.
-      // Defaults to `gpg[.exe]`.
-      // When mode = `COMMAND`.
+    pgp {
+      // Enables or disables PGP.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
       // icon:dot-circle[] icon:eye-slash[]
-      executable = 'gpg'
+      active = 'ALWAYS'
 
-      // The directory from which gpg will load keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      homeDir = '/home/users/duke/.gnugpg'
-
-      // The "name" of the key to sign with.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      keyName = '0CB28B71EF50'
-
-      // The path to a public keyring to add to the list of keyrings.
-      // Defaults to empty.
-      // When mode = `COMMAND`.
-      // icon:dot-circle[] icon:eye-slash[]
-      publicKeyring = 'my-pubring.gpg'
-
-      // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
-      // Defaults to `true`.
-      // When mode = `COMMAND`.
+      // Generates an armored signature.
+      // Defaults to `false`.
       // icon:dot-circle[]
-      defaultKeyring = true
+      armored = true
 
-      // Sets the arguments to be passed to gpg.
-      // When mode = `COMMAND`.
+      // How should GPG keys be handled.
+      // Supported values are [`MEMORY`, `FILE`, `COMMAND`].
+      // Defaults to `MEMORY`.
       // icon:dot-circle[]
-      args = ['--no-random-seed-file']
+      mode = 'MEMORY'
+
+      // The passphrase required to read secret keys.
+      // If not set and mode = `COMMAND`, the command may ask for the passphrase interactively.
+      // icon:dot-circle[] icon:eye-slash[]
+      passphrase = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // The public GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      publicKey = '__USE_ENVIRONMENT_VARIABLE__'
+
+      // The secret GPG (ascii armored) used to sign files and commits.
+      // Required when mode = `MEMORY` || `FILE`.
+      // icon:exclamation-triangle[] icon:eye-slash[]
+      secretKey = '__USE_ENVIRONMENT_VARIABLE__'
+
+include::partial$signing/gradle/common.adoc[]
+
+      // Settings used when mode = `COMMAND`.
+      // icon:dot-circle[]
+      command {
+        // The executable used for signing.
+        // Defaults to `gpg[.exe]`.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        executable = 'gpg'
+
+        // The directory from which gpg will load keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        homeDir = '/home/users/duke/.gnugpg'
+
+        // The "name" of the key to sign with.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        keyName = '0CB28B71EF50'
+
+        // The path to a public keyring to add to the list of keyrings.
+        // Defaults to empty.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[] icon:eye-slash[]
+        publicKeyring = 'my-pubring.gpg'
+
+        // Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+        // Defaults to `true`.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[]
+        defaultKeyring = true
+
+        // Sets the arguments to be passed to gpg.
+        // When mode = `COMMAND`.
+        // icon:dot-circle[]
+        args = ['--no-random-seed-file']
+      }
     }
 
-    // Settings used when mode = `COSIGN`.
     // icon:dot-circle[]
     cosign {
-      // Tool version.
-      // icon:exclamation-triangle[]
-      version = '1.4.1'
+      // Enables or disables Cosign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      active = 'ALWAYS'
 
-      // The private cosign key.
+      // Tool version.
+      // icon:dot-circle[]
+      version = '{cosign-version}'
+
+      // The secret cosign key.
       // icon:exclamation-triangle[] icon:eye-slash[]
-      privateKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+      secretKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
 
       // The public cosign key.
       // icon:exclamation-triangle[] icon:eye-slash[]
       publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+
+include::partial$signing/gradle/common.adoc[]
     }
 
-    // Settings used when mode = `MINISIGN`.
     // icon:dot-circle[]
     minisign {
+      // Enables or disables Minisign.
+      // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+      // Defaults to `NEVER`.
+      // icon:dot-circle[] icon:eye-slash[]
+      active = 'ALWAYS'
+
       // Tool version.
-      // icon:exclamation-triangle[]
-      version = '1.4.1'
+      // icon:dot-circle[]
+      version = '{cosign-version}'
 
       // The secret minisign key.
       // Defaults to `~/.minisign/minisign.key`.
@@ -744,6 +758,8 @@ jreleaser {
       // Defaults to `{{basedir}}/minisign.pub`.
       // icon:exclamation-triangle[] icon:eye-slash[]
       publicKeyFile = '__USE_ENVIRONMENT_VARIABLE__'
+
+include::partial$signing/gradle/common.adoc[]
     }
   }
 }
@@ -780,8 +796,8 @@ include::partial$envvars-header.adoc[]
 | jreleaser.gpg.public.keyring | JRELEASER_GPG_PUBLIC_KEYRING
 2+| *cosign.publicKeyFile*
 | jreleaser.cosign.public.key  | JRELEASER_COSIGN_PUBLIC_KEY
-2+| *cosign.privateKeyFile*
-| jreleaser.cosign.private.key | JRELEASER_COSIGN_PRIVATE_KEY
+2+| *cosign.secretKeyFile*
+| jreleaser.cosign.secret.key | JRELEASER_COSIGN_SECRET_KEY
 2+| *minisign.publicKeyFile*
 | jreleaser.minisign.public.key  | JRELEASER_MINISIGN_PUBLIC_KEY
 2+| *minisign.secretKeyFile*
@@ -802,12 +818,12 @@ signing executable (`gpg` by default). Signing and verification will be invoked 
 == Cosign
 
 You may sign artifacts, files, and checksums using Sigstore's link:https://github.com/sigstore/cosign[cosign] however
-you *can not* sign commits nor tags when `COSIGN` mode is active.
+you *can not* sign commits nor tags when `COSIGN` is active.
 
 You may use `JRELEASER_COSIGN_PASSWORD` instead of `JRELEASER_GPG_PASSPHRASE` to define the password required by cosign.
 
 You must define a value for the version property. JReleaser will check if a matching binary exists in the system or
-download a binary  that matches the current platform. If you do not have existing private/public keys then JReleaser
+download a binary  that matches the current platform. If you do not have existing secret/public keys then JReleaser
 will generate a key pair for you and store them in `$JRELEASER_USER_HOME` which matches `~/.jreleaser` by default.
 
 The public cosign key file will automatically be uploaded as a release asset.
@@ -815,7 +831,7 @@ The public cosign key file will automatically be uploaded as a release asset.
 == Minisign
 
 You may sign artifacts, files, and checksums using link:https://jedisct1.github.io/minisign/[minisign] however
-you *can not* sign commits nor tags when `MINISIGN` mode is active.
+you *can not* sign commits nor tags when `MINISIGN` is active.
 
 You may use `JRELEASER_MINISIGN_PASSWORD` instead of `JRELEASER_GPG_PASSPHRASE` to define the password required by minisign.
 
@@ -834,4 +850,4 @@ must match `skipSigning` and be set to `true`. Setting this property on a distri
 If the `verify` property is set to `false` then no signature verification will be performed, in which case you may ommit
 setting a value for `publicKey` as well.
 
-NOTE: `COSIGN` mode does require both `publicKeyFile` and `privateKeyFile` regardless of the value set in `verify`.
+NOTE: `COSIGN`  does require both `publicKeyFile` and `secretKeyFile` regardless of the value set in `verify`.
