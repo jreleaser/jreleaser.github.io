@@ -902,3 +902,108 @@ jreleaser {
 ----
 --
 ====
+
+=== Twist
+
+Posts a message to a link:https://www.twist.com[Twist] channel or thread. You must create a custom webhook for this announcer to work.
+
+1. Log into Twist.
+2. Go to `Settings` -> `Integrations` -> `Build` -> `Build Integration`.
+3. Create either a `Channel Integration` or `Thread Integration`.
+4. Copy the `Shareable Install URL` and open it in a web browser.
+5. Configure the webhook, and click `Install Integration`.
+6. Copy the generated webhook URL.
+
+NOTE: Set a `JRELEASER_TWIST_WEBHOOK` environment variable with the webhook's url as value.
+
+[tabs]
+====
+YAML::
++
+--
+[source,yaml]
+[subs="+macros,attributes"]
+----
+announce:
+  webhooks:
+    twist:
+      active: ALWAYS
+      messageTemplate: path/to/template/twist.tpl
+----
+--
+TOML::
++
+--
+[source,toml]
+[subs="+macros,attributes"]
+----
+[announce.webhooks.twist]
+  active = "ALWAYS"
+  messageTemplate = "path/to/template/twist.tpl"
+----
+--
+JSON::
++
+--
+[source,json]
+[subs="+macros,attributes"]
+----
+{
+  "announce": {
+    "webhooks": {
+      "twist": {
+        "active": "ALWAYS",
+        "messageTemplate": "path/to/template/twist.tpl"
+      }
+    }
+  }
+}
+----
+--
+Maven::
++
+--
+[source,xml]
+[subs="+macros,attributes,verbatim"]
+----
+<jreleaser>
+  <announce>
+    <webhooks>
+      <twist>
+        <active>ALWAYS</active>
+        <messageTemplate>path/to/template/twist.tpl</messageTemplate>
+      </twist>
+    </webhooks>
+  </announce>
+</jreleaser>
+----
+--
+Gradle::
++
+--
+[source,groovy]
+[subs="+macros,attributes"]
+----
+jreleaser {
+  announce {
+    webhooks {
+      twist {
+        active = 'ALWAYS'
+        messageTemplate = 'path/to/template/twist.tpl'
+      }
+    }
+  }
+}
+----
+--
+====
+
+The following is an example `twist.tpl` when posting to a channel:
+
+[source,json]
+----
+{
+  "content": "**{{projectName}} {{projectVersion}} is now available!**\n\n{{projectLongDescription}}",
+  "title": "{{projectName}} {{projectVersion}} is now available!"
+}
+----
