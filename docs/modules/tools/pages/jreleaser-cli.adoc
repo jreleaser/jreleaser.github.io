@@ -52,6 +52,7 @@ The following settings may also be specified via environment variables
 | output-directory        | JRELEASER_OUTPUT_DIRECTORY        | out
 | dry-run                 | JRELEASER_DRY_RUN                 | false
 | strict                  | JRELEASER_STRICT                  | false
+| reproducible            | JRELEASER_REPRODUCIBLE            | false
 | yolo                    | JRELEASER_YOLO                    | false
 | git-root-search         | JRELEASER_GIT_ROOT_SEARCH         | false
 | select-current-platform | JRELEASER_SELECT_CURRENT_PLATFORM | false
@@ -233,10 +234,10 @@ The file will be generated at `<basedir>` if specified, otherwise at the current
 $ jreleaser config -h
 Display current configuration.
 
-Usage: jreleaser config [-fghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                        [-rp=<platform>]... [-sp=<platform>]... [--announce | -a | --changelog | -d |
-                        --deploy]
+Usage: jreleaser config [-fghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                        [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                        [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... [--announce | -a |
+                        --changelog | -d | --deploy]
 
 Options:
   -a, --assembly                            Display assembly configuration.
@@ -255,6 +256,7 @@ Options:
       -od, --output-directory=<directory>   Output directory.
   -P, --set-property=<key=value>            Sets the value of a property. 🔁
   -q, --quiet                               Log errors only.
+      --reproducible                        Enable reproducible artifacts.
       -rp, --reject-platform=<platform>     Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform       Activates paths matching the current platform.
       --settings-file=<file>                The settings file.
@@ -359,11 +361,11 @@ The value of `--packager` must match any of the available xref:reference:package
 $ jreleaser template eval -h
 Evaluate a template or templates.
 
-Usage: jreleaser template eval [-ghioqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                               [-od=<directory>] [--settings-file=<file>] --target-directory=<directory>
-                               [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]...
-                               [-sp=<platform>]... (--announce | --assembly | --changelog | --download)
-                               (--input-file=<file> | --input-directory=<directory>)
+Usage: jreleaser template eval [-ghioqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                               [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                               --target-directory=<directory> [-D=<key=value>]... [-P=<key=value>]...
+                               [-rp=<platform>]... [-sp=<platform>]... (--announce | --assembly | --changelog
+                               | --download) (--input-file=<file> | --input-directory=<directory>)
 
 Options:
       --announce                            Eval model in announce configuration.
@@ -383,6 +385,7 @@ Options:
       -od, --output-directory=<directory>   Output directory.
   -P, --set-property=<key=value>            Sets the value of a property. 🔁
   -q, --quiet                               Log errors only.
+      --reproducible                        Enable reproducible artifacts.
       -rp, --reject-platform=<platform>     Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform       Activates paths matching the current platform.
       --settings-file=<file>                The settings file.
@@ -412,9 +415,10 @@ Executes the xref:concepts:workflow.adoc#_download[Download] workflow step.
 $ jreleaser download -h
 Download assets.
 
-Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                          [[[-d=<downloader>]... [-dn=<name>]...] | [[-xd=<downloader>]... [-xdn=<name>]...]]
+Usage: jreleaser download [-ghiqVw] [--dry-run] [-grs] [--reproducible] [--strict] [--yolo] [-b=<directory>]
+                          [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                          [-P=<key=value>]... [[[-d=<downloader>]... [-dn=<name>]...] |
+                          [[-xd=<downloader>]... [-xdn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                    Base directory.
@@ -428,6 +432,7 @@ Options:
       -od, --output-directory=<directory>      Output directory.
   -P, --set-property=<key=value>               Sets the value of a property. 🔁
   -q, --quiet                                  Log errors only.
+      --reproducible                           Enable reproducible artifacts.
       --settings-file=<file>                   The settings file.
       --strict                                 Enable strict mode.
   -V, --version                                Print version information and exit.
@@ -469,9 +474,9 @@ Executes the xref:concepts:workflow.adoc#_assemble[Assemble] workflow step.
 $ jreleaser assemble -h
 Assemble distributions.
 
-Usage: jreleaser assemble [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                          [-rp=<platform>]... [-sp=<platform>]... [[[-s=<assembler>]...
+Usage: jreleaser assemble [-ghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                          [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                          [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... [[[-s=<assembler>]...
                           [-d=<distribution>]...] | [[-xs=<assembler>]... [-xd=<distribution>]...]]
 
 Options:
@@ -485,6 +490,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -529,8 +535,9 @@ Executes the xref:concepts:workflow.adoc#_changelog[Changelog] workflow step.
 $ jreleaser changelog -h
 Calculate the changelog.
 
-Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                           [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
+Usage: jreleaser changelog [-ghiqVw] [--dry-run] [-grs] [--reproducible] [--strict] [--yolo] [-b=<directory>]
+                           [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                           [-P=<key=value>]...
 
 Options:
   -b, --basedir=<directory>                 Base directory.
@@ -544,6 +551,7 @@ Options:
       -od, --output-directory=<directory>   Output directory.
   -P, --set-property=<key=value>            Sets the value of a property. 🔁
   -q, --quiet                               Log errors only.
+      --reproducible                        Enable reproducible artifacts.
       --settings-file=<file>                The settings file.
       --strict                              Enable strict mode.
   -V, --version                             Print version information and exit.
@@ -569,12 +577,12 @@ Executes the xref:concepts:workflow.adoc#_catalog[Catalog] workflow step.
 $ jreleaser catalog -h
 Catalog artifacts and files.
 
-Usage: jreleaser catalog [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                         [-rp=<platform>]... [-sp=<platform>]... [[[--distribution=<distribution>]...
-                         [--cataloger=<cataloger>]... [-y=<deployer>]... [-yn=<name>]...] |
-                         [[--exclude-distribution=<distribution>]... [--exclude-cataloger=<cataloger>]...
-                         [-xy=<deployer>]... [-xyn=<name>]...]]
+Usage: jreleaser catalog [-ghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                         [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                         [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                         [[[--distribution=<distribution>]... [--cataloger=<cataloger>]... [-y=<deployer>]...
+                         [-yn=<name>]...] | [[--exclude-distribution=<distribution>]...
+                         [--exclude-cataloger=<cataloger>]... [-xy=<deployer>]... [-xyn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                   Base directory.
@@ -587,6 +595,7 @@ Options:
       -od, --output-directory=<directory>     Output directory.
   -P, --set-property=<key=value>              Sets the value of a property. 🔁
   -q, --quiet                                 Log errors only.
+      --reproducible                          Enable reproducible artifacts.
       -rp, --reject-platform=<platform>       Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform         Activates paths matching the current platform.
       --settings-file=<file>                  The settings file.
@@ -627,10 +636,10 @@ Executes the xref:concepts:workflow.adoc#_checksum[Checksum] workflow step.
 $ jreleaser checksum -h
 Calculate checksums.
 
-Usage: jreleaser checksum [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                          [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...] |
-                          [[-xd=<distribution>]...]]
+Usage: jreleaser checksum [-ghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                          [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                          [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                          [[[-d=<distribution>]...] | [[-xd=<distribution>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -643,6 +652,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -680,9 +690,9 @@ Executes the xref:concepts:workflow.adoc#_sign[Sign] workflow step.
 $ jreleaser sign -h
 Sign release artifacts.
 
-Usage: jreleaser sign [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                      [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                      [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...] |
+Usage: jreleaser sign [-ghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                      [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                      [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...] |
                       [[-xd=<distribution>]...]]
 
 Options:
@@ -696,6 +706,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -733,9 +744,10 @@ Executes the xref:concepts:workflow.adoc#_deploy[Deploy] workflow step.
 $ jreleaser deploy -h
 Deploy all staged artifacts.
 
-Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                        [[[-y=<deployer>]... [-yn=<name>]...] | [[-xy=<deployer>]... [-xyn=<name>]...]]
+Usage: jreleaser deploy [-ghiqVw] [--dry-run] [-grs] [--reproducible] [--strict] [--yolo] [-b=<directory>]
+                        [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                        [-P=<key=value>]... [[[-y=<deployer>]... [-yn=<name>]...] | [[-xy=<deployer>]...
+                        [-xyn=<name>]...]]
 
 Options:
   -b, --basedir=<directory>                  Base directory.
@@ -749,6 +761,7 @@ Options:
       -od, --output-directory=<directory>    Output directory.
   -P, --set-property=<key=value>             Sets the value of a property. 🔁
   -q, --quiet                                Log errors only.
+      --reproducible                         Enable reproducible artifacts.
       --settings-file=<file>                 The settings file.
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
@@ -817,11 +830,12 @@ Executes the xref:concepts:workflow.adoc#_upload[Upload] workflow step.
 $ jreleaser upload -h
 Upload all artifacts.
 
-Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                        [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                        [-rp=<platform>]... [-sp=<platform>]... [[[-u=<uploader>]... [-un=<name>]...
-                        [-d=<distribution>]... [--cataloger=<cataloger>]...] | [[-xu=<uploader>]...
-                        [-xun=<name>]... [-xd=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
+Usage: jreleaser upload [-ghiqVw] [--dry-run] [-grs] [--reproducible] [-scp] [--strict] [--yolo]
+                        [-b=<directory>] [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                        [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                        [[[-u=<uploader>]... [-un=<name>]... [-d=<distribution>]...
+                        [--cataloger=<cataloger>]...] | [[-xu=<uploader>]... [-xun=<name>]...
+                        [-xd=<distribution>]... [--exclude-cataloger=<cataloger>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -835,6 +849,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -910,20 +925,20 @@ Executes the xref:concepts:workflow.adoc#_release[Release] workflow step.
 $ jreleaser release -h
 Create or update a release.
 
-Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-y=<deployer>]...
-                         [-yn=<name>]... [-u=<uploader>]... [-un=<name>]... [--cataloger=<cataloger>]...] |
-                         [[-xd=<distribution>]... [-xy=<deployer>]... [-xyn=<name>]... [-xu=<uploader>]...
-                         [-xun=<name>]... [--exclude-cataloger=<cataloger>]...] | [[--auto-config]
-                         [--project-name=<name>] [--project-version=<version>]
-                         [--project-version-pattern=<pattern>] [--project-snapshot-pattern=<pattern>]
-                         [--project-snapshot-label=<label>] [--project-snapshot-full-changelog]
-                         [--project-copyright=<copyright>] [--project-description=<description>]
-                         [--project-inception-year=<year>] [--project-stereotype=<stereotype>]
-                         [--author=<author>]... [--tag-name=<tag>] [--previous-tag-name=<tag>]
-                         [--release-name=<name>] [--milestone-name=<name>] [--prerelease]
-                         [--prerelease-pattern=<pattern>] [--draft] [--overwrite] [--update]
+Usage: jreleaser release [-ghiqVw] [--dry-run] [-grs] [--reproducible] [-scp] [--strict] [--yolo]
+                         [-b=<directory>] [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                         [[[-d=<distribution>]... [-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]...
+                         [-un=<name>]... [--cataloger=<cataloger>]...] | [[-xd=<distribution>]...
+                         [-xy=<deployer>]... [-xyn=<name>]... [-xu=<uploader>]... [-xun=<name>]...
+                         [--exclude-cataloger=<cataloger>]...] | [[--auto-config] [--project-name=<name>]
+                         [--project-version=<version>] [--project-version-pattern=<pattern>]
+                         [--project-snapshot-pattern=<pattern>] [--project-snapshot-label=<label>]
+                         [--project-snapshot-full-changelog] [--project-copyright=<copyright>]
+                         [--project-description=<description>] [--project-inception-year=<year>]
+                         [--project-stereotype=<stereotype>] [--author=<author>]... [--tag-name=<tag>]
+                         [--previous-tag-name=<tag>] [--release-name=<name>] [--milestone-name=<name>]
+                         [--prerelease] [--prerelease-pattern=<pattern>] [--draft] [--overwrite] [--update]
                          [--update-section=<section>]... [--skip-tag] [--skip-release] [--skip-checksums]
                          [--branch=<branch>] [--changelog=<changelog>] [--changelog-formatted]
                          [--username=<username>] [--commit-author-name=<name>]
@@ -942,6 +957,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -1046,10 +1062,10 @@ Executes the xref:concepts:workflow.adoc#_prepare[Prepare] workflow step.
 $ jreleaser prepare -h
 Prepare all distributions.
 
-Usage: jreleaser prepare [-ghiqVw] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
-                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
+Usage: jreleaser prepare [-ghiqVw] [-grs] [--reproducible] [-scp] [--strict] [--yolo] [-b=<directory>]
+                         [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                         [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]...
+                         [-p=<packager>]...] | [[-xd=<distribution>]... [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1062,6 +1078,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -1130,10 +1147,11 @@ Executes the xref:concepts:workflow.adoc#_package[Package] workflow step.
 $ jreleaser package -h
 Package all distributions.
 
-Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
-                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
+Usage: jreleaser package [-ghiqVw] [--dry-run] [-grs] [--reproducible] [-scp] [--strict] [--yolo]
+                         [-b=<directory>] [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                         [[[-d=<distribution>]... [-p=<packager>]...] | [[-xd=<distribution>]...
+                         [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1147,6 +1165,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -1218,10 +1237,11 @@ Executes the xref:concepts:workflow.adoc#_publish[Publish] workflow step.
 $ jreleaser publish -h
 Publish all distributions.
 
-Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                         [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                         [-rp=<platform>]... [-sp=<platform>]... [[[-d=<distribution>]... [-p=<packager>]...]
-                         | [[-xd=<distribution>]... [-xp=<packager>]...]]
+Usage: jreleaser publish [-ghiqVw] [--dry-run] [-grs] [--reproducible] [-scp] [--strict] [--yolo]
+                         [-b=<directory>] [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                         [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+                         [[[-d=<distribution>]... [-p=<packager>]...] | [[-xd=<distribution>]...
+                         [-xp=<packager>]...]]
 
 Options:
   -b, --basedir=<directory>                        Base directory.
@@ -1235,6 +1255,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
@@ -1306,9 +1327,9 @@ Executes the xref:concepts:workflow.adoc#_announce[Announce] workflow step.
 $ jreleaser announce -h
 Announce a release.
 
-Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--strict] [--yolo] [-b=<directory>] [-c=<file>]
-                          [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]... [-P=<key=value>]...
-                          [[[-a=<announcer>]...] | [[-xa=<announcer>]...]]
+Usage: jreleaser announce [-ghiqVw] [--dry-run] [-grs] [--reproducible] [--strict] [--yolo] [-b=<directory>]
+                          [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
+                          [-P=<key=value>]... [[[-a=<announcer>]...] | [[-xa=<announcer>]...]]
 
 Options:
   -b, --basedir=<directory>                  Base directory.
@@ -1322,6 +1343,7 @@ Options:
       -od, --output-directory=<directory>    Output directory.
   -P, --set-property=<key=value>             Sets the value of a property. 🔁
   -q, --quiet                                Log errors only.
+      --reproducible                         Enable reproducible artifacts.
       --settings-file=<file>                 The settings file.
       --strict                               Enable strict mode.
   -V, --version                              Print version information and exit.
@@ -1373,9 +1395,9 @@ Executes the xref:concepts:workflow.adoc#_full_release[Full Release] workflow st
 $ jreleaser full-release -h
 Perform a full release.
 
-Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [-scp] [--strict] [--yolo] [-b=<directory>]
-                              [-c=<file>] [-od=<directory>] [--settings-file=<file>] [-D=<key=value>]...
-                              [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
+Usage: jreleaser full-release [-ghiqVw] [--dry-run] [-grs] [--reproducible] [-scp] [--strict] [--yolo]
+                              [-b=<directory>] [-c=<file>] [-od=<directory>] [--settings-file=<file>]
+                              [-D=<key=value>]... [-P=<key=value>]... [-rp=<platform>]... [-sp=<platform>]...
                               [[[-y=<deployer>]... [-yn=<name>]... [-u=<uploader>]... [-un=<name>]...
                               [-d=<distribution>]... [-p=<packager>]... [-a=<announcer>]...
                               [--cataloger=<cataloger>]...] | [[-xy=<deployer>]... [-xyn=<name>]...
@@ -1394,6 +1416,7 @@ Options:
       -od, --output-directory=<directory>          Output directory.
   -P, --set-property=<key=value>                   Sets the value of a property. 🔁
   -q, --quiet                                      Log errors only.
+      --reproducible                               Enable reproducible artifacts.
       -rp, --reject-platform=<platform>            Activates paths not matching the given platform. 🔁
       -scp, --select-current-platform              Activates paths matching the current platform.
       --settings-file=<file>                       The settings file.
