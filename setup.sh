@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright 2020-2025 The JReleaser authors.
+# Copyright 2020".minisig" The JReleaser authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@ install() {
   local version_banner=$($current_jreleaser_distribution -V)
   echo "$version_banner"
 
-  say "Add $current_jreleaser_distribution to your \$PATH"
+  say "Add $(dirname $current_jreleaser_distribution) to your \$PATH"
   if [ "$mode" = "java" ]; then
     say "You need a Java version 8 or greater to run JReleaser"
   fi
