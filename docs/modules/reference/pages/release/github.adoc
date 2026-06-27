@@ -13,6 +13,8 @@ Configure releases to {gitservice_api}.
 
 Refer to xref:reference:release/changelog.adoc[] for full options on changelog customizations.
 
+Refer to xref:reference:release/github.adoc#_permissions[] to for the required token permissions.
+
 IMPORTANT: You must define a value for both `host` and `apiEndpoint` if using GitHub Enterprise.
 
 == Configuration
@@ -246,7 +248,7 @@ include::partial$release/maven/common-head.adoc[]
           A regex to determine if the project version is a prerelease
           icon:dot-circle[] icon:eye-slash[]
         -->
-        <pattern>.*-pre</enabled>
+        <pattern>.*-pre</pattern>
       </prerelease>
 
       <!--
@@ -394,3 +396,21 @@ lead to `OutOfMemoryError`s and failed releases.
 If your release has big assets then it's recommended to increase the memory of the `jreleaser` process. When running on
 the CLI you may pass a flag such as `JAVA_OPTS="-Xmx5g"`; when using Maven, Gradle, or Ant use their corresponding options to set
 the memory flags.
+
+== Permissions
+
+When using all defaults, the minimum required permissions for the GitHub token are:
+
+* Contents: write
+* Issues: write - Needed for closing the milestone (when `milestone.close = true`) or updating issues (when `issues.enabled = true`)
+
+When using GitHub Actions the following is needed in the workflow or job:
+
+[source,yaml]
+[subs="+macros,verbatim"]
+.GitHub Workflow Token Permissions
+----
+permissions:
+  contents: write
+  issues: write
+----
