@@ -33,6 +33,12 @@ environment:
   # icon:dot-circle[]
   variables: path/to/alternate/config.properties
 
+  # Lets external sources take precedence over values
+  # explicitly set in the DSL.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  override: true
+
   # Additional properties used when evaluating templates.
   # icon:dot-circle[]
   properties:
@@ -55,6 +61,12 @@ TOML::
   # icon:dot-circle[]
   variables = "path/to/alternate/config.properties"
 
+  # Lets external sources take precedence over values
+  # explicitly set in the DSL.
+  # Defaults to `false`.
+  # icon:dot-circle[] icon:eye-slash[]
+  override = true
+
   # Additional properties used when evaluating templates.
   # icon:dot-circle[]
   properties.foo = "bar"
@@ -75,6 +87,12 @@ JSON::
     // the environment variable it overrides.
     // icon:dot-circle[]
     "variables": "path/to/alternate/config.properties",
+
+    // Lets external sources take precedence over values
+    // explicitly set in the DSL.
+    // Defaults to `false`.
+    // icon:dot-circle[] icon:eye-slash[]
+    "override": true,
 
     // Additional properties used when evaluating templates.
     // icon:dot-circle[]
@@ -106,6 +124,14 @@ Maven::
     <variables>path/to/alternate/config.properties</variables>
 
     <!--
+      Lets external sources take precedence over values
+      explicitly set in the DSL.
+      Defaults to `false`.
+      icon:dot-circle[] icon:eye-slash[]
+    -->
+    <override>true</override>
+
+    <!--
      Additional properties used when evaluating templates.
      icon:dot-circle[]
     -->
@@ -131,6 +157,12 @@ jreleaser {
     // the environment variable it overrides.
     // icon:dot-circle[]
     variables = 'path/to/alternate/config.properties'
+
+    // Lets external sources take precedence over values
+    // explicitly set in the DSL.
+    // Defaults to `false`.
+    // icon:dot-circle[] icon:eye-slash[]
+    override = true
 
     // Additional properties used when evaluating templates.
     // icon:dot-circle[]
@@ -383,6 +415,32 @@ Settings will be evaluated in the following order:
  * Project configuration (`.env` file).
  * User configuration (`$XDG_CONFIG_HOME/jreleaser`, `$JRELEASER_USER_HOME`, `$HOME/.jreleaser`).
 
+=== Overriding the DSL
+
+A value written in the DSL normally wins, which means external sources only fill in the fields you left out. Set
+`environment.override` to move the DSL to the bottom of the list instead, so a release may be adjusted from the outside
+without keeping a second configuration file. The remaining entries keep their relative order, so a system property
+still wins over an environment variable.
+
+This is useful on CI, where the same configuration file has to produce a different release:
+
+[source,yaml]
+[subs="+macros"]
+..github/workflows/release.yml
+----
+- uses: jreleaser/release-action@v2
+  env:
+    JRELEASER_ENVIRONMENT_OVERRIDE: true
+    JRELEASER_PROJECT_VERSION: ${{ github.ref_name }}
+    JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+----
+
+Here `project.version` resolves to the tag that triggered the workflow even when the configuration file sets a version
+of its own. Drop `JRELEASER_ENVIRONMENT_OVERRIDE` and the configured version wins again.
+
+NOTE: Fields with no matching key are unaffected, as there is nothing external to read them from. Use the `env` command
+described in the next section to see which keys exist.
+
 == Inspection
 
 Use the `env` command to display environment variable key names as resolved by the tool
@@ -398,6 +456,18 @@ You'll also find  these key names in the respective `trace.log` file.
 
 The value of the following properties may be resolved from an environment variable or a system
 property. The system property takes precedence over the environment variable.
+
+=== Environment Override
+
+Lets external sources take precedence over values explicitly set in the DSL, as described under Precedence Order.
+Setting this key is equivalent to setting `environment.override`, and leaves the configuration file untouched. An
+explicit `environment.override` wins over this key.
+
+[horizontal]
+System Property:: jreleaser.environment.override
+Environment Variable:: JRELEASER_ENVIRONMENT_OVERRIDE
+Default Value:: false
+Possible Values:: true, false
 
 === HTTP Logger
 
